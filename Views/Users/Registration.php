@@ -1,3 +1,1 @@
-xxx
-<?php echo $this->payments; ?>
- yyy
+111

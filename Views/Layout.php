@@ -1329,12 +1329,15 @@ $(function () {
 				data: {ajax:' 1'},
 				success: function(data){
 					refreshAllowed = true;
-					$('#content').html(data);
+                    $.each(data, function(key, value){
+                      $('#'+key).html(value);
+                    });
 					startAllNeedFunctions.apply($('#content'));
 					$("body,html").animate({
 						scrollTop:0
 					}, 400);
-				}
+				},
+                dataType: 'json'
 			});
 
 			if(url != window.location){

@@ -12,7 +12,7 @@ namespace Controllers {
 		}
 
 		public function registration(array $page) {
-			echo json_encode(['ttt' => (new View('Users/Registration', ['payments' => 111]))->get()]);
+			$this->view(['content' 	=> ['Users/Registration', []]]);
 		}
 	}
 

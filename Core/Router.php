@@ -29,7 +29,7 @@ namespace Core {
         }
 
         private function getUri() {
-            $this->uri = substr($_SERVER["REQUEST_URI"], strlen(dirname($_SERVER['SCRIPT_NAME'])));
+            $this->uri = substr($_SERVER["REQUEST_URI"], strlen(DIR));
             $this->uri = preg_replace('/[^a-zA-Z0-9-_\/]/', '', $this->uri);
         }
 

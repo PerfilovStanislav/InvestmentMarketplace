@@ -15,7 +15,8 @@ namespace Core {
 		}
 
 		protected function view(array $params) {
-			$params['userHead']	= ['Users/HeadAuthorized', ['name' => 'HeLLo ‼']];
+			if ($this->auth->isAuthorized) 	$params['userHead']	= ['Users/HeadAuthorized', ['name' => 'HeLLo ‼']];
+			else 							$params['userHead']	= ['Users/HeadNotAuthorized', []];
 			foreach($params as $k => &$v) {
 				$v = (new View($v[0], $v[1]))->get();
 			}

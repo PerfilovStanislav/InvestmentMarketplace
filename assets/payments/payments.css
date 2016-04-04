@@ -1,0 +1,109 @@
+.pay {
+	background:url(payments.png) no-repeat;
+	display: inline-block;
+    vertical-align: middle;
+	
+	width: 31px;
+	height: 20px;
+	margin: 0px 6px 2px 0px;
+}
+
+.pay-2co {
+    background-position: -5px -5px;
+}
+
+.pay-Advcash {
+    background-position: -46px -5px;
+}
+
+.pay-AmericanExpress {
+    background-position: -87px -5px;
+}
+
+.pay-Bitcoin {
+    background-position: -128px -5px;
+}
+
+.pay-Cirrus {
+    background-position: -5px -35px;
+}
+
+.pay-Delta {
+    background-position: -46px -35px;
+}
+
+.pay-Discover {
+    background-position: -87px -35px;
+}
+
+.pay-MasterCard {
+    background-position: -128px -35px;
+}
+
+.pay-MoneyBookers {
+    background-position: -5px -65px;
+}
+
+.pay-PayPal {
+    background-position: -46px -65px;
+}
+
+.pay-Payeer {
+    background-position: -87px -65px;
+}
+
+.pay-Payza {
+    background-position: -128px -65px;
+}
+
+.pay-PerfectMoney {
+    background-position: -5px -95px;
+}
+
+.pay-Qiwi {
+    background-position: -46px -95px;
+}
+
+.pay-Solo {
+    background-position: -87px -95px;
+}
+
+.pay-Switch {
+    background-position: -128px -95px;
+}
+
+.pay-VISA {
+    background-position: -5px -125px;
+}
+
+.pay-WesternUnion {
+    background-position: -46px -125px;
+}
+
+.pay-Liqpay {
+    background-position: -87px -125px;
+}
+
+.pay-Neteller {
+    background-position: -128px -125px;
+}
+
+.pay-NixMoney {
+    background-position: -169px -5px;
+}
+
+.pay-OKpay {
+    background-position: -169px -35px;
+}
+
+.pay-SolidTrustPay {
+    background-position: -169px -65px;
+}
+
+.pay-WebMoney {
+    background-position: -169px -95px;
+}
+
+.pay-Yandex {
+    background-position: -169px -125px;
+}

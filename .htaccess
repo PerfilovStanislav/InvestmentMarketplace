@@ -1,0 +1,63 @@
+RewriteEngine On  
+Options All -Indexes +FollowSymLinks
+AddDefaultCharset UTF-8
+ServerSignature Off
+php_flag register_globals off
+php_value allow_url_fopen off
+php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source"
+
+<IfModule mod_reqtimeout.c>
+  RequestReadTimeout header=20-40,MinRate=500 body=20,MinRate=500
+</IfModule>
+
+<FilesMatch ".(gif|jpg|jpeg|png|ico|js|css|gz|jsgz)$">
+Header set Cache-Control "max-age=2592000"
+</FilesMatch>
+
+<FilesMatch "\.(php)$">
+Header unset Cache-Control
+</FilesMatch>
+
+
+AddType text/css cssgz
+AddType text/javascript jsgz
+AddEncoding x-gzip .cssgz .jsgz
+
+AddType application/octet-stream .zip
+
+RewriteCond %{REQUEST_FILENAME} (\.(php|htaccess))$ [OR]
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule (.*)$ index.php [QSA,L]
+
+
+
+
+
+
+
+
+
+
+
+# #Блокируем все ссылки, содержащие <script>
+# RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+# #Блокируем все скрипты, которые пытаются изменить переменные PHP Globals:
+# RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+# #Блокируем все скрипты, которые пытаются изменить переменную _REQUEST:
+# RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+# #Перенаправляем все подобные на страницу с ошибкой 403 - запрещено
+# RewriteRule ^(.*)$ index.php [F,L]
+
+
+
+# # Блокируем base64_encode в URL
+# RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [OR]
+# # Блокируем всевозможные скрипты, включая тег &lt;script&gt; в URL
+# RewriteCond %{QUERY_STRING} (\&lt;|%3C).*script.*(\&gt;|%3E) [NC,OR]
+# # Блокируем установку глобальных переменных ( GLOBALS ) в URL
+# RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+# # Блокируем попытки модифицировать глобальную переменную _REQUEST в URL
+# RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+# # На все подобные запросы будем отвечать ошибкой &quot;403 Forbidden&quot;!
+# RewriteRule ^(.*)$ index.php [F,L]

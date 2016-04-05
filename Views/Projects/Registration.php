@@ -411,5 +411,5 @@
       <!-- End: Content -->
 	  
 	  <script>
-		scripts.addOne(['initTypes', 'controls', 'addproject_form', 'datePickerInit']);
+		scripts.addOne(['ProjectRegistrationFormControl', 'datePickerInit']);
 	  </script>

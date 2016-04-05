@@ -562,3 +562,7 @@
     </ul>
   </li>
 </ul>
+
+<script>
+  scripts.addOne(['linkClick']);
+</script>

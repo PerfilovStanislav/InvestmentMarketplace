@@ -35,9 +35,11 @@
         <div class="admin-form theme-primary w300 center-block">
 
 
+          <form method="post" action="/" id="authorizationuser_form">
           <div class="section row mb5">
             <label class="field prepend-icon">
-              <input placeholder="Логин или Email" class="gui-input onlyText" name="login">
+              <input placeholder="Логин или Email" class="gui-input onlyEmail" name="login">
+              <input type="hidden" name="ajax" value="1">
               <label class="field-icon">
                 <i class="glyphicons glyphicons-user"></i>
               </label>
@@ -59,12 +61,13 @@
 
           <div class="section row mbn">
             <div class="pull-left">
-              <a class="btn  btn-gradient btn-info btn-block w125" id="login">Вход</a></div>
+              <button type="submit" class="btn  btn-gradient btn-info btn-block w125" >Войти</button></div>
 
             <div class="pull-right">
-              <a href="<?=SITE;?>Users/registration" class="btn  btn-gradient btn-success btn-block w125" id="userReg" >Регистрация</a>
+              <a href="<?=SITE;?>Users/registration" class="btn  btn-gradient btn-success btn-block w125" >Регистрация</a>
             </div>
           </div>
+            </form>
         </div>
       </li>
     </ul>
@@ -72,5 +75,5 @@
 </ul>
 
 <script>
-  scripts.addOne(['linkClick']);
+  scripts.addOne(['UserAuthorization']);
 </script>

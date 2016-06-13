@@ -10,7 +10,7 @@ php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,cur
   RequestReadTimeout header=20-40,MinRate=500 body=20,MinRate=500
 </IfModule>
 
-<FilesMatch ".(gif|jpg|jpeg|png|ico|js|css|gz|jsgz)$">
+<FilesMatch ".(gif|jpg|jpeg|png|ico|css|gz|jsgz)$">
 Header set Cache-Control "max-age=2592000"
 </FilesMatch>
 

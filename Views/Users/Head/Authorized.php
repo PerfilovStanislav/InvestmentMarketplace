@@ -522,42 +522,10 @@
       <span class="hidden-xs pl15"> <?= $this->name; ?> </span>
       <span class="caret caret-tp hidden-xs"></span>
     </a>
-    <ul class="dropdown-menu list-group dropdown-persist w350" role="menu">
-      <li class="dropdown-header clearfix">
-        <div class="admin-form theme-primary w300 center-block">
-
-
-          <div class="section row mb5">
-            <label class="field prepend-icon">
-              <input placeholder="Логин или Email" class="gui-input onlyText" name="login">
-              <label class="field-icon">
-                <i class="glyphicons glyphicons-user"></i>
-              </label>
-            </label>
-          </div>
-
-
-
-          <div class="section row mb5">
-            <label class="field prepend-icon">
-              <input placeholder="Пароль" class="gui-input onlyText" name="password" type="password">
-              <label class="field-icon">
-                <i class="fa fa-lock"></i>
-              </label>
-            </label>
-          </div>
-
-
-
-          <div class="section row mbn">
-            <div class="pull-left">
-              <a class="btn  btn-gradient btn-info btn-block w125" id="login">Вход</a></div>
-
-            <div class="pull-right">
-              <a href="<?=SITE;?>Users/registration" class="btn  btn-gradient btn-success btn-block w125" id="userReg" >Регистрация</a>
-            </div>
-          </div>
-        </div>
+    <ul class="dropdown-menu list-group dropdown-persist w150" role="menu">
+      <li class="dropdown-footer">
+        <a class="" href="<?=SITE;?>Users/logout">
+          <span class="fa fa-power-off pr5"></span> Выйти </a>
       </li>
     </ul>
   </li>

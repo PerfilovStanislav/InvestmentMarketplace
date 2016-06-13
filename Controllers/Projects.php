@@ -5,11 +5,13 @@ namespace Controllers {
 	use Core\Database;
 	use Core\View;
 	use Core\Auth;
-	use Core\ViewPrepare;
 
 	class Projects extends Controller{
+		private $model;
+
 		function __construct(Database $db, Auth $auth) {
 			parent::__construct(__CLASS__, $db, $auth);
+			$this->model = new \Models\Projects($db);
 		}
 
 		public function registration(array $page) {
@@ -17,7 +19,7 @@ namespace Controllers {
 		}
 
 		public function add() {
-			$this->model->saveProject($_POST);
+			$this->model->addProject($_POST);
 		}
 /*
 		public function add(array $page) {

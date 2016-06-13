@@ -9,8 +9,8 @@ namespace Core {
 		private $db_pass = '';
 		private $db_name = 'test';
 
-		private $queries = [];
-		private $errors = [];
+		public $queries = [];
+		public $errors = [];
 
 		function __construct() {
 			parent::__construct($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
@@ -55,7 +55,8 @@ namespace Core {
 		}
 
 		public function getResult($sql) {
-			return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
+			$res = $this->query($sql);
+			return $res ? $res->fetch_all(MYSQLI_ASSOC) : null;
 		}
 
 		/**
@@ -78,6 +79,11 @@ namespace Core {
                 $q .= ' LIMIT '.$limit;
 			}
 			return $this->getResult($q);
+		}
+
+		public function getOne($table, $fields = '*', $where = null, $order = null) {
+			$res = $this->select($table, $fields, $where, $order);
+			return count($res) > 0 ? $res[0] : false;
 		}
 
 		public function lastID($table) {

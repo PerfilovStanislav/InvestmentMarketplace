@@ -12,7 +12,7 @@ namespace Models {
 			parent::__construct($db);
 		}
 
-		public function saveProject(array $post) {
+		public function addProject(array $post) {
 			$data = [
 				'name' 			=> $post['projectname'],
 				'admin' 		=> 1,
@@ -48,11 +48,11 @@ namespace Models {
 
 			// сохраняем реферальные уровни
 			$cnt=count($post['ref_percent']);
-			$data = array(
+			$data = [
 				array_fill(0, $cnt, '@project_id'),
 				$post['ref_percent'],
 				range(1,$cnt)
-			);
+			];
 			$fields = [
 				"project_id",
 				"percents",

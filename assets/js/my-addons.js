@@ -1,6 +1,10 @@
 var GO = !0;
+var beforeSend = function(d) {GO = !1;};
+var complete = function(d) {GO = !0;};
+var $userHead = $('#userHead');
 
-function onlyText(e) {$(this).val($(this).val().replace(/[^a-zа-я0-9 \-]/gi,''));}
+function onlyText(e) {$(this).val($(this).val().replace(/[^a-zа-я0-9ё \-]/gi,''));}
+function onlyEn(e) {$(this).val($(this).val().replace(/[^a-z0-9]/gi,''));}
 function onlyEmail(e) {$(this).val($(this).val().replace(/[^a-z0-9\-_.@]/gi,'').replace(/(^[@\._]*)|@(?=.*@)/gi,''));}
 function onlyNumber(e) {
 	var v = $(this).val().replace(/[^\d.]/gi,'');
@@ -10,17 +14,93 @@ function onlyNumber(e) {
 function toFloat(e) {var v = parseFloat(e.target.value); e.target.value = isNaN(v) ? '' : v;}
 function onlyUrl(e) {$(this).val($(this).val().replace(/[^a-zа-я0-9\-\.\/:\?\=\%]/gi,''));}
 
-var initTypes = function() {
-	$(this).find('.onlyText').on('input', onlyText);
-	$(this).find('.onlyEmail').on('input', onlyEmail);
-	$(this).find('.onlyNumber').on('input', onlyNumber).on('change', toFloat);
-	$(this).find('.onlyUrl').on('input', onlyUrl);
+var initTypes = function(el) {
+	$('.onlyText', el).on('input', onlyText);
+	$('.onlyEn', el).on('input', onlyEn);
+	$('.onlyEmail', el).on('input', onlyEmail);
+	$('.onlyNumber', el).on('input', onlyNumber).on('change', toFloat);
+	$('.onlyUrl', el).on('input', onlyUrl);
 }
 
+var reload = function() {
+    alert(this);
+    location.reload();
+}
 
-var ProjectRegistrationFormControl = function() {
-    initTypes();
-	$(this).find('.copy').on('click', function() {
+var UserAuthorization = function() {
+    initTypes(this);
+
+    var form = $("#authorizationuser_form");
+    $('input', form).on('focusin', function(e) {
+        $(this).parent().removeClass('state-error');
+    });
+    form.submit(function(){
+        $f = $(this);
+        var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
+
+        if (a.length) {
+            a.addClass('state-error');
+            return !1;
+        }
+
+        if (GO) {
+            $.ajax({
+                type: 'POST',
+                url: SITE+'Users/authorize',
+                data: form.serialize(),
+                beforeSend: beforeSend,
+                success: function(data){
+                    if (data === 'userAuthorized') location.reload();
+                },
+                complete: complete
+
+            });
+        }
+        return false;
+    });
+};
+
+
+var UserRegistration = function() {
+    initTypes(this);
+
+    var form = $("#adduser_form");
+    $('input', form).on('focusin', function(e) {
+        $(this).parent().removeClass('state-error');
+    });
+    form.submit(function(){
+        var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
+        if ($('#confirm_pass').val() != $('input[name=password]', form).val()) a = a.add($('#confirm_pass').parent());
+
+        if (a.length) {
+            a.addClass('state-error');
+            var v = a.eq(0).offset().top;
+            $('html').animate({ scrollTop: v - 75}, 250+Math.abs($('html').scrollTop()-v)*0.5, 'easeOutQuad');
+            return !1;
+        }
+
+        if (GO) {
+            $.ajax({
+                type: 'POST',
+                url: SITE+'Users/add',
+                data: form.serialize(),
+                beforeSend: beforeSend,
+                success: function(data){
+                    console.log(data);
+                },
+                complete: complete
+
+            });
+        }
+        return false;
+    });
+};
+
+
+var ProjectRegistration = function() {
+    initTypes(this);
+    datePickerInit(this);
+	$('.copy', this).on('click', function() {
 		var g = $(this).parent().prev();
 		var p = g.find('>div:last');
 		var c = p.clone().insertAfter(p);
@@ -31,14 +111,14 @@ var ProjectRegistrationFormControl = function() {
 		c.find('.remove').on('click', remove);
 	});
 		
-	$(this).find('.remove').on('click', remove);
+	$('.remove', this).on('click', remove);
 	
-	$(this).find('.showPrev').on('click', function() {
+	$('.showPrev',this).on('click', function() {
 	  $(this).parent().hide('slow').prev().show('slow');
 	});
-	
-	
-	form = $("#addproject_form");	
+
+
+    var form = $("#addproject_form");
 	$('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).on('focusin', function(e) {
 		$(this).parent().removeClass('state-error');
 	});
@@ -51,12 +131,12 @@ var ProjectRegistrationFormControl = function() {
         var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).filter(function(i) {return $(this).val() === "";})
             .add('div.payments:not(:has(:checked)) label,div.langs:not(:has(:checked)) label', form)
             .parent();
-        a.addClass('state-error');
         if ($('#full_site_image').attr('src') === "") {
             $('label[for=inputImage]').addClass('btn-danger').removeClass('btn-primary');
             a = a.add('label[for=inputImage]');
         };
         if (a.length) {
+            a.addClass('state-error');
             var v = a.eq(0).offset().top;
             $('html').animate({ scrollTop: v - 75}, 250+Math.abs($('html').scrollTop()-v)*0.5, 'easeOutQuad');
             return !1;
@@ -75,20 +155,15 @@ var ProjectRegistrationFormControl = function() {
                url: SITE+'Projects/add',
                //dataType: 'json',
                data: form.serialize(),
-               beforeSend: function(data) {
-                    GO = !1;
-               },
+               beforeSend: beforeSend,
                success: function(data){
                     console.log(data);
-                 },
+               },
                error: function (xhr, ajaxOptions, thrownError) {
                     console.warn(2, xhr.status);
                     console.warn(3, thrownError);
-                 }
-                ,
-               complete: function(data) {
-                    GO = !0;
-                 }
+               },
+               complete: complete
 
             });
         }
@@ -281,13 +356,13 @@ var changeScrollContentHeight = function() {
 };
 
 /* ------------------------------------------------------------ DATEPICKER ------------------------------------------ */
-var datePickerInit = function() {
+var datePickerInit = function(el) {
 	$(".datepicker").datepicker({
       prevText: '<i class="fa fa-chevron-left"></i>',
       nextText: '<i class="fa fa-chevron-right"></i>',
       beforeShow: function(input, inst) {
         var newclass = 'admin-form';
-        var themeClass = $(this).parents('.admin-form').attr('class');
+        var themeClass = $(el).parents('.admin-form').attr('class');
         var smartpikr = inst.dpDiv.parent();
         if (!smartpikr.hasClass(themeClass)) {
           inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
@@ -299,7 +374,7 @@ var datePickerInit = function() {
 
 /* ------------------------------------------------------------ FULLSCREEN BUTTONS ---------------------------------- */
 var adminPanelInit = function() {
-	$(this).find('.admin-panels').adminpanel();
+	$('.admin-panels',this).adminpanel();
 }
 
 
@@ -312,14 +387,7 @@ var linkClick = function() {
             data: {ajax:' 1'},
             success: function(data){
                 refreshAllowed = true;
-                $.each(data, function(key, value){
-                    $('#'+key).fadeOut(300, 'linear', function() {
-                        $('#'+key).html(value);
-                        $('html').scrollTop(0);
-                        startAllNeedFunctions.apply($('#'+key));
-                        $('#'+key).fadeIn(500, 'linear');
-                    });
-                });
+                $.each(data, applyFunctions);
             },
             dataType: 'json'
         });
@@ -333,6 +401,19 @@ var linkClick = function() {
 }
 
 
+var applyFunctions = function(key, value) {
+    if (key === 'functions') {
+        value();
+    }
+    else {
+        $('#' + key).fadeOut(300, 'linear', function () {
+            $('#' + key).html(value);
+            $('html').scrollTop(0);
+            startAllNeedFunctions.apply($('#' + key));
+            $('#' + key).fadeIn(500, 'linear');
+        });
+    }
+}
 
 
 
@@ -341,8 +422,6 @@ jQuery(document).ready(function() {
     Core.init();
     Demo.init();
 
-
-
     $(window).bind('popstate', function(e) {
         if (refreshAllowed) {
             $.ajax({
@@ -350,13 +429,9 @@ jQuery(document).ready(function() {
                 type: "POST",
                 data: {ajax:' 1'},
                 success: function(data) {
-                    $('#content').html(data);
-                    startAllNeedFunctions.apply($('#content'));
-                    $("body,html").animate({
-                        scrollTop:0
-                    }, 800);
+                    $.each(data, applyFunctions);
                 },
-                dataType: "html"
+                dataType: 'json'
             });
         }
     });

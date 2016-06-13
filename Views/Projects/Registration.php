@@ -16,15 +16,14 @@
             <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
 
               <div class="panel heading-border panel-primary">
-
+				  <div class="panel-heading">
+                    <span class="panel-title">
+                      <i class="fa fa-pencil-square"></i>Добавление проекта
+                    </span>
+				  </div>
                 <form method="post" action="/" id="addproject_form">
 
                   <div class="panel-body bg-light">
-
-                    <div class="section-divider mt20 mb40">
-                      <span> Форма добавления проекта </span>
-                    </div>
-                    <!-- .section-divider -->
 
                     <div class="section row" >
                       <div class="section">
@@ -411,5 +410,5 @@
       <!-- End: Content -->
 	  
 	  <script>
-		scripts.addOne(['ProjectRegistrationFormControl', 'datePickerInit']);
+		scripts.addOne(['ProjectRegistration']);
 	  </script>

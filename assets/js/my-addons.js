@@ -22,6 +22,20 @@ var initTypes = function(el) {
 	$('.onlyUrl', el).on('input', onlyUrl);
 }
 
+$('#logout').on('click', function() {
+    if (GO) {
+        $.ajax({
+            type: 'POST',
+            url: SITE+'Users/logout',
+            beforeSend: beforeSend,
+            success: function(data){
+                location.reload();
+            },
+            complete: complete
+        });
+    }
+});
+
 var reload = function() {
     alert(this);
     location.reload();
@@ -379,7 +393,7 @@ var adminPanelInit = function() {
 
 
 var linkClick = function() {
-    $('a[href*="/"]', this).click(function() {
+    $('a.ajax', this).click(function() { // a[href*="/"],
         var url = $(this).attr('href');
         $.ajax({
             url:  url,
@@ -403,6 +417,7 @@ var linkClick = function() {
 
 var applyFunctions = function(key, value) {
     if (key === 'functions') {
+        console.log(value);
         value();
     }
     else {

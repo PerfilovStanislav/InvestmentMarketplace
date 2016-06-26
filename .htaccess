@@ -1,4 +1,5 @@
 RewriteEngine On  
+
 Options All -Indexes +FollowSymLinks
 AddDefaultCharset UTF-8
 ServerSignature Off

@@ -1,8 +1,8 @@
 <?php
 
 namespace Core {
-	use Libraries\PregReplace;
-	
+	use Libraries\Validation as Valid;
+
 	class Auth
 	{
 
@@ -25,18 +25,20 @@ namespace Core {
 				$s = &$_SESSION;
 				$c = &$_COOKIE;
 
-				if (isset($s['user'])) {
-					$this->setUserInfo($s['user']);
+				if (isset($s['user_id'])) {
+					$this->setUserInfo($s['user_id']);
 				}
-				else if (isset($c['user']) && isset($c['hash'])) {
-					setcookie('user', PregReplace::replace('num',  $c['user']),null,'/',DOMAIN,null,false);
-					setcookie('hash', PregReplace::replace('hash', $c['hash']),null,'/',DOMAIN,null,false);
+				else if (isset($c['user_id']) && isset($c['hash'])) {
+					$user_id = Valid::replace(Valid::NUM,  $c['user_id']);
+					$hash 	 = Valid::replace(Valid::HASH, $c['hash']);
+					setcookie('user_id' , $user_id,	null,'/',DOMAIN,null,false);
+					setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
 
-					$hash = $this->db->getOne('user_remember', 'hash', "user_id = {$c['user']} and hash = '{$c['hash']}'");
+					$hash = $this->db->getOne('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}'");
 					if ($hash) {
-						$s['user'] = $c['user'];
+						$s['user_id'] = $c['user_id'];
 						$s['hash'] = $hash['hash'];
-						$this->setUserInfo($s['user']);
+						$this->setUserInfo($s['user_id']);
 					}
 					else {
 						self::$isAuthorized = false;
@@ -57,11 +59,11 @@ namespace Core {
 
 		public function authorize($login, $password) {
 			if (strpos($login, '@') > 0) {
-				$email = PregReplace::replace('email', $login);
+				$email = Valid::replace(Valid::EMAIL, $login);
 				$res = $this->db->getOne('user', 'id, hashpass', "email = '$email'");
 			}
 			else {
-				$login = PregReplace::replace('en', $login);
+				$login = Valid::replace(Valid::EN, $login);
 				$res = $this->db->getOne('user', 'id, hashpass', "login = '$login'");
 			}
 
@@ -71,21 +73,21 @@ namespace Core {
 				self::startSession();
 				$s = &$_SESSION;
 
-				setcookie('user', $res['id'],null,'/',DOMAIN,null,true);
-				$s['user'] = $res['id'];
+				setcookie('user_id', $res['id'],null,'/',DOMAIN,null,true);
+				$s['user_id'] = $res['id'];
 				$res = $this->db->getOne('user_remember', 'hash', "user_id = '{$res['id']}'");
 				if ($res) {
 					setcookie('hash', $res['hash'],null,'/',DOMAIN,null,true);
-					return 'userAuthorized';
 				}
 				else {
 					$hash = self::hashPassword(uniqid('rand'.$s['user'], true));
 					setcookie('hash', $hash,null,'/',DOMAIN,null,true);
 					$this->db->insert('user_remember', [
-						'user_id' => $s['user'],
+						'user_id' => $s['user_id'],
 						'hash' => $hash
 					])->execute();
 				}
+				return 'userAuthorized';
 			}
 			else {
 				return 'badPassword';
@@ -93,8 +95,16 @@ namespace Core {
 		}
 
 		public function logout() {
-			setcookie('hash', '', time()-3600);
-			setcookie('user', '', time()-3600);
+			self::startSession();
+			$session_keys_in_cookies = ['uid', 'hash', 'user_id'];
+			$params = session_get_cookie_params();
+			foreach ($session_keys_in_cookies as $k => $v) {
+				setcookie($v, '', time() - 42000,
+					$params["path"], $params["domain"],
+					$params["secure"], $params["httponly"]
+				);
+			}
+			session_destroy();
 		}
 
 		private final static function confirmPassword($password, $hash)

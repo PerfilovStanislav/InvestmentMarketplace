@@ -524,8 +524,7 @@
     </a>
     <ul class="dropdown-menu list-group dropdown-persist w150" role="menu">
       <li class="dropdown-footer">
-        <a class="" href="<?=SITE;?>Users/logout">
-          <span class="fa fa-power-off pr5"></span> Выйти </a>
+        <a id="logout" class="btn"><span class="fa fa-power-off pr5"></span> Выйти </a>
       </li>
     </ul>
   </li>

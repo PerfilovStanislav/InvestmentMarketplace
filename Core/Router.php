@@ -3,7 +3,7 @@
 namespace Core {
     use Core\Database;
     use Core\Auth;
-    use Libraries\PregReplace;
+    use Libraries\Validation as Valid;
 
     class Router {
         private $defaultParams = 'Projects/show/1';
@@ -32,7 +32,7 @@ namespace Core {
         private function getUri() {
             $this->uri = substr($_SERVER["REQUEST_URI"], strlen(DIR));
             $this->uri = preg_replace('/[^a-zA-Z0-9-_\/]/', '', $this->uri);
-            $this->uri = PregReplace::replace('uri', $this->uri);
+            $this->uri = Valid::replace(Valid::URI, $this->uri);
         }
 
         private function parseUri($uri) {

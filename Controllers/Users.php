@@ -23,12 +23,13 @@ namespace Controllers {
 		}
 		
 		public function authorize() {
-			echo $this->auth->authorize($_POST['login'], $_POST['password']);
+			if (isset($_POST['login']) && isset($_POST['password'])) {
+				echo $this->auth->authorize($_POST['login'], $_POST['password']);
+			}
 		}
 
 		public function logout() {
 			$this->auth->logout();
-			echo json_encode(['functions' => 'reload']);
 		}
 	}
 

@@ -5,7 +5,7 @@ namespace Models {
 	use Core\Database;
 	use Core\Model;
 	use Libraries\File;
-	use Libraries\PregReplace;
+	use Libraries\Validation as Valid;
 
 	class Users extends Model{
 
@@ -14,10 +14,15 @@ namespace Models {
 		}
 
 		public function addUser(array $post) {
+			if (Valid::issetKeys($post, ['login', 'name', 'email', 'password'])) {
+				die('OK');
+			}
+			else die('BadUser');
+
 			$data = [
-				'login' 		=> PregReplace::replace('en', $post['login']),
-				'name' 			=> PregReplace::replace('text', $post['name']),
-				'email' 		=> PregReplace::replace('email', $post['email']),
+				'login' 		=> Valid::replace(Valid::EN, $post['login']),
+				'name' 			=> Valid::replace(Valid::TEXT, $post['name']),
+				'email' 		=> Valid::replace(Valid::EMAIL, $post['email']),
 				'pass' 			=> str_replace('"', '\"', $post['password']) // #TODO ... сохранять hash
 			];
 

@@ -5,7 +5,10 @@ namespace Models {
 	use Core\Database;
 	use Core\Model;
 	use Libraries\File;
-	use Libraries\Validation as Valid;
+	use Libraries\Cleaner as Valid;
+	use Libraries\Validator;
+	use \Core\Auth;
+	use \Helpers\Errors;
 
 	class Users extends Model{
 
@@ -14,23 +17,17 @@ namespace Models {
 		}
 
 		public function addUser(array $post) {
-			if (Valid::issetKeys($post, ['login', 'name', 'email', 'password'])) {
-				die('OK');
+			if ($user = $this->db->getOne('user', 'login, email', "login = '{$post['login']}' or email = '{$post['email']}'")) {
+				if ($user['login'] === $post['login']) Errors::setField('name', 'login_is_busy');
+				if ($user['email'] === $post['email']) Errors::setField('name', 'email_is_busy');
+				return Errors::getErrors();
 			}
-			else die('BadUser');
 
-			$data = [
-				'login' 		=> Valid::replace(Valid::EN, $post['login']),
-				'name' 			=> Valid::replace(Valid::TEXT, $post['name']),
-				'email' 		=> Valid::replace(Valid::EMAIL, $post['email']),
-				'pass' 			=> str_replace('"', '\"', $post['password']) // #TODO ... сохранять hash
-			];
-
-			$this->db->insert('user', $data);
-
+			$post['password'] = Auth::hashPassword($post['password']);
+			$this->db->insert('user', $post);
 			if ($this->db->execute()) {
-				$user_id = $this->db->lastID('user');
-				echo $user_id;
+//				$user_id = $this->db->lastID('user');
+				return ['success' => 'userAdded'];
 			}
 		}
 	}

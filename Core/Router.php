@@ -3,7 +3,7 @@
 namespace Core {
     use Core\Database;
     use Core\Auth;
-    use Libraries\Validation as Valid;
+    use Libraries\Cleaner as Valid;
 
     class Router {
         private $defaultParams = 'Projects/show/1';
@@ -17,8 +17,10 @@ namespace Core {
         private $action;
         private $params;
 
+        private $language;
+
         function __construct() {
-            $this->db   = new Database();
+            /*$this->db   = new Database();
             $this->auth = new Auth($this->db);
 
             $this->getUri();
@@ -26,7 +28,22 @@ namespace Core {
             if(!$this->route()) {
                 $this->parseUri($this->defaultParams);
                 $this->route();
-            };
+            };*/
+
+
+            echo '<pre>';
+            $availableLanguages = ['en', 'ru', 'de'];
+           if (($list = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']))) {
+                if (preg_match_all('/([a-z]{1,8}(?:-[a-z]{1,8})?)(?:;q=([0-9.]+))?/', $list, $list)) {
+                    $this->language = array_combine($list[1], $list[2]);
+                    foreach ($this->language as $n => &$v)
+                        $v = $v ? $v : 1;
+                    arsort($this->language, SORT_NUMERIC);
+                }
+            } else $this->language = array();
+//            $this->language = array_intersect(array_keys($this->language), $availableLanguages);
+            print_r(array_keys($this->language)); die();
+
         }
 
         private function getUri() {

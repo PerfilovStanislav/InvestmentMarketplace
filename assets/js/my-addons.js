@@ -20,7 +20,7 @@ var initTypes = function(el) {
 	$('.onlyEmail', el).on('input', onlyEmail);
 	$('.onlyNumber', el).on('input', onlyNumber).on('change', toFloat);
 	$('.onlyUrl', el).on('input', onlyUrl);
-}
+};
 
 $('#logout').on('click', function() {
     if (GO) {
@@ -39,7 +39,7 @@ $('#logout').on('click', function() {
 var reload = function() {
     alert(this);
     location.reload();
-}
+};
 
 var UserAuthorization = function() {
     initTypes(this);
@@ -97,10 +97,18 @@ var UserRegistration = function() {
             $.ajax({
                 type: 'POST',
                 url: SITE+'Users/add',
+                dataType: 'json',
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
-                    console.log(data);
+                    if (data.errors) {
+                        if (data.errors.fields) {
+                            $.each(data.errors.fields, function(k,v) {
+                                $el = $('input[name='+k+']');
+                                $el.parent().addClass('state-error');
+                            });
+                        }
+                    }
                 },
                 complete: complete
 

@@ -2,7 +2,7 @@
 
 namespace Libraries {
 
-	class Validation {
+	class Cleaner {
 		CONST TEXT = '/[^a-zа-я0-9ё \-]/iu';
 		CONST EN = '/[^a-z0-9]/iu';
 		CONST EMAIL = '/[^a-z0-9\-_.@]/i';
@@ -14,9 +14,9 @@ namespace Libraries {
 			return preg_replace($regex, '', $str);
 		}
 
-		public final static function issetKeys(array $array, array $needle) {
+		/*public final static function issetKeys(array $array, array $needle) {
 			return count(array_intersect(array_keys($array), $needle)) === count($needle);
-		}
+		}*/
 
 	}
 

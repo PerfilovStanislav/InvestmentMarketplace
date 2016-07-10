@@ -5,13 +5,14 @@ namespace Controllers {
 	use Core\Database;
 	use Core\View;
 	use Core\Auth;
+	use \Models\Projects as Model;
 
 	class Projects extends Controller{
 		private $model;
 
 		function __construct(Database $db, Auth $auth) {
-			parent::__construct(__CLASS__, $db, $auth);
-			$this->model = new \Models\Projects($db);
+			parent::__construct($db, $auth);
+			$this->model = new Model($db);
 		}
 
 		public function registration(array $page) {

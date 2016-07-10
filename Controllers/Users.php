@@ -6,12 +6,14 @@ namespace Controllers {
 	use Core\View;
 	use Core\Auth;
 	use Core\Router;
+	use \Models\Users as Model;
+	use \Libraries\Validator;
 
 	class Users extends Controller{
 		private $model;
 		function __construct(Database $db, Auth $auth) {
-			parent::__construct(__CLASS__, $db, $auth);
-			$this->model = new \Models\Users($db);
+			parent::__construct($db, $auth);
+			$this->model = new Model($db);
 		}
 
 		public function registration(array $page) {
@@ -19,7 +21,16 @@ namespace Controllers {
 		}
 
 		public function add() {
-			$this->model->addUser($_POST);
+			$post = (new Validator($_POST))
+				->checkAll('login', 4, 32, Validator::EN)
+				->checkAll('name', 4, 64, Validator::TEXT)
+				->checkAll('email', 8, 64, Validator::EMAIL)
+				->checkAll('password', 8, 64);
+
+			if (!$post->getErrors()) {
+				echo json_encode($this->model->addUser($post->getData()));
+			}
+			else echo json_encode(['errors' => ['fields' => $post->getErrors()]]);
 		}
 		
 		public function authorize() {
@@ -29,7 +40,8 @@ namespace Controllers {
 		}
 
 		public function logout() {
-			$this->auth->logout();
+			Auth::logout();
+//			$this->auth->logout();
 		}
 	}
 

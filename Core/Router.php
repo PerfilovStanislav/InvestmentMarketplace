@@ -20,30 +20,17 @@ namespace Core {
         private $language;
 
         function __construct() {
-            /*$this->db   = new Database();
+            $this->db   = new Database();
             $this->auth = new Auth($this->db);
 
-            $this->getUri();
+            /*$this->getUri();
             $this->parseUri($this->uri);
             if(!$this->route()) {
                 $this->parseUri($this->defaultParams);
                 $this->route();
             };*/
 
-
-            echo '<pre>';
-            $availableLanguages = ['en', 'ru', 'de'];
-           if (($list = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']))) {
-                if (preg_match_all('/([a-z]{1,8}(?:-[a-z]{1,8})?)(?:;q=([0-9.]+))?/', $list, $list)) {
-                    $this->language = array_combine($list[1], $list[2]);
-                    foreach ($this->language as $n => &$v)
-                        $v = $v ? $v : 1;
-                    arsort($this->language, SORT_NUMERIC);
-                }
-            } else $this->language = array();
-//            $this->language = array_intersect(array_keys($this->language), $availableLanguages);
-            print_r(array_keys($this->language)); die();
-
+            \Helpers\Locale::getLocale();
         }
 
         private function getUri() {

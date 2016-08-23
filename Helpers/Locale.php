@@ -8,18 +8,19 @@
 
 namespace Helpers {
     use \Core\Auth;
-    use \Libraries\TabgeoCountry;
 
     class Locale {
-        private static $defaultLanguage = 'ru';
+        private static $defaultLanguage = 'Ru';
         private static $availableLanguages = ['en', 'ru', 'de'];
         private static $language = null;
-        private static $locale;
+        private static $locale = null;
 
         private static final function getLanguage() {
+            if (self::$language !== null) return self::$language;
+
             // 1: from profile
             $lang = Auth::getUserInfo()['lang'];
-//            if (in_array($lang, self::$availableLanguages)) return $lang;
+            if (in_array($lang, self::$availableLanguages)) return (self::$language = ucfirst($lang));
 
             // 2: from browser
             if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -32,33 +33,25 @@ namespace Helpers {
                 }
             }
             $langs = array_values(array_intersect(array_keys($langs), self::$availableLanguages));
-//            if (!empty($langs)) return $langs[0];
-            
-            // 3: from ip
-            $lang = TabgeoCountry::getCountry();
+            if (!empty($langs)) return (self::$language = ucfirst($langs[0]));
 
-            return 'Error!';
+            // 3: Default
+            return (self::$language = self::$defaultLanguage);
+
+            // #TODO
+            // 4: language from ip .. Example module: TabgeoCountry
         }
 
         public static final function getLocale() {
-            self::$language = self::getLanguage();
-            print_r(self::$language); die();
+            if (self::$locale !== null) return self::$locale;
 
-            /*
-            $lang = Auth::getUserInfo()['lang'];
-            print_r(['rrr' => Auth::getUserInfo()]); die();
-            $lang = 'Ru';
-            $locale = "\\Helpers\\Locale\\{$lang}::getLocale";
-            self::$locale = call_user_func($locale);
-            */
-
-
-            return self::$locale;
+            $locale = '\Helpers\Locales\\'.self::getLanguage();
+            return (self::$locale = $locale::getLocale());
         }
 
-        public static final function getErrors() {
+        /*public static final function getErrors() {
             return ['errors' => self::$errors];
-        }
+        }*/
 
     }
 

@@ -21,7 +21,7 @@ namespace Helpers {
             $lang = Auth::getUserInfo()['lang'];
             return Auth::getUserInfo(); die();
             $lang = 'Ru';
-            $locale = "\\Helpers\\Locale\\{$lang}::getLocale";
+            $locale = "\\Helpers\\Locales\\{$lang}::getLocale";
             self::$locale = call_user_func($locale);
             return self::$locale;
         }

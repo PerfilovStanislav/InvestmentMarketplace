@@ -30,7 +30,7 @@ namespace Core {
                 $this->route();
             };*/
 
-            \Helpers\Locale::getLocale();
+            print_r(\Helpers\Locale::getLocale());
         }
 
         private function getUri() {

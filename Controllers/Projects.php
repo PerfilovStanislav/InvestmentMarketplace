@@ -1,10 +1,9 @@
 <?php
 
 namespace Controllers {
-	use Core\Controller;
-	use Core\Database;
-	use Core\View;
-	use Core\Auth;
+	use Core\{Controller,Database,Auth};
+	use Helpers\Validator;
+	use Libraries\File;
 	use \Models\Projects as Model;
 
 	class Projects extends Controller{
@@ -20,23 +19,33 @@ namespace Controllers {
 		}
 
 		public function add() {
-			$this->model->addProject($_POST);
+			$post = New Validator($_POST);
+			$post->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
+				->checkAll('website', 			1, 		null, 	Validator::URL)
+				->checkAll('description', 		1, 		null, 	Validator::TEXT)
+				->checkAll('paymenttype', 		1, 		1, 		Validator::NUM)
+				->checkAll('date', 				10, 	10, 	Validator::DATE)
+
+            	->checkAll('percents', 			1, 		10, 	Validator::NUM, 	'plan_percents', 		true, 0)
+            	->checkAll('period', 			1, 		10, 	Validator::NUM, 	'plan_period', 			true, 0)
+            	->checkAll('periodtype', 		1, 		10, 	Validator::NUM, 	'plan_period_type', 	true, 0)
+            	->checkAll('minmoney', 			1, 		10, 	Validator::FLOAT, 	'plan_start_deposit', 	true, 0)
+				->checkAll('currency', 			1, 		10, 	Validator::NUM,		'plan_currency_type', 	true, 0)
+				
+				->checkAll('ref_percent', 		null, 	null, 	Validator::NUM)
+				->checkAll('lang', 				1, 		null, 	Validator::NUM,		'languages')
+				->checkAll('payment', 			1, 		null, 	Validator::NUM,		'payments');
+
+			if ($errors = $post->getErrors()) echo json_encode(['error' => $errors]);
+			else if (!$post->same()) echo 'error: Not same!';
+			else if ($project_id = $this->model->addProject($post)) {
+				// Save screenshots
+				$file = new File($project_id);
+				$file->save($_POST['screen_data']);
+				$file->save($_POST['thumb_data'], true);
+
+			}
 		}
-/*
-		public function add(array $page) {
-//			print_r($page);
-
-			$ajax = false;
-			$content = (new View('Addproject', ['aaa' => 'a', 'bbb' => 'b']))->get();
-			if ($ajax) {
-				echo $content;
-			}
-			else {
-				echo (new View('Layout', ['content' => $content]))->get();
-			}
-
-			//$this->model->query('select * from project');
-		}*/
 	}
 
 }?>

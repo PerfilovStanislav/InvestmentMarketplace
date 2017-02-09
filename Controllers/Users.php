@@ -1,13 +1,9 @@
 <?php
 
 namespace Controllers {
-	use Core\Controller;
-	use Core\Database;
-	use Core\View;
-	use Core\Auth;
-	use Core\Router;
+	use Core\{Controller,Database,Auth};
 	use \Models\Users as Model;
-	use \Libraries\Validator;
+	use \Helpers\Validator;
 
 	class Users extends Controller{
 		private $model;

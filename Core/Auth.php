@@ -1,7 +1,8 @@
 <?php
 
 namespace Core {
-	use Libraries\Cleaner as Valid;
+	use Helpers\Validator;
+	use \Helpers\Errors;
 
 	class Auth
 	{
@@ -24,15 +25,14 @@ namespace Core {
 				$this->setUserInfo($s['user_id']);
 			}
 			else if (isset($c['user_id']) && isset($c['hash'])) {
-				$user_id = Valid::replace(Valid::NUM,  $c['user_id']);
-				$hash 	 = Valid::replace(Valid::HASH, $c['hash']);
+				$user_id = Validator::replace(Validator::NUM,  $c['user_id']);
+				$hash 	 = Validator::replace(Validator::HASH, $c['hash']);
 				setcookie('user_id' , $user_id,	null,'/',DOMAIN,null,false);
 				setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
 
-				$hash = $this->db->getOne('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}'");
-				if ($hash) {
+				if ($this->db->getOne('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}' and ip='{$this->get_ip()}'")) {
 					$s['user_id'] = $c['user_id'];
-					$s['hash'] = $hash['hash'];
+					$s['hash'] = $hash;
 					$this->setUserInfo($s['user_id']);
 				}
 				else {
@@ -48,7 +48,7 @@ namespace Core {
 		private final static function startSession() {
 			if (!self::$sessionStarted) {
 				session_name('uid');
-				session_set_cookie_params(172800, '/', DOMAIN, false, true);
+				session_set_cookie_params(1728000, '/', DOMAIN, false, true);
 				session_start();
 				self::$sessionStarted = true;
 			}
@@ -56,15 +56,18 @@ namespace Core {
 
 		public function authorize($login, $password) {
 			if (strpos($login, '@') > 0) {
-				$email = Valid::replace(Valid::EMAIL, $login);
-				$res = $this->db->getOne('user', 'id, password', "email = '$email'");
+				$email = Validator::replace(Validator::EMAIL, $login);
+				$res = $this->db->getOne('users', 'id, password', "email = '$email'");
 			}
 			else {
-				$login = Valid::replace(Valid::EN, $login);
-				$res = $this->db->getOne('user', 'id, password', "login = '$login'");
+				$login = Validator::replace(Validator::EN, $login);
+				$res = $this->db->getOne('users', 'id, password', "login = '$login'");
 			}
 
-			if (!$res) return 'badUser';
+			if (!$res) {
+				Errors::setField('login', 'NoUser');
+				return Errors::getErrors();
+			}
 
 			if (self::confirmPassword($password, $res['password'])) {
 				self::startSession();
@@ -72,27 +75,36 @@ namespace Core {
 
 				setcookie('user_id', $res['id'],null,'/',DOMAIN,null,true);
 				$s['user_id'] = $res['id'];
-				$res = $this->db->getOne('user_remember', 'hash', "user_id = '{$res['id']}'");
+
+				$res = $this->db->getOne('user_remember', 'hash', "user_id = '{$res['id']}' and ip = '{$this->get_ip()}'");
 				if ($res) {
 					setcookie('hash', $res['hash'],null,'/',DOMAIN,null,true);
 				}
-				else {
-					$hash = self::hashPassword(uniqid('rand'.$s['user'], true));
+				elseif (($_POST['remember'] ?? '') === 'on') {
+					$hash = self::hashPassword(uniqid('rand'.$s['user_id'].$this->get_ip(), true));
 					setcookie('hash', $hash,null,'/',DOMAIN,null,true);
 					$this->db->insert('user_remember', [
-						'user_id' => $s['user_id'],
-						'hash' => $hash
-					])->execute();
+						'user_id' 	=> [[$s['user_id']],	\PDO::PARAM_INT],
+						'hash' 		=> [[$hash]],
+						'ip' 		=> [[$this->get_ip()]]
+					]);
 				}
-				return 'userAuthorized';
+				return ['success' => 'userAuthorized'];
 			}
 			else {
-				return 'badPassword';
+				Errors::setField('password', 'badPassword');
+				return Errors::getErrors();
 			}
 		}
 
-		public static final function logout() {
+		public function logout() {
+			if (!self::$isAuthorized) return false;
+
 			self::startSession();
+
+			$info = self::$userInfo;
+			$this->db->deleteOne('user_remember', "user_id={$info['id']} and ip='{$this->get_ip()}'");
+
 			$session_keys_in_cookies = ['uid', 'hash', 'user_id'];
 			$params = session_get_cookie_params();
 			foreach ($session_keys_in_cookies as $k => $v) {
@@ -102,6 +114,7 @@ namespace Core {
 				);
 			}
 			session_destroy();
+			return true;
 		}
 
 		private final static function confirmPassword($password, $hash)
@@ -117,12 +130,18 @@ namespace Core {
 
 		public final function setUserInfo($id) {
 			self::$isAuthorized = true;
-			self::$userInfo = $this->db->getOne('user u 
-				left join user_params p ON p.user_id = u.id', 'u.name, p.lang', "u.id = {$id}");
+			self::$userInfo = $this->db->getOne('users u left join transp_company tc ON tc.user_id=u.id', 'u.id, u.login, u.status_id, u.name, tc.id as transp_company_id', "u.id = {$id}");
 		}
 
 		public final static function getUserInfo() {
 			return self::$userInfo;
+		}
+
+		private function get_ip():string
+		{
+			$ip = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
+			$ip = Validator::replace(Validator::IP, $ip);
+			return $ip;
 		}
 	}
 }

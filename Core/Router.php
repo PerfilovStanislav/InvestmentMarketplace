@@ -3,7 +3,7 @@
 namespace Core {
     use Core\Database;
     use Core\Auth;
-    use Libraries\Cleaner as Valid;
+    use Helpers\{Validator,Arrays};
 
     class Router {
         private $defaultParams = 'Projects/show/1';
@@ -23,20 +23,20 @@ namespace Core {
             $this->db   = new Database();
             $this->auth = new Auth($this->db);
 
-            /*$this->getUri();
+            $this->getUri();
             $this->parseUri($this->uri);
             if(!$this->route()) {
                 $this->parseUri($this->defaultParams);
                 $this->route();
-            };*/
+            };
 
-            print_r(\Helpers\Locale::getLocale());
+//            print_r(\Helpers\Locale::getLocale());
         }
 
         private function getUri() {
             $this->uri = substr($_SERVER["REQUEST_URI"], strlen(DIR));
             $this->uri = preg_replace('/[^a-zA-Z0-9-_\/]/', '', $this->uri);
-            $this->uri = Valid::replace(Valid::URI, $this->uri);
+            $this->uri = Validator::replace(Validator::URI, $this->uri);
         }
 
         private function parseUri($uri) {

@@ -22,7 +22,7 @@ namespace Core {
 			$c = &$_COOKIE;
 
 			if (isset($s['user_id'])) {
-				$this->setUserInfo($s['user_id']);
+                self::setUserInfo($s['user_id']);
 			}
 			else if (isset($c['user_id']) && isset($c['hash'])) {
 				$user_id = Validator::replace(Validator::NUM,  $c['user_id']);
@@ -32,8 +32,7 @@ namespace Core {
 
 				if ($this->db->getOne('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}' and ip='{$this->get_ip()}'")) {
 					$s['user_id'] = $c['user_id'];
-					$s['hash'] = $hash;
-					$this->setUserInfo($s['user_id']);
+                    self::setUserInfo($s['user_id']);
 				}
 				else {
 					self::$isAuthorized = false;
@@ -65,7 +64,7 @@ namespace Core {
 			}
 
 			if (!$res) {
-				Errors::setField('login', 'NoUser');
+				Errors::setField('login', 'no_user');
 				return Errors::getErrors();
 			}
 
@@ -92,7 +91,7 @@ namespace Core {
 				return ['success' => 'userAuthorized'];
 			}
 			else {
-				Errors::setField('password', 'badPassword');
+				Errors::setField('password', 'bad_password');
 				return Errors::getErrors();
 			}
 		}
@@ -130,7 +129,9 @@ namespace Core {
 
 		public final function setUserInfo($id) {
 			self::$isAuthorized = true;
-			self::$userInfo = $this->db->getOne('users u left join transp_company tc ON tc.user_id=u.id', 'u.id, u.login, u.status_id, u.name, tc.id as transp_company_id', "u.id = {$id}");
+			self::$userInfo = $this->db->getOne('users u 
+			    left join user_params up ON up.user_id = u.id 
+			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang', "u.id = {$id}");
 		}
 
 		public final static function getUserInfo() {

@@ -27,7 +27,7 @@ namespace Helpers {
         }
 
         public static final function getErrors() {
-            return ['errors' => self::$errors];
+            return ['error' => self::$errors];
         }
 
     }

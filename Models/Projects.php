@@ -2,8 +2,10 @@
 
 namespace Models {
 
-	use Core\{Model, Database};
-	use Helpers\{Validator, Arrays};
+    use Core\{Auth, Model, Database};
+    use Helpers\{
+        Helper, Validator, Arrays
+    };
 
 	class Projects extends Model{
 
@@ -13,14 +15,13 @@ namespace Models {
 
 		public function addProject(Validator $post) {
 			$data = $post->getData();
-//			var_dump(Validator::join($post['ref_percent'], 1)); die();
 
 			// сохраняем информацию по проекту
-			$data = [
+			$in_data = [
 				'name' 					=> [[$data['projectname']]],
 				'admin' 				=> [[1],								\PDO::PARAM_INT],
-				'url' 					=> [[$data['website']]],
-				'description' 			=> [[$data['description']]],
+				'url' 					=> [[$data['url']]],
+				'ref_url' 				=> [[$data['ref_url']]],
 				'paymenttype' 			=> [[$data['paymenttype']],				\PDO::PARAM_INT],
 				'start_date'			=> [[$data['date']]],
 				'plan_percents'			=> [[Arrays::join($data['plan_percents'])]],
@@ -29,21 +30,29 @@ namespace Models {
 				'plan_start_deposit'	=> [[Arrays::join($data['plan_start_deposit'])]],
 				'plan_currency_type'	=> [[Arrays::join($data['plan_currency_type'])]],
 				'ref_percent'			=> [[Arrays::join($data['ref_percent'])]],
-				'languages'				=> [[Arrays::join($data['languages'])]],
 				'payments'				=> [[Arrays::join($data['payments'])]]
 			];
 
-			if ($this->db->insert('project', $data)) return $this->db->lastID('project');
-			else return null;
+			if (!$this->db->insert('project', $in_data)) return null;
+
+			$project_id = $this->db->lastID('project');
+
+
+            $this->db->insert('project_lang', [
+                'project_id' 		=> [array_fill(0, count($data['description']), $project_id), \PDO::PARAM_INT],
+                'lang_id' 			=> [array_keys($data['description']),              \PDO::PARAM_INT],
+                'description' 		=> [array_values($data['description'])],
+            ]);
+            return $project_id;
 		}
 
 		public function getData() {
 			return [
 				'payments'  => $this->db->select('payments', 'id, name', null, 'pos'),
 				'languages' => $this->db->select('languages', 'id, name, own_name, flag', 'pos is not null', 'pos'),
-				'hidden_languages' => $this->db->select('languages', 'id, name, own_name, flag', 'pos is null', 'name')
+				'hidden_languages' => $this->db->select('languages', 'id, name, own_name, flag', 'pos is null', 'name'),
+                'user_info' => Auth::getUserInfo()
 			];
 		}
 	}
-
-}?>
+}

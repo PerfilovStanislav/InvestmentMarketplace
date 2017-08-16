@@ -11,7 +11,7 @@ namespace Helpers {
 
     class Locale {
         private static $defaultLanguage = 'Ru';
-        private static $availableLanguages = ['en', 'ru', 'de'];
+        private static $availableLanguages = ['en', 'ru'];
         private static $language = null;
         private static $locale = null;
 

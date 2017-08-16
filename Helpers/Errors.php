@@ -7,19 +7,16 @@
  */
 
 namespace Helpers {
-    use \Core\Auth;
-    use Helpers\Locale;
 
     class Errors {
         private static $errors = [];
-        private static $locale;
 
         public static final function setField($field, $key) {
             self::$errors['fields'][$field] = Locale::getLocale()[$key];
         }
 
         public static final function getErrors() {
-            return ['errors' => self::$errors];
+            return ['error' => self::$errors];
         }
 
     }

@@ -574,7 +574,7 @@
   border: 1px solid #DDD;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
-/* expands container to the left of 
+/* expands container to the left of
  * button, default opens right */
 .sp-container.sp-left {
   top: 50px !important;
@@ -1131,7 +1131,7 @@
   top: 3px;
 }
 /*==================================================================
-  Google Map Block 
+  Google Map Block
 ===================================================================*/
 .admin-form .map-container {
   padding: 7px;
@@ -1382,7 +1382,7 @@
   background: #f2f2f2;
 }
 /*==================================================================
-  Progress Bars 
+  Progress Bars
 ===================================================================*/
 .admin-form .progress-section {
   display: none;
@@ -1418,7 +1418,7 @@
 /* This file creates and combines all of the AdminForm color skins.
  * To minimize file size, we recommended using only one or two skins.
  * However, we have provided this file as it proves useful for demonstrating
- * all of skins or for enabling true multi-skin support. 
+ * all of skins or for enabling true multi-skin support.
  */
 .admin-form .panel-primary > .panel-heading {
   border-top-color: #4ea5e0;

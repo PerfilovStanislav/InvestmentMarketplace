@@ -6,12 +6,13 @@ namespace Core {
     use Helpers\{Validator,Arrays};
 
     class Router {
-        private $defaultParams = 'Projects/show/1';
+        private $defaultParams = 'Projects/registration/1';
+        private $errorParams   = 'Errors/show/1';
 
         private $db;
         private $auth;
 
-        private $uri;
+        private $uri = null;
 
         private $controller;
         private $action;
@@ -23,30 +24,37 @@ namespace Core {
             $this->db   = new Database();
             $this->auth = new Auth($this->db);
 
-            $this->getUri();
-            $this->parseUri($this->uri);
-            if(!$this->route()) {
-                $this->parseUri($this->defaultParams);
-                $this->route();
-            };
-
-//            print_r(\Helpers\Locale::getLocale());
+            /*
+             * если не указан метод (зашли site.com), то показываем стартовую страницу
+             * иначе если не получилось найти указанный метод,
+             * то возвращаем ошибку
+             */
+            if (!$this->parseUri()->action) {
+                $this->route($this->defaultParams);
+            }
+            else if (!$this->parseUri()->route()) {
+                $this->route($this->route($this->errorParams));
+            }
         }
 
         private function getUri() {
             $this->uri = substr($_SERVER["REQUEST_URI"], strlen(DIR));
             $this->uri = preg_replace('/[^a-zA-Z0-9-_\/]/', '', $this->uri);
             $this->uri = Validator::replace(Validator::URI, $this->uri);
+            return $this;
         }
 
-        private function parseUri($uri) {
-            $uri                = explode('/', strtolower(trim($uri,'/')));
+        private function parseUri($strUri = null) {
+            $strUri             = $strUri ?? $this->uri ?? $this->getUri()->uri;
+            $uri                = explode('/', strtolower(trim($strUri,'/')));
             $this->controller   = count($uri) ? ucfirst(array_shift($uri)) : '';
-            $this->action       = count($uri) ? array_shift($uri) : '';
+            $this->action       = count($uri) ? array_shift($uri) : null;
             $this->params       = count($uri) ? $uri : [];
+            return $this;
         }
 
-        private function route() {
+        private function route($strUri = null) {
+            if ($strUri) $this->parseUri($strUri);
             $controllerClass = 'Controllers\\'.$this->controller;
 
             if(!file_exists($controllerClass.'.php')) { return false; }

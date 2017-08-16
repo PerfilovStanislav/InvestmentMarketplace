@@ -2,7 +2,9 @@
 
 namespace Core {
 
-	class View {
+    use Helpers\Locale;
+
+    class View {
 		const LAYOUT = 'Layout';
 		private $data = [];
 		private $template;
@@ -11,6 +13,7 @@ namespace Core {
 
 		function __construct( $template, $data = []) {
 			$this->isLayout = ($template == self::LAYOUT);
+            $data = array_merge($data, ['locale' => Locale::getLocale()]);
 			$this->set($data);
 			$this->template = 'Views/'.$template.'.php';
 

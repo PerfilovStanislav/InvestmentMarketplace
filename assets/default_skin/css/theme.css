@@ -11520,10 +11520,13 @@ a.thumbnail.active {
 .alert {
     color: #ffffff;
     font-size: 14px;
-    padding: 15px;
-    margin-bottom: 19px;
+    padding: 8px;
+    margin-bottom: 8px;
+    margin-left: -11px;
+    margin-right: -11px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 3px;
+    display: none;
 }
 .alert .close {
     color: #666666;
@@ -20128,16 +20131,16 @@ body.error-page #return-arrow {
     top: 75px;
     padding-top: 0;
 }
-body.error-page .error-title {
+.error-title {
     font-size: 140px;
     font-weight: 800;
     color: #3498db;
     text-align: center;
     padding-top: 60px;
     margin-bottom: 20px;
-    line-height: 120px;
+    line-height: 120px !important;
 }
-body.error-page .error-subtitle {
+.error-subtitle {
     font-weight: 400;
     text-align: center;
     font-size: 40px;
@@ -20169,7 +20172,7 @@ body.error-page .mid-content input {
     border-left: 5px solid #3498db;
     background: #FBFBFB;
 }
-body.error-page .error-page.alt .error-title {
+.error-title {
     padding-top: 110px;
 }
 body.error-page #search-widget {

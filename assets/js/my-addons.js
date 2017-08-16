@@ -1,25 +1,38 @@
 var GO = !0;
 var beforeSend = function(d) {GO = !1;};
 var complete = function(d) {GO = !0;};
+var error = function (xhr, ajaxOptions, thrownError) {
+    console.warn(2, xhr.status);
+    console.warn(3, thrownError);
+};
 var $userHead = $('#userHead');
 
-function onlyText(e) {$(this).val($(this).val().replace(/[^a-zа-я0-9ё \-]/gi,''));}
-function onlyEn(e) {$(this).val($(this).val().replace(/[^a-z0-9]/gi,''));}
-function onlyEmail(e) {$(this).val($(this).val().replace(/[^a-z0-9\-_.@]/gi,'').replace(/(^[@\._]*)|@(?=.*@)/gi,''));}
-function onlyNumber(e) {
-	var v = $(this).val().replace(/[^\d.]/gi,'');
-	$(this).val(v);
-	if ((v.indexOf('.') === 0 && v.length > 1 && parseFloat(v) > 0) || v.indexOf('.') !== v.lastIndexOf('.')) toFloat(e);
+function replace(e) {
+    $el = $(e.currentTarget);
+    var str = $el.val();
+    switch (e.handleObj.handler.name) {
+        case 'onlyUrl'      : filtered_str = str.replace(/[^a-zа-я0-9\-\.\/:\?\=\%]/gi,''); break;
+        case 'onlyNumber'   : filtered_str = str.replace(/[^\d.]/gi,''); break;
+        case 'onlyEmail'    : filtered_str = str.replace(/[^a-z0-9\-_.@]/gi,'').replace(/(^[@\._]*)|@(?=.*@)/gi,''); break;
+        case 'onlyEn'       : filtered_str = str.replace(/[^a-z0-9\-_.@]/gi,'').replace(/[^a-z0-9]/gi,''); break;
+        case 'onlyText'     : filtered_str = str.replace(/[^a-zа-я0-9ё \-]/gi,''); break;
+    }
+    if (str !== filtered_str) $el.val(filtered_str);
 }
+
 function toFloat(e) {var v = parseFloat(e.target.value); e.target.value = isNaN(v) ? '' : v;}
-function onlyUrl(e) {$(this).val($(this).val().replace(/[^a-zа-я0-9\-\.\/:\?\=\%]/gi,''));}
+function onlyUrl    (e) {replace(e);}
+function onlyNumber (e) {replace(e);}
+function onlyEmail  (e) {replace(e);}
+function onlyEn     (e) {replace(e);}
+function onlyText   (e) {replace(e);}
 
 var initTypes = function(el) {
-	$('.onlyText', el).on('input', onlyText);
-	$('.onlyEn', el).on('input', onlyEn);
-	$('.onlyEmail', el).on('input', onlyEmail);
-	$('.onlyNumber', el).on('input', onlyNumber).on('change', toFloat);
-	$('.onlyUrl', el).on('input', onlyUrl);
+	$('.onlyText'   , el).on('input', onlyText);
+	$('.onlyEn'     , el).on('input', onlyEn);
+	$('.onlyEmail'  , el).on('input', onlyEmail);
+	$('.onlyNumber' , el).on('input', onlyNumber).on('change', toFloat);
+	$('.onlyUrl'    , el).on('input', onlyUrl);
 };
 
 $('#logout').on('click', function() {
@@ -35,11 +48,6 @@ $('#logout').on('click', function() {
         });
     }
 });
-
-var reload = function() {
-    alert(this);
-    location.reload();
-};
 
 var UserAuthorization = function() {
     initTypes(this);
@@ -60,14 +68,19 @@ var UserAuthorization = function() {
         if (GO) {
             $.ajax({
                 type: 'POST',
+                dataType: 'json',
                 url: SITE+'Users/authorize',
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
-                    if (data === 'userAuthorized') location.reload();
+                    if (data['success'] === 'userAuthorized') location.reload();
+                    else if (data.error){
+                        var error = data.error.fields.login || data.error.fields.password || '';
+                        $('#alert-user-error er').text(error);
+                        $('#alert-user-error:not(:visible)').slideToggle('fast');
+                    }
                 },
                 complete: complete
-
             });
         }
         return false;
@@ -79,7 +92,7 @@ var UserRegistration = function() {
     initTypes(this);
 
     var form = $("#adduser_form");
-    $('input', form).on('focusin', function(e) {
+    $('input,textarea', form).on('focusin', function(e) {
         $(this).parent().removeClass('state-error');
     });
     form.submit(function(){
@@ -89,7 +102,7 @@ var UserRegistration = function() {
         if (a.length) {
             a.addClass('state-error');
             var v = a.eq(0).offset().top;
-            $('html').animate({ scrollTop: v - 75}, 250+Math.abs($('html').scrollTop()-v)*0.5, 'easeOutQuad');
+            $('html,body').animate({ scrollTop: v - 75}, 250+Math.abs($(document).scrollTop()-v)*0.5, 'easeOutQuad');
             return !1;
         }
 
@@ -101,11 +114,16 @@ var UserRegistration = function() {
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
-                    if (data.errors) {
-                        if (data.errors.fields) {
-                            $.each(data.errors.fields, function(k,v) {
+                    if (data.error) {
+                        if (data.error.fields) {
+                            $('.alert-dismissable', form).remove();
+                            $.each(data.error.fields, function(k,v) {
                                 $el = $('input[name='+k+']');
                                 $el.parent().addClass('state-error');
+
+                                $xxx = $('#alert-user-registration-error').clone();
+                                $xxx.find('er').text(data.error.fields[k]);
+                                $xxx.insertBefore($el.parent(), form).slideToggle('fast');
                             });
                         }
                     }
@@ -120,6 +138,8 @@ var UserRegistration = function() {
 
 
 var ProjectRegistration = function() {
+    var form = $("#addproject_form");
+
     initTypes(this);
     datePickerInit(this);
 	$('.copy', this).on('click', function() {
@@ -139,14 +159,49 @@ var ProjectRegistration = function() {
 	  $(this).parent().hide('slow').prev().show('slow');
 	});
 
+    $('.check', this).on('click', function() {
+        var data = {};
+        $(this).prev().find('input').each(function(i,el) {data[$(el).attr('name')] = $(el).val()});
 
-    var form = $("#addproject_form");
+        if (GO) {
+            $.ajax({
+                type: 'POST',
+                url: SITE+'Projects/check',
+                dataType: 'json',
+                data: data,
+                beforeSend: beforeSend,
+                success: function(data){
+                    console.log(data);
+                },
+                error: error,
+                complete: complete
+            });
+        }
+    });
+
 	$('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).on('focusin', function(e) {
 		$(this).parent().removeClass('state-error');
 	});
 	$('div.langs, div.payments').find(':checkbox').on('click', function(e) {
 		$('div.payments:has(:checked) label,div.langs:has(:checked) label', form).parent().removeClass('state-error');
 	});
+
+    $('div.langs :checkbox').on('click', function(e) {
+        if ($(this).is(":checked")) {
+            $el = $('.description:eq(0)').clone().show().attr('id', 'desc_'+$(this).val());
+            $('.description:last').after($el);
+            $el.find('textarea').attr('name', 'description[' + $(this).val()+']').attr('placeholder', $('.description:eq(0) textarea').attr('placeholder') +$(this).parent().find('txt').text());
+            $el.find('textarea').on('focusin', function(e) {
+                $(this).parent().removeClass('state-error');
+            });
+            $(this).next().next().clone().appendTo($el.find('.field-icon'));
+        }
+        else {
+            $('#desc_'+$(this).val()).remove();
+            console.log($(this).next().next().next())
+        }
+    });
+    $('div.langs :checkbox:checked').attr('checked', false).trigger('click');
 
 
 	form.submit(function(){
@@ -160,7 +215,7 @@ var ProjectRegistration = function() {
         if (a.length) {
             a.addClass('state-error');
             var v = a.eq(0).offset().top;
-            $('html').animate({ scrollTop: v - 75}, 250+Math.abs($('html').scrollTop()-v)*0.5, 'easeOutQuad');
+            $('html,body').animate({ scrollTop: v - 75}, 250+Math.abs($(document).scrollTop()-v)*0.5, 'easeOutQuad');
             return !1;
         }
         else if ($('#full_site_image').attr('src') === "") {
@@ -175,18 +230,28 @@ var ProjectRegistration = function() {
             $.ajax({
                type: 'POST',
                url: SITE+'Projects/add',
-               //dataType: 'json',
+               dataType: 'json',
                data: form.serialize(),
                beforeSend: beforeSend,
                success: function(data){
-                    console.log(data);
+                   // TODO SiteTour
+                   // Для неавторизованного пользователя выводить предупреждающее сообщение
+                   if (data.error) {
+                       if (data.error.fields) {
+                           console.log(33);
+                           $.each(data.error.fields, function(k,v) {
+                               $.each(v, function(a,b) {
+                                   $('input[name='+a+']').parent().addClass('state-error');
+                               });
+                           });
+                       }
+                   }
                },
                error: function (xhr, ajaxOptions, thrownError) {
                     console.warn(2, xhr.status);
                     console.warn(3, thrownError);
                },
                complete: complete
-
             });
         }
         return false;
@@ -431,7 +496,7 @@ var applyFunctions = function(key, value) {
     else {
         $('#' + key).fadeOut(300, 'linear', function () {
             $('#' + key).html(value);
-            $('html').scrollTop(0);
+            $('html,body').scrollTop(0);
             startAllNeedFunctions.apply($('#' + key));
             $('#' + key).fadeIn(500, 'linear');
         });
@@ -461,6 +526,11 @@ jQuery(document).ready(function() {
 
 	// ###   ###   ###		выполняем все необходимые скрипты для текущей страницы из массива
 	startAllNeedFunctions.apply(document);
+
+
+    $('.alert button').on('click', function() {
+        $(this).parent().slideToggle('fast');
+    });
 });
 
 function startAllNeedFunctions() {

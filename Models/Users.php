@@ -1,14 +1,8 @@
 <?php
 
 namespace Models {
-
-	use Core\Database;
-	use Core\Model;
-	use Libraries\File;
-	use Libraries\Cleaner as Valid;
-	use Libraries\Validator;
-	use \Core\Auth;
-	use \Helpers\Errors;
+	use Core\{Database, Model, Auth};
+    use Helpers\{Validator, Errors};
 
 	class Users extends Model{
 
@@ -16,20 +10,24 @@ namespace Models {
 			parent::__construct($db);
 		}
 
-		public function addUser(array $post) {
-			if ($user = $this->db->getOne('user', 'login, email', "login = '{$post['login']}' or email = '{$post['email']}'")) {
-				if ($user['login'] === $post['login']) Errors::setField('name', 'login_is_busy');
-				if ($user['email'] === $post['email']) Errors::setField('name', 'email_is_busy');
+		public function addUser(Validator $post) {
+		    $data = $post->getData();
+			if ($user = $this->db->getOne('users', 'login, email', "login = '{$data['login']}' or email = '{$data['email']}'")) {
+				if ($user['login'] === $data['login']) Errors::setField('login', 'login_is_busy');
+				if ($user['email'] === $data['email']) Errors::setField('email',  'email_is_busy');
 				return Errors::getErrors();
 			}
 
-			$post['password'] = Auth::hashPassword($post['password']);
-			$this->db->insert('user', $post);
-			if ($this->db->execute()) {
-//				$user_id = $this->db->lastID('user');
-				return ['success' => 'userAdded'];
+			if ($this->db->insert('users', [
+                    'login' 	=> [[$data['login']]],
+                    'name' 		=> [[$data['name']]],
+                    'email' 	=> [[$data['email']]],
+                    'password' 	=> [[Auth::hashPassword($data['password'])]]
+                ])) {
+				return ['success' => 'user_added'];
 			}
+			else return ['error' => ['user' => ['adding_error']]];
 		}
 	}
 
-}?>
+}

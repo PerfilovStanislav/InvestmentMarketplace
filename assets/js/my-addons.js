@@ -114,18 +114,16 @@ var UserRegistration = function() {
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
-                    if (data.error) {
-                        if (data.error.fields) {
-                            $('.alert-dismissable', form).remove();
-                            $.each(data.error.fields, function(k,v) {
-                                $el = $('input[name='+k+']');
-                                $el.parent().addClass('state-error');
+                    if (data.error && data.error.fields) {
+                        $('.alert-dismissable:visible', form).remove();
+                        $.each(data.error.fields, function(k,v) {
+                            $el = $('input[name='+k+']');
+                            $el.parent().addClass('state-error');
 
-                                $xxx = $('#alert-user-registration-error').clone();
-                                $xxx.find('er').text(data.error.fields[k]);
-                                $xxx.insertBefore($el.parent(), form).slideToggle('fast');
-                            });
-                        }
+                            $a = $('#alert').clone();
+                            $a.find('er').text(data.error.fields[k]);
+                            $a.insertBefore($el.parent(), form).slideToggle('fast');
+                        });
                     }
                 },
                 complete: complete
@@ -171,7 +169,18 @@ var ProjectRegistration = function() {
                 data: data,
                 beforeSend: beforeSend,
                 success: function(data){
-                    console.log(data);
+                    if (data.error && data.error.fields) {
+                        $('.alert-dismissable:visible', form).remove();
+                        $.each(data.error.fields, function(k,v) {
+                            $el = $('input[name='+k+']');
+                            $el.parent().addClass('state-error');
+
+                            $a = $('#alert').clone();
+                            $a.find('er').text(data.error.fields[k][0]);
+                            $el.parents('div.section:first', form).prepend($a);
+                            $a.slideToggle('fast');
+                        });
+                    }
                 },
                 error: error,
                 complete: complete
@@ -238,10 +247,15 @@ var ProjectRegistration = function() {
                    // Для неавторизованного пользователя выводить предупреждающее сообщение
                    if (data.error) {
                        if (data.error.fields) {
-                           console.log(33);
                            $.each(data.error.fields, function(k,v) {
                                $.each(v, function(a,b) {
-                                   $('input[name='+a+']').parent().addClass('state-error');
+                                   $el = $('input[name='+a+']');
+                                   $el.parent().addClass('state-error');
+
+                                   $a = $('#alert').clone();
+                                   $a.find('er').text(b);
+                                   $el.parents('div.section:first', form).prepend($a);
+                                   $a.slideToggle('fast');
                                });
                            });
                        }

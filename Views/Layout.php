@@ -1082,6 +1082,10 @@
     <!-- End: Right Sidebar -->
 
   </div>
+
+<div class="alert alert-warning alert-dismissable alert-border-left mrn mln" id="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <i class="fa fa-warning pr10"></i><er>{error}</er></div>
   <!-- End: Main -->
 
   

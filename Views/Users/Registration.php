@@ -20,11 +20,6 @@
             <form method="post" action="/" id="adduser_form">
 
                 <div class="panel-body bg-light">
-
-                    <div class="alert alert-warning alert-dismissable alert-border-left mr0 ml0" id="alert-user-registration-error">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <i class="fa fa-warning pr10"></i><er>{user_error}</er></div>
-
                     <div class="section row" >
                         <div class="section">
                             <label class="field prepend-icon">

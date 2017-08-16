@@ -52,6 +52,7 @@ namespace Helpers\Locales {
                 'email'             => 'Email',
                 'password'          => 'Password',
                 'repeat_password'   => 'Repeat password',
+                'auth_4_add_project'=> 'Only authorized users may add projects',
             ];
         }
     }

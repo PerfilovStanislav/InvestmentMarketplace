@@ -8,8 +8,11 @@
 
             <!-- Begin: Content Header -->
             <div class="content-header">
-              <h2> AdminForms makes <b class="text-primary">Validation</b> is easier than ever</h2>
-              <p class="lead">Use the Admin Forms you know and love to help build the perfect form.</p>
+                <?php if (!($this->user_info['id'] ?? null)): ?>
+                    <p class="lead text-danger"><?php echo $this->locale['auth_4_add_project'] ?> </p>
+                <?php endif; ?>
+
+              <h2> Добавление проекта в базу абсолютно <b class="text-primary">бесплатно</b></h2>
             </div>
 
             <!-- Validation Example -->

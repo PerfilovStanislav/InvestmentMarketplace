@@ -27,7 +27,7 @@ namespace Controllers {
 		public function add() {
 			$this->post
 				->checkAll('login', 4, 32, Validator::EN)
-				->checkAll('name', 4, 64, Validator::TEXT)
+				->checkAll('name', 4, 64, Validator::EN)
 				->checkAll('email', 8, 64, Validator::EMAIL)
 				->checkAll('password', 8, 64);
 

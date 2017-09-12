@@ -15,7 +15,7 @@ namespace Helpers {
         private static $language = null;
         private static $locale = null;
 
-        private static final function getLanguage() {
+        public static final function getLanguage() {
             if (self::$language !== null) return self::$language;
 
             // 1: from profile

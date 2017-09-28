@@ -10,8 +10,8 @@ namespace Helpers {
     use \Core\Auth;
 
     class Locale {
-        private static $defaultLanguage = 'Ru';
-        private static $availableLanguages = ['en', 'ru'];
+        private static $defaultLanguage = 'En';
+        private static $availableLanguages = ['en'];
         private static $language = null;
         private static $locale = null;
 
@@ -35,11 +35,11 @@ namespace Helpers {
             $langs = array_values(array_intersect(array_keys($langs), self::$availableLanguages));
             if (!empty($langs)) return (self::$language = ucfirst($langs[0]));
 
-            // 3: Default
-            return (self::$language = self::$defaultLanguage);
-
             // #TODO
-            // 4: language from ip .. Example module: TabgeoCountry
+            // 3: language from ip .. Example module: TabgeoCountry
+
+            // 4: Default
+            return (self::$language = self::$defaultLanguage);
         }
 
         public static final function getLocale() {

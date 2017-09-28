@@ -1,8 +1,10 @@
 <?php
 
 namespace Core {
-	use Helpers\Validator;
-	use \Helpers\Errors;
+
+    use Helpers\{
+        Helper, Validator, Errors, Locale
+    };
 
 	class Auth
 	{
@@ -22,7 +24,7 @@ namespace Core {
 			$c = &$_COOKIE;
 
 			if (isset($s['user_id'])) {
-                self::setUserInfo($s['user_id']);
+                self::setUserInfoFromBase($s['user_id']);
 			}
 			else if (isset($c['user_id']) && isset($c['hash'])) {
 				$user_id = Validator::replace(Validator::NUM,  $c['user_id']);
@@ -32,12 +34,17 @@ namespace Core {
 
 				if ($this->db->getOne('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}' and ip='{$this->get_ip()}'")) {
 					$s['user_id'] = $c['user_id'];
-                    self::setUserInfo($s['user_id']);
+                    self::setUserInfoFromBase($s['user_id']);
 				}
 				else {
 					self::$isAuthorized = false;
 				}
 			}
+
+			if (!self::$isAuthorized) {
+			    // если есть сессия, то берём из неё, иначе берём из функции и записываем в сессию и юзеринфо
+			    self::$userInfo['lang'] = ($_SESSION['lang'] = ($_SESSION['lang'] ?? false) ?: Locale::getLanguage());
+            }
 		}
 
 		public static final function isAuthorized() {
@@ -127,11 +134,12 @@ namespace Core {
 			return substr(crypt($password, self::PREFIX . $salt), 7);
 		}
 
-		public final function setUserInfo($id) {
+		public final function setUserInfoFromBase($id) {
 			self::$isAuthorized = true;
 			self::$userInfo = $this->db->getOne('users u 
 			    left join user_params up ON up.user_id = u.id 
 			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang', "u.id = {$id}");
+            var_dump(self::$userInfo); die();
 		}
 
 		public final static function getUserInfo() {

@@ -21,10 +21,9 @@ namespace Core {
 
 		protected final function view(array $params) {
 			if (!IS_AJAX) {
-                $lang = ['En', 'Ru', 'De', 'Fr', 'Gg'];
-                $rrr = array_splice($lang, 2, 2);
+                /*$rrr = array_splice($this->lang, 2, 2);
                 echo '<pre>'; print_r($rrr); die();
-			    var_dump(Locale::getLanguage()); die();
+			    var_dump(Locale::getLanguage()); die();*/
 				if (Auth::isAuthorized()) 	$params['userHead']	= ['Users/Head/Authorized', Auth::getUserInfo()];
 				else 						$params['userHead']	= ['Users/Head/NotAuthorized', []];
 			}

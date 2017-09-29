@@ -57,7 +57,7 @@ namespace Core {
             if ($strUri) $this->parseUri($strUri);
             $controllerClass = 'Controllers\\'.$this->controller;
 
-            if(!file_exists($controllerClass.'.php')) { return false; }
+            if(!file_exists(real_path($controllerClass).'.php')) { return false; }
             $controller = new $controllerClass($this->db, $this->auth);
 
             if (!is_callable([$controller, $this->action])) { return false; }

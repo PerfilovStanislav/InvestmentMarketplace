@@ -9,8 +9,11 @@ namespace {
     ini_set('display_startup_errors', 1);
 
     spl_autoload_extensions(".php");
+    function real_path($path) {
+        return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+    }
     spl_autoload_register(function ($className) {
-        require_once($className . ".php");
+        require_once(real_path($className) . ".php");
     });
 
     new Core\Router();

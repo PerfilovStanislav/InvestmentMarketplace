@@ -7,9 +7,9 @@ php_flag register_globals off
 php_value allow_url_fopen off
 php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source"
 
-<IfModule mod_reqtimeout.c>
-  RequestReadTimeout header=20-40,MinRate=500 body=20,MinRate=500
-</IfModule>
+# <IfModule mod_reqtimeout.c>
+#   RequestReadTimeout header=20-40,MinRate=500 body=20,MinRate=500
+# </IfModule>
 
 <FilesMatch ".(gif|jpg|jpeg|png|ico|css|gz|jsgz)$">
 Header set Cache-Control "max-age=2592000"

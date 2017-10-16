@@ -4,6 +4,7 @@ namespace Core {
     use Core\Database;
     use Core\Auth;
     use Helpers\{Validator,Arrays};
+    use Models\Main;
 
     class Router {
         private $defaultParams = 'Projects/registration/1';
@@ -18,11 +19,11 @@ namespace Core {
         private $action;
         private $params;
 
-        private $language;
-
         function __construct() {
             $this->db   = new Database();
+            new Main($this->db);
             $this->auth = new Auth($this->db);
+
 
             /*
              * если не указан метод (зашли site.com), то показываем стартовую страницу

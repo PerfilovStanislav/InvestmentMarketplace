@@ -4,14 +4,11 @@ namespace Models {
 
     use Core\{Model, Database};
 
-    class Main extends Model{
+    class Main{
+        public static $db;
 
         function __construct(Database $db) {
-            parent::__construct($db);
-        }
-
-        public function getLanguages(Validator $post) {
-
+            self::$db = $db;
         }
     }
 }

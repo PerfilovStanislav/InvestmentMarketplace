@@ -31,7 +31,6 @@ namespace Controllers {
 				->checkAll('email', 8, 64, Validator::EMAIL)
 				->checkAll('password', 8, 64);
 
-//			var_dump()
 			if (!$this->post->getErrors()) {
                 Helper::show_json($this->model->addUser($this->post));
 			}

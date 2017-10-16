@@ -46,6 +46,8 @@ namespace Helpers\Locales {
                 'yes'               => 'Yes',
                 'no'                => 'No',
                 'or'                => 'or',
+                'enter'             => 'Enter',
+                'registration'      => 'Registration',
                 'user_registration' => 'User\'s registration',
                 'login'             => 'Login',
                 'name'              => 'Name',

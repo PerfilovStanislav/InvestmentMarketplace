@@ -153,19 +153,6 @@ namespace Helpers {
 			}
 			return preg_replace($regex, '', $str);
 		}
-
-		/*
-		 * Собираем массив в строку
-		 */
-		public final static function join(array $arr, $type = null) {
-			if (empty($arr) || count($arr) < 1) return null;
-
-			$str = implode(',', $arr);
-			if ($str === '') return null;
-			return '{'.$str.'}';
-		}
-
-
 	}
 
 }?>

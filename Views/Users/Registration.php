@@ -59,7 +59,7 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="password" id="confirm_pass" class="gui-input" placeholder="<?= $this->locale['password']?>">
+                                <input type="password" id="confirm_pass" class="gui-input" placeholder="<?= $this->locale['repeat_password']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>

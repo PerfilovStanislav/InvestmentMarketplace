@@ -3,7 +3,7 @@
 namespace Core {
 
     use Helpers\{
-        Helper, Validator, Errors, Locale
+        Validator, Errors, Locale
     };
 
 	class Auth
@@ -40,11 +40,6 @@ namespace Core {
 					self::$isAuthorized = false;
 				}
 			}
-
-			if (!self::$isAuthorized) {
-			    // если есть сессия, то берём из неё, иначе берём из функции и записываем в сессию и юзеринфо
-			    self::$userInfo['lang'] = ($_SESSION['lang'] = ($_SESSION['lang'] ?? false) ?: Locale::getLanguage());
-            }
 		}
 
 		public static final function isAuthorized() {
@@ -95,7 +90,7 @@ namespace Core {
 						'ip' 		=> [[$this->get_ip()]]
 					]);
 				}
-				return ['success' => 'userAuthorized'];
+				return ['success' => 'user_authorized'];
 			}
 			else {
 				Errors::setField('password', 'bad_password');
@@ -139,7 +134,6 @@ namespace Core {
 			self::$userInfo = $this->db->getOne('users u 
 			    left join user_params up ON up.user_id = u.id 
 			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang', "u.id = {$id}");
-            var_dump(self::$userInfo); die();
 		}
 
 		public final static function getUserInfo() {

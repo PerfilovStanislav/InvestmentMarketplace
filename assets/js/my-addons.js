@@ -73,7 +73,7 @@ var UserAuthorization = function() {
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
-                    if (data['success'] === 'userAuthorized') location.reload();
+                    if (data['success'] === 'user_authorized') location.reload();
                     else if (data.error){
                         var error = data.error.fields.login || data.error.fields.password || '';
                         $('#alert-user-error er').text(error);

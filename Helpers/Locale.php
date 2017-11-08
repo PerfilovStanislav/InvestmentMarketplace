@@ -36,7 +36,7 @@ namespace Helpers {
                     arsort($langs, SORT_NUMERIC);
                 }
             }
-            $langs = array_values(array_intersect(array_keys($langs ?? ''), self::getAvailableLanguages()));
+            $langs = array_values(array_intersect(array_keys($langs ?? ''), (new Arrays(self::getAvailableLanguages()))->array_column('shortname')->getArray()));
             if (!empty($langs)) return (self::$language = $langs[0]);
 
             // #TODO
@@ -54,15 +54,9 @@ namespace Helpers {
             return (self::$locale = $locale::getLocale());
         }
 
-        /*public static final function getErrors() {
-            return ['errors' => self::$errors];
-        }*/
-
-        private static final function getAvailableLanguages() {
+        public static final function getAvailableLanguages() {
             if (self::$availableLanguages !== null) return self::$availableLanguages;
-
-            $langs = Main::$db->select('languages', 'shortname', "available = true");
-            return (self::$availableLanguages = (new Arrays($langs))->array_column('shortname')->getArray());
+            return Main::$db->select('languages', 'shortname', 'available = true');
         }
 
     }

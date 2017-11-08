@@ -32,7 +32,7 @@ namespace Core {
 				setcookie('user_id' , $user_id,	null,'/',DOMAIN,null,false);
 				setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
 
-				if ($this->db->getOne('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}' and ip='{$this->get_ip()}'")) {
+				if ($this->db->getRow('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}' and ip='{$this->get_ip()}'")) {
 					$s['user_id'] = $c['user_id'];
                     self::setUserInfoFromBase($s['user_id']);
 				}
@@ -58,11 +58,11 @@ namespace Core {
 		public function authorize($login, $password) {
 			if (strpos($login, '@') > 0) {
 				$email = Validator::replace(Validator::EMAIL, $login);
-				$res = $this->db->getOne('users', 'id, password', "email = '$email'");
+				$res = $this->db->getRow('users', 'id, password', "email = '$email'");
 			}
 			else {
 				$login = Validator::replace(Validator::EN, $login);
-				$res = $this->db->getOne('users', 'id, password', "login = '$login'");
+				$res = $this->db->getRow('users', 'id, password', "login = '$login'");
 			}
 
 			if (!$res) {
@@ -77,7 +77,7 @@ namespace Core {
 				setcookie('user_id', $res['id'],null,'/',DOMAIN,null,true);
 				$s['user_id'] = $res['id'];
 
-				$res = $this->db->getOne('user_remember', 'hash', "user_id = '{$res['id']}' and ip = '{$this->get_ip()}'");
+				$res = $this->db->getRow('user_remember', 'hash', "user_id = '{$res['id']}' and ip = '{$this->get_ip()}'");
 				if ($res) {
 					setcookie('hash', $res['hash'],null,'/',DOMAIN,null,true);
 				}
@@ -131,7 +131,7 @@ namespace Core {
 
 		public final function setUserInfoFromBase($id) {
 			self::$isAuthorized = true;
-			self::$userInfo = $this->db->getOne('users u 
+			self::$userInfo = $this->db->getRow('users u 
 			    left join user_params up ON up.user_id = u.id 
 			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang', "u.id = {$id}");
 		}

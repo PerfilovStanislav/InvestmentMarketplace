@@ -1,6 +1,10 @@
 var GO = !0;
 var beforeSend = function(d) {GO = !1;};
-var complete = function(d) {GO = !0;};
+var complete = function(d) {
+    if (d.responseJSON) $.each(d.responseJSON, applyFunctions);
+    console.log(d);
+    GO = !0;
+};
 var error = function (xhr, ajaxOptions, thrownError) {
     console.warn(2, xhr.status);
     console.warn(3, thrownError);
@@ -114,6 +118,9 @@ var UserRegistration = function() {
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
+                    // TODO
+                    // Вернуть VIEW об подтверждении авторизации
+
                     if (data.error && data.error.fields) {
                         $('.alert-dismissable:visible', form).remove();
                         $.each(data.error.fields, function(k,v) {
@@ -125,6 +132,9 @@ var UserRegistration = function() {
                             $a.insertBefore($el.parent(), form).slideToggle('fast');
                         });
                     }
+                    /*else {
+                        $.each(data, applyFunctions);
+                    }*/
                 },
                 complete: complete
 
@@ -486,14 +496,11 @@ var linkClick = function() {
             url:  url,
             type: "POST",
             data: {ajax:' 1'},
-            success: function(data){
-                refreshAllowed = true;
-                $.each(data, applyFunctions);
-            },
-            dataType: 'json'
+            dataType: 'json',
+            complete: complete
         });
 
-        if(url != window.location){
+        if(url != window.location.pathname){
             window.history.pushState(null, null, url);
         }
 
@@ -503,16 +510,21 @@ var linkClick = function() {
 
 
 var applyFunctions = function(key, value) {
+    /**
+     * #TODO
+     * Удалить или доделать
+    **/
     if (key === 'functions') {
-        console.log(value);
         value();
     }
     else {
-        $('#' + key).fadeOut(300, 'linear', function () {
-            $('#' + key).html(value);
-            $('html,body').scrollTop(0);
-            startAllNeedFunctions.apply($('#' + key));
-            $('#' + key).fadeIn(500, 'linear');
+        $('html,body').animate({ scrollTop: 0}, 250+Math.abs($(document).scrollTop()-131)*0.5, 'easeOutQuad', function() {
+            $('#' + key).fadeOut(300, 'easeOutQuad', function () {
+                //$('html,body').scrollTop(0);
+                $('#' + key).html(value);
+                startAllNeedFunctions.apply($('#' + key));
+                $('#' + key).fadeIn(500, 'linear');
+            });
         });
     }
 }
@@ -525,17 +537,13 @@ jQuery(document).ready(function() {
     Demo.init();
 
     $(window).bind('popstate', function(e) {
-        if (refreshAllowed) {
-            $.ajax({
-                url: location.pathname,
-                type: "POST",
-                data: {ajax:' 1'},
-                success: function(data) {
-                    $.each(data, applyFunctions);
-                },
-                dataType: 'json'
-            });
-        }
+        $.ajax({
+            url: location.pathname,
+            type: "POST",
+            data: {ajax:' 1'},
+            dataType: 'json',
+            complete: complete
+        });
     });
 
 	// ###   ###   ###		выполняем все необходимые скрипты для текущей страницы из массива
@@ -543,7 +551,7 @@ jQuery(document).ready(function() {
 
 
     $('.alert button').on('click', function() {
-        $(this).parent().slideToggle('fast');
+        $(this).parent().slideToggle('slow');
     });
 });
 

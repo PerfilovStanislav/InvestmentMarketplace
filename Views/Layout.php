@@ -348,7 +348,7 @@
             </a>
           </li>
           <li>
-            <a href="<?=SITE;?>Projects/registration">
+            <a href="<?=SITE;?>Projects/registration" class="ajax">
               <span class="fa fa-plus text-success"></span>
               <span class="sidebar-title">Add Project</span>
               <span class="sidebar-title-tray">

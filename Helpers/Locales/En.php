@@ -49,6 +49,7 @@ namespace Helpers\Locales {
                 'enter'             => 'Enter',
                 'registration'      => 'Registration',
                 'user_registration' => 'User\'s registration',
+                'user_registered'   => 'User is registered',
                 'login'             => 'Login',
                 'name'              => 'Name',
                 'email'             => 'Email',

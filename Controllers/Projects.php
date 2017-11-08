@@ -70,7 +70,7 @@ namespace Controllers {
             }
             else {
                 $url_str = $url[1] . '.' . $url[0];
-                if (($res = $this->db->getOne('project', 'id', "url = '{$url_str}'"))) {
+                if (($res = $this->db->getRow('project', 'id', "url = '{$url_str}'"))) {
                     $ret = ['error' => ['fields' => ['website' => ['exists', $res['id']]]]];
                 }
                 else $ret = ['success' => ['url' => $url_str, 'ref_url' => $ref_url]];

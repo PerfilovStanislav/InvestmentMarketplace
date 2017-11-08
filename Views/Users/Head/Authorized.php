@@ -6,6 +6,15 @@
         <!-- <span class="caret"></span> -->
       </button>
       <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+          <?php
+              foreach($this->payments as $k => $v) {
+                  if ($k%$div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
+                  echo '<label class="block mt15 option option-primary">
+                                            <input type="checkbox" name="payment[]" value="'.$v['id'].'">
+                                            <span class="checkbox"></span> <i class="pay pay-'.$v['name'].' mbn" ></i> '.$v['name'].'</label>';
+                  if (($k+1)%$div === 0  ||  $k === sizeof($this->payments)-1) echo '</div>';
+              }
+          ?>
         <li>
           <a href="javascript:void(0);">
             <span class="flag-xs flag-in mr10"></span> Hindu </a>

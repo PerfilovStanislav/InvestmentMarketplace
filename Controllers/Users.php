@@ -21,7 +21,8 @@ namespace Controllers {
         }
 
 		public function registration(array $page) {
-			$this->view(['content' 	=> ['Users/Registration', []]]);
+		    $view = Auth::isAuthorized() ? 'Registered' : 'Registration';
+			$this->view(['content' 	=> ['Users/'.$view, []]]);
 		}
 
 		public function add() {
@@ -31,10 +32,12 @@ namespace Controllers {
 				->checkAll('email', 8, 64, Validator::EMAIL)
 				->checkAll('password', 8, 64);
 
-			if (!$this->post->getErrors()) {
-                Helper::show_json($this->model->addUser($this->post));
+			if (!($errors = $this->post->getErrors())) {
+                $res = $this->model->addUser($this->post);
+                if ($res['success'] ?? false) $this->view(['content' 	=> ['Users/Registered', []]]);
+                else Helper::show_json($res);
 			}
-			else Helper::show_json(['error' => ['fields' => $this->post->getErrors()]]);
+			else Helper::show_json(['error' => ['fields' => $errors]]);
 		}
 
         public function authorize() {

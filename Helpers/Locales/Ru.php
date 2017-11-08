@@ -49,6 +49,7 @@ namespace Helpers\Locales {
                 'enter'             => 'Войти',
                 'registration'      => 'Регистрация',
                 'user_registration' => 'Регистрация пользователя',
+                'user_registered'   => 'Пользователь зарегистрирован',
                 'login'             => 'Логин',
                 'name'              => 'Имя',
                 'email'             => 'Email',

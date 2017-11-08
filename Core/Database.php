@@ -7,11 +7,11 @@ namespace Core {
 
 	class Database extends PDO{
 		private $db_dns;
-		private $db_name = 'HyipMonitoring';
+		private $db_name = 'sperfilov';
 		private $db_host = '127.0.0.1';
 		private $db_port = '5432';
-		private $db_user = 'postgres';
-		private $db_pass = 'itsall4you';
+		private $db_user = 'sperfilov';
+		private $db_pass = '';
 
 		public $queries = [];
 		public $errors = [];
@@ -161,9 +161,14 @@ namespace Core {
 			return $this->getResult($q);
 		}
 
-		public function getOne($table, $fields = '*', $where = null, $order = null) {
+		public function getRow($table, $fields = '*', $where = null, $order = null) {
 			$res = $this->select($table, $fields, $where, $order);
 			return $res[0] ?? null;
+		}
+
+		public function getOne($table, $field = 'id', $where = null, $order = null) {
+			$res = $this->getRow($table, $field, $where, $order);
+			return $res[0][$field] ?? null;
 		}
 
 		public function getOneDebug($table, $fields = '*', $where = null, $order = null) {

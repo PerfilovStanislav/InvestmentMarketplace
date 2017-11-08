@@ -2,8 +2,10 @@
 
 namespace Core {
 
-	use Core\View;
-    use Helpers\{Validator, Helper};
+    use Helpers\{
+        Locale, Validator, Helper
+    };
+    use Models\Main;
 
     class Controller {
 		protected   $auth;
@@ -19,16 +21,21 @@ namespace Core {
 
 		protected final function view(array $params) {
 			if (!IS_AJAX) {
-				if (Auth::isAuthorized()) 	$params['userHead']	= ['Users/Head/Authorized', Auth::getUserInfo()];
-				else 						$params['userHead']	= ['Users/Head/NotAuthorized', []];
+                $this->loadHead($params);
 			}
-			foreach($params as $k => &$v) {
+			foreach($params as &$v) {
 				$v = (new View($v[0], $v[1]))->get();
 			}
 
 			if (IS_AJAX) Helper::show_json($params);
             else echo (new View('Layout', $params))->get();
 		}
+
+		private final function loadHead(array &$params) {
+            $available_langs = Locale::getAvailableLanguages();
+            if (Auth::isAuthorized()) 	$params['userHead']	= ['Users/Head/Authorized', array_merge(Auth::getUserInfo(), ['langs' => $available_langs])];
+            else 						$params['userHead']	= ['Users/Head/NotAuthorized', $available_langs];
+        }
 	}
 
 }?>

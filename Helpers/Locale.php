@@ -8,21 +8,25 @@
 
 namespace Helpers {
     use \Core\Auth;
+    use Models\Main;
+    use Helpers\Arrays;
 
     class Locale {
-        private static $defaultLanguage = 'Ru';
-        private static $availableLanguages = ['en', 'ru'];
+        private static $defaultLanguage = 'en';
+        private static $availableLanguages = null;
         private static $language = null;
         private static $locale = null;
 
-        private static final function getLanguage() {
+        public static final function getLanguage() {
             if (self::$language !== null) return self::$language;
 
             // 1: from profile
-            $lang = Auth::getUserInfo()['lang'];
-            if (in_array($lang, self::$availableLanguages)) return (self::$language = ucfirst($lang));
+            if ($lang = (Auth::getUserInfo()['lang'] ?? false)) return (self::$language = ucfirst($lang));
 
-            // 2: from browser
+            // 2: from session
+            if ($_SESSION['lang'] ?? false) return (self::$language = $_SESSION['lang']);
+
+            // 3: from browser
             if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 $list = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']);
                 if (preg_match_all('/([a-z]{1,8}(?:-[a-z]{1,8})?)(?:;q=([0-9.]+))?/', $list, $list)) {
@@ -32,26 +36,28 @@ namespace Helpers {
                     arsort($langs, SORT_NUMERIC);
                 }
             }
-            $langs = array_values(array_intersect(array_keys($langs), self::$availableLanguages));
-            if (!empty($langs)) return (self::$language = ucfirst($langs[0]));
-
-            // 3: Default
-            return (self::$language = self::$defaultLanguage);
+            $langs = array_values(array_intersect(array_keys($langs ?? ''), (new Arrays(self::getAvailableLanguages()))->array_column('shortname')->getArray()));
+            if (!empty($langs)) return (self::$language = $langs[0]);
 
             // #TODO
             // 4: language from ip .. Example module: TabgeoCountry
+
+            // 5: Default
+
+            return ($_SESSION['lang'] = self::$language = self::$defaultLanguage);
         }
 
         public static final function getLocale() {
             if (self::$locale !== null) return self::$locale;
 
-            $locale = '\Helpers\Locales\\'.self::getLanguage();
+            $locale = '\Helpers\Locales\\'.ucfirst(self::getLanguage());
             return (self::$locale = $locale::getLocale());
         }
 
-        /*public static final function getErrors() {
-            return ['errors' => self::$errors];
-        }*/
+        public static final function getAvailableLanguages() {
+            if (self::$availableLanguages !== null) return self::$availableLanguages;
+            return Main::$db->select('languages', 'shortname', 'available = true');
+        }
 
     }
 

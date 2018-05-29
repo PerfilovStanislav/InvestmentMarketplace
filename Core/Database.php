@@ -7,19 +7,26 @@ namespace Core {
 
 	class Database extends PDO{
 		private $db_dns;
-		private $db_name = 'sperfilov';
+		private $db_name = 'HyipMonitoring';
 		private $db_host = '127.0.0.1';
 		private $db_port = '5432';
-		private $db_user = 'sperfilov';
-		private $db_pass = '';
+		private $db_user = 'postgres';
+		private $db_pass = 'itsall4you';
 
 		public $queries = [];
 		public $errors = [];
 
-		function __construct() {
+        private static $_instance = null;
+
+		function __construct($a=!1) {
+		    if (!$a) throw new \Exception(__CLASS__.__FUNCTION__);
 			$this->db_dns = "pgsql:dbname={$this->db_name};host={$this->db_host};port={$this->db_port}";
-			parent::__construct($this->db_dns, $this->db_user, $this->db_pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+            parent::__construct($this->db_dns, $this->db_user, $this->db_pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 		}
+
+        public final static function getInstance() {
+            return self::$_instance?:new self(!0);
+        }
 
 		public function insert($table, array $params) {
 			if (empty($params)) return null;

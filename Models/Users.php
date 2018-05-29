@@ -9,8 +9,8 @@ namespace Models {
 
 	class Users extends Model{
 
-		function __construct(Database $db) {
-			parent::__construct($db);
+		function __construct() {
+            parent::__construct();
 		}
 
 		public function addUser(Validator $post) {

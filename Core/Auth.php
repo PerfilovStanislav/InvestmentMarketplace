@@ -13,10 +13,12 @@ namespace Core {
 		private static $isAuthorized = null;
 		private static $sessionStarted = false;
 		private static $userInfo = null;
+        private static $_instance = null;
 
 
-		function __construct(Database $db) {
-			$this->db = $db;
+		function __construct($a=!1) {
+            if (!$a) throw new \Exception(__CLASS__.__FUNCTION__);
+			$this->db = Database::getInstance();
 
 			self::startSession();
 
@@ -41,6 +43,10 @@ namespace Core {
 				}
 			}
 		}
+
+        public final static function getInstance() {
+            return self::$_instance?:new self(!0);
+        }
 
 		public static final function isAuthorized() {
 			return self::$isAuthorized;

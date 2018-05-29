@@ -30,8 +30,9 @@ namespace Core {
 		}
 
 		public function __get($name) {
-			if (isset($this->data[$name])) return $this->data[$name];
-			return '';
+		    return $this->data[$name]??'';
+			/*if (isset($this->data[$name])) return $this->data[$name];
+			return '';*/
 		}
 
 		/*public function get() {

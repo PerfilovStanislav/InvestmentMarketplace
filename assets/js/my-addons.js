@@ -43,7 +43,7 @@ $('#logout').on('click', function() {
     if (GO) {
         $.ajax({
             type: 'POST',
-            url: SITE+'Users/logout',
+            url: '/Users/logout',
             beforeSend: beforeSend,
             success: function(data){
                 location.reload();
@@ -73,7 +73,7 @@ var UserAuthorization = function() {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                url: SITE+'Users/authorize',
+                url: '/Users/authorize',
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
@@ -113,7 +113,7 @@ var UserRegistration = function() {
         if (GO) {
             $.ajax({
                 type: 'POST',
-                url: SITE+'Users/add',
+                url: '/Users/add',
                 dataType: 'json',
                 data: form.serialize(),
                 beforeSend: beforeSend,
@@ -174,7 +174,7 @@ var ProjectRegistration = function() {
         if (GO) {
             $.ajax({
                 type: 'POST',
-                url: SITE+'Projects/check',
+                url: '/Hyip/check',
                 dataType: 'json',
                 data: data,
                 beforeSend: beforeSend,
@@ -248,7 +248,7 @@ var ProjectRegistration = function() {
             $('[name=thumb_data]').val( $('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
             $.ajax({
                type: 'POST',
-               url: SITE+'Projects/add',
+               url: '/Hyip/add',
                dataType: 'json',
                data: form.serialize(),
                beforeSend: beforeSend,

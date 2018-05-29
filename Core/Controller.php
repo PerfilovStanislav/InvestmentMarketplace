@@ -8,15 +8,11 @@ namespace Core {
     use Models\Main;
 
     class Controller {
-		protected   $auth;
 		public      $isAjax;
-        protected   $db;
         protected   $post;
 
-		function __construct(Database $db, Auth $auth) {
+		protected function __construct() {
 		    $this->post = new Validator($_POST ?? []);
-			$this->auth = $auth;
-			$this->db = $db;
 		}
 
 		protected final function view(array $params) {

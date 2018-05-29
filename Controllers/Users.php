@@ -7,9 +7,9 @@ namespace Controllers {
 
 	class Users extends Controller{
 		private $model;
-		function __construct(Database $db, Auth $auth) {
-			parent::__construct($db, $auth);
-			$this->model = new Model($db);
+		function __construct() {
+			parent::__construct();
+            $this->model = new Model();
 		}
 
         public function login(array $page) {
@@ -17,7 +17,7 @@ namespace Controllers {
         }
 
         public function logout(array $page) {
-            $this->auth->logout();
+            Auth::getInstance()->logout();
         }
 
 		public function registration(array $page) {
@@ -51,7 +51,7 @@ namespace Controllers {
                     return;
                 }
 
-                Helper::show_json($this->auth->authorize($_POST['login'], $_POST['password']));
+                Helper::show_json(Auth::getInstance()->authorize($_POST['login'], $_POST['password']));
             }
         }
 	}

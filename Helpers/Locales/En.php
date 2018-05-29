@@ -9,7 +9,7 @@
 namespace Helpers\Locales {
 
     class En {
-        public static function getLocale() {
+        public final static function getLocale() {
             return [
                 'login_is_busy'     => 'This login is already registered. Please enter another',
                 'email_is_busy'     => 'This email is already registered. Please enter another',
@@ -25,11 +25,15 @@ namespace Helpers\Locales {
                 'plans'             => 'Investment plans',
                 'profit'            => 'Profit',
                 'after'             => 'after',
-                'period'            => ['','minutes','hours','days','weeks','months','years'],
+                'period_name'       => ['','minutes','hours','days','weeks','months','years'],
+                'period'            => 'Period',
+                'deposit'           => 'Deposit',
+                'currency'          => ['dollar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'won', 'rupee'],
                 'from'              => 'from',
                 'remove'            => 'Remove',
                 'add_plan'          => 'Add plan',
                 'ref_program'       => 'Referral program',
+                'options'           => 'Options',
                 'level'             => 'level',
                 'add_level'         => 'Add level',
                 'payment_system'    => 'Payment systems',
@@ -56,7 +60,13 @@ namespace Helpers\Locales {
                 'password'          => 'Password',
                 'repeat_password'   => 'Repeat password',
                 'auth_4_add_project'=> 'Only authorized users may add projects',
+                'write_message'     => 'Write a message...',
+                'chat'              => 'Chat'
             ];
+        }
+
+        public final static function getPeriodName($i, $k) {
+            return ['minute','hour','day','week','month','year'][$i-1].($k>1?'s':'');
         }
     }
 }

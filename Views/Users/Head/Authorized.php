@@ -35,8 +35,8 @@
   </li>
   <li class="dropdown menu-merge">
     <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
-      <img src="<?=SITE;?>assets/img/avatars/1.jpg" alt="avatar" class="mw30 br64">
-      <span class="hidden-xs pl15"> <?= $this->name; ?> </span>
+      <img src="/assets/img/avatars/1.jpg" alt="avatar" class="mw30 br64">
+      <span class="hidden-xs pl15"> <?=$this->name; ?> </span>
       <span class="caret caret-tp hidden-xs"></span>
     </a>
     <ul class="dropdown-menu list-group dropdown-persist w150" role="menu">

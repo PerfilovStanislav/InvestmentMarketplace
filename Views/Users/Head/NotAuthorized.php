@@ -26,7 +26,7 @@
   </li>
   <li class="dropdown menu-merge">
     <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
-      <img src="<?=SITE;?>assets/img/avatars/1.jpg" alt="avatar" class="mw30 br64">
+      <img src="/assets/img/avatars/1.jpg" alt="avatar" class="mw30 br64">
       <span class="hidden-xs pl15"> Гость </span>
       <span class="caret caret-tp hidden-xs"></span>
     </a>
@@ -38,7 +38,7 @@
           <form method="post" action="/" id="authorizationuser_form">
           <div class="section row mb5">
             <label class="field prepend-icon">
-              <input placeholder="<?= $this->locale['login']?> <?= $this->locale['or']?> <?= $this->locale['email']?>" class="gui-input onlyEmail" name="login">
+              <input placeholder="<?=$this->locale['login']?> <?=$this->locale['or']?> <?=$this->locale['email']?>" class="gui-input onlyEmail" name="login">
               <input type="hidden" name="ajax" value="1">
               <label class="field-icon">
                 <i class="glyphicons glyphicons-user"></i>
@@ -62,17 +62,17 @@
           <div class="section row mt10 mb5">
               <label class="switch block switch-success">
                   <input name="remember" id="remember" type="checkbox">
-                  <label for="remember" data-on="<?= $this->locale['yes']?>" data-off="<?= $this->locale['no']?>"></label>
-                  <span><?= $this->locale['remember']?></span>
+                  <label for="remember" data-on="<?=$this->locale['yes']?>" data-off="<?=$this->locale['no']?>"></label>
+                  <span><?=$this->locale['remember']?></span>
               </label>
           </div>
 
           <div class="section row mbn">
             <div class="pull-left">
-              <button type="submit" class="btn  btn-gradient btn-info btn-block w125" ><?= $this->locale['enter']?></button></div>
+              <button type="submit" class="btn  btn-gradient btn-info btn-block w125" ><?=$this->locale['enter']?></button></div>
 
             <div class="pull-right">
-              <a href="<?=SITE;?>Users/registration" class="btn  btn-gradient btn-success btn-block w125" ><?= $this->locale['registration']?></a>
+              <a href="Users/registration" class="btn  btn-gradient btn-success btn-block w125" ><?=$this->locale['registration']?></a>
             </div>
           </div>
             </form>

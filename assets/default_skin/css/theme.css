@@ -5865,7 +5865,7 @@ form.hide-list-label .bootstrap-duallistbox-container label {
     overflow: hidden;
 }
 .panel-scroller .scroller-content {
-    padding: 12px;
+    padding: 5px;
 }
 .panel-scroller .scroller-bar {
     width: 14px;
@@ -8940,6 +8940,13 @@ th {
 .table tbody>tr:first-child>td {
     border-top: 0;
 }
+
+.table.justify tbody td:last-child {
+    text-align: right;
+}
+.table.justify tbody td:not(:last-child) {
+    text-align: center;
+}
 .table .table {
     margin-bottom: 0;
     background-color: #ffffff;
@@ -11494,11 +11501,11 @@ a.list-group-item.active>.badge,
 .thumbnail {
     display: block;
     padding: 4px;
-    margin-bottom: 19px;
+    /*margin-bottom: 19px;*/
     line-height: 1.49;
     background-color: #ffffff;
     border: 1px solid #dddddd;
-    border-radius: 4px;
+    /*border-radius: 4px;*/
     -webkit-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
@@ -11892,7 +11899,7 @@ a.list-group-item:focus {
     position: relative;
     margin-bottom: 27px;
     background-color: #ffffff;
-    border-radius: 3px;
+    /*border-radius: 3px;*/
 }
 .panel.panel-transparent {
     background: none;
@@ -13565,11 +13572,11 @@ ol.timeline-list li.timeline-item .timeline-date {
     border-right-color: #EEE;
     border-bottom-color: #EEE;
 }
-.chat-widget {}.chat-widget .media-left {
-    padding-right: 20px;
+.chat-widget .media-left {
+    padding-right: 12px;
 }
 .chat-widget .media-right {
-    padding-left: 20px;
+    padding-left: 12px;
 }
 .chat-widget .media-left img,
 .chat-widget .media-right img {
@@ -13578,6 +13585,7 @@ ol.timeline-list li.timeline-item .timeline-date {
     border: 2px solid #FFF;
 }
 .chat-widget .media-body {
+    width: 100%;
     position: relative;
     padding: 7px;
     border-radius: 2px;
@@ -14649,6 +14657,9 @@ ol.timeline-list li.timeline-item .timeline-date {
 .mh-100 {
     max-height: 100px !important;
 }
+.mh-179 {
+    max-height: 179px !important;
+}
 .mh-200 {
     max-height: 200px !important;
 }
@@ -14675,6 +14686,9 @@ ol.timeline-list li.timeline-item .timeline-date {
 }
 .mh-1000 {
     max-height: 1000px !important;
+}
+.mih-220 {
+    min-height: 220px !important;
 }
 .h-20 {
     height: 20px !important;
@@ -16044,6 +16058,9 @@ on tables, feel free to add more*/
 .w320 {
     width: 320px !important;
 }
+.w330 {
+    width: 330px !important;
+}
 .w350 {
     width: 350px !important;
 }
@@ -16089,8 +16106,14 @@ on tables, feel free to add more*/
 .mnw250 {
     min-width: 250px !important;
 }
+.mnw220 {
+    min-width: 220px !important;
+}
 .mnw300 {
     min-width: 300px !important;
+}
+.mnw400 {
+    min-width: 400px !important;
 }
 .mnw500 {
     min-width: 500px !important;
@@ -23626,4 +23649,42 @@ body.timeline-page .panel-clone {
         overflow: hidden !important;
         min-width: 0 !important;
     }
+}
+
+.fl {
+    float: left
+}
+
+.flex {
+    display: flex;
+}
+
+.chat-footer {
+    padding: 1px;
+    background-color: #F2F2F2;
+    border: 1px solid #e2e2e2;
+}
+
+.chat-footer .field-icon {
+    line-height: 36px !important;
+    height: 36px !important;
+    width: 36px !important;
+}
+
+.chat-footer input {
+    height: 36px !important;
+}
+
+.chat-widget .panel-body {
+    border-bottom: none;
+}
+
+.hyip .inforow {
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex: 1 0 10px;
+}
+
+.hyip .inforow > div {
+    padding: 5px;
 }

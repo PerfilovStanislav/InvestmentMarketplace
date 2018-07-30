@@ -9,13 +9,10 @@
     transition: all 0.5s ease-out;
     filter: grayscale(100%);
     opacity: 0.5;
+    cursor: pointer;
 }
 
-.chat-footer .gui-input:hover~.icon_send {
-    filter: grayscale(0%);
-    opacity: 1.0;
-}
-.chat-footer .gui-input:focus~.icon_send {
+.chat-footer .gui-input:hover~.icon_send,.chat-footer .gui-input:focus~.icon_send,.icon_send:hover {
     filter: grayscale(0%);
     opacity: 1.0;
 }

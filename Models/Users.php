@@ -31,7 +31,7 @@ namespace Models {
 
 			    // Add UserParams
 			    $user_id = $this->db->lastID('users', "login = '{$data['login']}'");
-                $lang_id = Main::$db->getOne('languages', 'id', "shortname = '".Locale::getLanguage()."'");
+                $lang_id = $this->db->getOne('languages', "shortname = '".Locale::getLanguage()."'");
 
                 $this->db->insert('user_params', [
                     'user_id' 	=> [[$user_id]],

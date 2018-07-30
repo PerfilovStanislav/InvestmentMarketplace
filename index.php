@@ -17,5 +17,3 @@ namespace {
 
     new Core\Router();
 }
-
-

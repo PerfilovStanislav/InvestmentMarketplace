@@ -22,8 +22,13 @@ class Helper
         }
     }
 
-    public final static function show_json(array $arr) {
+    public final static function json(array $arr) {
         self::header(self::JSON);
         echo json_encode($arr);
+        return !0 & die();
+    }
+
+    public final static function error(array $arr) {
+        return !self::json(['error' => $arr]);
     }
 }

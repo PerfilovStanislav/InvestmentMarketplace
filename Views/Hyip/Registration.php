@@ -31,7 +31,7 @@
                     <div class="section row" >
                       <div class="section">
                         <label class="field prepend-icon">
-                          <input name="projectname" class="gui-input onlyText" placeholder="<?=$this->locale['project_name']?>">
+                          <input name="projectname" class="gui-input onlyEn" placeholder="<?=$this->locale['project_name']?>">
                           <label class="field-icon">
                             <i class="fa fa-pencil"></i>
                           </label>
@@ -407,7 +407,3 @@
         </div>
         <!-- end: .tray-center -->
       <!-- End: Content -->
-
-	  <script>
-		scripts.addOne(['ProjectRegistration']);
-	  </script>

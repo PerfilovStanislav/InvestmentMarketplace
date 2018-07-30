@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>  
-	<script>
-      var refreshAllowed = false;
-      var scripts=['panelScrollerInit', 'linkClick'];
-      Array.prototype.addOne = function(el) {
-          o:for (var i in el) {
-              for(var j in this) {
-                  if (el[i] == this[j]) continue o;
-              }
-              this.push(el[i]);
-          }
-      };
-	</script>
-  <!-- Meta, title, CSS, favicons, etc. -->
+<head>
   <meta charset="utf-8">
   <title>AbsoluteAdmin - A Responsive Boostrap 3 Admin Dashboard</title>
   <meta name="keywords" content="Bootstrap 3 Admin Dashboard Template Theme" />
@@ -1082,9 +1069,13 @@
 
   </div>
 
+<!-- ADDITIONAL -->
 <div class="alert alert-warning alert-dismissable alert-border-left mrn mln" id="alert">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <i class="fa fa-warning pr10"></i><er>{error}</er></div>
+    <i class="fa fa-warning pr10"></i><er>{error}</er>
+</div>
+
+<?=(new \Core\View('Hyip/ChatMessage', []))->get()?>
   <!-- End: Main -->
 
   
@@ -1109,8 +1100,16 @@
   <script src="/assets/fullcalendar/lib/moment.min.js"></script>
   <script src="/assets/js/widgets.js"></script>
   <script src="/assets/cropper/cropper.js"></script>
-  
+
+  <script src="/assets/js/common.js"></script>
   <script src="/assets/js/my-addons.js"></script>
+
+<?php if($this->f): ?>
+    <script>
+    // запускаем необходимые функции
+    applyFunctions('f',  <?=json_encode($this->f)?>);
+    </script>
+<?php  endif; ?>
 
 </body>
 

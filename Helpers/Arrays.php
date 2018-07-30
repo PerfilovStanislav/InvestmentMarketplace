@@ -32,14 +32,17 @@ namespace Helpers {
         }
 
         public final function join() {
-            $this->arr = implode(',', $this->arr);
-            return $this;
+            return implode(',', $this->arr);
         }
 
-        public final function groupBy($column_name) {
+        public final function groupBy($cols) {
             $r = [];
             foreach ($this->arr as $a) {
-                $r[$a[$column_name]] = array_filter($a, function($k) use($column_name) {return $k!==$column_name;}, ARRAY_FILTER_USE_KEY );
+                $t = &$r;
+                foreach ($cols as $col) {
+                    $t = &$t[$a[$col]];
+                }
+                $t = array_filter($a, function($k) use($cols) {return !in_array($k, $cols);}, ARRAY_FILTER_USE_KEY );
             }
             $this->arr = $r;
             return $this;

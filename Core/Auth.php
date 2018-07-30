@@ -12,7 +12,10 @@ namespace Core {
 		CONST PREFIX = '$2a$08$';
 		private static $isAuthorized = null;
 		private static $sessionStarted = false;
-		private static $userInfo = null;
+		private static $userInfo = [
+		    'id'            => null,
+		    'session_id'    => -1
+        ];
         private static $_instance = null;
 
 
@@ -42,10 +45,26 @@ namespace Core {
 					self::$isAuthorized = false;
 				}
 			}
+
+			// поулчаем id сессии из базы
+            if (!($s['session_id']??null)) {
+                $session_id = $this->db->getOne('session', sprintf("uid = '%s'", session_id()));
+                if (!$session_id) {
+                    $data = [
+                        'uid' => [[session_id()]],
+                        'ip' => [[$this->get_ip()]],
+                    ];
+                    $this->db->insert('session', $data);
+                    $session_id = $this->db->getOne('session', sprintf("uid = '%s'", session_id()));
+                }
+                $s['session_id'] = $session_id;
+            }
+
+            self::$userInfo['session_id'] = $s['session_id'];
 		}
 
         public final static function getInstance() {
-            return self::$_instance?:new self(!0);
+            return self::$_instance?:(self::$_instance = new self(!0));
         }
 
 		public static final function isAuthorized() {
@@ -137,9 +156,9 @@ namespace Core {
 
 		public final function setUserInfoFromBase($id) {
 			self::$isAuthorized = true;
-			self::$userInfo = $this->db->getRow('users u 
+			self::$userInfo = array_merge(self::$userInfo, $this->db->getRow('users u 
 			    left join user_params up ON up.user_id = u.id 
-			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang', "u.id = {$id}");
+			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang, up.photo', "u.id = {$id}"));
 		}
 
 		public final static function getUserInfo() {

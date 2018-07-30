@@ -50,7 +50,7 @@
 
           <div class="section row mb5">
             <label class="field prepend-icon">
-              <input placeholder="Пароль" class="gui-input onlyText" name="password" type="password">
+              <input placeholder="Пароль" class="gui-input" name="password" type="password">
               <label class="field-icon">
                 <i class="fa fa-lock"></i>
               </label>
@@ -81,7 +81,3 @@
     </ul>
   </li>
 </ul>
-
-<script>
-  scripts.addOne(['UserAuthorization']);
-</script>

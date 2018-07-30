@@ -3,7 +3,7 @@
 namespace Controllers {
 	use Core\{Controller,Database,Auth};
 	use \Models\Users as Model;
-	use \Helpers\{Validator, Helper};
+	use \Helpers\{Validator, Helper, Locale};
 
 	class Users extends Controller{
 		private $model;
@@ -22,7 +22,12 @@ namespace Controllers {
 
 		public function registration(array $page) {
 		    $view = Auth::isAuthorized() ? 'Registered' : 'Registration';
-			$this->view(['content' 	=> ['Users/'.$view, []]]);
+
+
+            $return['c']['content'] = ['Users/'.$view, []];
+            $return['f']['content'] = ['UserRegistration'];
+
+            return IS_AJAX ? Helper::json($return) : $this->layout($return);
 		}
 
 		public function add() {
@@ -30,29 +35,41 @@ namespace Controllers {
 				->checkAll('login', 4, 32, Validator::EN)
 				->checkAll('name', 4, 64, Validator::EN)
 				->checkAll('email', 8, 64, Validator::EMAIL)
-				->checkAll('password', 8, 64);
+				->checkAll('password', 8, 64)->checkErrors();
 
-			if (!($errors = $this->post->getErrors())) {
-                $res = $this->model->addUser($this->post);
-                if ($res['success'] ?? false) $this->view(['content' 	=> ['Users/Registered', []]]);
-                else Helper::show_json($res);
-			}
-			else Helper::show_json(['error' => ['fields' => $errors]]);
+            $res = $this->model->addUser($this->post);
+            if ($res['success'] ?? false) $this->view(['content' 	=> ['Users/Registered', []]]);
+            else Helper::json($res);
 		}
 
         public function authorize() {
             if (isset($_POST['login']) && isset($_POST['password'])) {
-                $this->post->checkAll('password', 8, 64);
-                if (strpos($_POST['login'], '@') > 0) $this->post->checkAll('login', 8, 64, Validator::EMAIL);
-                else 								  $this->post->checkAll('login', 4, 32, Validator::EN);
+                $this->post->checkAll('password', 8, 64)->checkErrors();
+                if (strpos($_POST['login'], '@') > 0) $this->post->checkAll('login', 8, 64, Validator::EMAIL)->checkErrors();
+                else 								  $this->post->checkAll('login', 4, 32, Validator::EN)->checkErrors();
 
-                if ($this->post->getErrors()) {
-                    Helper::show_json(['error' => ['fields' => $this->post->getErrors()]]);
-                    return;
-                }
-
-                Helper::show_json(Auth::getInstance()->authorize($_POST['login'], $_POST['password']));
+                Helper::json(Auth::getInstance()->authorize($_POST['login'], $_POST['password']));
             }
+        }
+
+        private final function layout($return) {
+            $available_langs = Locale::getAvailableLanguages();
+            /*$return['c']['userHead'] = Auth::isAuthorized()
+                ? ['Users/Head/Authorized', array_merge(Auth::getUserInfo(), ['langs' => $available_langs])]
+                : ['Users/Head/NotAuthorized', ['langs' => $available_langs]];*/
+            $return['c']['userHead'] = ['Users/Head/NotAuthorized', []];
+            $return['f']['document'] = ['UserAuthorization'];
+
+            foreach($return['c'] as &$v) {
+                $v = (new View($v[0], $v[1]))->get();
+            }
+
+            if (isset($return['f'])) {
+                $return['c']['f'] = $return['f'];
+                unset ($return['f']);
+            }
+
+            echo (new View('Layout', $return['c']))->get();
         }
 	}
 }

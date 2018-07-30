@@ -5766,13 +5766,13 @@ form.hide-list-label .bootstrap-duallistbox-container label {
     overflow-y: hidden;
     position: relative;
 }
-.scroller,
+/*.scroller,
 .scroller * {
     -webkit-user-select: none!important;
     -moz-user-select: none!important;
     -ms-user-select: none!important;
     user-select: none!important;
-}
+}*/
 .scroller,
 .scroller-content,
 .scroller-bar,
@@ -13577,11 +13577,12 @@ ol.timeline-list li.timeline-item .timeline-date {
 }
 .chat-widget .media-right {
     padding-left: 12px;
+    order: 2;
 }
 .chat-widget .media-left img,
 .chat-widget .media-right img {
     max-width: 55px;
-    border-radius: 3px;
+    border-radius: 28px;
     border: 2px solid #FFF;
 }
 .chat-widget .media-body {
@@ -13591,7 +13592,10 @@ ol.timeline-list li.timeline-item .timeline-date {
     border-radius: 2px;
     border: 1px solid #e4e4e4;
     background-color: #fefefe;
-    font-weight: 400;
+    font-weight: 600;
+}
+.chat-widget .media-right+.media-body {
+    background-color: #DFC;
 }
 .chat-widget .media-body:before,
 .chat-widget .media-body:after {
@@ -23687,4 +23691,38 @@ body.timeline-page .panel-clone {
 
 .hyip .inforow > div {
     padding: 5px;
+}
+
+.icon_send {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAD8gAAA/IBpxuJTQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAALFSURBVFhHxVdNbxJRFGWtcWmiif9BE12D1ilECnXrxx+o0R+hC7vwN+hKizhlWmsZExoTN03aGFcGg5Y2pR1KeYSB4sLGYK3nDnfozDgDAx3kJCeTDPDu4Z5z37wJjR2SXElFFbEazVRnJHnrHN/+f7j+WvtxU64UYwu1QkwR+WhGPI4uli/wx6NHOLXzDCKOb6TLQspUCyQEHfmK61NJqV7mr40WkdTOJxIBtife7JUgwBDSEVN9Hpvfu8pfHQ0iL7VLkZSmswiiLs3vd2zpUqi4TvFPgkd4bjtuEWB0A7ZUJtkWk+hIDlm5F5HFGf5pcDDz4OAhhdRqi0FFrGNyHgQ+OZY82Jkuky1U/JuNNDkL4gkm5yIvcTq45MFKCqmGbnxHccoIiSBRm7i3gessJucKLzU8XPLg5Mne0RGhgSWQhFFOXmByrvFyw8EjDzYipDWElISY3SABFooccjLNSw4OzzzY+Qu27LIFW+AmaFpj5AQdWUFW7mNyzvLS/tAnD042EVKzsBvz8aX6+0S2cUeSG/6F+MiDlcbegbaTBdQRo/itt/X1ZPYgN622VIPZg+Wk2np0e1E/z2V6w08eHDxCSFtUfOpdY6Vb2MFktpnmEr0xhIA2BNBU5BPLzc8otgaedGAQAQNa8JsmAxbY/IcFBVjwBUU/GMX9WjBgCFu8U3oyvqR/RAjv+g6hzzE8npArDYyh5wQM9QDzuREdYSOisG2DLgKECjsSvKR/9PH9D3iIdtdRZBfsjpvJUx1i+vhew6634dZu3AvmGOfhu452F52HE4MojMdxMAdZF99/giXXdCtiDf4+DOxAEp7TrL63wTLaTa21FeZE04MluCOZxXcqLNDuwr/tHuGhlH0nAUVsobbCgRwuegG+z1Jha7s50cEcr/qB2m2+EcFb89UsmAOmH0xm9l/hH4/v5XS8CIX+AlCPoQly2n5cAAAAAElFTkSuQmCC');
+    background-repeat:round;
+    height: 24px;
+    width: 24px;
+    top: 6px;
+    right: 6px;
+    position: absolute;
+    transition: all 0.5s ease-out;
+    filter: grayscale(100%);
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.chat-footer .gui-input:hover~.icon_send,.chat-footer .gui-input:focus~.icon_send,.icon_send:hover {
+    filter: grayscale(0%);
+    opacity: 1.0;
+}
+
+:root {
+    --placeholder-color: #A0A0A0
+}
+
+::placeholder {
+    color: var(--placeholder-color);
+}
+:-ms-input-placeholder {
+    color:  var(--placeholder-color);
+ }
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color:  var(--placeholder-color);
 }

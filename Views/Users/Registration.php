@@ -88,7 +88,3 @@
     </div>
     <!-- end: .tray-center -->
     <!-- End: Content -->
-
-    <script>
-        scripts.addOne(['UserRegistration']);
-    </script>

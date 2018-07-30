@@ -25,7 +25,7 @@ namespace Core {
 		}
 
         public final static function getInstance() {
-            return self::$_instance?:new self(!0);
+            return self::$_instance?:(self::$_instance = new self(!0));
         }
 
 		public function insert($table, array $params) {
@@ -63,7 +63,7 @@ namespace Core {
 			else {
 				$this->rollBack();
 				Helper::header(Helper::E500);
-                Helper::show_json(['error' => $stmt->errorInfo()]);
+                Helper::json(['error' => $stmt->errorInfo()]);
 				return false;
 			}
 		}
@@ -94,7 +94,7 @@ namespace Core {
 			else {
 				$this->rollBack();
                 Helper::header(Helper::E500);
-                Helper::show_json(['error' => $stmt->errorInfo()]);
+                Helper::json(['error' => $stmt->errorInfo()]);
 				return false;
 			}
 		}
@@ -113,7 +113,7 @@ namespace Core {
 			else {
 				$this->rollBack();
                 Helper::header(Helper::E500);
-                Helper::show_json(['error' => $stmt->errorInfo()]);
+                Helper::json(['error' => $stmt->errorInfo()]);
 				return false;
 			}
 		}
@@ -169,19 +169,23 @@ namespace Core {
 		}
 
 		public function getRow($table, $fields = '*', $where = null, $order = null) {
-			$res = $this->select($table, $fields, $where, $order);
+			$res = $this->select($table, $fields, $where, $order, 1);
 			return $res[0] ?? null;
 		}
 
-		public function getOne($table, $field = 'id', $where = null, $order = null) {
+		public function getOne($table, $where = null, $field = 'id', $order = null) {
 			$res = $this->getRow($table, $field, $where, $order);
-			return $res[0][$field] ?? null;
+			return $res[$field] ?? null;
 		}
 
-		public function getOneDebug($table, $fields = '*', $where = null, $order = null) {
-			$res = $this->debugselect($table, $fields, $where, $order);
-			return $res[0] ?? null;
-		}
+        public function getOneDebug($table, $where = null, $field = 'id', $order = null) {
+            $res = $this->getRowDebug($table, $field, $where, $order);
+            return $res[0] ?? null;
+        }
+        public function getRowDebug($table, $fields = '*', $where = null, $order = null) {
+            $res = $this->debugselect($table, $fields, $where, $order, 1);
+            return $res[0] ?? null;
+        }
 
 		/*public function getByClass() {
 			$sth = $this->query("SELECT * FROM users");

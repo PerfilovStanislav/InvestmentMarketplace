@@ -63,7 +63,3 @@
     </div>
     <!-- end: .tray-center -->
     <!-- End: Content -->
-
-    <script>
-        scripts.addOne(['UsersAuthorization']);
-    </script>

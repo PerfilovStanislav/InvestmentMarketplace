@@ -9,14 +9,13 @@
 namespace Helpers {
     use \Core\Auth;
     use Core\Database;
-    use Models\Main;
 
     class Locale {
         private static $defaultLanguage = 'en';
         private static $availableLanguages = null;
         private static $language = null;
         private static $locale = null;
-        private static $periodNames = null;
+        private static $localeFile = null;
 
         public static final function getLanguage() {
             if (self::$language !== null) return self::$language;
@@ -48,20 +47,19 @@ namespace Helpers {
         }
 
         public static final function getLocale() {
-            if (self::$locale !== null) return self::$locale;
+            return self::$locale?:(self::$locale = self::getLocaleFile()::getLocale());
+        }
 
-            $locale = '\Helpers\Locales\\'.ucfirst(self::getLanguage());
-            return (self::$locale = $locale::getLocale());
+        public static final function getLocaleFile() {
+            return self::$localeFile?:(self::$localeFile = '\Helpers\Locales\\'.ucfirst(self::getLanguage()));
         }
 
         public static final function getPeriodName($i,$k) {
-            $locale = '\Helpers\Locales\\'.ucfirst(self::getLanguage());
-            return (self::$locale = $locale::getPeriodName($i,$k));
+            return self::getLocaleFile()::getPeriodName($i,$k);
         }
 
         public static final function getAvailableLanguages() {
-            if (self::$availableLanguages !== null) return self::$availableLanguages;
-            return Database::getInstance()->select('languages', 'shortname', 'available = true');
+            return self::$availableLanguages?:(self::$availableLanguages = Database::getInstance()->select('languages', 'shortname', 'available = true'));
         }
 
     }

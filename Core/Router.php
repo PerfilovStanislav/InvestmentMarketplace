@@ -51,19 +51,8 @@ namespace Core {
             if(!file_exists(real_path($controllerClass).'.php')) { return false; }
             $controller = new $controllerClass();
 
-            if (!is_callable([$controller, $this->action])) { return false; }
-            try {
-                $error = true;
-                call_user_func_array([$controller, $this->action], [$this->params]);
-                $error = false;
-            }
-            catch (\Exception $e) {
-                die($e);
-            } finally {
-               if ($error) echo '<pre>';
-            }
-
-            return true;
+            $this->params = array_map(function($a){return [$a[0] => $a[1]??null];}, array_chunk($this->params, 2));
+            call_user_func_array([$controller, $this->action], $this->params);
         }
     }
 

@@ -1,6 +1,6 @@
 <div class="hyip">
 <? foreach ($this->projects as $project_id => $project): ?>
-<div class="panel mb25 mt5">
+<div class="panel mb25 mt5" project_id="<?=$project_id?>">
     <div class="panel-heading">
         <span class="panel-title hidden-xs"> <?=$project['name']?></span>
         <ul class="nav panel-tabs-border panel-tabs">
@@ -90,94 +90,17 @@
                                 <span class="panel-title"><?=$this->locale['chat']?></span>
                             </div>
                             <div class="panel-body bg-light dark panel-scroller scroller-lg pn mh-179">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="widgets_panel.html#">
-                                            <img class="media-object" alt="64x64" src="/assets/img/avatars/2.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="media-status"></span>
-                                        <h5 class="media-heading">Courtney Faught
-                                            <small> - 12:30am</small>
-                                        </h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.ibero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.ibero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.ibero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.ibero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.ibero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-body">
-                                        <span class="media-status offline"></span>
-                                        <h5 class="media-heading">Joe Gibbons
-                                            <small> - 12:30am</small>
-                                        </h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.
-                                    </div>
-                                    <div class="media-right">
-                                        <a href="widgets_panel.html#">
-                                            <img class="media-object" alt="64x64" src="/assets/img/avatars/1.jpg">
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="widgets_panel.html#">
-                                            <img class="media-object" alt="64x64" src="/assets/img/avatars/2.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="media-status online"></span>
-                                        <h5 class="media-heading">Courtney Faught
-                                            <small> - 12:30am</small>
-                                        </h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.  qwrfedgbfh qwrfedgbfh qwrfedgbfh
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-body">
-                                        <span class="media-status offline"></span>
-                                        <h5 class="media-heading">Joe Gibbons
-                                            <small> - 12:30am</small>
-                                        </h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.
-                                    </div>
-                                    <div class="media-right">
-                                        <a href="widgets_panel.html#">
-                                            <img class="media-object" alt="64x64" src="/assets/img/avatars/1.jpg">
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="widgets_panel.html#">
-                                            <img class="media-object" alt="64x64" src="/assets/img/avatars/2.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="media-status online"></span>
-                                        <h5 class="media-heading">Courtney Faught
-                                            <small> - 12:30am</small>
-                                        </h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-body">
-                                        <span class="media-status offline"></span>
-                                        <h5 class="media-heading">Joe Gibbons
-                                            <small> - 12:30am</small>
-                                        </h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.
-                                    </div>
-                                    <div class="media-right">
-                                        <a href="widgets_panel.html#">
-                                            <img class="media-object" alt="64x64" src="/assets/img/avatars/1.jpg">
-                                        </a>
-                                    </div>
-                                </div>
+<!--                                --><?//=$this->chats[$project_id]??''?>
                             </div>
-                            <div class="admin-form chat-footer">
+                            <form class="admin-form chat-footer" chat_id="<?=$project_id?>" data-chat="<?=$project_id?>" autocomplete="off">
                                 <label class="field prepend-icon">
-                                    <input name="projectname" class="gui-input onlyText" placeholder="<?=$this->locale['write_message']?>">
+                                    <input name="message" class="gui-input" placeholder="<?=$this->locale['write_message']?>">
                                     <label class="field-icon">
                                         <i class="fa fa-pencil"></i>
                                     </label>
                                     <div class="icon_send"></i></div>
                                 </label>
-                            </div>
+                            </form>
                         </div>
                     </div>
 

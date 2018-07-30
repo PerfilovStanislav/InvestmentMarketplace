@@ -8,7 +8,6 @@ namespace Core {
     use Models\Main;
 
     class Controller {
-		public      $isAjax;
         protected   $post;
 
 		protected function __construct() {
@@ -23,15 +22,15 @@ namespace Core {
 				$v = (new View($v[0], $v[1]))->get();
 			}
 
-			if (IS_AJAX) Helper::show_json($params);
+			if (IS_AJAX) Helper::json($params);
             else echo (new View('Layout', $params))->get();
 		}
 
-		private final function loadHead(array &$params) {
+		/*private final function loadHead(array &$params) {
             $available_langs = Locale::getAvailableLanguages();
             if (Auth::isAuthorized()) 	$params['userHead']	= ['Users/Head/Authorized', array_merge(Auth::getUserInfo(), ['langs' => $available_langs])];
             else 						$params['userHead']	= ['Users/Head/NotAuthorized', $available_langs];
-        }
+        }*/
 	}
 
 }?>

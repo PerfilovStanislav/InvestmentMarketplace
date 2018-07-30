@@ -1,17 +1,11 @@
 <?php
 
 namespace Core {
-    use Core\Database;
-    use Core\Auth;
-    use Helpers\{Validator,Arrays};
-    use Models\Main;
+    use Helpers\{Validator};
 
     class Router {
-        private $defaultParams = 'Projects/registration/1';
+        private $defaultParams = 'Hyip/registration/1';
         private $errorParams   = 'Errors/show/1';
-
-        private $db;
-        private $auth;
 
         private $uri = null;
 
@@ -20,11 +14,7 @@ namespace Core {
         private $params;
 
         function __construct() {
-            $this->db   = new Database();
-            new Main($this->db);
-            $this->auth = new Auth($this->db);
-
-
+            Auth::getInstance();
             /*
              * если не указан метод (зашли site.com), то показываем стартовую страницу
              * иначе если не получилось найти указанный метод,
@@ -59,12 +49,10 @@ namespace Core {
             $controllerClass = 'Controllers\\'.$this->controller;
 
             if(!file_exists(real_path($controllerClass).'.php')) { return false; }
-            $controller = new $controllerClass($this->db, $this->auth);
+            $controller = new $controllerClass();
 
-            if (!is_callable([$controller, $this->action])) { return false; }
-            call_user_func_array([$controller, $this->action], [$this->params]);
-
-            return true;
+            $this->params = array_map(function($a){return [$a[0] => $a[1]??null];}, array_chunk($this->params, 2));
+            call_user_func_array([$controller, $this->action], $this->params);
         }
     }
 

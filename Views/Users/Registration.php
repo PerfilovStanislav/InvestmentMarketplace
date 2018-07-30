@@ -13,7 +13,7 @@
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
                     <span class="panel-title">
-                      <i class="fa fa-pencil-square"></i><?= $this->locale['user_registration']?>
+                      <i class="fa fa-pencil-square"></i><?=$this->locale['user_registration']?>
                     </span>
             </div>
 
@@ -23,7 +23,7 @@
                     <div class="section row" >
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="login" class="gui-input onlyEn" placeholder="<?= $this->locale['login']?>">
+                                <input name="login" class="gui-input onlyEn" placeholder="<?=$this->locale['login']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-user"></i>
                                 </label>
@@ -32,7 +32,7 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="name" class="gui-input onlyEn" placeholder="<?= $this->locale['name']?>">
+                                <input name="name" class="gui-input onlyEn" placeholder="<?=$this->locale['name']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-group"></i>
                                 </label>
@@ -41,7 +41,7 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="email" class="gui-input onlyEmail" placeholder="<?= $this->locale['email']?>">
+                                <input name="email" class="gui-input onlyEmail" placeholder="<?=$this->locale['email']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-envelope-o"></i>
                                 </label>
@@ -50,7 +50,7 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="password" name="password" class="gui-input" placeholder="<?= $this->locale['password']?>">
+                                <input type="password" name="password" class="gui-input" placeholder="<?=$this->locale['password']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
@@ -59,7 +59,7 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="password" id="confirm_pass" class="gui-input" placeholder="<?= $this->locale['repeat_password']?>">
+                                <input type="password" id="confirm_pass" class="gui-input" placeholder="<?=$this->locale['repeat_password']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
@@ -88,7 +88,3 @@
     </div>
     <!-- end: .tray-center -->
     <!-- End: Content -->
-
-    <script>
-        scripts.addOne(['UserRegistration']);
-    </script>

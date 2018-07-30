@@ -1,18 +1,105 @@
-var GO = !0;
-var beforeSend = function(d) {GO = !1;};
-var complete = function(d) {
-    if (d.responseJSON) $.each(d.responseJSON, applyFunctions);
-    console.log(d);
-    GO = !0;
-};
-var error = function (xhr, ajaxOptions, thrownError) {
-    console.warn(2, xhr.status);
-    console.warn(3, thrownError);
-};
+"use strict";
+var STORAGE = {chat: {}};
+// устанавливаем параметры для всех аякс запросов
+$.ajaxSetup({
+    type: "POST",
+    data: {ajax:' 1'},
+    dataType: 'json',
+    beforeSend: function(d, status, xhr) {
+        // console.log('beforeSend', d, status, xhr);
+        /*count_of_requests++;
+        if (count_of_requests === 1) $("#loader").animate({opacity: 1}, 250, "easeOutBack", function() {});*/
+    },
+    complete: function(d,status,xhr) {
+        // console.log('complete', d, status, xhr);
+        /*if (count_of_requests === 1) $("#loader").animate({opacity: 0}, 250, "easeOutBack", function() {});
+        count_of_requests--;*/
+        if (d.responseJSON) $.each(d.responseJSON, applyFunctions);
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        console.warn(1, xhr);
+        console.warn(2, ajaxOptions);
+        console.warn(3, thrownError);
+    }/*,
+    success: function(result,status,xhr) {
+        console.log('success', result,status,xhr);
+    }*/
+});
+
+// вызов массив функций для определённой области , элимента, формы
+var callFunctions = function() {
+    for (var i in arguments) {
+        if (typeof(arguments[i]) == 'string') window[arguments[i]].apply(this);      // вызов функции без параметров
+        else window[arguments[i][0]].apply(this, [arguments[i][1]]);                 // вызов функции с параметрами
+    }
+}
+
+// вызывается после каждого ответа с сервера
+// умеет: отрисовывать вьюшки, вызывать методы, показывать ошибки и удачные запросы
+// Порядок обработки находится в system/helpers/json_helper/default_sort
+var applyFunctions = function(key, value) {
+    // console.log('applyFunctions', key, value);
+    if (key === 'c') {
+        //отрисовываем вьюшки
+        $.each(value, function(k,v) {
+            $('#' + k).html(v);
+        });
+    }
+    else if (key === 'data') {        // data обрабатывается самими функциями
+        return true;
+    }
+    // всё хорошо  либо просто уведомление
+    /*else if ($.inArray(key, ['success', 'warning', 'info']) != -1) {       // в верхнем правом углу выскакивает зелёный/оранжевый/голубой alert
+        var titles = {
+            success: 'Успешно!',
+            warning: 'Информация',
+            info:    'Информация',
+        }
+        $.each(value, function(k,v) {
+            if (typeof(v) == 'string') v = [v];
+            $.each(v, function(title,text) {
+                toastr[key](text, titles[key], {showMethod: 'slideDown'});
+            });
+        });
+    }
+    // всё плохо
+    else if (key === 'error') {
+        $.each(value, function(k,v) {
+            if ($('#' + k).length) {    // если существует такой раздел, то для него показываем ошибки
+                $.each(v, function(a,b) {
+                    $('input[name='+a+']', $('#' + k)).addClass('is-invalid').next('div[role=show_error]').text(b);
+                    $('input[name='+a+']', $('#' + k)).parent().addClass('has-danger');
+                });
+            }
+            else {                      // иначе в верхнем правом углу выскакивает красный alert
+                if (typeof(v) == 'string') v = [v];
+                $.each(v, function(title,text) {
+                    toastr["error"](text, 'Ошибка!', {showMethod: 'slideDown'}); // http://codeseven.github.io/toastr/demo.html
+                });
+                console.error(v);
+            }
+        });
+    }*/
+    else if (key === 'f') {
+        //вызов методов в необходимой области видимости
+        $.each(value, function(scope,functions) {
+            $.each(functions, function(a, b) {
+                if (parseInt(a).toString() == a) { // if is number
+                    a = b;
+                    b = null;
+                }
+                window[a].apply(scope === 'document' ? document : $('#'+scope), [b]);
+            });
+        });
+    }
+}
+
+
+
 var $userHead = $('#userHead');
 
 function replace(e) {
-    $el = $(e.currentTarget);
+    var filtered_str, $el = $(e.currentTarget);
     var str = $el.val();
     switch (e.handleObj.handler.name) {
         case 'onlyUrl'      : filtered_str = str.replace(/[^a-zа-я0-9\-\.\/:\?\=\%]/gi,''); break;
@@ -42,13 +129,10 @@ var initTypes = function(el) {
 $('#logout').on('click', function() {
     if (GO) {
         $.ajax({
-            type: 'POST',
-            url: SITE+'Users/logout',
-            beforeSend: beforeSend,
+            url: '/Users/logout',
             success: function(data){
                 location.reload();
-            },
-            complete: complete
+            }
         });
     }
 });
@@ -61,7 +145,7 @@ var UserAuthorization = function() {
         $(this).parent().removeClass('state-error');
     });
     form.submit(function(){
-        $f = $(this);
+        var $f = $(this);
         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
 
         if (a.length) {
@@ -73,7 +157,7 @@ var UserAuthorization = function() {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                url: SITE+'Users/authorize',
+                url: '/Users/authorize',
                 data: form.serialize(),
                 beforeSend: beforeSend,
                 success: function(data){
@@ -112,11 +196,8 @@ var UserRegistration = function() {
 
         if (GO) {
             $.ajax({
-                type: 'POST',
-                url: SITE+'Users/add',
-                dataType: 'json',
+                url: '/Users/add',
                 data: form.serialize(),
-                beforeSend: beforeSend,
                 success: function(data){
                     // TODO
                     // Вернуть VIEW об подтверждении авторизации
@@ -124,10 +205,10 @@ var UserRegistration = function() {
                     if (data.error && data.error.fields) {
                         $('.alert-dismissable:visible', form).remove();
                         $.each(data.error.fields, function(k,v) {
-                            $el = $('input[name='+k+']');
+                            var $el = $('input[name='+k+']');
                             $el.parent().addClass('state-error');
 
-                            $a = $('#alert').clone();
+                            var $a = $('#alert').clone();
                             $a.find('er').text(data.error.fields[k]);
                             $a.insertBefore($el.parent(), form).slideToggle('fast');
                         });
@@ -135,8 +216,7 @@ var UserRegistration = function() {
                     /*else {
                         $.each(data, applyFunctions);
                     }*/
-                },
-                complete: complete
+                }
 
             });
         }
@@ -145,7 +225,7 @@ var UserRegistration = function() {
 };
 
 
-var ProjectRegistration = function() {
+var ProjectRegistration = function(a) {
     var form = $("#addproject_form");
 
     initTypes(this);
@@ -173,27 +253,22 @@ var ProjectRegistration = function() {
 
         if (GO) {
             $.ajax({
-                type: 'POST',
-                url: SITE+'Projects/check',
-                dataType: 'json',
+                url: '/Hyip/check',
                 data: data,
-                beforeSend: beforeSend,
                 success: function(data){
                     if (data.error && data.error.fields) {
                         $('.alert-dismissable:visible', form).remove();
                         $.each(data.error.fields, function(k,v) {
-                            $el = $('input[name='+k+']');
+                            var $el = $('input[name='+k+']');
                             $el.parent().addClass('state-error');
 
-                            $a = $('#alert').clone();
+                            var $a = $('#alert').clone();
                             $a.find('er').text(data.error.fields[k][0]);
                             $el.parents('div.section:first', form).prepend($a);
                             $a.slideToggle('fast');
                         });
                     }
-                },
-                error: error,
-                complete: complete
+                }
             });
         }
     });
@@ -207,9 +282,10 @@ var ProjectRegistration = function() {
 
     $('div.langs :checkbox').on('click', function(e) {
         if ($(this).is(":checked")) {
-            $el = $('.description:eq(0)').clone().show().attr('id', 'desc_'+$(this).val());
+            var $el = $('.description:eq(0)').clone().show().attr('id', 'desc_'+$(this).val());
             $('.description:last').after($el);
-            $el.find('textarea').attr('name', 'description[' + $(this).val()+']').attr('placeholder', $('.description:eq(0) textarea').attr('placeholder') +$(this).parent().find('txt').text());
+            $el.find('textarea').attr('name', 'description[' + $(this).val()+']')
+                .attr('placeholder', $('.description:eq(0) textarea').attr('placeholder') +$(this).parent().find('txt').text());
             $el.find('textarea').on('focusin', function(e) {
                 $(this).parent().removeClass('state-error');
             });
@@ -217,7 +293,6 @@ var ProjectRegistration = function() {
         }
         else {
             $('#desc_'+$(this).val()).remove();
-            console.log($(this).next().next().next())
         }
     });
     $('div.langs :checkbox:checked').attr('checked', false).trigger('click');
@@ -230,7 +305,7 @@ var ProjectRegistration = function() {
         if ($('#full_site_image').attr('src') === "") {
             $('label[for=inputImage]').addClass('btn-danger').removeClass('btn-primary');
             a = a.add('label[for=inputImage]');
-        };
+        }
         if (a.length) {
             a.addClass('state-error');
             var v = a.eq(0).offset().top;
@@ -247,11 +322,8 @@ var ProjectRegistration = function() {
             $('[name=screen_data]').val( $('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.8) );
             $('[name=thumb_data]').val( $('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
             $.ajax({
-               type: 'POST',
-               url: SITE+'Projects/add',
-               dataType: 'json',
+               url: '/Hyip/add',
                data: form.serialize(),
-               beforeSend: beforeSend,
                success: function(data){
                    // TODO SiteTour
                    // Для неавторизованного пользователя выводить предупреждающее сообщение
@@ -259,10 +331,10 @@ var ProjectRegistration = function() {
                        if (data.error.fields) {
                            $.each(data.error.fields, function(k,v) {
                                $.each(v, function(a,b) {
-                                   $el = $('input[name='+a+']');
+                                   var $el = $('input[name='+a+']');
                                    $el.parent().addClass('state-error');
 
-                                   $a = $('#alert').clone();
+                                   var $a = $('#alert').clone();
                                    $a.find('er').text(b);
                                    $el.parents('div.section:first', form).prepend($a);
                                    $a.slideToggle('fast');
@@ -270,12 +342,7 @@ var ProjectRegistration = function() {
                            });
                        }
                    }
-               },
-               error: function (xhr, ajaxOptions, thrownError) {
-                    console.warn(2, xhr.status);
-                    console.warn(3, thrownError);
-               },
-               complete: complete
+               }
             });
         }
         return false;
@@ -375,7 +442,6 @@ function reCountN(el) {
 	$(el).find('n').each(function(i) {$(this).text(i+1)});
 }
 
-
 /* ------------------------------------------------------------ IMAGE SHOW ------------------------------------------ */
 var imgClickInit = function() {
     $('.mix img').magnificPopup({
@@ -394,7 +460,7 @@ var imgClickInit = function() {
         },
         elementParse: function(item) {
           item.src = item.el.attr('src');
-        },
+        }
       },
       overflowY: 'scroll',
       removalDelay: 200,
@@ -403,54 +469,17 @@ var imgClickInit = function() {
 };
 
 
-/* #TODO УДАЛИТЬ */
-/*var tagsInit = function() {
-	// Init tagsinput plugin
-    $("input#tagsinput").tagsinput({
-      tagClass: function(item) {
-        return 'label label-default';
-      },
-	  allowDuplicates: true,
-	  confirmKeys: [13, 44, 32]
-    });
-}*/
-
  /* ------------------------------------------------------------ SCROLLERS ------------------------------------------ */
  var panelScrollerInit = function() {
-	var panelScroller = $(this).find('.panel-scroller');
-	if (panelScroller.length) {
-		 panelScroller.each(function(i, e) {
-			var This = $(e);
-			var Delay = This.data('scroller-delay');
-			var Margin = 5;
-			if (This.hasClass('scroller-thick')) {
-			   Margin = 0;
-			}
-			var DropMenuParent = This.parents('.dropdown-menu');
-			if (DropMenuParent.length) {
-			   DropMenuParent.prev('.dropdown-toggle').on('click', function() {
-				  setTimeout(function() {
-					 This.scroller();
-					 $('.navbar').scrollLock('on', 'div');
-				  }, 50);
-			   });
-			   return;
-			}
-			if (Delay) {
-			   var Timer = setTimeout(function() {
-				  This.scroller({
-					 trackMargin: Margin,
-				  });
-				  $('#content').scrollLock('on', 'div');
-			   }, Delay);
-			} else {
-			   This.scroller({
-				  trackMargin: Margin,
-			   });
-			   $('#content').scrollLock('on', 'div');
-			}
-		 });
-	}
+    var panelScroller = $(this).find('.panel-scroller');
+    if (panelScroller.length) {
+         panelScroller.each(function(i, e) {
+             $(e).scroller({
+                    trackMargin: 2,
+                    handleSize: 20
+             });
+         });
+    }
 }
 
 /* ------------------------------------------------------------ SCROLL CHANGE --------------------------------------- */
@@ -508,46 +537,79 @@ var linkClick = function() {
     });
 }
 
-
-var applyFunctions = function(key, value) {
-    /**
-     * #TODO
-     * Удалить или доделать
-    **/
-    if (key === 'functions') {
-        value();
-    }
-    else {
-        $('html,body').animate({ scrollTop: 0}, 250+Math.abs($(document).scrollTop()-131)*0.5, 'easeOutQuad', function() {
-            $('#' + key).fadeOut(300, 'easeOutQuad', function () {
-                //$('html,body').scrollTop(0);
-                $('#' + key).html(value);
-                startAllNeedFunctions.apply($('#' + key));
-                $('#' + key).fadeIn(500, 'linear');
-            });
+var initChat = function() {
+    $("form[chat_id]").submit(function(e){
+        if (_.contains([1,2,4,5], STORAGE.status)) {
+            clearTimeout(STORAGE.chat_timer);
+            STORAGE.status = 1;
+        }
+        else if (STORAGE.status == 3) {
+            STORAGE.status = 6;
+        }
+        $.ajax({
+            url: '/Hyip/sendMessage/project/'+$(this).attr('chat_id'),
+            data: {message: $(this).find('[name=message]').val()}
         });
+        $(this).find('[name=message]').val('');
+        return false;
+    });
+};
+
+var startChatCheck = function() {
+    if (STORAGE.status != 6) {
+        STORAGE.status = 2; // подготовка к отправке
+        STORAGE.chat_timer = setTimeout(checkChats, 3000);
     }
-}
+};
 
-
+var checkChats = function() {
+    var data = $('form[chat_id]').map(function(i,el){
+        var id = $(el).attr('chat_id');
+        return {id: id, max_id:(_.isEmpty(STORAGE.chat[id])?0:STORAGE.chat[id].max)}
+    }).get();
+    STORAGE.status = 3; // отправлен запрос на проверку наличия новых сообщений
+    ajax('/hyip/getChatMessages/', {chats:data});
+};
+var ff;
+var setNewChatMessages = function(messages) {
+    STORAGE.status = 4; // сообщения получены
+    if (!_.isEmpty(messages)) {
+        for (var project_id in messages) {
+            STORAGE.chat[project_id] = _.extend({}, STORAGE.chat[project_id]);
+            var proj_mess = messages[project_id];
+            STORAGE.chat[project_id].max = _.max(_.keys(proj_mess), function(x){ return parseInt(x); });
+            if (project_id == 138 && !ff) {
+                ff = _.keys(proj_mess);
+            }
+            var $panel_scroller = $('[project_id='+project_id+'] .chat-widget .panel-scroller').eq(0);
+            var $scroller_content = $panel_scroller.find('.scroller-content').eq(0);
+            for (var id in proj_mess) {
+                var message = proj_mess[id];
+                var $chat_block = $('#chatMessage').children().clone();
+                $chat_block.find('.media-position').addClass('media-' + ((STORAGE.user.id|0) == message.user_id  ||  (STORAGE.user.session_id|0) == message.session_id ? 'right' : 'left'));
+                $chat_block.find('.date_create').text(message.date_create);
+                $chat_block.find('.message').text(message.message);
+                $chat_block.find('.media-heading').text(message.session_id);
+                $scroller_content.append($chat_block)
+            }
+            $scroller_content.css('scroll-behavior', 'smooth');
+            $panel_scroller.scroller('reset').scroller('scroll', 999999);
+            $scroller_content.css('scroll-behavior', '');
+        }
+    }
+    STORAGE.status = 5; // сообщения отрисованы
+};
 
 jQuery(document).ready(function() {
-    "use strict";
     Core.init();
     Demo.init();
 
     $(window).bind('popstate', function(e) {
-        $.ajax({
-            url: location.pathname,
-            type: "POST",
-            data: {ajax:' 1'},
-            dataType: 'json',
-            complete: complete
-        });
+        ajax(location.pathname);
     });
 
 	// ###   ###   ###		выполняем все необходимые скрипты для текущей страницы из массива
-	startAllNeedFunctions.apply(document);
+	// startAllNeedFunctions.apply(document);
 
 
     $('.alert button').on('click', function() {
@@ -555,8 +617,22 @@ jQuery(document).ready(function() {
     });
 });
 
+var ajax = function(url, data) {
+    $.ajax({
+        url: url,
+        data: data
+    });
+};
+
+var setStorage = function(data) {
+    STORAGE = addToObject(STORAGE, data);
+}
+
+
+
+/*
 function startAllNeedFunctions() {
 	while(script = scripts.shift()) {
 		window[script].apply(this);
 	}
-};
+};*/

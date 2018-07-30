@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>  
-	<script>
-      const SITE = '<?=SITE;?>';
-
-      var refreshAllowed = false;
-      var scripts=['panelScrollerInit', 'linkClick'];
-      Array.prototype.addOne = function(el) {
-          o:for (var i in el) {
-              for(var j in this) {
-                  if (el[i] == this[j]) continue o;
-              }
-              this.push(el[i]);
-          }
-      };
-	</script>
-  <!-- Meta, title, CSS, favicons, etc. -->
+<head>
   <meta charset="utf-8">
   <title>AbsoluteAdmin - A Responsive Boostrap 3 Admin Dashboard</title>
   <meta name="keywords" content="Bootstrap 3 Admin Dashboard Template Theme" />
@@ -26,28 +11,29 @@
 	ДОБАВИТЬ CloudFlare
 -->
 <!-- <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'>-->
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/fullcalendar/fullcalendar.min.css">
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/google/fonts.css">
-<!--<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/skin/default_skin/css/theme.cssgz">-->
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/default_skin/css/theme.css">
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/cropper/cropper.css">
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/admin-forms/css/admin-forms.min.css">
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/glyphicons-pro/glyphicons-pro.css">
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/flags/flags.css">
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/payments/payments.css">
+<link rel="stylesheet" type="text/css" href="/assets/fullcalendar/fullcalendar.min.css">
+<link rel="stylesheet" type="text/css" href="/assets/google/fonts.css">
+<!--<link rel="stylesheet" type="text/css" href="/assets/skin/default_skin/css/theme.cssgz">-->
+<link rel="stylesheet" type="text/css" href="/assets/default_skin/css/theme.css">
+<link rel="stylesheet" type="text/css" href="/assets/default_skin/css/base64.css">
+<link rel="stylesheet" type="text/css" href="/assets/cropper/cropper.css">
+<link rel="stylesheet" type="text/css" href="/assets/admin-forms/css/admin-forms.min.css">
+<link rel="stylesheet" type="text/css" href="/assets/glyphicons-pro/glyphicons-pro.css">
+<link rel="stylesheet" type="text/css" href="/assets/flags/flags.css">
+<link rel="stylesheet" type="text/css" href="/assets/payments/payments.css">
   
 <!-- для работы с картинками-->
-<link rel="stylesheet" type="text/css" href="<?=SITE;?>assets/magnific/magnific-popup.css">
+<link rel="stylesheet" type="text/css" href="/assets/magnific/magnific-popup.css">
   
 
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="<?=SITE;?>assets/favicon.ico">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
-  <script src="<?=SITE;?>assets/js/3.7.0/html5shiv.js"></script>
-  <script src="<?=SITE;?>assets/js/respond.min.js"></script>
+  <script src="/assets/js/3.7.0/html5shiv.js"></script>
+  <script src="/assets/js/respond.min.js"></script>
 <![endif]-->
 
 </head>
@@ -348,7 +334,7 @@
             </a>
           </li>
           <li>
-            <a href="<?=SITE;?>Projects/registration" class="ajax">
+            <a href="/Projects/registration" class="ajax">
               <span class="fa fa-plus text-success"></span>
               <span class="sidebar-title">Add Project</span>
               <span class="sidebar-title-tray">
@@ -1083,9 +1069,13 @@
 
   </div>
 
+<!-- ADDITIONAL -->
 <div class="alert alert-warning alert-dismissable alert-border-left mrn mln" id="alert">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <i class="fa fa-warning pr10"></i><er>{error}</er></div>
+    <i class="fa fa-warning pr10"></i><er>{error}</er>
+</div>
+
+<?=(new \Core\View('Hyip/ChatMessage', []))->get()?>
   <!-- End: Main -->
 
   
@@ -1096,22 +1086,30 @@
   <!-- ### ### ### ### ### ### 		ПО УМОЛЧАНИЮ -->
   
   <!-- jQuery -->
-  <script src="<?=SITE;?>assets/jquery/jquery-1.12.0.min.js"></script>
-  <script src="<?=SITE;?>assets/jquery/jquery-ui.min.js"></script>
+  <script src="/assets/jquery/jquery-1.12.0.min.js"></script>
+  <script src="/assets/jquery/jquery-ui.min.js"></script>
   <!--<script src="vendor/plugins/tagsinput/tagsinput.min.js"></script>-->
 
   <!-- Theme Javascript -->
-  <script src="<?=SITE;?>assets/js/utility.js"></script>
-  <script src="<?=SITE;?>assets/js/demo.js"></script>
-  <script src="<?=SITE;?>assets/js/main.js"></script>
+  <script src="/assets/js/utility.js"></script>
+  <script src="/assets/js/demo.js"></script>
+  <script src="/assets/js/main.js"></script>
 
-  <script src="<?=SITE;?>assets/magnific/jquery.magnific-popup.js"></script>
-  <script src="<?=SITE;?>assets/js/highcharts.js"></script>
-  <script src="<?=SITE;?>assets/fullcalendar/lib/moment.min.js"></script>
-  <script src="<?=SITE;?>assets/js/widgets.js"></script>
-  <script src="<?=SITE;?>assets/cropper/cropper.js"></script>
-  
-  <script src="<?=SITE;?>assets/js/my-addons.js"></script>
+  <script src="/assets/magnific/jquery.magnific-popup.js"></script>
+  <script src="/assets/js/highcharts.js"></script>
+  <script src="/assets/fullcalendar/lib/moment.min.js"></script>
+  <script src="/assets/js/widgets.js"></script>
+  <script src="/assets/cropper/cropper.js"></script>
+
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/my-addons.js"></script>
+
+<?php if($this->f): ?>
+    <script>
+    // запускаем необходимые функции
+    applyFunctions('f',  <?=json_encode($this->f)?>);
+    </script>
+<?php  endif; ?>
 
 </body>
 

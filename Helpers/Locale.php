@@ -8,18 +8,17 @@
 
 namespace Helpers {
     use \Core\Auth;
-    use Models\Main;
-    use Helpers\Arrays;
+    use Core\Database;
 
     class Locale {
         private static $defaultLanguage = 'en';
         private static $availableLanguages = null;
         private static $language = null;
         private static $locale = null;
+        private static $localeFile = null;
 
         public static final function getLanguage() {
             if (self::$language !== null) return self::$language;
-
             // 1: from profile
             if ($lang = (Auth::getUserInfo()['lang'] ?? false)) return (self::$language = ucfirst($lang));
 
@@ -36,7 +35,7 @@ namespace Helpers {
                     arsort($langs, SORT_NUMERIC);
                 }
             }
-            $langs = array_values(array_intersect(array_keys($langs ?? ''), (new Arrays(self::getAvailableLanguages()))->array_column('shortname')->getArray()));
+            $langs = array_values(array_intersect(array_keys($langs ?? ''), (new Arrays(self::getAvailableLanguages()))->arrayColumn('shortname')->getArray()));
             if (!empty($langs)) return (self::$language = $langs[0]);
 
             // #TODO
@@ -48,15 +47,19 @@ namespace Helpers {
         }
 
         public static final function getLocale() {
-            if (self::$locale !== null) return self::$locale;
+            return self::$locale?:(self::$locale = self::getLocaleFile()::getLocale());
+        }
 
-            $locale = '\Helpers\Locales\\'.ucfirst(self::getLanguage());
-            return (self::$locale = $locale::getLocale());
+        public static final function getLocaleFile() {
+            return self::$localeFile?:(self::$localeFile = '\Helpers\Locales\\'.ucfirst(self::getLanguage()));
+        }
+
+        public static final function getPeriodName($i,$k) {
+            return self::getLocaleFile()::getPeriodName($i,$k);
         }
 
         public static final function getAvailableLanguages() {
-            if (self::$availableLanguages !== null) return self::$availableLanguages;
-            return Main::$db->select('languages', 'shortname', 'available = true');
+            return self::$availableLanguages?:(self::$availableLanguages = Database::getInstance()->select('languages', 'shortname', 'available = true'));
         }
 
     }

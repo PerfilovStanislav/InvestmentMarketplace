@@ -5,8 +5,8 @@ namespace Core;
 class Model {
 	public $db;
 	
-    function __construct(Database $db) {
-		$this->db = $db;
+    protected function __construct() {
+		$this->db = Database::getInstance();
     }
 }
 

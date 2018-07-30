@@ -1,8 +1,7 @@
 <?php
 namespace {
     define('DIR', dirname($_SERVER['SCRIPT_NAME']));
-    define('SITE', str_replace('//', '/', DIR.'/'));
-    define('DOMAIN', '127.0.0.1');
+    define('DOMAIN', 'richinme.org');
     error_reporting(E_ALL | E_STRICT);
     define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));
     ini_set('display_errors', 1);
@@ -18,5 +17,3 @@ namespace {
 
     new Core\Router();
 }
-
-

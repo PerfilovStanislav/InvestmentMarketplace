@@ -370,7 +370,7 @@
          $.error('Method ' + method + ' does not exist on jQuery.dockmodal');
       }
    };
-})(jQuery);;
+})(jQuery);
 (function($, window, document, undefined) {
    $.fn.adminpanel = function(options) {
       var defaults = {
@@ -804,7 +804,7 @@
          methods.init.call(plugin, options);
       });
    };
-})(jQuery, window, document);;
+})(jQuery, window, document);
 (function(root, factory) {
    "use strict";
    if (typeof define === "function" && define.amd) {
@@ -1379,7 +1379,7 @@
       return init(_$ || $);
    };
    return exports;
-}));;
+}));
 (function($) {
    function defined(a) {
       return typeof a !== 'undefined';
@@ -1615,7 +1615,7 @@
       }
       return this;
    };
-})(jQuery);;
+})(jQuery);
 (function($) {
    $.fn.hoverIntent = function(handlerIn, handlerOut, selector) {
       var cfg = {
@@ -1693,7 +1693,7 @@
          "mouseleave.hoverIntent": handleHover
       }, cfg.selector)
    }
-})(jQuery);;
+})(jQuery);
 ! function(a) {
    function d(b) {
       var c = b || window.event,
@@ -1725,7 +1725,7 @@
          return this.unbind("mousewheel", a)
       }
    })
-}(jQuery);;
+}(jQuery);
 (function(t) {
    "function" == typeof define && define.amd ? define(["jquery"], t) : t(jQuery)
 })(function(t) {
@@ -1827,7 +1827,7 @@
    }, t.smoothScroll.version = l, t.smoothScroll.filterPath = function(t) {
       return t = t || "", t.replace(/^\//, "").replace(/(?:index|default).[a-zA-Z]{3,4}$/, "").replace(/\/$/, "")
    }, t.fn.smoothScroll.defaults = n
-});;
+});
 ! function(a) {
    function f(a, b) {
       if (!(a.originalEvent.touches.length > 1)) {
@@ -1864,7 +1864,7 @@
          }), d.call(b)
       }
    }
-}(jQuery);;
+}(jQuery);
 var JSON;
 if (!JSON) {
    JSON = {}
@@ -2016,7 +2016,7 @@ if (!JSON) {
          throw new SyntaxError("JSON.parse")
       }
    }
-})();;
+})();
 ! function(a) {
    "function" == typeof define && define.amd ? define(["jquery"], a) : a(jQuery)
 }(function(a) {
@@ -2055,7 +2055,7 @@ if (!JSON) {
    }, a.fn.scrollLock.noConflict = function() {
       return a.fn.scrollLock = d, this
    }
-});;
+});
 ! function($) {
    "use strict";
    if (typeof ko !== 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
@@ -2811,7 +2811,7 @@ if (!JSON) {
    $(function() {
       $("select[data-role=multiselect]").multiselect();
    });
-}(window.jQuery);;
+}(window.jQuery);
 ! function(a) {
    return "function" == typeof define && define.amd ? define(["jquery"], function(b) {
       return a(b, window, document)
@@ -2986,7 +2986,7 @@ if (!JSON) {
          return d.reset()
       })
    }, a.fn.nanoScroller.Constructor = q
-});;
+});
 (function($, window) {
    "use strict";
    var namespace = "scroller",
@@ -3340,7 +3340,7 @@ if (!JSON) {
          pub.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
       }
    };
-})(jQuery);;
+})(jQuery);
 (function() {
    var n = this,
       t = n._,

@@ -146,13 +146,21 @@ namespace Helpers {
 			return $this->data;
 		}
 
-		public final static function replace($regex, $str) {
+		public final function __get($name) {
+            return $this->data[$name];
+        }
+
+        public final static function replace($regex, $str) {
 			switch ($regex) {
 				case self::FLOAT: 	$str = str_replace(',', '.', $str); break;
 //				case self::NUM: 	$str = (int)$str; break;
 			}
 			return preg_replace($regex, '', $str);
 		}
+
+		public final function checkErrors() {
+            return ($errors = $this->getErrors()) ? Helper::error($errors) : $this;
+        }
 	}
 
 }?>

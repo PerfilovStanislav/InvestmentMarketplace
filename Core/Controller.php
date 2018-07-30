@@ -8,15 +8,10 @@ namespace Core {
     use Models\Main;
 
     class Controller {
-		protected   $auth;
-		public      $isAjax;
-        protected   $db;
         protected   $post;
 
-		function __construct(Database $db, Auth $auth) {
+		protected function __construct() {
 		    $this->post = new Validator($_POST ?? []);
-			$this->auth = $auth;
-			$this->db = $db;
 		}
 
 		protected final function view(array $params) {
@@ -27,15 +22,15 @@ namespace Core {
 				$v = (new View($v[0], $v[1]))->get();
 			}
 
-			if (IS_AJAX) Helper::show_json($params);
+			if (IS_AJAX) Helper::json($params);
             else echo (new View('Layout', $params))->get();
 		}
 
-		private final function loadHead(array &$params) {
+		/*private final function loadHead(array &$params) {
             $available_langs = Locale::getAvailableLanguages();
             if (Auth::isAuthorized()) 	$params['userHead']	= ['Users/Head/Authorized', array_merge(Auth::getUserInfo(), ['langs' => $available_langs])];
             else 						$params['userHead']	= ['Users/Head/NotAuthorized', $available_langs];
-        }
+        }*/
 	}
 
 }?>

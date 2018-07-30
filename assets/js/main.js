@@ -274,7 +274,7 @@ var Core = function(options) {
             Body.removeClass('tray-rescale tray-rescale-left tray-rescale-right');
          }
 		// #TODO Added by Me
-		setTimeout(changeScrollContentHeight(), 10);
+		// setTimeout(changeScrollContentHeight(), 10);
       }
       var lazyLayout = _.debounce(rescale, 300);
       if (!Body.hasClass('disable-tray-rescale')) {

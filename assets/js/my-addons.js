@@ -570,7 +570,6 @@ var checkChats = function() {
     STORAGE.status = 3; // отправлен запрос на проверку наличия новых сообщений
     ajax('/hyip/getChatMessages/', {chats:data});
 };
-var ff;
 var setNewChatMessages = function(messages) {
     STORAGE.status = 4; // сообщения получены
     if (!_.isEmpty(messages)) {
@@ -578,15 +577,13 @@ var setNewChatMessages = function(messages) {
             STORAGE.chat[project_id] = _.extend({}, STORAGE.chat[project_id]);
             var proj_mess = messages[project_id];
             STORAGE.chat[project_id].max = _.max(_.keys(proj_mess), function(x){ return parseInt(x); });
-            if (project_id == 138 && !ff) {
-                ff = _.keys(proj_mess);
-            }
             var $panel_scroller = $('[project_id='+project_id+'] .chat-widget .panel-scroller').eq(0);
             var $scroller_content = $panel_scroller.find('.scroller-content').eq(0);
             for (var id in proj_mess) {
                 var message = proj_mess[id];
                 var $chat_block = $('#chatMessage').children().clone();
-                $chat_block.find('.media-position').addClass('media-' + ((STORAGE.user.id|0) == message.user_id  ||  (STORAGE.user.session_id|0) == message.session_id ? 'right' : 'left'));
+                $chat_block.find('.media-position').addClass('media-' + ((STORAGE.user.id|0) == message.user_id  ||  (STORAGE.user.session_id|0) == message.session_id ? 'right' : 'left'))
+                    .find('img.media-object').attr('src', '/assets/img/avatars/'+(((message.user_id|message.session_id|0)%30)+1)+'.jpg')
                 $chat_block.find('.date_create').text(message.date_create);
                 $chat_block.find('.message').text(message.message);
                 $chat_block.find('.media-heading').text(message.session_id);

@@ -4,7 +4,8 @@ namespace Core {
     use Helpers\{Validator};
 
     class Router {
-        private $defaultParams = 'Hyip/registration/1';
+//        private $defaultParams = 'Hyip/registration/1';
+        private $defaultParams = 'Hyip/show/1';
         private $errorParams   = 'Errors/show/1';
 
         private $uri = null;
@@ -52,7 +53,9 @@ namespace Core {
             $controller = new $controllerClass();
 
             $this->params = array_map(function($a){return [$a[0] => $a[1]??null];}, array_chunk($this->params, 2));
+//            \R::r($this->params);
             call_user_func_array([$controller, $this->action], $this->params);
+            return true;
         }
     }
 

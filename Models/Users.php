@@ -15,11 +15,12 @@ namespace Models {
 
 		public function addUser(Validator $post) {
 		    $data = $post->getData();
+		    $scope = 'adduser_form';
 
 			if ($user = $this->db->getRow('users', 'login, email', "login = '{$data['login']}' or email = '{$data['email']}'")) {
 				if ($user['login'] === $data['login']) Errors::setField('login', 'login_is_busy');
 				if ($user['email'] === $data['email']) Errors::setField('email',  'email_is_busy');
-				return Errors::getErrors();
+				return Errors::getErrors($scope);
 			}
 
 			if ($this->db->insert('users', [

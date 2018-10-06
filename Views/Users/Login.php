@@ -31,7 +31,8 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="password" name="password" class="gui-input" placeholder="<?=$this->Password;?>">
+                                <input type="password" autocomplete="password" name="password" class="gui-input"
+									   placeholder="<?=$this->Password;?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>

@@ -9,7 +9,6 @@
 
     <!-- Validation Example -->
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
-
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
                     <span class="panel-title">
@@ -18,7 +17,6 @@
             </div>
 
             <form method="post" action="/" id="adduser_form">
-
                 <div class="panel-body bg-light">
                     <div class="section row" >
                         <div class="section">
@@ -32,7 +30,8 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="name" class="gui-input onlyEn" placeholder="<?=$this->locale['name']?>">
+                                <input name="name" autocomplete="name" class="gui-input onlyEn"
+									   placeholder="<?=$this->locale['name']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-group"></i>
                                 </label>
@@ -41,7 +40,8 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="email" class="gui-input onlyEmail" placeholder="<?=$this->locale['email']?>">
+                                <input name="email" autocomplete="email" class="gui-input onlyEmail"
+									   placeholder="<?=$this->locale['email']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-envelope-o"></i>
                                 </label>
@@ -50,7 +50,8 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="password" name="password" class="gui-input" placeholder="<?=$this->locale['password']?>">
+                                <input type="password" autocomplete="password" name="password" class="gui-input"
+									   placeholder="<?=$this->locale['password']?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
@@ -59,7 +60,8 @@
 
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="password" id="confirm_pass" class="gui-input" placeholder="<?=$this->locale['repeat_password']?>">
+                                <input type="password" autocomplete="password" id="confirm_pass" class="gui-input"
+									   placeholder="<?=$this->locale['repeat_password']?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>

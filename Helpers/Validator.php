@@ -150,7 +150,7 @@ namespace Helpers {
             return $this->data[$name];
         }
 
-        public final static function replace($regex, $str) {
+        public final static function replace($regex, $str):string {
 			switch ($regex) {
 				case self::FLOAT: 	$str = str_replace(',', '.', $str); break;
 //				case self::NUM: 	$str = (int)$str; break;

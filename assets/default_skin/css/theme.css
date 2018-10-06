@@ -11533,6 +11533,9 @@ a.thumbnail.active {
     margin-right: -11px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 3px;
+    /*display: none;*/
+}
+form .alert {
     display: none;
 }
 .alert .close {

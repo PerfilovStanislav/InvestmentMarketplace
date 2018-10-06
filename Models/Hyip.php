@@ -2,7 +2,7 @@
 
 namespace Models {
 
-    use Core\{Auth, Model, Database};
+    use Core\{Auth, Model};
     use Helpers\{
         Validator, Arrays, Data\Currency
     };

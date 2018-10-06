@@ -9,10 +9,10 @@
             <!-- Begin: Content Header -->
             <div class="content-header">
                 <?php if (!($this->user_info['id'] ?? null)): ?>
-                    <p class="lead text-danger"><?php echo $this->locale['auth_4_add_project'] ?> </p>
+                    <p class="lead text-danger"><?=$this->locale['auth_4_add_project']?> </p>
                 <?php endif; ?>
 
-              <h2> Добавление проекта в базу абсолютно <b class="text-primary">бесплатно</b></h2>
+              <h2> <?=$this->locale['free_4_add_project']?> <b class="text-primary"><?=$this->locale['free'] ?></b></h2>
             </div>
 
             <!-- Validation Example -->
@@ -46,8 +46,8 @@
                                     <label class="field-icon">
                                         <i class="fa fa-globe"></i>
                                     </label>
-                                </label>
-                                <label for="verification" class="button btn-primary check"><?=$this->locale['check']?></label>
+									<label class="button btn-primary check"><?=$this->locale['check']?></label>
+								</label>
                             </div>
                             <!-- end .smart-widget section -->
                         </div>

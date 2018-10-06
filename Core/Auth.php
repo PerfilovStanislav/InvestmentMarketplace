@@ -19,8 +19,7 @@ namespace Core {
         private static $_instance = null;
 
 
-		function __construct($a=!1) {
-            if (!$a) throw new \Exception(__CLASS__.__FUNCTION__);
+		function __construct() {
 			$this->db = Database::getInstance();
 
 			self::startSession();
@@ -46,7 +45,7 @@ namespace Core {
 				}
 			}
 
-			// поулчаем id сессии из базы
+			// получаем id сессии из базы
             if (!($s['session_id']??null)) {
                 $session_id = $this->db->getOne('session', sprintf("uid = '%s'", session_id()));
                 if (!$session_id) {
@@ -63,12 +62,12 @@ namespace Core {
             self::$userInfo['session_id'] = $s['session_id'];
 		}
 
-        public final static function getInstance() {
-            return self::$_instance?:(self::$_instance = new self(!0));
+        public final static function getInstance():self {
+            return self::$_instance?:(self::$_instance = new self());
         }
 
-		public static final function isAuthorized() {
-			return self::$isAuthorized;
+		public static final function isAuthorized():bool {
+			return self::$isAuthorized??false;
 		}
 
 		private final static function startSession() {

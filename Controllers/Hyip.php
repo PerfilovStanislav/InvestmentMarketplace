@@ -6,12 +6,13 @@ namespace Controllers {
         Auth, Controller, View
     };
     use Helpers\{
-        Locale, Validator, Helper, Data\Currency
+        Validator, Helper, Data\Currency
     };
 	use Libraries\File;
 	use \Models\Hyip as Model;
+	use Controllers\Layout;
 
-	class Hyip extends Controller{
+	class Hyip extends Layout{
 		private $model;
 
 		function __construct() {
@@ -19,7 +20,7 @@ namespace Controllers {
 			$this->model = new Model();
 		}
 
-		public final function registration(array $params) {
+		public final function registration() {
 		    $data = $this->model->getRegistrationData();
             $data['currency'] = Currency::getCurrency();
             $return['c']['content'] = ['Hyip/Registration', $data];
@@ -28,7 +29,7 @@ namespace Controllers {
             return IS_AJAX ? Helper::json($return) : $this->layout($return);
 		}
 
-		public final function show(array $params = []) {
+		public function show(array $params = []) {
 		    $return = [];
             $data = $this->model->getShowData();
 
@@ -52,31 +53,9 @@ namespace Controllers {
             $return['c']['content'] = ['Hyip/Show', $data];
             $return['f']['content'] = array_merge(['initChat', 'panelScrollerInit'], $chats);
 
-            return IS_AJAX ? Helper::json($return) : $this->layout($return);
+            return IS_AJAX ? Helper::json(Helper::view($return)) : $this->layout($return);
 		}
 
-		private final function layout($return) {
-            $available_langs = Locale::getAvailableLanguages();
-            /*$return['c']['userHead'] = Auth::isAuthorized()
-                ? ['Users/Head/Authorized', array_merge(Auth::getUserInfo(), ['langs' => $available_langs])]
-                : ['Users/Head/NotAuthorized', ['langs' => $available_langs]];*/
-            $return['c']['userHead'] = ['Users/Head/NotAuthorized', []];
-
-            foreach($return['c'] as &$v) {
-                $v = (new View($v[0], $v[1]))->get();
-            }
-            $return['f']['document'] = array_merge($return['f']['document']??[], ['setStorage' => ['user' => Auth::getUserInfo()], 'UserAuthorization']);
-            uksort($return['f'], function($a,$b) {
-                return $a == 'document' ? -1 : 1;
-            });
-
-            if ($return['f']??!1) {
-                $return['c']['f'] = $return['f'];
-                unset ($return['f']);
-            }
-
-            echo (new View('Layout', $return['c']))->get();
-        }
 
 		public final function add(array $args) {
             $data = $this->post
@@ -95,7 +74,7 @@ namespace Controllers {
                 ->checkAll('description', 		1, 		null, 	null,                 null,                  null,  1)
                 ->checkAll('lang', 				1, 		null, 	Validator::NUM,		'languages',            null,  1)
 
-                ->addErrors($this->checWebsite()['error'] ?? [])->checkErrors()->getData();
+                ->addErrors($this->checkWebsite()['error'] ?? [])->checkErrors()->getData();
 
             foreach ($data['languages'] as $key => $val) {
 			    if (!isset($data['description'][$val])) {
@@ -103,7 +82,7 @@ namespace Controllers {
                 }
             }
 
-            $this->post->addFields(['url' => $this->checWebsite()['success']['url']]);
+            $this->post->addFields(['url' => $this->checkWebsite()['success']['url']]);
             if ($project_id = $this->model->addProject($this->post)) {
                 // Save screenshots
                 $file = new File($project_id);
@@ -114,26 +93,27 @@ namespace Controllers {
             }
 		}
 
-		private final function checWebsite():array {
+		private final function checkWebsite():array {
             $ref_url = $this->post->checkAll('website', 1, 128, Validator::URL, 'ref_url')->getData()['ref_url'];
             $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($ref_url));
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
 
             if (count($url) < 2) {
-                $ret = ['error' => ['fields' => ['website' => ['Wrong site']]]];
+                $ret = ['error' => ['fields' => ['website' => 'Wrong site', 'projectname' => 'xxx projectname xxx']]];
             }
             else {
                 $url_str = $url[1] . '.' . $url[0];
                 if (($res = $this->model->db->getRow('project', 'id', "url = '{$url_str}'"))) {
                     $ret = ['error' => ['fields' => ['website' => ['exists', $res['id']]]]];
                 }
-                else $ret = ['success' => ['url' => $url_str, 'ref_url' => $ref_url]];
+                else $ret = ['success' => ['url' => $url_str, 'ref_url' => $ref_url, 'fields' => ['website' =>
+					['OK']]]];
             }
             return $ret;
         }
 
-        public final function check(array $args) {
-            Helper::json($this->checWebsite());
+        public final function check() {
+            Helper::json($this->checkWebsite());
         }
 
         public final function sendMessage(array $params = []) {

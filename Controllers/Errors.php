@@ -1,21 +1,24 @@
 <?php
 
 namespace Controllers {
-	use Core\{Controller,Database,Auth};
+	use \Models\Hyip as Model;
 	use Helpers\Helper;
 
-	class Errors extends Controller{
+	class Errors extends Layout {
 		private $model;
 
-		function __construct(Database $db, Auth $auth) {
-			parent::__construct($db, $auth);
-//			$this->model = new Model($db);
+		function __construct() {
+			parent::__construct();
+			$this->model = new Model();
 		}
 
+		// #TODO логирование ошибок (кто откуда пришёл)
 		public function show(array $page) {
-		    // #TODO логирование ошибок (кто откуда пришёл)
+			$return = [];
+			$return['c']['content'] = ['Errors/404', []];
+
             Helper::header(Helper::E404);
-			$this->view(['content' 	=> ['Errors/404', []]]);
+			return IS_AJAX ? Helper::json($return) : $this->layout($return);
 		}
 	}
 

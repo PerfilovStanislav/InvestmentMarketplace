@@ -15,8 +15,11 @@ namespace Core {
 			$this->template = 'Views/'.$template.'.php';
 
 			ob_start();
-			include $this->template;
+			require_once $this->template;
 			$this->pageView = ob_get_clean();
+			$this->pageView = str_replace(["\n", "\r"], ' ', $this->pageView);
+			$this->pageView = preg_replace('/\<!--.*?--\>/i', ' ', $this->pageView);
+			$this->pageView = preg_replace('/\s+/', ' ', $this->pageView);
 		}
 
 		public function set($data) {

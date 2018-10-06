@@ -1,4 +1,5 @@
 "use strict";
+var GO = !0;
 var STORAGE = {chat: {}};
 // устанавливаем параметры для всех аякс запросов
 $.ajaxSetup({
@@ -6,17 +7,20 @@ $.ajaxSetup({
     data: {ajax:' 1'},
     dataType: 'json',
     beforeSend: function(d, status, xhr) {
+        GO = !1;
         // console.log('beforeSend', d, status, xhr);
         /*count_of_requests++;
         if (count_of_requests === 1) $("#loader").animate({opacity: 1}, 250, "easeOutBack", function() {});*/
     },
     complete: function(d,status,xhr) {
+        GO = !0;
         // console.log('complete', d, status, xhr);
         /*if (count_of_requests === 1) $("#loader").animate({opacity: 0}, 250, "easeOutBack", function() {});
         count_of_requests--;*/
         if (d.responseJSON) $.each(d.responseJSON, applyFunctions);
     },
     error: function (xhr, ajaxOptions, thrownError) {
+        GO = !0;
         console.warn(1, xhr);
         console.warn(2, ajaxOptions);
         console.warn(3, thrownError);
@@ -29,16 +33,15 @@ $.ajaxSetup({
 // вызов массив функций для определённой области , элимента, формы
 var callFunctions = function() {
     for (var i in arguments) {
-        if (typeof(arguments[i]) == 'string') window[arguments[i]].apply(this);      // вызов функции без параметров
-        else window[arguments[i][0]].apply(this, [arguments[i][1]]);                 // вызов функции с параметрами
+        if (typeof(arguments[i]) == 'function') arguments[i].apply(this);      // вызов функции без параметров
+        else arguments[i][0].apply(this, [arguments[i][1]]);                 // вызов функции с параметрами
     }
-}
+};
 
 // вызывается после каждого ответа с сервера
 // умеет: отрисовывать вьюшки, вызывать методы, показывать ошибки и удачные запросы
 // Порядок обработки находится в system/helpers/json_helper/default_sort
 var applyFunctions = function(key, value) {
-    // console.log('applyFunctions', key, value);
     if (key === 'c') {
         //отрисовываем вьюшки
         $.each(value, function(k,v) {
@@ -49,37 +52,39 @@ var applyFunctions = function(key, value) {
         return true;
     }
     // всё хорошо  либо просто уведомление
-    /*else if ($.inArray(key, ['success', 'warning', 'info']) != -1) {       // в верхнем правом углу выскакивает зелёный/оранжевый/голубой alert
-        var titles = {
-            success: 'Успешно!',
-            warning: 'Информация',
-            info:    'Информация',
-        }
-        $.each(value, function(k,v) {
-            if (typeof(v) == 'string') v = [v];
-            $.each(v, function(title,text) {
-                toastr[key](text, titles[key], {showMethod: 'slideDown'});
+    else if (key === 'alert') {
+        $.each(value, function(type,data) {
+            $.each(data, function(title,text) {
+                new PNotify({
+                    title: title,
+                    text: text,
+                    type: type,
+                    width: "290px",
+                    delay: 4000
+                });
             });
         });
     }
-    // всё плохо
     else if (key === 'error') {
-        $.each(value, function(k,v) {
-            if ($('#' + k).length) {    // если существует такой раздел, то для него показываем ошибки
-                $.each(v, function(a,b) {
-                    $('input[name='+a+']', $('#' + k)).addClass('is-invalid').next('div[role=show_error]').text(b);
-                    $('input[name='+a+']', $('#' + k)).parent().addClass('has-danger');
-                });
-            }
-            else {                      // иначе в верхнем правом углу выскакивает красный alert
-                if (typeof(v) == 'string') v = [v];
-                $.each(v, function(title,text) {
-                    toastr["error"](text, 'Ошибка!', {showMethod: 'slideDown'}); // http://codeseven.github.io/toastr/demo.html
-                });
-                console.error(v);
-            }
-        });
-    }*/
+        $.each(value, function(scope,params) {
+            var $scope = getScope(scope);
+            $.each(params, function (param_key, fields) {
+                $.each(fields, function (k, v) {
+                    var $el = $('input[name=' + k + ']', $scope);
+                    var $el = $('input[name=' + k + ']', $scope);
+                    $el.parent().addClass('state-error');
+
+                    var $a = $('#alert').clone();
+                    $a.find('er').text(fields[k]);
+                    $a.insertBefore($el.parent()).not(':visible')
+                })
+            });
+            $('.alert:not(:visible)').slideToggle('fast');
+
+            var v = $('.state-error').eq(0).offset().top;
+            $('html,body').animate({scrollTop: v - 75}, 250 + Math.abs($(document).scrollTop() - v) * 0.5, 'easeOutQuad');
+        })
+    }
     else if (key === 'f') {
         //вызов методов в необходимой области видимости
         $.each(value, function(scope,functions) {
@@ -88,13 +93,15 @@ var applyFunctions = function(key, value) {
                     a = b;
                     b = null;
                 }
-                window[a].apply(scope === 'document' ? document : $('#'+scope), [b]);
+                window[a].apply(getScope(scope), [b]);
             });
         });
     }
-}
+};
 
-
+var getScope = function (scope) {
+    return scope === 'document' ? document : $('#'+scope);
+};
 
 var $userHead = $('#userHead');
 
@@ -145,7 +152,6 @@ var UserAuthorization = function() {
         $(this).parent().removeClass('state-error');
     });
     form.submit(function(){
-        var $f = $(this);
         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
 
         if (a.length) {
@@ -153,24 +159,18 @@ var UserAuthorization = function() {
             return !1;
         }
 
-        if (GO) {
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: '/Users/authorize',
-                data: form.serialize(),
-                beforeSend: beforeSend,
-                success: function(data){
-                    if (data['success'] === 'user_authorized') location.reload();
-                    else if (data.error){
-                        var error = data.error.fields.login || data.error.fields.password || '';
-                        $('#alert-user-error er').text(error);
-                        $('#alert-user-error:not(:visible)').slideToggle('fast');
-                    }
-                },
-                complete: complete
-            });
-        }
+        $.ajax({
+            url: '/Users/authorize',
+            data: form.serialize(),
+            success: function(data){
+                if (data['success'] === 'user_authorized') location.reload();
+                else if (data.error){
+                    var error = data.error.fields.login || data.error.fields.password || '';
+                    $('#alert-user-error er').text(error);
+                    $('#alert-user-error:not(:visible)').slideToggle('fast');
+                }
+            },
+        });
         return false;
     });
 };
@@ -181,7 +181,7 @@ var UserRegistration = function() {
 
     var form = $("#adduser_form");
     $('input,textarea', form).on('focusin', function(e) {
-        $(this).parent().removeClass('state-error');
+        $(this).parent().removeClass('state-error').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
     });
     form.submit(function(){
         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
@@ -195,27 +195,11 @@ var UserRegistration = function() {
         }
 
         if (GO) {
+            $('.alert-dismissable', form).slideToggle('fast', 'swing', function(){this.remove()});
             $.ajax({
                 url: '/Users/add',
                 data: form.serialize(),
                 success: function(data){
-                    // TODO
-                    // Вернуть VIEW об подтверждении авторизации
-
-                    if (data.error && data.error.fields) {
-                        $('.alert-dismissable:visible', form).remove();
-                        $.each(data.error.fields, function(k,v) {
-                            var $el = $('input[name='+k+']');
-                            $el.parent().addClass('state-error');
-
-                            var $a = $('#alert').clone();
-                            $a.find('er').text(data.error.fields[k]);
-                            $a.insertBefore($el.parent(), form).slideToggle('fast');
-                        });
-                    }
-                    /*else {
-                        $.each(data, applyFunctions);
-                    }*/
                 }
 
             });
@@ -249,26 +233,13 @@ var ProjectRegistration = function(a) {
 
     $('.check', this).on('click', function() {
         var data = {};
-        $(this).prev().find('input').each(function(i,el) {data[$(el).attr('name')] = $(el).val()});
+        $(this).parent().find('input').each(function(i,el) {data[$(el).attr('name')] = $(el).val()});
 
         if (GO) {
+            $('.alert-dismissable:visible', form).remove();
             $.ajax({
                 url: '/Hyip/check',
-                data: data,
-                success: function(data){
-                    if (data.error && data.error.fields) {
-                        $('.alert-dismissable:visible', form).remove();
-                        $.each(data.error.fields, function(k,v) {
-                            var $el = $('input[name='+k+']');
-                            $el.parent().addClass('state-error');
-
-                            var $a = $('#alert').clone();
-                            $a.find('er').text(data.error.fields[k][0]);
-                            $el.parents('div.section:first', form).prepend($a);
-                            $a.slideToggle('fast');
-                        });
-                    }
-                }
+                data: data
             });
         }
     });
@@ -583,7 +554,7 @@ var setNewChatMessages = function(messages) {
                 var message = proj_mess[id];
                 var $chat_block = $('#chatMessage').children().clone();
                 $chat_block.find('.media-position').addClass('media-' + ((STORAGE.user.id|0) == message.user_id  ||  (STORAGE.user.session_id|0) == message.session_id ? 'right' : 'left'))
-                    .find('img.media-object').attr('src', '/assets/img/avatars/'+(((message.user_id|message.session_id|0)%30)+1)+'.jpg')
+                    .find('img.media-object').attr('src', '/assets/img/avatars2/'+(((message.user_id|message.session_id|0)%30)+1)+'.webp')
                 $chat_block.find('.date_create').text(message.date_create);
                 $chat_block.find('.message').text(message.message);
                 $chat_block.find('.media-heading').text(message.session_id);
@@ -624,12 +595,3 @@ var ajax = function(url, data) {
 var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
 }
-
-
-
-/*
-function startAllNeedFunctions() {
-	while(script = scripts.shift()) {
-		window[script].apply(this);
-	}
-};*/

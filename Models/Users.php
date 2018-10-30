@@ -2,9 +2,9 @@
 
 namespace Models {
 	use Core\{Database, Model, Auth};
-    use Helpers\{
-        Locale, Validator, Errors
-    };
+	use Helpers\{
+		Helper, Locale, Validator, Errors
+	};
     use Models\Main;
 
 	class Users extends Model{
@@ -18,9 +18,8 @@ namespace Models {
 		    $scope = 'adduser_form';
 
 			if ($user = $this->db->getRow('users', 'login, email', "login = '{$data['login']}' or email = '{$data['email']}'")) {
-				if ($user['login'] === $data['login']) Errors::setField('login', 'login_is_busy');
-				if ($user['email'] === $data['email']) Errors::setField('email',  'email_is_busy');
-				return Errors::getErrors($scope);
+				if ($user['login'] === $data['login']) return Helper::fieldError('login', 'login_is_busy', $scope);
+				if ($user['email'] === $data['email']) return Helper::fieldError('email', 'email_is_busy', $scope);
 			}
 
 			if ($this->db->insert('users', [
@@ -44,5 +43,4 @@ namespace Models {
 			else return ['error' => ['user' => ['adding_error']]];
 		}
 	}
-
 }

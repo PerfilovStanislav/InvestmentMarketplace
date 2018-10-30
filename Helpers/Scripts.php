@@ -4,7 +4,7 @@ namespace Helpers;
 
 class Scripts {
 
-	public final static function js(array $arr) {
+	final public static function js(array $arr) {
 		foreach ($arr as $dir => $files) {
 			foreach ($files as $file) {
 				$f = $dir.$file.'.js';
@@ -14,7 +14,7 @@ class Scripts {
 		}
 	}
 
-	public final static function css(array $arr) {
+	final public static function css(array $arr) {
 		foreach ($arr as $dir => $files) {
 			foreach ($files as $file) {
 				$f = $dir.$file.'.css';

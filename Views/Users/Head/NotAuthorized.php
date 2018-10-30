@@ -74,7 +74,8 @@
                 </div>
 
                 <div class="pull-right">
-                  <a href="/users/registration" class="btn  btn-gradient btn-success btn-block w125" ><?=$this->locale['registration']?></a>
+                  <a href="/users/registration" class="btn ajax page btn-gradient btn-success btn-block w125"
+				  ><?=$this->locale['registration']?></a>
                 </div>
               </div>
             </form>

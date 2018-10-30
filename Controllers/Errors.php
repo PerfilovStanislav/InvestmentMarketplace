@@ -18,7 +18,7 @@ namespace Controllers {
 			$return['c']['content'] = ['Errors/404', []];
 
             Helper::header(Helper::E404);
-			return IS_AJAX ? Helper::json($return) : $this->layout($return);
+			return IS_AJAX ? Helper::jsonv($return) : $this->layout($return);
 		}
 	}
 

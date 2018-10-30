@@ -9,16 +9,16 @@ namespace Helpers {
             $this->arr = $arr;
         }
 
-        public final function setArray(array $arr) {
+        final public function setArray(array $arr) {
             $this->arr = $arr;
             return $this;
         }
 
-        public final function getArray() {
+        final public function getArray() {
             return $this->arr;
         }
 
-		public final static function joinForInsert(array $arr) {
+		final public static function joinForInsert(array $arr) {
 			if (empty($arr) || count($arr) < 1) return null;
 
 			$str = implode(',', $arr);
@@ -26,16 +26,16 @@ namespace Helpers {
 			return '{'.$str.'}';
 		}
 
-        public final function arrayColumn($column_name) {
+        final public function arrayColumn($column_name) {
             $this->arr = array_map(function($element) use($column_name){return $element[$column_name];}, $this->arr);
             return $this;
         }
 
-        public final function join() {
+        final public function join() {
             return implode(',', $this->arr);
         }
 
-        public final function groupBy($cols) {
+        final public function groupBy($cols) {
             $r = [];
             foreach ($this->arr as $a) {
                 $t = &$r;
@@ -48,7 +48,7 @@ namespace Helpers {
             return $this;
         }
 
-        public final function toArray($keys) {
+        final public function toArray($keys) {
             foreach ($this->arr as &$arr) {
                 foreach ($keys as $key) {
                     $arr[$key] = json_decode($arr[$key]);

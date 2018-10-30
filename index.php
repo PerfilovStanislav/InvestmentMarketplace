@@ -1,6 +1,10 @@
 <?php
+
 namespace {
-    define('DIR', dirname($_SERVER['SCRIPT_NAME']));
+
+	use Core\Auth;
+
+	define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));
     define('DOMAIN', 'richinme.org');
     error_reporting(E_ALL | E_STRICT);
@@ -16,5 +20,6 @@ namespace {
         require_once(real_path($className) . ".php");
     });
 
-    new Core\Router();
+	Auth::getInstance();
+	(new Core\Router())->setUri()->startRoute();
 }

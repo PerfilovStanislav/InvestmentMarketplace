@@ -23,7 +23,7 @@ namespace Core {
             parent::__construct($this->db_dns, $this->db_user, $this->db_pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 		}
 
-        public final static function getInstance():self {
+        final public static function getInstance():self {
             return self::$_instance?:(self::$_instance = new self());
         }
 
@@ -134,16 +134,22 @@ namespace Core {
 		 */
 		public function select($table, $fields = '*', $where = null, $order = null, $limit = null, $offset = null) {
 			$q = 'SELECT '.$fields.' FROM '.$table;
-			if($where !== null){
-				$q .= ' WHERE '.$where;
+			if($where !== null) {
+				$q .= ' WHERE ';
+				if (is_array($where)) {
+					$q .= implode(' AND ', array_map(function ($v, $k) {
+						return [$k => "'$v'"];
+					}, $where, array_keys($where)));
+				}
+				else $q .= $where;
 			}
-			if($order !== null){
+			if($order !== null) {
 				$q .= ' ORDER BY '.$order;
 			}
-			if($limit !== null){
+			if($limit !== null) {
 				$q .= ' LIMIT '.$limit;
 			}
-			if($offset !== null){
+			if($offset !== null) {
 				$q .= ' offset '.$offset;
 			}
 			return $this->getResult($q);

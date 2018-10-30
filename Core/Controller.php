@@ -26,7 +26,7 @@ namespace Core {
             else echo (new View('Layout', $params))->get();
 		}
 
-		/*private final function loadHead(array &$params) {
+		/*final private function loadHead(array &$params) {
             $available_langs = Locale::getAvailableLanguages();
             if (Auth::isAuthorized()) 	$params['userHead']	= ['Users/Head/Authorized', array_merge(Auth::getUserInfo(), ['langs' => $available_langs])];
             else 						$params['userHead']	= ['Users/Head/NotAuthorized', $available_langs];

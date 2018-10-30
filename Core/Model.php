@@ -9,5 +9,3 @@ class Model {
 		$this->db = Database::getInstance();
     }
 }
-
-?>

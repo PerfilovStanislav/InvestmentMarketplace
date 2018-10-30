@@ -19,7 +19,7 @@ namespace Helpers {
 		private $post;
 		private $data = [];
 		private $link;
-		private $errors = [];
+		private $errors = null;
 		private $key = null;
 		private $is_array = false;
 		private $sameArrays = [];
@@ -132,7 +132,7 @@ namespace Helpers {
 			foreach ($this->sameArrays as $key => $arr) {
 				if (max($arr) !== min($arr)) $this->addErrors([$key => 'Not same!']);
 			}
-			return empty($this->errors) ? false : $this->errors;
+			return $this->errors?:false;
 		}
 
 		public function addErrors(array $errors):Validator {
@@ -146,11 +146,11 @@ namespace Helpers {
 			return $this->data;
 		}
 
-		public final function __get($name) {
+		final public function __get($name) {
             return $this->data[$name];
         }
 
-        public final static function replace($regex, $str):string {
+        final public static function replace($regex, $str):string {
 			switch ($regex) {
 				case self::FLOAT: 	$str = str_replace(',', '.', $str); break;
 //				case self::NUM: 	$str = (int)$str; break;
@@ -158,9 +158,9 @@ namespace Helpers {
 			return preg_replace($regex, '', $str);
 		}
 
-		public final function checkErrors() {
-            return ($errors = $this->getErrors()) ? Helper::error($errors) : $this;
+		final public function checkErrors($scope = 'content') {
+            return ($errors = $this->getErrors()) ? Helper::error($errors, $scope) : $this;
         }
 	}
 
-}?>
+}

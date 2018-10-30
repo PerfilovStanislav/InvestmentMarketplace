@@ -892,10 +892,12 @@
   </div>
 
 <!-- ADDITIONAL -->
-<div class="alert alert-danger alert-dismissable alert-micro alert-border-left mrn mln" id="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <i class="fa fa-warning pr10"></i><er>{error}</er>
-</div>
+  <div hidden>
+	<div class="alert alert-danger alert-dismissable alert-micro alert-border-left mrn mln" id="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<i class="fa fa-warning pr10"></i><er>{error}</er>
+	</div>
+  </div>
 
 <?=(new \Core\View('Hyip/ChatMessage', []))->get()?>
   <!-- End: Main -->

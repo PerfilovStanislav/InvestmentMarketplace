@@ -1,26 +1,24 @@
 "use strict";
-var GO = !0;
-var STORAGE = {chat: {}};
+var STORAGE;
+var setDefaultStorage = function() {
+    STORAGE = {chat: {}}
+};
+setDefaultStorage();
+var xhrId = 0, Q = {};
 // устанавливаем параметры для всех аякс запросов
 $.ajaxSetup({
     type: "POST",
     data: {ajax:' 1'},
     dataType: 'json',
-    beforeSend: function(d, status, xhr) {
-        GO = !1;
-        // console.log('beforeSend', d, status, xhr);
-        /*count_of_requests++;
-        if (count_of_requests === 1) $("#loader").animate({opacity: 1}, 250, "easeOutBack", function() {});*/
+    beforeSend: function(xhr, status) {
+        xhr.xhrId = ++xhrId;
+        Q[xhr.xhrId] = xhr;
     },
-    complete: function(d,status,xhr) {
-        GO = !0;
-        // console.log('complete', d, status, xhr);
-        /*if (count_of_requests === 1) $("#loader").animate({opacity: 0}, 250, "easeOutBack", function() {});
-        count_of_requests--;*/
-        if (d.responseJSON) $.each(d.responseJSON, applyFunctions);
+    complete: function(xhr, status) {
+        delete Q[xhr.xhrId];
+        if (xhr.responseJSON) $.each(xhr.responseJSON, applyFunctions);
     },
     error: function (xhr, ajaxOptions, thrownError) {
-        GO = !0;
         console.warn(1, xhr);
         console.warn(2, ajaxOptions);
         console.warn(3, thrownError);
@@ -29,6 +27,29 @@ $.ajaxSetup({
         console.log('success', result,status,xhr);
     }*/
 });
+
+var abortAllAjax = function() {
+    $.each(Q, function(i, xhr){
+        xhr.abort();
+    });
+};
+
+var allClear = function() {
+    abortAllAjax();
+    stopTimers();
+    setDefaultStorage();
+};
+
+var reSend = function(links) {
+    console.log(STORAGE);
+    for (var i in links) {
+        ajax(links[i]);
+    }
+};
+
+var stopTimers = function() {
+    clearTimeout(STORAGE.chat_timer);
+};
 
 // вызов массив функций для определённой области , элимента, формы
 var callFunctions = function() {
@@ -71,15 +92,20 @@ var applyFunctions = function(key, value) {
             $.each(params, function (param_key, fields) {
                 $.each(fields, function (k, v) {
                     var $el = $('input[name=' + k + ']', $scope);
-                    var $el = $('input[name=' + k + ']', $scope);
+                    $el.on('focusin', function(e) {
+                        $(this).parent().removeClass('state-error').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
+                    });
                     $el.parent().addClass('state-error');
 
-                    var $a = $('#alert').clone();
+                    var $a = $('#alert').clone().removeAttr('id');
                     $a.find('er').text(fields[k]);
-                    $a.insertBefore($el.parent()).not(':visible')
+                    $a.insertBefore($el.parent()).not(':visible');
+                    $a.find('button').on('click', function() {
+                        $(this).parent().slideToggle('fast', 'swing', function(){this.remove()});
+                    });
                 })
             });
-            $('.alert:not(:visible)').slideToggle('fast');
+            $('.alert:not(:visible)', $('#main')).slideToggle('fast');
 
             var v = $('.state-error').eq(0).offset().top;
             $('html,body').animate({scrollTop: v - 75}, 250 + Math.abs($(document).scrollTop() - v) * 0.5, 'easeOutQuad');
@@ -102,8 +128,6 @@ var applyFunctions = function(key, value) {
 var getScope = function (scope) {
     return scope === 'document' ? document : $('#'+scope);
 };
-
-var $userHead = $('#userHead');
 
 function replace(e) {
     var filtered_str, $el = $(e.currentTarget);
@@ -133,25 +157,12 @@ var initTypes = function(el) {
 	$('.onlyUrl'    , el).on('input', onlyUrl);
 };
 
-$('#logout').on('click', function() {
-    if (GO) {
-        $.ajax({
-            url: '/Users/logout',
-            success: function(data){
-                location.reload();
-            }
-        });
-    }
-});
-
 var UserAuthorization = function() {
     initTypes(this);
 
     var form = $("#authorizationuser_form");
-    $('input', form).on('focusin', function(e) {
-        $(this).parent().removeClass('state-error');
-    });
     form.submit(function(){
+        removeAlerts(form);
         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
 
         if (a.length) {
@@ -159,22 +170,14 @@ var UserAuthorization = function() {
             return !1;
         }
 
-        $.ajax({
-            url: '/Users/authorize',
-            data: form.serialize(),
-            success: function(data){
-                if (data['success'] === 'user_authorized') location.reload();
-                else if (data.error){
-                    var error = data.error.fields.login || data.error.fields.password || '';
-                    $('#alert-user-error er').text(error);
-                    $('#alert-user-error:not(:visible)').slideToggle('fast');
-                }
-            },
-        });
+        ajax('/Users/authorize', form.serialize());
         return false;
     });
 };
 
+var removeAlerts = function(scope) {
+    $('.alert', scope).slideToggle('fast', 'swing', function(){this.remove()});
+};
 
 var UserRegistration = function() {
     initTypes(this);
@@ -184,6 +187,7 @@ var UserRegistration = function() {
         $(this).parent().removeClass('state-error').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
     });
     form.submit(function(){
+        removeAlerts(form);
         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
         if ($('#confirm_pass').val() != $('input[name=password]', form).val()) a = a.add($('#confirm_pass').parent());
 
@@ -194,16 +198,11 @@ var UserRegistration = function() {
             return !1;
         }
 
-        if (GO) {
-            $('.alert-dismissable', form).slideToggle('fast', 'swing', function(){this.remove()});
-            $.ajax({
-                url: '/Users/add',
-                data: form.serialize(),
-                success: function(data){
-                }
+        $.ajax({
+            url: '/Users/add',
+            data: form.serialize()
+        });
 
-            });
-        }
         return false;
     });
 };
@@ -235,13 +234,11 @@ var ProjectRegistration = function(a) {
         var data = {};
         $(this).parent().find('input').each(function(i,el) {data[$(el).attr('name')] = $(el).val()});
 
-        if (GO) {
-            $('.alert-dismissable:visible', form).remove();
-            $.ajax({
-                url: '/Hyip/check',
-                data: data
-            });
-        }
+        $('.alert-dismissable:visible', form).remove();
+        $.ajax({
+            url: '/Hyip/check',
+            data: data
+        });
     });
 
 	$('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).on('focusin', function(e) {
@@ -288,34 +285,33 @@ var ProjectRegistration = function(a) {
             return !1;
         }
 
-        if (GO) {
-            var d = $('#full_site_image').cropper('getCroppedCanvas');
-            $('[name=screen_data]').val( $('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.8) );
-            $('[name=thumb_data]').val( $('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
-            $.ajax({
-               url: '/Hyip/add',
-               data: form.serialize(),
-               success: function(data){
-                   // TODO SiteTour
-                   // Для неавторизованного пользователя выводить предупреждающее сообщение
-                   if (data.error) {
-                       if (data.error.fields) {
-                           $.each(data.error.fields, function(k,v) {
-                               $.each(v, function(a,b) {
-                                   var $el = $('input[name='+a+']');
-                                   $el.parent().addClass('state-error');
+        var d = $('#full_site_image').cropper('getCroppedCanvas');
+        $('[name=screen_data]').val( $('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.8) );
+        $('[name=thumb_data]').val( $('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
+        $.ajax({
+           url: '/Hyip/add',
+           data: form.serialize(),
+           success: function(data){
+               // TODO SiteTour
+               // Для неавторизованного пользователя выводить предупреждающее сообщение
+               if (data.error) {
+                   if (data.error.fields) {
+                       $.each(data.error.fields, function(k,v) {
+                           $.each(v, function(a,b) {
+                               var $el = $('input[name='+a+']');
+                               $el.parent().addClass('state-error');
 
-                                   var $a = $('#alert').clone();
-                                   $a.find('er').text(b);
-                                   $el.parents('div.section:first', form).prepend($a);
-                                   $a.slideToggle('fast');
-                               });
+                               var $a = $('#alert').clone();
+                               $a.find('er').text(b);
+                               $el.parents('div.section:first', form).prepend($a);
+                               $a.slideToggle('fast');
                            });
-                       }
+                       });
                    }
                }
-            });
-        }
+           }
+        });
+
         return false;
     });
 
@@ -490,23 +486,22 @@ var adminPanelInit = function() {
 
 
 var linkClick = function() {
-    $('a.ajax', this).click(function() { // a[href*="/"],
-        var url = $(this).attr('href');
-        $.ajax({
-            url:  url,
-            type: "POST",
-            data: {ajax:' 1'},
-            dataType: 'json',
-            complete: complete
-        });
-
-        if(url != window.location.pathname){
-            window.history.pushState(null, null, url);
-        }
-
+    $(document).on('click', 'a.ajax', function(e) {
+        var $target = $(e.currentTarget);
+        var url = $target.attr('href');
+        ajax(url, [], $target.hasClass('page'));
         return false;
     });
-}
+};
+
+var ajax = function(url, data, page) {
+    var tmp = {url: url};
+    if (data) tmp.data = data;
+    if (page && url != window.location.pathname) {
+        window.history.pushState(null, null, url);
+    }
+    $.ajax(tmp);
+};
 
 var initChat = function() {
     $("form[chat_id]").submit(function(e){
@@ -517,10 +512,10 @@ var initChat = function() {
         else if (STORAGE.status == 3) {
             STORAGE.status = 6;
         }
-        $.ajax({
-            url: '/Hyip/sendMessage/project/'+$(this).attr('chat_id'),
-            data: {message: $(this).find('[name=message]').val()}
-        });
+        ajax(
+            '/Hyip/sendMessage/project/'+$(this).attr('chat_id'),
+            {message: $(this).find('[name=message]').val()}
+        );
         $(this).find('[name=message]').val('');
         return false;
     });
@@ -542,6 +537,7 @@ var checkChats = function() {
     ajax('/hyip/getChatMessages/', {chats:data});
 };
 var setNewChatMessages = function(messages) {
+    console.log(STORAGE);
     STORAGE.status = 4; // сообщения получены
     if (!_.isEmpty(messages)) {
         for (var project_id in messages) {
@@ -576,22 +572,17 @@ jQuery(document).ready(function() {
         ajax(location.pathname);
     });
 
+    linkClick();
+
 	// ###   ###   ###		выполняем все необходимые скрипты для текущей страницы из массива
 	// startAllNeedFunctions.apply(document);
 
 
-    $('.alert button').on('click', function() {
+    /*$('.alert button').on('click', function() {
         $(this).parent().slideToggle('slow');
-    });
+    });*/
 });
-
-var ajax = function(url, data) {
-    $.ajax({
-        url: url,
-        data: data
-    });
-};
 
 var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
-}
+};

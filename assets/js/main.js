@@ -220,7 +220,7 @@ var Core = function(options) {
          });
       }
       $('.dropdown-menu').on('click', function(e) {
-         e.stopPropagation();
+         e.preventDefault();
          var Target = $(e.target);
          var TargetGroup = Target.parents('.btn-group');
          var SiblingGroup = Target.parents('.dropdown-menu').find('.btn-group');
@@ -329,7 +329,7 @@ var Core = function(options) {
          Popovers.popover();
       }
       $('.dropdown-menu.dropdown-persist').on('click', function(e) {
-         e.stopPropagation();
+         // e.preventDefault();
       });
       $('.dropdown-menu .nav-tabs li a').on('click', function(e) {
          e.preventDefault();
@@ -368,12 +368,12 @@ var Core = function(options) {
             siblingRope: true
          };
          var options = $.extend({}, defaults, options);
-         runHelpers();
+         /*runHelpers();
          runAnimations();
          runHeader();
-         runSideMenu(options); /*кнопка меню и доп.меню справа*/
+         runSideMenu(options);*/
          //runFooter();
-         runTrays();
+         // runTrays();
          runFormElements();
       }
    }

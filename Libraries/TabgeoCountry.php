@@ -30,7 +30,7 @@ namespace Libraries {
 
         private static $filename = 'Libraries\Tabgeocountry.dat';
 
-        public static final function getCountry() {
+        final public static function getCountry() {
             if (!isset($_SERVER['REMOTE_ADDR'])) return null;
             $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -94,7 +94,7 @@ namespace Libraries {
             }
         }
 
-        public final static function updateBase() {
+        final public static function updateBase() {
             $db_md5 = file_get_contents('http://tabgeo.com/api/v4/country/db/md5/');
             if(md5_file(self::$filename) <> $db_md5){
                 $db_content = file_get_contents('http://tabgeo.com/api/v4/country/db/get/');

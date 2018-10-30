@@ -11,7 +11,7 @@ namespace Helpers\Data {
     use Helpers\Locale;
 
     class Currency {
-        public static final function getCurrency() {
+        final public static function getCurrency() {
             $c = Locale::getLocale()['currency'];
             return [
                 ['i' => '&#xf155;', 't' => $c[0]],

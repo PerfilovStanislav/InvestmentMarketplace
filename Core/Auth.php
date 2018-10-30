@@ -2,9 +2,9 @@
 
 namespace Core {
 
-    use Helpers\{
-        Validator, Errors, Locale
-    };
+	use Helpers\{
+		Helper, Validator, Errors
+	};
 
 	class Auth
 	{
@@ -28,7 +28,7 @@ namespace Core {
 			$c = &$_COOKIE;
 
 			if (isset($s['user_id'])) {
-                self::setUserInfoFromBase($s['user_id']);
+                $this->setUserInfoFromBase($s['user_id']);
 			}
 			else if (isset($c['user_id']) && isset($c['hash'])) {
 				$user_id = Validator::replace(Validator::NUM,  $c['user_id']);
@@ -36,41 +36,44 @@ namespace Core {
 				setcookie('user_id' , $user_id,	null,'/',DOMAIN,null,false);
 				setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
 
-				if ($this->db->getRow('user_remember', 'hash', "user_id = {$user_id} and hash = '{$hash}' and ip='{$this->get_ip()}'")) {
+				if ($this->db->getRow('user_remember', 'hash', [
+						'user_id' => $user_id,
+						'hash' => $hash,
+						'ip' => self::get_ip()
+					])) {
 					$s['user_id'] = $c['user_id'];
-                    self::setUserInfoFromBase($s['user_id']);
+					$this->setUserInfoFromBase($s['user_id']);
 				}
 				else {
 					self::$isAuthorized = false;
 				}
 			}
 
-			// получаем id сессии из базы
-            if (!($s['session_id']??null)) {
-                $session_id = $this->db->getOne('session', sprintf("uid = '%s'", session_id()));
-                if (!$session_id) {
-                    $data = [
-                        'uid' => [[session_id()]],
-                        'ip' => [[$this->get_ip()]],
-                    ];
-                    $this->db->insert('session', $data);
-                    $session_id = $this->db->getOne('session', sprintf("uid = '%s'", session_id()));
-                }
-                $s['session_id'] = $session_id;
-            }
-
-            self::$userInfo['session_id'] = $s['session_id'];
+            self::$userInfo['session_id'] = $s['session_id']??self::getSession();
 		}
 
-        public final static function getInstance():self {
+		final private static function getSession() {
+			$session_id = Database::getInstance()->getOne('session', sprintf("uid = '%s'", session_id()));
+			if (!$session_id) {
+				$data = [
+					'uid' => [[session_id()]],
+					'ip' => [[self::get_ip()]],
+				];
+				Database::getInstance()->insert('session', $data);
+				return Database::getInstance()->getOne('session', $data);
+			}
+			return $session_id;
+		}
+
+        final public static function getInstance():self {
             return self::$_instance?:(self::$_instance = new self());
         }
 
-		public static final function isAuthorized():bool {
+		final public static function isAuthorized():bool {
 			return self::$isAuthorized??false;
 		}
 
-		private final static function startSession() {
+		final private static function startSession() {
 			if (!self::$sessionStarted) {
 				session_name('uid');
 				session_set_cookie_params(1728000, '/', DOMAIN, false, true);
@@ -79,7 +82,8 @@ namespace Core {
 			}
 		}
 
-		public function authorize($login, $password) {
+		final public function authorize($login, $password) {
+		    $scope = 'authorizationuser_form';
 			if (strpos($login, '@') > 0) {
 				$email = Validator::replace(Validator::EMAIL, $login);
 				$res = $this->db->getRow('users', 'id, password', "email = '$email'");
@@ -90,45 +94,47 @@ namespace Core {
 			}
 
 			if (!$res) {
-				Errors::setField('login', 'no_user');
-				return Errors::getErrors();
+				return Helper::fieldError('login', 'no_user', $scope);
 			}
 
 			if (self::confirmPassword($password, $res['password'])) {
+				$user_id = $res['id'];
 				self::startSession();
 				$s = &$_SESSION;
 
-				setcookie('user_id', $res['id'],null,'/',DOMAIN,null,true);
-				$s['user_id'] = $res['id'];
+				setcookie('user_id', $user_id,null,'/',DOMAIN,null,true);
+				$s['user_id'] = $user_id;
 
-				$res = $this->db->getRow('user_remember', 'hash', "user_id = '{$res['id']}' and ip = '{$this->get_ip()}'");
+				$res = $this->db->getRow('user_remember', 'hash', [
+					'user_id' => $user_id,
+					'ip' => self::get_ip()]);
 				if ($res) {
 					setcookie('hash', $res['hash'],null,'/',DOMAIN,null,true);
 				}
 				elseif (($_POST['remember'] ?? '') === 'on') {
-					$hash = self::hashPassword(uniqid('rand'.$s['user_id'].$this->get_ip(), true));
+					$hash = self::hashPassword(uniqid('rand'.$s['user_id'].self::get_ip(), true));
 					setcookie('hash', $hash,null,'/',DOMAIN,null,true);
 					$this->db->insert('user_remember', [
 						'user_id' 	=> [[$s['user_id']],	\PDO::PARAM_INT],
 						'hash' 		=> [[$hash]],
-						'ip' 		=> [[$this->get_ip()]]
+						'ip' 		=> [[self::get_ip()]]
 					]);
 				}
+				$this->setUserInfoFromBase($user_id);
 				return ['success' => 'user_authorized'];
 			}
 			else {
-				Errors::setField('password', 'bad_password');
-				return Errors::getErrors();
+				return Helper::fieldError('password', 'bad_password', $scope);
 			}
 		}
 
-		public function logout() {
+		final public function logout() {
 			if (!self::$isAuthorized) return false;
 
 			self::startSession();
 
 			$info = self::$userInfo;
-			$this->db->deleteOne('user_remember', "user_id={$info['id']} and ip='{$this->get_ip()}'");
+			$this->db->deleteOne('user_remember', "user_id={$info['id']} and ip='" . self::get_ip() . "'");
 
 			$session_keys_in_cookies = ['uid', 'hash', 'user_id'];
 			$params = session_get_cookie_params();
@@ -139,32 +145,34 @@ namespace Core {
 				);
 			}
 			session_destroy();
+			self::$isAuthorized = false;
 			return true;
 		}
 
-		private final static function confirmPassword($password, $hash)
-		{
+		final private static function confirmPassword($password, $hash) {
 			return crypt($password, self::PREFIX.$hash) === self::PREFIX.$hash;
 		}
 
-		public final static function hashPassword($password)
+		final public static function hashPassword($password)
 		{
 			$salt = substr(md5(uniqid('St', true)), 0, 22);
 			return substr(crypt($password, self::PREFIX . $salt), 7);
 		}
 
-		public final function setUserInfoFromBase($id) {
+		final public function setUserInfoFromBase($id) {
 			self::$isAuthorized = true;
 			self::$userInfo = array_merge(self::$userInfo, $this->db->getRow('users u 
 			    left join user_params up ON up.user_id = u.id 
-			    left join languages l ON l.id = up.lang_id', 'u.id, u.login, u.status_id, u.name, l.shortname as lang, up.photo', "u.id = {$id}"));
+			    left join languages l ON l.id = up.lang_id',
+				'u.id, u.login, u.status_id, u.name, l.shortname as lang, up.photo',
+				"u.id = {$id}"));
 		}
 
-		public final static function getUserInfo() {
+		final public static function getUserInfo() {
 			return self::$userInfo;
 		}
 
-		private function get_ip():string
+		final private static function get_ip():string
 		{
 			$ip = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
 			$ip = Validator::replace(Validator::IP, $ip);
@@ -172,5 +180,3 @@ namespace Core {
 		}
 	}
 }
-
-?>

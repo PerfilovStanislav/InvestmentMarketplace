@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Beautynight
- * Date: 08.07.2016
- * Time: 22:49
- */
 
 namespace Helpers\Locales {
 
-    class Ru {
-        public final static function getLocale() {
+	use Interfaces\LocaleInterface;
+
+	class Ru implements LocaleInterface {
+        final public static function getLocale():array {
             return [
             	'add'				=> 'Добавить',
 				'add_level'         => 'Добавить уровень',
@@ -68,7 +64,7 @@ namespace Helpers\Locales {
             ];
         }
 
-        public final static function getPeriodName($i, $k) {
+        final public static function getPeriodName(int $i, int $k):string {
             return ['минут','час','','недел','месяц',''][$i-1].(
                 ($k+89)%100<4||($k+9)%10>3
                     ?['','ов','дней','ь','ев','лет'][$i-1]

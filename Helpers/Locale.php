@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Beautynight
- * Date: 08.07.2016
- * Time: 21:25
- */
 
 namespace Helpers {
     use \Core\Auth;
@@ -17,7 +11,7 @@ namespace Helpers {
         private static $locale = null;
         private static $localeFile = null;
 
-        public static final function getLanguage() {
+        final public static function getLanguage() {
             if (self::$language !== null) return self::$language;
             // 1: from profile
             if ($lang = (Auth::getUserInfo()['lang'] ?? false)) return (self::$language = ucfirst($lang));
@@ -26,8 +20,8 @@ namespace Helpers {
             if ($_SESSION['lang'] ?? false) return (self::$language = $_SESSION['lang']);
 
             // 3: from browser
-            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-                $list = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            if ($list=($_SERVER['HTTP_ACCEPT_LANGUAGE']??false)) {
+                $list = strtolower($list);
                 if (preg_match_all('/([a-z]{1,8}(?:-[a-z]{1,8})?)(?:;q=([0-9.]+))?/', $list, $list)) {
                     $langs = array_combine($list[1], $list[2]);
                     foreach ($langs as $k => &$v)
@@ -46,23 +40,24 @@ namespace Helpers {
             return ($_SESSION['lang'] = self::$language = self::$defaultLanguage);
         }
 
-        public static final function getLocale() {
+        final public static function getLocale() {
             return self::$locale?:(self::$locale = self::getLocaleFile()::getLocale());
         }
 
-        public static final function getLocaleFile() {
+        final public static function getLocaleFile():string {
             return self::$localeFile?:(self::$localeFile = '\Helpers\Locales\\'.ucfirst(self::getLanguage()));
         }
 
-        public static final function getPeriodName($i,$k) {
+        final public static function getPeriodName($i,$k) {
             return self::getLocaleFile()::getPeriodName($i,$k);
         }
 
-        public static final function getAvailableLanguages() {
-            return self::$availableLanguages?:(self::$availableLanguages = Database::getInstance()->select('languages', 'shortname', 'available = true'));
-        }
+		final public static function getAvailableLanguages() {
+			return self::$availableLanguages?:(self::$availableLanguages = Database::getInstance()->select('languages', 'shortname', 'available = true'));
+		}
 
+		final public static function get(string $key) {
+			return self::getLocale()[$key];
+		}
     }
-
-    
 }

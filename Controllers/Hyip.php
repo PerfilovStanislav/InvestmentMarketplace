@@ -2,15 +2,13 @@
 
 namespace Controllers {
 
-    use Core\{
-        Auth, Controller, View
-    };
-    use Helpers\{
+    use Core\Auth;
+	use Core\Router;
+	use Helpers\{
         Validator, Helper, Data\Currency
     };
 	use Libraries\File;
 	use \Models\Hyip as Model;
-	use Controllers\Layout;
 
 	class Hyip extends Layout{
 		private $model;
@@ -20,7 +18,7 @@ namespace Controllers {
 			$this->model = new Model();
 		}
 
-		public final function registration() {
+		final public function registration() {
 		    $data = $this->model->getRegistrationData();
             $data['currency'] = Currency::getCurrency();
             $return['c']['content'] = ['Hyip/Registration', $data];
@@ -53,11 +51,11 @@ namespace Controllers {
             $return['c']['content'] = ['Hyip/Show', $data];
             $return['f']['content'] = array_merge(['initChat', 'panelScrollerInit'], $chats);
 
-            return IS_AJAX ? Helper::json(Helper::view($return)) : $this->layout($return);
+            return IS_AJAX ? Helper::jsonv($return) : $this->layout($return);
 		}
 
 
-		public final function add(array $args) {
+		final public function add(array $params = []) {
             $data = $this->post
                 ->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
 				->checkAll('paymenttype', 		1, 		3, 	Validator::NUM)
@@ -78,7 +76,7 @@ namespace Controllers {
 
             foreach ($data['languages'] as $key => $val) {
 			    if (!isset($data['description'][$val])) {
-                    return Helper::error(['is_absent' => [$val]]);
+                    return Helper::alert(['is_absent' => [$val]]);
                 }
             }
 
@@ -93,7 +91,7 @@ namespace Controllers {
             }
 		}
 
-		private final function checkWebsite():array {
+		final private function checkWebsite():array {
             $ref_url = $this->post->checkAll('website', 1, 128, Validator::URL, 'ref_url')->getData()['ref_url'];
             $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($ref_url));
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
@@ -112,11 +110,11 @@ namespace Controllers {
             return $ret;
         }
 
-        public final function check() {
-            Helper::json($this->checkWebsite());
+        final public function check() {
+            return Helper::json($this->checkWebsite());
         }
 
-        public final function sendMessage(array $params = []) {
+        final public function sendMessage(array $params = []) {
             $project_id = (int)$params['project'];
 
             $post = $this->post
@@ -138,12 +136,15 @@ namespace Controllers {
             return Helper::json($return);
         }
 
-        public final function getChatMessages(array $params = []) {
+        final public function getChatMessages(array $params = []) {
 		    // если есть $params, значит вызвали из $this->show()
             $chats = $params ?: $this->post->checkAll('chats')->checkErrors()->chats;
 
-            if ($new_messages = $this->model->getChatMessages($chats)) $return['f']['content']['setNewChatMessages'] = $new_messages;
+            if ($new_messages = $this->model->getChatMessages($chats)) {
+            	$return['f']['content']['setNewChatMessages'] = $new_messages;
+			}
             $return['f']['content'][] = 'startChatCheck';
+//            sleep(2);
             return $params ? $return['f']['content'] : Helper::json($return);
         }
 	}

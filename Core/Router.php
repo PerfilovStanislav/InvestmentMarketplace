@@ -2,12 +2,14 @@
 
 namespace Core;
 
-use Helpers\{Validator};
+use Helpers\{
+	Helper, Validator
+};
 
 class Router {
 //        private $defaultParams = 'Hyip/registration/1';
-	private $defaultParams = 'Hyip/show/1';
-	private $errorParams   = 'Errors/show/1';
+	private $defaultParams = 'Hyip/show';
+	private $errorParams   = 'Errors/show';
 	private $controller;
 	private $action;
 	private $params;
@@ -48,13 +50,13 @@ class Router {
 		$controller = new $controllerClass();
 
 		$this->params = array_filter(
-							array_map(function($a){
+							array_map(function(array $a){
 								return $a[1]??false ? [$a[0] => $a[1]] : null;
 							}, array_chunk($this->params, 2))
 						, function($v) { return $v != null; });
 		$this->params = $this->params ? array_unique(call_user_func_array('array_merge', $this->params)) : [];
 		if ($this->additional) $this->params = array_merge($this->params, $this->additional);
 		call_user_func_array([$controller, $this->action],  [$this->params]);
-		return true;
+		return Helper::result();
 	}
 }

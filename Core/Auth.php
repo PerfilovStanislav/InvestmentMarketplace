@@ -2,33 +2,43 @@
 
 namespace Core {
 
-	use Helpers\{
-		Helper, Validator, Errors
+    use Helpers\{
+		Helper, Validator
 	};
+    use Traits\Instance;
 
-	class Auth
-	{
+    class Auth {
+        use Instance;
+
 		private $db;
 		CONST PREFIX = '$2a$08$';
 		private static $isAuthorized = null;
 		private static $sessionStarted = false;
-		private static $userInfo = [
-		    'id'            => null,
-		    'session_id'    => -1
-        ];
+		private static $defaultUserInfo = [
+			'id'            => null,
+			'session_id'    => -1
+		];
+		private static $userInfo;
         private static $_instance = null;
-
 
 		function __construct() {
 			$this->db = Database::getInstance();
+			self::clearUserInfo();
+			$this->login();
+		}
 
+		final private static function clearUserInfo() {
+			self::$userInfo = self::$defaultUserInfo;
+		}
+
+		final private function login() {
 			self::startSession();
 
 			$s = &$_SESSION;
 			$c = &$_COOKIE;
 
 			if (isset($s['user_id'])) {
-                $this->setUserInfoFromBase($s['user_id']);
+				$this->setUserInfoFromBase($s['user_id']);
 			}
 			else if (isset($c['user_id']) && isset($c['hash'])) {
 				$user_id = Validator::replace(Validator::NUM,  $c['user_id']);
@@ -37,10 +47,10 @@ namespace Core {
 				setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
 
 				if ($this->db->getRow('user_remember', 'hash', [
-						'user_id' => $user_id,
-						'hash' => $hash,
-						'ip' => self::get_ip()
-					])) {
+					'user_id' => $user_id,
+					'hash' => $hash,
+					'ip' => self::get_ip()
+				])) {
 					$s['user_id'] = $c['user_id'];
 					$this->setUserInfoFromBase($s['user_id']);
 				}
@@ -49,10 +59,10 @@ namespace Core {
 				}
 			}
 
-            self::$userInfo['session_id'] = $s['session_id']??self::getSession();
+			self::$userInfo['session_id'] = $s['session_id']??self::getSession();
 		}
 
-		final private static function getSession() {
+		final private static function getSession():int {
 			$session_id = Database::getInstance()->getOne('session', sprintf("uid = '%s'", session_id()));
 			if (!$session_id) {
 				$data = [
@@ -60,14 +70,15 @@ namespace Core {
 					'ip' => [[self::get_ip()]],
 				];
 				Database::getInstance()->insert('session', $data);
+
+				$data = [
+					'uid' => $data['uid'][0][0],
+					'ip' => $data['ip'][0][0],
+				];
 				return Database::getInstance()->getOne('session', $data);
 			}
 			return $session_id;
 		}
-
-        final public static function getInstance():self {
-            return self::$_instance?:(self::$_instance = new self());
-        }
 
 		final public static function isAuthorized():bool {
 			return self::$isAuthorized??false;
@@ -94,13 +105,15 @@ namespace Core {
 			}
 
 			if (!$res) {
-				return Helper::fieldError('login', 'no_user', $scope);
+				Helper::fieldError('login', 'no_user', $scope);
 			}
 
 			if (self::confirmPassword($password, $res['password'])) {
 				$user_id = $res['id'];
 				self::startSession();
 				$s = &$_SESSION;
+
+				$this->db->update('message', [':user_id' => $user_id], 'session_id = ' . self::getSession());
 
 				setcookie('user_id', $user_id,null,'/',DOMAIN,null,true);
 				$s['user_id'] = $user_id;
@@ -121,19 +134,19 @@ namespace Core {
 					]);
 				}
 				$this->setUserInfoFromBase($user_id);
-				return ['success' => 'user_authorized'];
+//				Helper::$r['success'] = 'user_authorized';
 			}
 			else {
-				return Helper::fieldError('password', 'bad_password', $scope);
+				Helper::fieldError('password', 'bad_password', $scope);
 			}
 		}
 
-		final public function logout() {
+		final public function logout():bool {
 			if (!self::$isAuthorized) return false;
 
 			self::startSession();
 
-			$info = self::$userInfo;
+			$info = self::getUserInfo();
 			$this->db->deleteOne('user_remember', "user_id={$info['id']} and ip='" . self::get_ip() . "'");
 
 			$session_keys_in_cookies = ['uid', 'hash', 'user_id'];
@@ -149,11 +162,11 @@ namespace Core {
 			return true;
 		}
 
-		final private static function confirmPassword($password, $hash) {
+		final private static function confirmPassword($password, $hash):bool {
 			return crypt($password, self::PREFIX.$hash) === self::PREFIX.$hash;
 		}
 
-		final public static function hashPassword($password)
+		final public static function hashPassword($password):string
 		{
 			$salt = substr(md5(uniqid('St', true)), 0, 22);
 			return substr(crypt($password, self::PREFIX . $salt), 7);
@@ -168,7 +181,7 @@ namespace Core {
 				"u.id = {$id}"));
 		}
 
-		final public static function getUserInfo() {
+		final public static function getUserInfo():array {
 			return self::$userInfo;
 		}
 

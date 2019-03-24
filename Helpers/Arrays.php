@@ -9,16 +9,16 @@ namespace Helpers {
             $this->arr = $arr;
         }
 
-        final public function setArray(array $arr) {
+        final public function setArray(array $arr):self {
             $this->arr = $arr;
             return $this;
         }
 
-        final public function getArray() {
+        final public function getArray():array {
             return $this->arr;
         }
 
-		final public static function joinForInsert(array $arr) {
+		final public static function joinForInsert(array $arr):string {
 			if (empty($arr) || count($arr) < 1) return null;
 
 			$str = implode(',', $arr);
@@ -26,29 +26,26 @@ namespace Helpers {
 			return '{'.$str.'}';
 		}
 
-        final public function arrayColumn($column_name) {
-            $this->arr = array_map(function($element) use($column_name){return $element[$column_name];}, $this->arr);
-            return $this;
-        }
-
         final public function join() {
             return implode(',', $this->arr);
         }
 
-        final public function groupBy($cols) {
+        final public function groupBy(array $cols):self {
             $r = [];
             foreach ($this->arr as $a) {
                 $t = &$r;
                 foreach ($cols as $col) {
                     $t = &$t[$a[$col]];
                 }
-                $t = array_filter($a, function($k) use($cols) {return !in_array($k, $cols);}, ARRAY_FILTER_USE_KEY );
+                $t = array_filter($a, function($k) use($cols):bool {
+                		return !in_array($k, $cols);
+                	},ARRAY_FILTER_USE_KEY);
             }
             $this->arr = $r;
             return $this;
         }
 
-        final public function toArray($keys) {
+        final public function toArray(array $keys):self {
             foreach ($this->arr as &$arr) {
                 foreach ($keys as $key) {
                     $arr[$key] = json_decode($arr[$key]);
@@ -56,6 +53,18 @@ namespace Helpers {
             }
             return $this;
         }
-	}
 
-}?>
+        /* @TODO сделать универсальным? Рекурсивный массив по поиску ключей */
+        final public function getUnique(string $column_name) {
+        	$r = [];
+			foreach ($this->arr as $arr) {
+				foreach ($arr as $val) {
+					if ($tmp = $val[$column_name])
+						$r[$tmp] = $tmp;
+				}
+			}
+			$this->arr = array_keys($r);
+			return $this;
+		}
+	}
+}

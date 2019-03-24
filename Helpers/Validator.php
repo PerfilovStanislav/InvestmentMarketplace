@@ -13,7 +13,7 @@ namespace Helpers {
 		CONST URI = '/[^a-z0-9-_\/]/i';
 		CONST URL = '/[^a-z0-9\-\/=%#_:?№.]/iu';
 		CONST IP = '/[^0-9\.:]/i';
-		CONST DATE = '/[^0-9\.]/i';
+		CONST DATE = '/[^\-0-9]/i';
 		CONST TABLENAME = '/[^a-z_]/i';
 
 		private $post;
@@ -28,7 +28,7 @@ namespace Helpers {
 			$this->post = $post;
 		}
 
-		public function choose($key, $rename = null):Validator {
+		public function choose($key, $rename = null):self {
 			if (isset($this->post[$key])) {
 				$this->data[$rename ?? $key] = $this->post[$key];
 				$this->link = &$this->data[$rename ?? $key];
@@ -41,14 +41,14 @@ namespace Helpers {
 			return $this;
 		}
 
-		public function addFields($arr):Validator {
+		public function addFields($arr):self {
 		    foreach ($arr as $key => $val) {
                 $this->data[$key] = $val;
             }
 			return $this;
 		}
 
-		public function checkAll($key, $min = null, $max = null, $regex = null, $rename = null, $removeEmpty = null, $index = null):Validator {
+		public function checkAll($key, $min = null, $max = null, $regex = null, $rename = null, $removeEmpty = null, $index = null):self {
 			$this->choose($key, $rename);
 			if ($regex          !== null) $this->clear($regex);
             if ($removeEmpty    !== null) $this->removeEmpty();
@@ -58,7 +58,7 @@ namespace Helpers {
 			return $this;
 		}
 
-		public function clear($regex):Validator {
+		public function clear($regex):self {
 			if ($this->key !== null) {
 				if (!$this->is_array) $this->link = self::replace($regex, $this->link);
 				else {
@@ -70,7 +70,7 @@ namespace Helpers {
 			return $this;
 		}
 
-		public function min($min, $regex = null):Validator {
+		public function min($min, $regex = null):self {
 			if ($this->key !== null) {
 				if (!$this->is_array) {
 				    if (in_array($regex, [self::FLOAT, self::NUM])) {
@@ -91,7 +91,7 @@ namespace Helpers {
 			return $this;
 		}
 
-		public function max($max, $regex = null):Validator {
+		public function max($max, $regex = null):self {
 			if ($this->key !== null) {
 				if (!$this->is_array) {
                     if (in_array($regex, [self::FLOAT, self::NUM])) {
@@ -111,12 +111,12 @@ namespace Helpers {
 			return $this;
 		}
 
-		private function removeEmpty():Validator {
+		private function removeEmpty():self {
 		    $this->link = array_diff($this->link, array(''));
 			return $this;
 		}
 
-		private function count($index):Validator {
+		private function count($index):self {
 			$this->sameArrays[$index][] = count($this->link);
 			return $this;
 		}
@@ -135,7 +135,7 @@ namespace Helpers {
 			return $this->errors?:false;
 		}
 
-		public function addErrors(array $errors):Validator {
+		public function addErrors(array $errors):self {
 			if (!empty($errors)) foreach ($errors as $k => $v) {
 				$this->errors[$k][] = $v;
 			}
@@ -158,8 +158,12 @@ namespace Helpers {
 			return preg_replace($regex, '', $str);
 		}
 
-		final public function checkErrors($scope = 'content') {
+		final public function exitWithErrors($scope = 'content') {
             return ($errors = $this->getErrors()) ? Helper::error($errors, $scope) : $this;
+        }
+
+		final public function checkAlerts() {
+            return ($errors = $this->getErrors()) ? Helper::alert($errors, 'error') : $this;
         }
 	}
 

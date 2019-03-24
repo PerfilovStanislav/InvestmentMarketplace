@@ -3,18 +3,21 @@
 
 namespace Core {
 	use \PDO;
-	use Helpers\{Validator, Show, Helper};
+	use Helpers\{Validator, Helper};
+    use Traits\Instance;
 
-	class Database extends PDO{
-		private $db_dns;
-		private $db_name = 'HyipMonitoring';
-		private $db_host = '127.0.0.1';
-		private $db_port = '5432';
-		private $db_user = 'postgres';
-		private $db_pass = 'itsall4you';
+    class Database extends PDO{
+	    use Instance;
 
-		public $queries = [];
-		public $errors = [];
+		private $db_dns,
+		        $db_name = 'HyipMonitoring',
+		        $db_host = '127.0.0.1',
+		        $db_port = '5432',
+		        $db_user = 'postgres',
+		        $db_pass = 'itsall4you';
+
+		public  $queries = [],
+		        $errors = [];
 
         private static $_instance = null;
 
@@ -23,9 +26,9 @@ namespace Core {
             parent::__construct($this->db_dns, $this->db_user, $this->db_pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 		}
 
-        final public static function getInstance():self {
+        /*final public static function getInstance():self {
             return self::$_instance?:(self::$_instance = new self());
-        }
+        }*/
 
 		public function insert($table, array $params) {
 			if (empty($params)) return null;
@@ -33,7 +36,6 @@ namespace Core {
 
 			$head 			= array_keys($params);
 			$columnNames 	= implode(',', $head);
-
 
 			$values= [];
 			$rows = count($params[$head[0]][0]);
@@ -67,7 +69,7 @@ namespace Core {
 			}
 		}
 
-		public function updateOne($table, array $params, $where) {
+		public function update(string $table, array $params, $where) {
 			if (empty($params)) return null;
 			$table = Validator::replace(Validator::TABLENAME, $table);
 
@@ -75,6 +77,7 @@ namespace Core {
 			foreach ($head as $k => &$v) {
 				$v = substr($v,1)."=$v";
 			}
+			unset($v);
 			$bindValues = implode(',', $head);
 
 			$stmt = $this->prepare("UPDATE $table set $bindValues where $where");
@@ -125,21 +128,25 @@ namespace Core {
 		}
 
 		/**
-		 * @param string $table
+		 * @param $table
 		 * @param string $fields
-		 * @param string $where
-		 * @param string $order
-		 * @param string $limit
-		 * @return Database $this
+		 * @param null $where
+		 * @param null $order
+		 * @param null $limit
+		 * @param null $offset
+		 * @return array|null
 		 */
 		public function select($table, $fields = '*', $where = null, $order = null, $limit = null, $offset = null) {
 			$q = 'SELECT '.$fields.' FROM '.$table;
 			if($where !== null) {
 				$q .= ' WHERE ';
 				if (is_array($where)) {
-					$q .= implode(' AND ', array_map(function ($v, $k) {
-						return [$k => "'$v'"];
-					}, $where, array_keys($where)));
+					$tmp = [];
+					foreach ($where as $key => $val) {
+						if (is_array($val)) $tmp[] = sprintf('%s in (%s)', $key, implode(',', $val));
+						else $tmp[] = sprintf("%s = '%s'", $key, $val);
+					}
+					$q .= implode(' AND ', $tmp);
 				}
 				else $q .= $where;
 			}

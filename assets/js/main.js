@@ -370,8 +370,8 @@ var Core = function(options) {
          var options = $.extend({}, defaults, options);
          /*runHelpers();
          runAnimations();
-         runHeader();
-         runSideMenu(options);*/
+         runHeader();*/
+         runSideMenu(options);
          //runFooter();
          // runTrays();
          runFormElements();

@@ -1,3 +1,6 @@
+<?php
+namespace Views\Layout;
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,7 +69,7 @@
         </div>
       </form>-->
       <div id="userHead" class="animated fadeIn">
-        <?=$this->userHead;?>
+        <?=$this->userHead?>
       </div>
     </header>
     <!-- End: Header -->
@@ -893,13 +896,13 @@
 
 <!-- ADDITIONAL -->
   <div hidden>
-	<div class="alert alert-danger alert-dismissable alert-micro alert-border-left mrn mln" id="alert">
+	<div class="alert alert-dismissable alert-micro alert-border-left mrn mln" id="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 		<i class="fa fa-warning pr10"></i><er>{error}</er>
 	</div>
   </div>
 
-<?=(new \Core\View('Hyip/ChatMessage', []))->get()?>
+<?=(new \Core\View(\Views\Hyip\ChatMessage::class, []))->get()?>
   <!-- End: Main -->
 
 

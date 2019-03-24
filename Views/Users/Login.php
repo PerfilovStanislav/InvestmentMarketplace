@@ -10,7 +10,7 @@
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
                     <span class="panel-title">
-                      <i class="fa fa-pencil-square"></i><?=$this->user_authorization;?>
+                      <i class="fa fa-pencil-square"></i><?=$this->user_authorization?>
                     </span>
             </div>
 
@@ -21,7 +21,7 @@
                     <div class="section row" >
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="login" class="gui-input onlyEmail" placeholder="<?=$this->Login;?>">
+                                <input name="login" class="gui-input onlyEmail" placeholder="<?=$this->Login?>">
                                 <label class="field-icon">
                                     <i class="fa fa-user"></i>
                                 </label>
@@ -32,7 +32,7 @@
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" name="password" class="gui-input"
-									   placeholder="<?=$this->Password;?>" />
+									   placeholder="<?=$this->Password?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>

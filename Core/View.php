@@ -6,16 +6,14 @@ namespace Core {
 
     class View {
 		private $data = [];
-		private $template;
 		private $pageView;
 
-		function __construct( $template, $data = []) {
+		function __construct(string $template, array $data = []) {
             $data = array_merge($data, ['locale' => Locale::getLocale()]);
 			$this->set($data);
-			$this->template = 'Views/'.$template.'.php';
 
 			ob_start();
-			require_once $this->template;
+			require_once real_path($template . '.php');
 			$this->pageView = ob_get_clean();
 			$this->pageView = str_replace(["\n", "\r"], ' ', $this->pageView);
 			$this->pageView = preg_replace('/\<!--.*?--\>/i', ' ', $this->pageView);

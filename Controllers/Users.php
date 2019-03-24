@@ -3,13 +3,16 @@
 namespace Controllers {
 
 	use Core\{
-		Auth, Router
+		Auth, Controller
 	};
-	use Controllers\Hyip;
-	use \Models\Users as Model;
-	use \Helpers\{Validator, Helper, Locale};
+	use Models\Users as Model;
+	use Helpers\{Validator, Helper, Locale};
+    use Views\{
+        Users\Head\Authorized as ViewAuthorized,
+        Users\Head\NotAuthorized as ViewNotAuthorized
+    };
 
-	class Users extends Layout {
+	class Users extends Controller {
 		private $model;
 		function __construct() {
 			parent::__construct();
@@ -21,31 +24,28 @@ namespace Controllers {
         }
 
         final public function logout() {
-            if (Auth::getInstance()->logout()) {
-				$url = parse_url($_SERVER['HTTP_REFERER']??'');
-				$return['f']['document'] = [
-					'allClear',
-					'reSend' => ['/Users/getUserInfo', $url['path']],
-				];
-			}
-			else {
-				$return['f']['document'] = ['reload'];
-			}
-
-			return Helper::json($return);
+			Auth::getInstance()->logout();
+			$this->reloadPage();
         }
 
-        final public function getUserInfo() {
-			// TODO
-			// TODO
-			// TODO
-			// TODO
-			$return['c']['userHead'] = Users::getUserHead();
-			$return['f']['document'] = [
-				'setStorage' => ['user' => Auth::getUserInfo()],
-				'UserAuthorization',
+        final private function reloadPage() {
+			$url = parse_url($_SERVER['HTTP_REFERER']??'');
+			Helper::$r['f']['document']['addToAjaxQueue'] = [
+				'/Users/head',
+//				'/Hyip/leftside',
+				$url['path']
 			];
-			return Helper::jsonv($return);
+		}
+
+		final public function authorize() {
+			if ($_POST['login']??!1 && $_POST['password']??!1) {
+				$this->post->checkAll('password', 8, 64)->exitWithErrors();
+				if (strpos($_POST['login'], '@') > 0) $this->post->checkAll('login', 8, 64, Validator::EMAIL)->exitWithErrors();
+				else $this->post->checkAll('login', 4, 32, Validator::EN)->exitWithErrors();
+
+				Auth::getInstance()->authorize($this->post->login, $this->post->password);
+				$this->reloadPage();
+			}
 		}
 
 		final public function registration() {
@@ -62,7 +62,7 @@ namespace Controllers {
 				->checkAll('login'	 , 4, 32, Validator::EN)
 				->checkAll('name'	 , 4, 64, Validator::EN)
 				->checkAll('email'	 , 8, 64, Validator::EMAIL)
-				->checkAll('password', 8, 64)->checkErrors();
+				->checkAll('password', 8, 64)->exitWithErrors();
 
             $res = $this->model->addUser($this->post);
             if ($res['success'] ?? false) {
@@ -71,31 +71,52 @@ namespace Controllers {
 			else return Helper::json($res);
 		}
 
-        final public function authorize() {
-            if ($_POST['login']??!1 && $_POST['password']??!1) {
-                $this->post->checkAll('password', 8, 64)->checkErrors();
-                if (strpos($_POST['login'], '@') > 0) $this->post->checkAll('login', 8, 64, Validator::EMAIL)->checkErrors();
-                else $this->post->checkAll('login', 4, 32, Validator::EN)->checkErrors();
+        final public static function setUserHead() {
+			Helper::$r['c']['userHead'] = [
+                Auth::isAuthorized() ? ViewAuthorized::class : ViewNotAuthorized::class,
+				array_merge(
+					Auth::getUserInfo(),
+					[
+						'activeLang' => Locale::getLanguage(),
+						'availableLangs' => Locale::getAvailableLanguages(),
+						'photoThumb' => self::getUserPhoto(true)
+					])
+			];
 
-                Auth::getInstance()->authorize($this->post->login, $this->post->password);
-				$url = parse_url($_SERVER['HTTP_REFERER']??'');
-				$return['c']['userHead'] = Users::getUserHead();
-				$return['f']['document'] = [
-					'reSend' => [$url['path']],
-					'UserAuthorization',
-					'setStorage' => ['user' => Auth::getUserInfo()]
-				];
+			Helper::$r['f']['document']['setStorage']['user'] = Auth::getUserInfo();
+			Helper::$r['f']['document'][] = 'UserAuthorization';
+		}
 
-				return Helper::jsonv($return);
-            }
-            return false;
-        }
+		final public function head() {
+			return self::setUserHead();
+		}
 
-        final public static function getUserHead():array {
-			$available_langs = Locale::getAvailableLanguages();
-			$head_path = 'Users/Head/'.(Auth::isAuthorized()?'':'Not').'Authorized';
-			$data = array_merge(Auth::getUserInfo(), ['langs' => $available_langs]);
-			return [$head_path, $data];
+		final private static function getUserPhoto(bool $thumb = false) : string {
+			// @TODO
+			if ($thumb || true) {
+				$info = Auth::getUserInfo();
+				return sprintf('/assets/img/avatars2/%s.webp', (($info['id'] ?? $info['session_id'] ?? 1)-1)%30+1);
+			}
+		}
+
+		/*final public function getUsers(array $ids) {
+			$users = $this->model->getUsersByIds($ids);
+
+			$arrayHelper = new Arrays();
+			return $arrayHelper->setArray($chats)->groupBy(['project_id', 'id'])->getArray();
+		}*/
+
+		final public function changeLanguage(array $params = []) {
+			if ($langId = ((Locale::getAvailableLanguages()[$params['lang'] ?? null] ?? null)['id'] ?? null)) {
+				if (Auth::isAuthorized()) {
+					$this->model->db->update('user_params', [':lang_id' => $langId], 'user_id = ' . Auth::getUserInfo()
+						['id']);
+				}
+				else {
+					$_SESSION['lang'] = $params['lang'];
+				}
+			}
+			$this->reloadPage();
 		}
 	}
 }

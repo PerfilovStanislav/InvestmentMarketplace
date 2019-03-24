@@ -1,10 +1,12 @@
 <?php
 
 namespace Controllers {
+
+	use Core\Controller;
 	use \Models\Hyip as Model;
 	use Helpers\Helper;
 
-	class Errors extends Layout {
+	class Errors extends Controller {
 		private $model;
 
 		function __construct() {
@@ -22,4 +24,4 @@ namespace Controllers {
 		}
 	}
 
-}?>
+}

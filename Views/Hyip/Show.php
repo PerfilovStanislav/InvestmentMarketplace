@@ -1,3 +1,30 @@
+<?php
+namespace Views\Hyip\Show;
+/** @see \Controllers\Hyip::show() */
+?>
+<div class="filters">
+	<div class="panel mb25 mt5">
+		<div class="panel-body p10">
+			<div class="tab-content pn br-n">
+				<div class="btn-group">
+					<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+						<span class="flag flag-<?=$this->filterLangs[$this->lang]['flag']?>"></span>
+					</button>
+					<ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+						<? foreach ($this->filterLangs as $shortname => $lang): ?>
+							<li>
+								<a class="ajax <?=$shortname===$this->lang ? 'selected' : ''?> page"
+								   data-beforesend='{"document":{"changePageParams":{"lang":"<?=$shortname?>"}}}'>
+									<span class="flag flag-<?=$lang['flag']?> mr10"></span> <?printf('%s (%s)', $lang['name'], $lang['own_name'])?></a>
+							</li>
+						<? endforeach; ?>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="hyip">
 <? foreach ($this->projects as $project_id => $project): ?>
 <div class="panel mb25 mt5" project_id="<?=$project_id?>">
@@ -5,16 +32,16 @@
         <span class="panel-title hidden-xs"> <?=$project['name']?></span>
         <ul class="nav panel-tabs-border panel-tabs">
             <li class="active">
-                <a href="ecommerce_products.html#tab1_1" data-toggle="tab">General</a>
+                <a href="#main_<?=$project_id?>" data-toggle="tab"><?=$this->locale['general']?></a>
             </li>
             <li>
-                <a href="ecommerce_products.html#tab1_2" data-toggle="tab">Description</a>
+                <a href="#description_<?=$project_id?>" data-toggle="tab"><?=$this->locale['description']?></a>
             </li>
         </ul>
     </div>
     <div class="panel-body p10">
         <div class="tab-content pn br-n">
-            <div id="tab1_1" class="tab-pane active">
+            <div id="main_<?=$project_id?>" class="tab-pane active">
                 <div class="mbn flex inforow">
 
                     <div class="" style="flex: 0 0">
@@ -61,7 +88,7 @@
                                 </tr>
                                 <tr>
                                     <td><?=$this->locale['languages']?></td>
-                                    <td><?foreach ($this->flags[$project_id]['lang_id'] as $fl):?>
+                                    <td><?foreach ($this->projectLangs[$project_id]['lang_id'] as $fl):?>
                                             <i class="flag flag-<?=($a=$this->languages[$fl])['flag']?>" title="<?=$a['name']." ({$a['own_name']})"?>"></i>
                                         <?endforeach;?>
                                     </td>
@@ -103,32 +130,24 @@
                             </form>
                         </div>
                     </div>
-
-                    <!--<div class="pl15 fl  admin-form" style="width: calc(100% - 850px)">
-                        <div class="section mb10">
-                            <label for="name2" class="field prepend-icon">
-                                <input type="text" name="name2" id="name2" class="event-name gui-input br-light light" placeholder="Product Title">
-                                <label for="name2" class="field-icon">
-                                    <i class="fa fa-tag"></i>
-                                </label>
-                            </label>
-                        </div>
-                        <div class="section mb10">
-                            <label class="field prepend-icon">
-                                <textarea style="height: 160px;" class="gui-textarea br-light bg-light" id="comment" name="comment" placeholder="Product Description"></textarea>
-                                <label for="comment" class="field-icon">
-                                    <i class="fa fa-comments"></i>
-                                </label>
-                                <span class="input-footer hidden">
-                                       <strong>Hint:</strong>Don't be negative or off topic! just be awesome...</span>
-                            </label>
-                        </div>
-                    </div>-->
                 </div>
             </div>
-            <div id="tab1_2" class="tab-pane">
-                <div class="section row">
-                </div>
+            <div id="description_<?=$project_id?>" class="tab-pane">
+				<div class="mbn flex inforow">
+
+					<div class="" style="flex: 0 0">
+						<img src="/<?=$project['file_name']?>_th.jpg" class="media-object thumbnail">
+					</div>
+
+					<div class="mnw220" style="flex: 22 0">
+						<div class="panel-heading lh30 h-30">
+							<span class="panel-title"><?=$this->locale['description']?></span>
+						</div>
+						<div class="panel-body panel-scroller scroller-xs scroller-active scroller-success mih-220 scroller-content">
+							<?=$project['description']?>
+						</div>
+					</div>
+				</div>
             </div>
         </div>
     </div>

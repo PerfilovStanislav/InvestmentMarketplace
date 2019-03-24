@@ -17,17 +17,19 @@ $.ajaxSetup({
     complete: function(xhr, status) {
         delete Q[xhr.xhrId];
         if (xhr.responseJSON) $.each(xhr.responseJSON, applyFunctions);
+        linkAjaxQueue();
     },
     error: function (xhr, ajaxOptions, thrownError) {
-        console.warn(1, xhr);
-        console.warn(2, ajaxOptions);
-        console.warn(3, thrownError);
+        console.error(' ajaxError xhr', xhr);
+        /*console.error(' ajaxError', ajaxOptions);
+        console.error(' ajaxError', thrownError);*/
     }/*,
     success: function(result,status,xhr) {
         console.log('success', result,status,xhr);
     }*/
 });
 
+/* @TODO сделать вызов ajax запросов через очередь */
 var abortAllAjax = function() {
     $.each(Q, function(i, xhr){
         xhr.abort();
@@ -40,24 +42,26 @@ var allClear = function() {
     setDefaultStorage();
 };
 
-var reSend = function(links) {
-    console.log(STORAGE);
-    for (var i in links) {
-        ajax(links[i]);
-    }
+var ajaxQueue = [];
+var addToAjaxQueue = function(links) {
+    ajaxQueue = ajaxQueue.concat(links)
+};
+var linkAjaxQueue = function () {
+    if (!ajaxQueue.length) return false;
+    ajax(ajaxQueue.shift());
 };
 
 var stopTimers = function() {
-    clearTimeout(STORAGE.chat_timer);
+    clearTimeout(STORAGE.chatTimer);
 };
 
 // вызов массив функций для определённой области , элимента, формы
-var callFunctions = function() {
+/*var callFunctions = function() {
     for (var i in arguments) {
         if (typeof(arguments[i]) == 'function') arguments[i].apply(this);      // вызов функции без параметров
         else arguments[i][0].apply(this, [arguments[i][1]]);                 // вызов функции с параметрами
     }
-};
+};*/
 
 // вызывается после каждого ответа с сервера
 // умеет: отрисовывать вьюшки, вызывать методы, показывать ошибки и удачные запросы
@@ -86,29 +90,40 @@ var applyFunctions = function(key, value) {
             });
         });
     }
-    else if (key === 'error') {
+    else if (key === 'error' || key === 'success') {
         $.each(value, function(scope,params) {
             var $scope = getScope(scope);
-            $.each(params, function (param_key, fields) {
-                $.each(fields, function (k, v) {
-                    var $el = $('input[name=' + k + ']', $scope);
-                    $el.on('focusin', function(e) {
-                        $(this).parent().removeClass('state-error').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
+            $.each(params, function (k, v) {
+                var $input = $('input[name=' + k + ']', $scope);
+                if ($input.length) {
+                    $input.on('focusin', function(e) {
+                        $(this).parent().removeClass('state-error').removeClass('state-success').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
                     });
-                    $el.parent().addClass('state-error');
+                    $input.parent().addClass('state-' + key);
 
-                    var $a = $('#alert').clone().removeAttr('id');
-                    $a.find('er').text(fields[k]);
-                    $a.insertBefore($el.parent()).not(':visible');
-                    $a.find('button').on('click', function() {
+                    var $alert = $('#alert').clone().addClass('alert-' + (key === 'error' ? 'danger' : 'success')).removeAttr('id');
+                    $alert.find('er').text(v);
+                    $alert.insertBefore($input.parent()).not(':visible');
+                    $alert.find('button').on('click', function() {
                         $(this).parent().slideToggle('fast', 'swing', function(){this.remove()});
                     });
-                })
+                }
+                else {
+                    new PNotify({
+                        title: k,
+                        text: v,
+                        type: key,
+                        width: "290px",
+                        delay: 4000
+                    });
+                }
             });
             $('.alert:not(:visible)', $('#main')).slideToggle('fast');
 
-            var v = $('.state-error').eq(0).offset().top;
-            $('html,body').animate({scrollTop: v - 75}, 250 + Math.abs($(document).scrollTop() - v) * 0.5, 'easeOutQuad');
+            if ($('.state-error').length) {
+                var v = $('.state-error').eq(0).offset().top;
+                if (v) $('html,body').animate({scrollTop: v - 75}, 250 + Math.abs($(document).scrollTop() - v) * 0.5, 'easeOutQuad');
+            }
         })
     }
     else if (key === 'f') {
@@ -170,6 +185,7 @@ var UserAuthorization = function() {
             return !1;
         }
 
+        allClear();
         ajax('/Users/authorize', form.serialize());
         return false;
     });
@@ -236,7 +252,7 @@ var ProjectRegistration = function(a) {
 
         $('.alert-dismissable:visible', form).remove();
         $.ajax({
-            url: '/Hyip/check',
+            url: '/Hyip/checkWebsite/showsuccess/1',
             data: data
         });
     });
@@ -250,8 +266,9 @@ var ProjectRegistration = function(a) {
 
     $('div.langs :checkbox').on('click', function(e) {
         if ($(this).is(":checked")) {
-            var $el = $('.description:eq(0)').clone().show().attr('id', 'desc_'+$(this).val());
+            var $el = $('.description:eq(0)').clone().attr('id', 'desc_'+$(this).val());
             $('.description:last').after($el);
+            $el.show();
             $el.find('textarea').attr('name', 'description[' + $(this).val()+']')
                 .attr('placeholder', $('.description:eq(0) textarea').attr('placeholder') +$(this).parent().find('txt').text());
             $el.find('textarea').on('focusin', function(e) {
@@ -281,6 +298,8 @@ var ProjectRegistration = function(a) {
             return !1;
         }
         else if ($('#full_site_image').attr('src') === "") {
+            // @TODO Локализация с сервера
+            // ОТДЕЛЬНЫЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ СОобЩЕНИЙ С ЛОКАЛИЗАЦИЕЙ
             alert('Загрузите скриншот сайта');
             return !1;
         }
@@ -291,25 +310,6 @@ var ProjectRegistration = function(a) {
         $.ajax({
            url: '/Hyip/add',
            data: form.serialize(),
-           success: function(data){
-               // TODO SiteTour
-               // Для неавторизованного пользователя выводить предупреждающее сообщение
-               if (data.error) {
-                   if (data.error.fields) {
-                       $.each(data.error.fields, function(k,v) {
-                           $.each(v, function(a,b) {
-                               var $el = $('input[name='+a+']');
-                               $el.parent().addClass('state-error');
-
-                               var $a = $('#alert').clone();
-                               $a.find('er').text(b);
-                               $el.parents('div.section:first', form).prepend($a);
-                               $a.slideToggle('fast');
-                           });
-                       });
-                   }
-               }
-           }
         });
 
         return false;
@@ -465,6 +465,7 @@ var changeScrollContentHeight = function() {
 /* ------------------------------------------------------------ DATEPICKER ------------------------------------------ */
 var datePickerInit = function(el) {
 	$(".datepicker").datepicker({
+        dateFormat: 'yy-mm-dd',
       prevText: '<i class="fa fa-chevron-left"></i>',
       nextText: '<i class="fa fa-chevron-right"></i>',
       beforeShow: function(input, inst) {
@@ -488,25 +489,46 @@ var adminPanelInit = function() {
 var linkClick = function() {
     $(document).on('click', 'a.ajax', function(e) {
         var $target = $(e.currentTarget);
+        var functions = $target.data('beforesend');
+        if (functions) {
+            applyFunctions('f', functions);
+        }
         var url = $target.attr('href');
-        ajax(url, [], $target.hasClass('page'));
+        if (!url) url = generateUrlFromParams();
+        abortAllAjax();
+        stopTimers();
+        ajax(url, [], $target.hasClass('page'))
         return false;
     });
 };
 
+var generateUrlFromParams = function() {
+    var params = [STORAGE.pageParams.url];
+    for(var key in STORAGE.pageParams) {
+        if (key === 'url') continue;
+        params.push(key+'/'+STORAGE.pageParams[key])
+    }
+    return params ? '/' + params.join('/') : '';
+}
+
 var ajax = function(url, data, page) {
     var tmp = {url: url};
     if (data) tmp.data = data;
-    if (page && url != window.location.pathname) {
+    if (page && url !== window.location.pathname) {
         window.history.pushState(null, null, url);
     }
     $.ajax(tmp);
 };
 
 var initChat = function() {
+    $('.icon_send', this).on('click', function(e) {
+        $(this).parent().parent().submit();
+    });
     $("form[chat_id]").submit(function(e){
+        var message = $(this).find('[name=message]').val();
+        if (!message.length) return false;
         if (_.contains([1,2,4,5], STORAGE.status)) {
-            clearTimeout(STORAGE.chat_timer);
+            clearTimeout(STORAGE.chatTimer);
             STORAGE.status = 1;
         }
         else if (STORAGE.status == 3) {
@@ -524,7 +546,7 @@ var initChat = function() {
 var startChatCheck = function() {
     if (STORAGE.status != 6) {
         STORAGE.status = 2; // подготовка к отправке
-        STORAGE.chat_timer = setTimeout(checkChats, 3000);
+        STORAGE.chatTimer = setTimeout(checkChats, 3000);
     }
 };
 
@@ -536,10 +558,10 @@ var checkChats = function() {
     STORAGE.status = 3; // отправлен запрос на проверку наличия новых сообщений
     ajax('/hyip/getChatMessages/', {chats:data});
 };
-var setNewChatMessages = function(messages) {
-    console.log(STORAGE);
+var setNewChatMessages = function(data) {
     STORAGE.status = 4; // сообщения получены
-    if (!_.isEmpty(messages)) {
+    if (!_.isEmpty(data)) {
+        var messages = data.messages;
         for (var project_id in messages) {
             STORAGE.chat[project_id] = _.extend({}, STORAGE.chat[project_id]);
             var proj_mess = messages[project_id];
@@ -547,13 +569,17 @@ var setNewChatMessages = function(messages) {
             var $panel_scroller = $('[project_id='+project_id+'] .chat-widget .panel-scroller').eq(0);
             var $scroller_content = $panel_scroller.find('.scroller-content').eq(0);
             for (var id in proj_mess) {
-                var message = proj_mess[id];
+                var mess = proj_mess[id];
                 var $chat_block = $('#chatMessage').children().clone();
-                $chat_block.find('.media-position').addClass('media-' + ((STORAGE.user.id|0) == message.user_id  ||  (STORAGE.user.session_id|0) == message.session_id ? 'right' : 'left'))
-                    .find('img.media-object').attr('src', '/assets/img/avatars2/'+(((message.user_id|message.session_id|0)%30)+1)+'.webp')
-                $chat_block.find('.date_create').text(message.date_create);
-                $chat_block.find('.message').text(message.message);
-                $chat_block.find('.media-heading').text(message.session_id);
+                $chat_block.find('.media-position').addClass('media-' + ((STORAGE.user.id||0) == mess.user_id  ||  (STORAGE.user.session_id||0) == mess.session_id ? 'right' : 'left'))
+                    .find('img.media-object').attr('src', '/assets/img/avatars2/'+(((mess.user_id||mess.session_id||1)-1)%30+1)+'.webp')
+                $chat_block.find('.date_create').text(mess.date_create);
+                $chat_block.find('.message').text(mess.message);
+                $chat_block.find('.media-heading').text(
+                    mess.user_id && !_.isEmpty(data['users']) && !_.isEmpty(data['users'][mess.user_id])
+                        ? data['users'][mess.user_id]['name']
+                        : getRandomNameBySessionId(mess.session_id)
+                );
                 $scroller_content.append($chat_block)
             }
             $scroller_content.css('scroll-behavior', 'smooth');
@@ -562,6 +588,15 @@ var setNewChatMessages = function(messages) {
         }
     }
     STORAGE.status = 5; // сообщения отрисованы
+};
+
+var getRandomNameBySessionId = function(sessionId) {
+    return ['Domestic', 'Wild', 'Furry', 'Herbivorous', 'Dangerous', 'Ferocious', 'Poisonous', 'Agile', 'Clever',
+        'Aggressive', 'Beautiful', 'brave', 'Strong', 'Smart', 'Hungry', 'Angry', 'Fast', 'Strong', 'Gracious'][sessionId%19]
+        + ' '
+        + ['Crocodile', 'Bunny', 'Bear', 'Cow', 'Cat', 'Dog', 'Donkey', 'Elephant', 'Frog', 'Giraffe',
+        'Hamster', 'Horse', 'Dragon', 'Octopus', 'Kangaroo', 'Lamb', 'Raccoon', 'Parrot', 'Panda', 'Poulpe',
+        'Ant-eater', 'Mouse', 'Lion', 'Turtle', 'Unicorn', 'Snake', 'Whale', 'Fish', 'Bull', 'Zebra'][(sessionId-1)%30];
 };
 
 jQuery(document).ready(function() {
@@ -573,16 +608,12 @@ jQuery(document).ready(function() {
     });
 
     linkClick();
-
-	// ###   ###   ###		выполняем все необходимые скрипты для текущей страницы из массива
-	// startAllNeedFunctions.apply(document);
-
-
-    /*$('.alert button').on('click', function() {
-        $(this).parent().slideToggle('slow');
-    });*/
 });
 
 var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
 };
+
+var changePageParams = function(data) {
+    STORAGE.pageParams = _.extend({}, STORAGE.pageParams, data)
+}

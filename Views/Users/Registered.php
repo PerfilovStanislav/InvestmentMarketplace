@@ -1,4 +1,6 @@
-
+<?php
+namespace Views\Users\Registered;
+?>
 <!-- Begin: Content -->
 
 <!-- begin: .tray-center -->

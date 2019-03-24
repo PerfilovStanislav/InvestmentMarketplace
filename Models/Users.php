@@ -13,7 +13,7 @@ namespace Models {
             parent::__construct();
 		}
 
-		public function addUser(Validator $post) {
+		final public function addUser(Validator $post) {
 		    $data = $post->getData();
 		    $scope = 'adduser_form';
 
@@ -41,6 +41,10 @@ namespace Models {
 				return ['success' => 'user_added'];
 			}
 			else return ['error' => ['user' => ['adding_error']]];
+		}
+
+		final public function getUsersByIds(array $ids) {
+			return $this->db->select('users', 'id,name,login,status_id', ['id' => $ids]);
 		}
 	}
 }

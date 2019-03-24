@@ -3,6 +3,7 @@
 namespace {
 
 	use Core\Auth;
+	use Helpers\Helper;
 
 	define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));
@@ -14,12 +15,12 @@ namespace {
 
     spl_autoload_extensions(".php");
     function real_path($path) {
-        return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
     }
     spl_autoload_register(function ($className) {
         require_once(real_path($className) . ".php");
     });
 
 	Auth::getInstance();
-	(new Core\Router())->setUri()->startRoute();
+	(Core\Router::getInstance())->setUri()->startRoute();
 }

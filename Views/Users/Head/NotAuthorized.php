@@ -1,24 +1,23 @@
+<?php
+namespace Views\Users\Head\NotAuthorized;
+?>
 <ul class="nav navbar-nav navbar-right">
   <li class="dropdown menu-merge">
     <div class="navbar-btn btn-group">
-      <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-        <span class="flag-xs flag-us"></span>
-        <!-- <span class="caret"></span> -->
-      </button>
-      <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-        <li>
-          <a href="javascript:void(0);">
-            <span class="flag-xs flag-in mr10"></span> Hindu </a>
-        </li>
-        <li>
-          <a href="javascript:void(0);">
-            <span class="flag-xs flag-tr mr10"></span> Turkish </a>
-        </li>
-        <li>
-          <a href="javascript:void(0);">
-            <span class="flag-xs flag-es mr10"></span> Spanish </a>
-        </li>
-      </ul>
+		<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+			<span class="flag flag-<?=$this->availableLangs[$this->activeLang]['flag']?>"></span>
+			<!-- <span class="caret"></span> -->
+		</button>
+		<ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+			<? foreach ($this->availableLangs as $shortname => $lang): ?>
+				<li>
+					<a class="ajax <?=$shortname===$this->activeLang ? 'selected' : ''?>"
+					   href="/users/changeLanguage/lang/<?=$shortname?>"
+					   data-beforesend='{"f":["allClear"]}'>
+						<span class="flag flag-<?=$lang['flag']?> mr10"></span> <?printf('%s (%s)', $lang['name'], $lang['own_name'])?> </a>
+				</li>
+			<? endforeach; ?>
+		</ul>
     </div>
   </li>
   <li class="menu-divider hidden-xs">
@@ -26,7 +25,7 @@
   </li>
   <li class="dropdown menu-merge">
     <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
-      <img src="/assets/img/avatars/1.jpg" alt="avatar" class="mw30 br64">
+      <img src="<?=$this->photoThumb?>" alt="avatar" class="mw30 br64">
       <span class="hidden-xs pl15"> Гость </span>
       <span class="caret caret-tp hidden-xs"></span>
     </a>

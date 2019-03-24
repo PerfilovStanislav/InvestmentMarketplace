@@ -3,14 +3,20 @@
 namespace Controllers {
 
     use Core\Auth;
-	use Core\Router;
-	use Helpers\{
-        Validator, Helper, Data\Currency
-    };
+	use Core\Controller;
+    use Core\Router;
+    use Helpers\{
+		Arrays, Locale, Validator, Helper, Data\Currency
+	};
 	use Libraries\File;
-	use \Models\Hyip as Model;
+	use Models\Hyip as Model;
+	use Models\Users as UserModels;
+	use Views\{
+	    Hyip\Show as ViewShow,
+        Hyip\Registration as Registration
+	};
 
-	class Hyip extends Layout{
+	class Hyip extends Controller {
 		private $model;
 
 		function __construct() {
@@ -18,65 +24,64 @@ namespace Controllers {
 			$this->model = new Model();
 		}
 
-		final public function registration() {
+		final public function registration(array $params = []) {
 		    $data = $this->model->getRegistrationData();
             $data['currency'] = Currency::getCurrency();
-            $return['c']['content'] = ['Hyip/Registration', $data];
-            $return['f']['content'] = ['ProjectRegistration' => []];
-
-            return IS_AJAX ? Helper::json($return) : $this->layout($return);
+            Helper::$r['c']['content'] = [Registration::class, $data];
+            Helper::$r['f']['content'] = ['ProjectRegistration' => []];
 		}
 
 		public function show(array $params = []) {
-		    $return = [];
-            $data = $this->model->getShowData();
+			$page = max((int)($params['page'] ?? 1), 1);
+			$lang = Locale::getLangByName($params['lang'] ?? Locale::getLanguage()) ?:
+				Locale::getLangByName(Locale::getLanguage());
+
+			$filter = [
+				'lang' => $lang['shortname'],
+				'page' => $page,
+                'url' => Router::getInstance()->getCurrentPageUrl()
+			];
+			$data = $this->model->getShowData($lang['id']);
 
             if ($data) {
-                $file = new File(-1);
-
                 foreach ($data['projects'] as $project_id => &$val) {
-                    $val['file_name']   = $file->get_file_path($project_id);
+                    $val['file_name'] = File::get_file_path($project_id);
                 }
-                /*$user = Auth::getUserInfo();
-                foreach ($data['chats'] as $project_id => &$val) {
-                    $val = (new View('Hyip/ChatMessage', ['messages' => $val, 'user' => $user]))->get();
-                }*/
             }
+            else throw new \Exception('?');
 
-//            $return['f']['content'] = ['myFunc' => ['aa' => 'aaa', 'bb' => 'bbb'], 'myFunc2' => ['aa2' => 'aaa2', 'bb2' => 'bbb2']];
+            Helper::$r['c']['content'] = [ViewShow::class, $data + $filter];
+			Helper::$r['f']['content'] = ['initChat', 'panelScrollerInit', 'setStorage' => ['pageParams' => $filter]];
 
-            $chat_params = array_map(function($a){return ['id'=>$a,'max_id'=>0];}, $data['project_ids']);
-            $chats = $this->getChatMessages($chat_params);
-
-            $return['c']['content'] = ['Hyip/Show', $data];
-            $return['f']['content'] = array_merge(['initChat', 'panelScrollerInit'], $chats);
-
-            return IS_AJAX ? Helper::jsonv($return) : $this->layout($return);
+			$chatParams = array_map(function($a){return ['id'=>$a,'max_id'=>0];}, $data['projectIds']);
+			$this->getChatMessages($chatParams);
 		}
 
 
 		final public function add(array $params = []) {
+			$this->checkWebsite([]);
+
             $data = $this->post
                 ->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
-				->checkAll('paymenttype', 		1, 		3, 	Validator::NUM)
-				->checkAll('date', 				10, 	    10, 	Validator::DATE)
+				->checkAll('paymenttype', 		1, 		3, 	    Validator::NUM)
+				->checkAll('date', 				10, 	10, 	Validator::DATE)
 
             	->checkAll('percents', 			1, 		null,  Validator::FLOAT,    'plan_percents', 		true, 0)
-            	->checkAll('period', 			1, 		null,  Validator::NUM,      'plan_period', 			true, 0)
-            	->checkAll('periodtype', 		1, 		6, 	Validator::NUM,      'plan_period_type', 	    true, 0)
-            	->checkAll('minmoney', 			1, 		null, 	Validator::FLOAT, 	'plan_start_deposit', 	true, 0)
-				->checkAll('currency', 			1, 		8, 	Validator::NUM,		'plan_currency_type', 	true, 0)
+            	->checkAll('period', 			1, 		null,  Validator::NUM,      'plan_period', 		true, 0)
+            	->checkAll('periodtype', 		1, 		6, 	    Validator::NUM,      'plan_period_type', 	true, 0)
+            	->checkAll('minmoney', 			1, 		null, 	Validator::FLOAT, 	   'plan_start_deposit', true, 0)
+				->checkAll('currency', 			1, 		8, 	    Validator::NUM,		'plan_currency_type',true, 0)
 
-				->checkAll('ref_percent', 		null, 	    null, 	Validator::FLOAT,     null,                   true)
-				->checkAll('payment', 			1, 		null, 	Validator::NUM,		'payments')
-                ->checkAll('description', 		1, 		null, 	null,                 null,                  null,  1)
-                ->checkAll('lang', 				1, 		null, 	Validator::NUM,		'languages',            null,  1)
+				->checkAll('ref_percent', 		null, 	null, 	Validator::FLOAT,     null,                true)
+				->checkAll('payment', 			1, 		null, 	Validator::NUM,		'id_payments')
+                ->checkAll('description', 		1, 		null, 	null,                 null,                null,  1)
+                ->checkAll('lang', 				1, 		null, 	Validator::NUM,		'languages',         null,  1)
 
-                ->addErrors($this->checkWebsite()['error'] ?? [])->checkErrors()->getData();
+                ->exitWithErrors()->getData();
 
             foreach ($data['languages'] as $key => $val) {
 			    if (!isset($data['description'][$val])) {
-                    return Helper::alert(['is_absent' => [$val]]);
+                    return Helper::alert(['is_absent' => [$val]], 'error');
                 }
             }
 
@@ -87,31 +92,25 @@ namespace Controllers {
                 $file->save($_POST['screen_data']);
                 $file->save($_POST['thumb_data'], true);
 
-                return Helper::json(['success' => $project_id]);
+				Helper::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
             }
 		}
 
-		final private function checkWebsite():array {
+		final public function checkWebsite(array $params) {
             $ref_url = $this->post->checkAll('website', 1, 128, Validator::URL, 'ref_url')->getData()['ref_url'];
             $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($ref_url));
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
 
             if (count($url) < 2) {
-                $ret = ['error' => ['fields' => ['website' => 'Wrong site', 'projectname' => 'xxx projectname xxx']]];
+				return Helper::fieldError('website', 'wrong_url');
             }
             else {
                 $url_str = $url[1] . '.' . $url[0];
                 if (($res = $this->model->db->getRow('project', 'id', "url = '{$url_str}'"))) {
-                    $ret = ['error' => ['fields' => ['website' => ['exists', $res['id']]]]];
+					return Helper::fieldError('website', 'site_exists');
                 }
-                else $ret = ['success' => ['url' => $url_str, 'ref_url' => $ref_url, 'fields' => ['website' =>
-					['OK']]]];
+                elseif ($params['showsuccess'] ?? false) return Helper::fieldSuccess('website', 'site_is_free');
             }
-            return $ret;
-        }
-
-        final public function check() {
-            return Helper::json($this->checkWebsite());
         }
 
         final public function sendMessage(array $params = []) {
@@ -119,15 +118,15 @@ namespace Controllers {
 
             $post = $this->post
                 ->checkAll('message', 		1, 		2047)
-                ->checkErrors();
+                ->checkAlerts();
 
             $info = Auth::getUserInfo();
             $data = [
-                'user_id'       => [[$info['id']]],
-                'project_id'    => [[$project_id]],
-                'lang_id'       => [[217]],
+                'user_id'       => [[$info['id']], \PDO::PARAM_INT],
+                'project_id'    => [[$project_id], \PDO::PARAM_INT],
+                'lang_id'       => [[217], \PDO::PARAM_INT],
                 'message'       => [[$post->message]],
-                'session_id'    => [[$info['session_id']]],
+                'session_id'    => [[$info['session_id']], \PDO::PARAM_INT],
             ];
             $this->model->db->insert('message', $data);
 
@@ -138,14 +137,25 @@ namespace Controllers {
 
         final public function getChatMessages(array $params = []) {
 		    // если есть $params, значит вызвали из $this->show()
-            $chats = $params ?: $this->post->checkAll('chats')->checkErrors()->chats;
+            $chats = $params ?: $this->post->checkAll('chats')->exitWithErrors()->chats;
 
             if ($new_messages = $this->model->getChatMessages($chats)) {
-            	$return['f']['content']['setNewChatMessages'] = $new_messages;
+            	$array = new Arrays();
+				$usersIds = $array
+					->setArray($new_messages)
+					->getUnique('user_id')
+					->getArray();
+
+				Helper::$r['f']['content']['setNewChatMessages'] =
+					[
+						'users' => $usersIds ? $array
+							->setArray((new UserModels())->getUsersByIds($usersIds))
+							->groupBy(['id'])
+							->getArray() : [],
+						'messages' => $new_messages
+					];
 			}
-            $return['f']['content'][] = 'startChatCheck';
-//            sleep(2);
-            return $params ? $return['f']['content'] : Helper::json($return);
+			Helper::$r['f']['content'][] = 'startChatCheck';
         }
 	}
 

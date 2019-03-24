@@ -5,15 +5,19 @@ namespace Core;
 use Helpers\{
 	Helper, Validator
 };
+use Traits\Instance;
 
 class Router {
+    use Instance;
 //        private $defaultParams = 'Hyip/registration/1';
-	private $defaultParams = 'Hyip/show';
-	private $errorParams   = 'Errors/show';
-	private $controller;
-	private $action;
-	private $params;
-	private $additional = [];
+	private $defaultParams = 'Hyip/show',
+	        $errorParams   = 'Errors/show',
+	        $controller,
+	        $action,
+	        $params,
+	        $additional = [];
+
+	private static $_instance = null;
 
 	final public function startRoute() {
 		if (!$this->action) {
@@ -59,4 +63,8 @@ class Router {
 		call_user_func_array([$controller, $this->action],  [$this->params]);
 		return Helper::result();
 	}
+
+	final public function getCurrentPageUrl() : string {
+	    return $this->controller . '/' . $this->action;
+    }
 }

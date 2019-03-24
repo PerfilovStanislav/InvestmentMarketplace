@@ -1,8 +1,7 @@
-
-
-
+<?php
+namespace Views\Hyip\Registration;
+?>
       <!-- Begin: Content -->
-
         <!-- begin: .tray-center -->
         <div class="tray tray-center">
 

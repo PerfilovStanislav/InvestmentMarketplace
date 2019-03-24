@@ -1,3 +1,6 @@
+<?php
+namespace Views\Hyip\ChatMessage;
+?>
 <div id="chatMessage" hidden>
     <div class="media flex">
         <div class="media-position">
@@ -8,7 +11,7 @@
         <div class="media-body">
             <span class="media-heading"></span>
             <span class="date_create"></span>
-            <h5><span class="message"></span></h5>
+            <h4><span class="message"></span></h4>
         </div>
     </div>
 </div>

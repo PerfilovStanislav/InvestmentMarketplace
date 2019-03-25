@@ -9,7 +9,8 @@ namespace Controllers {
 	use Helpers\{Validator, Helper, Locale};
     use Views\{
         Users\Head\Authorized as ViewAuthorized,
-        Users\Head\NotAuthorized as ViewNotAuthorized
+        Users\Head\NotAuthorized as ViewNotAuthorized,
+        Users\Login as ViewLogin
     };
 
 	class Users extends Controller {
@@ -20,7 +21,7 @@ namespace Controllers {
 		}
 
         final public function login (array $page) {
-            $this->view(['content' 	=> ['Users/Login', []]]);
+            $this->view(['content' 	=> [ViewLogin::class, []]]);
         }
 
         final public function logout() {

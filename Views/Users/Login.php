@@ -1,9 +1,7 @@
-<!-- Begin: Content -->
-
-<!-- begin: .tray-center -->
+<?php
+namespace Views\Users\Login;
+?>
 <div class="tray tray-center">
-
-
     <!-- Validation Example -->
     <div class="admin-form theme-primary mw500 center-block" style="padding-bottom: 175px;">
 

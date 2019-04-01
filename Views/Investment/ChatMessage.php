@@ -1,5 +1,5 @@
 <?php
-namespace Views\Hyip\ChatMessage;
+namespace Views\Investment\ChatMessage;
 ?>
 <div id="chatMessage" hidden>
     <div class="media flex">

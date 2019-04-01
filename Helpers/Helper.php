@@ -29,7 +29,7 @@ namespace Helpers {
 
 		private final static function sort() {
 			uksort(self::$r, function($a, $b) {
-				$m = ['c' => 100, 'f' => 10];
+				$m = ['c' => 100, 'f' => 50, 'alert' => 25];
 				return $m[$b] - $m[$a];
 			});
 		}

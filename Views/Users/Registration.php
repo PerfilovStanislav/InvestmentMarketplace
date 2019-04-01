@@ -1,13 +1,7 @@
 <?php
 namespace Views\Users\Registration;
 ?>
-<!-- Begin: Content -->
-
-<!-- begin: .tray-center -->
 <div class="tray tray-center">
-
-
-    <!-- Validation Example -->
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
@@ -15,7 +9,6 @@ namespace Views\Users\Registration;
                       <i class="fa fa-pencil-square"></i><?=$this->locale['user_registration']?>
                     </span>
             </div>
-
             <form method="post" action="/" id="adduser_form">
                 <div class="panel-body bg-light">
                     <div class="section row" >
@@ -27,7 +20,6 @@ namespace Views\Users\Registration;
                                 </label>
                             </label>
                         </div>
-
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input name="name" autocomplete="name" class="gui-input onlyEn"
@@ -37,7 +29,6 @@ namespace Views\Users\Registration;
                                 </label>
                             </label>
                         </div>
-
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input name="email" autocomplete="email" class="gui-input onlyEmail"
@@ -47,7 +38,6 @@ namespace Views\Users\Registration;
                                 </label>
                             </label>
                         </div>
-
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" name="password" class="gui-input"
@@ -57,7 +47,6 @@ namespace Views\Users\Registration;
                                 </label>
                             </label>
                         </div>
-
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" id="confirm_pass" class="gui-input"
@@ -67,26 +56,13 @@ namespace Views\Users\Registration;
                                 </label>
                             </label>
                         </div>
-
-
-
-
-                        <!-- end .form-body section -->
                         <div class="panel-footer text-right">
-                            <button type="submit" class="button btn-primary"> Отправить форму </button>
+                            <button type="submit" class="button btn-primary"> <?=$this->locale['send_form']?> </button>
                         </div>
                     </div>
                     <input type="hidden" name="ajax" value="1">
-                    <!-- end .form-footer section -->
-
-
-
                 </div>
             </form>
-
         </div>
-        <!-- end: .admin-form -->
-
     </div>
-    <!-- end: .tray-center -->
-    <!-- End: Content -->
+</div>

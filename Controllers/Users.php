@@ -10,7 +10,9 @@ namespace Controllers {
     use Views\{
         Users\Head\Authorized as ViewAuthorized,
         Users\Head\NotAuthorized as ViewNotAuthorized,
-        Users\Login as ViewLogin
+        Users\Login as ViewLogin,
+        Users\Registered as UserRegistered,
+        Users\Registration as UserRegistration
     };
 
 	class Users extends Controller {
@@ -33,7 +35,7 @@ namespace Controllers {
 			$url = parse_url($_SERVER['HTTP_REFERER']??'');
 			Helper::$r['f']['document']['addToAjaxQueue'] = [
 				'/Users/head',
-//				'/Hyip/leftside',
+//				'/Investment/leftside',
 				$url['path']
 			];
 		}
@@ -50,12 +52,10 @@ namespace Controllers {
 		}
 
 		final public function registration() {
-		    $view = Auth::isAuthorized() ? 'Registered' : 'Registration';
+		    $view = Auth::isAuthorized() ? UserRegistered::class : UserRegistration::class;
 
-            $return['c']['content'] = ['Users/'.$view, []];
-            $return['f']['content'] = ['UserRegistration'];
-
-            return IS_AJAX ? Helper::jsonv($return) : $this->layout($return);
+            Helper::$r['c']['content'] = [$view, []];
+            Helper::$r['f']['content'] = ['UserRegistration'];
 		}
 
 		final public function add() {
@@ -67,7 +67,7 @@ namespace Controllers {
 
             $res = $this->model->addUser($this->post);
             if ($res['success'] ?? false) {
-				return (new Hyip())->show([]);
+				return (new Investment())->show([]);
 			}
 			else return Helper::json($res);
 		}

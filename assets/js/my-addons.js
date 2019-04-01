@@ -93,31 +93,36 @@ var applyFunctions = function(key, value) {
     else if (key === 'error' || key === 'success') {
         $.each(value, function(scope,params) {
             var $scope = getScope(scope);
-            $.each(params, function (k, v) {
-                var $input = $('input[name=' + k + ']', $scope);
-                if ($input.length) {
-                    $input.on('focusin', function(e) {
-                        $(this).parent().removeClass('state-error').removeClass('state-success').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
-                    });
-                    $input.parent().addClass('state-' + key);
+            $.each(params, function (fields, values) {
+                $.each(values, function (inputName, inputValue) {
+                    var $input = $('input[name=' + inputName + ']', $scope);
+                    if ($input.length) {
+                        $input.on('focusin', function (e) {
+                            $(this).parent().removeClass('state-error').removeClass('state-success').prev('.alert').slideToggle('fast', 'swing', function () {
+                                this.remove()
+                            });
+                        });
+                        $input.parent().addClass('state-' + key);
 
-                    var $alert = $('#alert').clone().addClass('alert-' + (key === 'error' ? 'danger' : 'success')).removeAttr('id');
-                    $alert.find('er').text(v);
-                    $alert.insertBefore($input.parent()).not(':visible');
-                    $alert.find('button').on('click', function() {
-                        $(this).parent().slideToggle('fast', 'swing', function(){this.remove()});
-                    });
-                }
-                else {
-                    new PNotify({
-                        title: k,
-                        text: v,
-                        type: key,
-                        width: "290px",
-                        delay: 4000
-                    });
-                }
-            });
+                        var $alert = $('#alert').clone().addClass('alert-' + (key === 'error' ? 'danger' : 'success')).removeAttr('id');
+                        $alert.find('er').text(inputValue);
+                        $alert.insertBefore($input.parent()).not(':visible');
+                        $alert.find('button').on('click', function () {
+                            $(this).parent().slideToggle('fast', 'swing', function () {
+                                this.remove()
+                            });
+                        });
+                    } else {
+                        new PNotify({
+                            title: inputName,
+                            text: inputValue,
+                            type: key,
+                            width: "290px",
+                            delay: 4000
+                        });
+                    }
+                });
+            })
             $('.alert:not(:visible)', $('#main')).slideToggle('fast');
 
             if ($('.state-error').length) {
@@ -151,8 +156,9 @@ function replace(e) {
         case 'onlyUrl'      : filtered_str = str.replace(/[^a-zа-я0-9\-\.\/:\?\=\%]/gi,''); break;
         case 'onlyNumber'   : filtered_str = str.replace(/[^\d.]/gi,''); break;
         case 'onlyEmail'    : filtered_str = str.replace(/[^a-z0-9\-_.@]/gi,'').replace(/(^[@\._]*)|@(?=.*@)/gi,''); break;
-        case 'onlyEn'       : filtered_str = str.replace(/[^a-z0-9\-_.@]/gi,'').replace(/[^a-z0-9]/gi,''); break;
+        case 'onlyEn'       : filtered_str = str.replace(/[^a-z0-9 \-]/gi,''); break;
         case 'onlyText'     : filtered_str = str.replace(/[^a-zа-я0-9ё \-]/gi,''); break;
+        case 'onlyDate'     : filtered_str = str.replace(/[^0-9\-]/gi,''); break;
     }
     if (str !== filtered_str) $el.val(filtered_str);
 }
@@ -252,7 +258,7 @@ var ProjectRegistration = function(a) {
 
         $('.alert-dismissable:visible', form).remove();
         $.ajax({
-            url: '/Hyip/checkWebsite/showsuccess/1',
+            url: '/Investment/checkWebsite/showsuccess/1',
             data: data
         });
     });
@@ -305,10 +311,10 @@ var ProjectRegistration = function(a) {
         }
 
         var d = $('#full_site_image').cropper('getCroppedCanvas');
-        $('[name=screen_data]').val( $('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.8) );
-        $('[name=thumb_data]').val( $('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
+        $('[name=screen_data]').val($('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.8) );
+        $('[name=thumb_data]').val($('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
         $.ajax({
-           url: '/Hyip/add',
+           url: '/Investment/add',
            data: form.serialize(),
         });
 
@@ -316,16 +322,24 @@ var ProjectRegistration = function(a) {
     });
 
     $(function () {
+        'use strict';
 
-      'use strict';
+        function debugBase64(base64URL){
+            var win = window.open();
+            win.document.write('<iframe src="' + base64URL  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+        }
 
-      var console = window.console || { log: function () {} };
-      var $full_site_image = $('#full_site_image');
-      var $thumb_site_image = $('#thumb_site_image');
-      var $download = $('#download');
+        var console = window.console || { log: function () {} };
+        var $full_site_image = $('#full_site_image');
+        var $thumb_site_image = $('#thumb_site_image');
+        var base64 = '';
 
-      $full_site_image.cropper();
-      $thumb_site_image.cropper({aspectRatio: 4/3});
+        $('#download').on('click', function () {
+            debugBase64(base64);
+        })
+
+        $full_site_image.cropper();
+        $thumb_site_image.cropper({aspectRatio: 4/3});
 
 
 
@@ -334,7 +348,6 @@ var ProjectRegistration = function(a) {
       $('.docs-buttons').on('click', '[data-method]', function () {
         var $this = $(this);
         var data = $this.data();
-        var $target;
         var result;
     	var $preview = data.control == 1 ? $full_site_image : $thumb_site_image;
 
@@ -352,47 +365,47 @@ var ProjectRegistration = function(a) {
           data = $.extend({}, data);
 
           result = $preview.cropper(data.method, data.option);
-    	  $download.attr('href', result.toDataURL('image/jpeg', 0.9));
+          base64 = result.toDataURL('image/jpeg', 0.9);
     	  $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
         }
       });
 
 
-      // Import image
-      var $inputImage = $('#inputImage');
-      var URL = window.URL || window.webkitURL;
-      var blobURL;
+        // Import image
+        var $inputImage = $('#inputImage');
+        var URL = window.URL || window.webkitURL;
+        var blobURL;
 
-      if (URL) {
-        $inputImage.change(function () {
-    	  $inputImage.parent().addClass('btn-primary').removeClass('btn-danger');
-          var files = this.files;
-          var file;
+        if (URL) {
+          $inputImage.change(function () {
+      	  $inputImage.parent().addClass('btn-primary').removeClass('btn-danger');
+            var files = this.files;
+            var file;
 
-          if (!$full_site_image.data('cropper')) {
-            return;
-          }
-
-          if (files && files.length) {
-            file = files[0];
-
-            if (/^image\/\w+$/.test(file.type)) {
-              blobURL = URL.createObjectURL(file);
-              $full_site_image.one('built.cropper', function () {
-    				$thumb_site_image.one('built.cropper', function () {
-    					URL.revokeObjectURL(blobURL);
-    					$('button[data-control]').removeClass('disabled');
-    			  }).cropper('reset').cropper('replace', blobURL);
-              }).cropper('reset').cropper('replace', blobURL);
-              $inputImage.val('');
-            } else {
-              window.alert('Please choose an image file.');
+            if (!$full_site_image.data('cropper')) {
+              return;
             }
-          }
-        });
-      } else {
-        $inputImage.prop('disabled', true).parent().addClass('disabled');
-      }
+
+            if (files && files.length) {
+              file = files[0];
+
+              if (/^image\/\w+$/.test(file.type)) {
+                blobURL = URL.createObjectURL(file);
+                $full_site_image.one('built.cropper', function () {
+      				$thumb_site_image.one('built.cropper', function () {
+      					URL.revokeObjectURL(blobURL);
+      					$('button[data-control]').removeClass('disabled');
+      			  }).cropper('reset').cropper('replace', blobURL);
+                }).cropper('reset').cropper('replace', blobURL);
+                $inputImage.val('');
+              } else {
+                window.alert('Please choose an image file.');
+              }
+            }
+          });
+        } else {
+          $inputImage.prop('disabled', true).parent().addClass('disabled');
+        }
 
     });
 
@@ -535,7 +548,7 @@ var initChat = function() {
             STORAGE.status = 6;
         }
         ajax(
-            '/Hyip/sendMessage/project/'+$(this).attr('chat_id'),
+            '/Investment/sendMessage/project/'+$(this).attr('chat_id'),
             {message: $(this).find('[name=message]').val()}
         );
         $(this).find('[name=message]').val('');
@@ -556,7 +569,7 @@ var checkChats = function() {
         return {id: id, max_id:(_.isEmpty(STORAGE.chat[id])?0:STORAGE.chat[id].max)}
     }).get();
     STORAGE.status = 3; // отправлен запрос на проверку наличия новых сообщений
-    ajax('/hyip/getChatMessages/', {chats:data});
+    ajax('/investment/getChatMessages/', {chats:data});
 };
 var setNewChatMessages = function(data) {
     STORAGE.status = 4; // сообщения получены

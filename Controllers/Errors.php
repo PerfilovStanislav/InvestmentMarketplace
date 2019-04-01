@@ -3,24 +3,13 @@
 namespace Controllers {
 
 	use Core\Controller;
-	use \Models\Hyip as Model;
 	use Helpers\Helper;
+	use Views\Errors\Error404 as Error404;
 
 	class Errors extends Controller {
-		private $model;
-
-		function __construct() {
-			parent::__construct();
-			$this->model = new Model();
-		}
-
 		// #TODO логирование ошибок (кто откуда пришёл)
-		public function show(array $page) {
-			$return = [];
-			$return['c']['content'] = ['Errors/404', []];
-
-            Helper::header(Helper::E404);
-			return IS_AJAX ? Helper::jsonv($return) : $this->layout($return);
+		public function show(array $page = []) {
+            Helper::$r['c']['content'] = [Error404::class, []];
 		}
 	}
 

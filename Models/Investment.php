@@ -7,7 +7,7 @@ namespace Models {
         Validator, Arrays, Data\Currency
     };
 
-	class Hyip extends Model{
+	class Investment extends Model{
 
 		function __construct() {
 			parent::__construct();

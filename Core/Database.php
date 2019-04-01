@@ -40,7 +40,7 @@ namespace Core {
 			$values= [];
 			$rows = count($params[$head[0]][0]);
 			for($i=0; $i<$rows; $i++) {
-				foreach ($params as $k => $v) {
+				foreach ($params as $v) {
 					$values[$i][] = $v[0][$i];
 				}
 			}

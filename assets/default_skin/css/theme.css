@@ -13806,7 +13806,7 @@ ol.timeline-list li.timeline-item .timeline-date {
 @media (min-width: 768px) {
     .modal-dialog {
         width: 600px;
-        margin: 30px auto;
+        margin: 80px auto;
     }
     .modal-content {
         -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -23697,13 +23697,13 @@ body.timeline-page .panel-clone {
     border-bottom: none;
 }
 
-.hyip .inforow {
+.investment .inforow {
     justify-content: space-around;
     flex-wrap: wrap;
     flex: 1 0 10px;
 }
 
-.hyip .inforow > div {
+.investment .inforow > div {
     padding: 5px;
 }
 

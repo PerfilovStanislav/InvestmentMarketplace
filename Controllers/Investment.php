@@ -9,14 +9,15 @@ namespace Controllers {
 		Arrays, Locale, Validator, Helper, Data\Currency
 	};
 	use Libraries\File;
-	use Models\Hyip as Model;
+	use Models\Investment as Model;
 	use Models\Users as UserModels;
 	use Views\{
-	    Hyip\Show as ViewShow,
-        Hyip\Registration as Registration
+	    Investment\Show as ViewShow,
+        Investment\Registration as Registration,
+        Investment\Added as ProjectAdded
 	};
 
-	class Hyip extends Controller {
+	class Investment extends Controller {
 		private $model;
 
 		function __construct() {
@@ -59,8 +60,6 @@ namespace Controllers {
 
 
 		final public function add(array $params = []) {
-			$this->checkWebsite([]);
-
             $data = $this->post
                 ->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
 				->checkAll('paymenttype', 		1, 		3, 	    Validator::NUM)
@@ -81,22 +80,23 @@ namespace Controllers {
 
             foreach ($data['languages'] as $key => $val) {
 			    if (!isset($data['description'][$val])) {
-                    return Helper::alert(['is_absent' => [$val]], 'error');
+                    Helper::alert(['is_absent' => [$val]], 'error');
                 }
             }
 
-            $this->post->addFields(['url' => $this->checkWebsite()['success']['url']]);
+            $this->post->addFields(['url' => $this->checkWebsite()]);
             if ($project_id = $this->model->addProject($this->post)) {
                 // Save screenshots
                 $file = new File($project_id);
                 $file->save($_POST['screen_data']);
                 $file->save($_POST['thumb_data'], true);
 
-				Helper::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
+                Helper::$r['c']['content'] = [ProjectAdded::class, $data];
+                Helper::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
             }
 		}
 
-		final public function checkWebsite(array $params) {
+		final public function checkWebsite(array $params = []) {
             $ref_url = $this->post->checkAll('website', 1, 128, Validator::URL, 'ref_url')->getData()['ref_url'];
             $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($ref_url));
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
@@ -110,6 +110,7 @@ namespace Controllers {
 					return Helper::fieldError('website', 'site_exists');
                 }
                 elseif ($params['showsuccess'] ?? false) return Helper::fieldSuccess('website', 'site_is_free');
+                else return $url_str;
             }
         }
 

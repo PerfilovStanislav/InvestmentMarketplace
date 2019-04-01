@@ -2,21 +2,16 @@
 namespace Views\Users\Login;
 ?>
 <div class="tray tray-center">
-    <!-- Validation Example -->
     <div class="admin-form theme-primary mw500 center-block" style="padding-bottom: 175px;">
-
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
-                    <span class="panel-title">
-                      <i class="fa fa-pencil-square"></i><?=$this->user_authorization?>
-                    </span>
+                <span class="panel-title">
+                    <i class="fa fa-pencil-square"></i><?=$this->user_authorization?>
+                </span>
             </div>
-
             <form method="post" action="/" id="user_form_authorization">
-
                 <div class="panel-body bg-light">
-
-                    <div class="section row" >
+                    <div class="section row">
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input name="login" class="gui-input onlyEmail" placeholder="<?=$this->Login?>">
@@ -26,18 +21,16 @@ namespace Views\Users\Login;
                             </label>
                             <em hidden class="state-error">ошибка</em>
                         </div>
-
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" name="password" class="gui-input"
-									   placeholder="<?=$this->Password?>" />
+                                       placeholder="<?=$this->Password?>"/>
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
                             </label>
                             <em hidden class="state-error">ошибка</em>
                         </div>
-
                         <div class="section">
                             <label class="switch block switch-success">
                                 <input name="remember" id="remember" type="checkbox">
@@ -45,20 +38,13 @@ namespace Views\Users\Login;
                                 <span>Запомнить</span>
                             </label>
                         </div>
-
-                        <!-- end .form-body section -->
                         <div class="panel-footer text-right">
-                            <button type="submit" class="button btn-primary"> Войти </button>
+                            <button type="submit" class="button btn-primary"> <?=$this->locale['enter']?></button>
                         </div>
                     </div>
                     <input type="hidden" name="ajax" value="1">
-                    <!-- end .form-footer section -->
                 </div>
             </form>
-
         </div>
-        <!-- end: .admin-form -->
-
     </div>
-    <!-- end: .tray-center -->
-    <!-- End: Content -->
+</div>

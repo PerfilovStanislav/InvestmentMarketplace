@@ -13,6 +13,7 @@ namespace Controllers {
 	use Models\Users as UserModels;
 	use Views\{
 	    Investment\Show as ViewShow,
+	    Investment\NoShow as ViewNoShow,
         Investment\Registration as Registration,
         Investment\Added as ProjectAdded
 	};
@@ -37,23 +38,30 @@ namespace Controllers {
 			$lang = Locale::getLangByName($params['lang'] ?? Locale::getLanguage()) ?:
 				Locale::getLangByName(Locale::getLanguage());
 
-			$filter = [
-				'lang' => $lang['shortname'],
-				'page' => $page,
+			$pageParams = [
+                'filter' => [
+                    'lang' => $lang['shortname'],
+                    'page' => $page,
+                ],
                 'url' => Router::getInstance()->getCurrentPageUrl()
-			];
+            ];
 			$data = $this->model->getShowData($lang['id']);
 
-            if ($data) {
-                foreach ($data['projects'] as $project_id => &$val) {
-                    $val['file_name'] = File::get_file_path($project_id);
-                }
+            Helper::$r['f']['content'] = [
+                'initChat',
+                'panelScrollerInit',
+                'imgClickInit',
+                'setStorage' => ['pageParams' => $pageParams]
+            ];
+
+            if (!$data) {
+                return Helper::$r['c']['content'] = [ViewNoShow::class, $pageParams + $this->model->getFilterLangs()];
             }
-            else throw new \Exception('?');
 
-            Helper::$r['c']['content'] = [ViewShow::class, $data + $filter];
-			Helper::$r['f']['content'] = ['initChat', 'panelScrollerInit', 'setStorage' => ['pageParams' => $filter]];
-
+            foreach ($data['projects'] as $project_id => &$val) {
+                $val['file_name'] = File::get_file_path($project_id);
+            }
+            Helper::$r['c']['content'] = [ViewShow::class, $data + $pageParams + $this->model->getFilterLangs()];
 			$chatParams = array_map(function($a){return ['id'=>$a,'max_id'=>0];}, $data['projectIds']);
 			$this->getChatMessages($chatParams);
 		}

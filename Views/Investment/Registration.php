@@ -12,9 +12,9 @@ namespace Views\Investment\Registration;
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
-                    <span class="panel-title">
-                      <i class="fa fa-pencil-square"></i><?=$this->locale['add_project']?>
-                    </span>
+                <span class="panel-title">
+                    <i class="fa fa-pencil-square"></i><?=$this->locale['add_project']?>
+                </span>
             </div>
             <form method="post" action="/" id="addproject_form">
                 <div class="panel-body bg-light">
@@ -68,13 +68,12 @@ namespace Views\Investment\Registration;
                                 <div class="col-md-3">
                                     <div class="section row mbn">
                                         <div class="col-md-3 w50 mr20">
-                                            <button class="button btn-warning remove glyphicons glyphicons-remove_2"
-                                                    type="button" title="<?=$this->locale['remove']?>"></button>
+                                            <button class="button btn-warning remove glyphicons glyphicons-remove_2" type="button" title="<?=$this->locale['remove']?>"> </button>
                                         </div>
+
                                         <div class="col-md-8 pln prn">
                                             <label class="field append-icon">
-                                                <input placeholder="<?=$this->locale['profit']?>"
-                                                       class="gui-input onlyNumber" name="percents[]">
+                                                <input placeholder="<?=$this->locale['profit']?>" class="gui-input onlyNumber" name="percents[]">
                                                 <label class="field-icon">
                                                     <i class="fa fa-percent"></i>
                                                 </label>
@@ -141,7 +140,7 @@ namespace Views\Investment\Registration;
                                 <div class="col-md-1 w50 mr20">
                                     <button type="button"
                                             class="button btn-warning remove glyphicons glyphicons-remove_2"
-                                            title="<?=$this->locale['remove']?>"></button>
+                                            title="<?=$this->locale['remove']?>"> </button>
                                 </div>
 
                                 <div class="col-md-11 pln">

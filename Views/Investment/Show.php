@@ -8,13 +8,13 @@ namespace Views\Investment\Show;
             <div class="tab-content pn br-n">
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                        <span class="flag flag-<?=$this->filterLangs[$this->lang]['flag']?>"></span>
+                        <span class="flag flag-<?=$this->filterLangs[$this->filter['lang']]['flag']?>"></span>
                     </button>
                     <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
                         <? foreach ($this->filterLangs as $shortname => $lang):?>
                             <li>
-                                <a class="ajax <?=$shortname === $this->lang ? 'selected' : ''?> page"
-                                   data-beforesend='{"document":{"changePageParams":{"lang":"<?=$shortname?>"}}}'>
+                                <a class="ajax <?=$shortname === $this->filter['lang'] ? 'selected' : ''?> page"
+                                   data-beforesend='{"document":{"changePageLang":"<?=$shortname?>"}}'>
                                     <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
                                 </a>
                             </li>
@@ -47,7 +47,7 @@ namespace Views\Investment\Show;
                         <div class="mbn flex inforow">
 
                             <div class="" style="flex: 0 0">
-                                <img src="/<?=$project['file_name']?>_th.jpg" class="media-object thumbnail">
+                                <img src="/<?=$project['file_name']?>_th.jpg" class="media-object thumbnail" href="/<?=$project['file_name']?>.jpg">
                             </div>
 
                             <div class="mnw220" style="flex: 22 0">

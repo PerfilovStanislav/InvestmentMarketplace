@@ -30,7 +30,8 @@ namespace Models {
 				'plan_start_deposit'	=> [[Arrays::joinForInsert($data['plan_start_deposit'])]],
 				'plan_currency_type'	=> [[Arrays::joinForInsert($data['plan_currency_type'])]],
 				'ref_percent'			=> [[Arrays::joinForInsert($data['ref_percent'])]],
-				'id_payments'			=> [[Arrays::joinForInsert($data['id_payments'])]]
+				'id_payments'			=> [[Arrays::joinForInsert($data['id_payments'])]],
+                'status_id'             => (Auth::getUserInfo()['status_id'] ?? null) == 3 ? 2 : 1,
 			];
 
 			if (!$this->db->insert('project', $in_data)) return null;
@@ -62,14 +63,18 @@ namespace Models {
                 	, array_to_json(p.id_payments) id_payments
                 FROM project p
                 JOIN project_lang l ON p.id = l.project_id
-                WHERE l.lang_id = $langId
+                WHERE l.lang_id = $langId and status_id = 2
                 limit 25
             ");
 
-		    $projectIds = array_column($projects, 'id');
-		    $projectIdsStr = implode(',', $projectIds);
+		    if(!$projects) {
+		        return [];
+            }
 
-		    $plans = $this->db->getResult('
+            $projectIds = array_column($projects, 'id');
+            $projectIdsStr = implode(',', $projectIds);
+
+            $plans = $this->db->getResult('
 		        SELECT id, array_to_json(array_agg(ARRAY[p1, p2, p3, p4, p5])) plan
                 FROM (
                     SELECT id
@@ -106,22 +111,23 @@ namespace Models {
                 ORDER BY pay.pos
             ');
 
-			$filterLangs = array_column(
-				$this->db->select('languages', 'id,name,own_name,flag,shortname', ['id' => [317,219]])
-				, null, 'shortname'
-			);
-
 			$arrayHelper = new Arrays();
             return [
                 'projectIds'  => $projectIds,
-                'projects'     => $arrayHelper->setArray($projects)->toArray(['id_payments', 'ref_percent'])->groupBy(['id'])->getArray(),
-                'plans'        => $arrayHelper->setArray($plans)->toArray(['plan'])->groupBy(['id'])->getArray(),
+                'projects'    => $arrayHelper->setArray($projects)->toArray(['id_payments', 'ref_percent'])->groupBy(['id'])->getArray(),
+                'plans'       => $arrayHelper->setArray($plans)->toArray(['plan'])->groupBy(['id'])->getArray(),
                 'projectLangs'=> $arrayHelper->setArray($projectLangs)->toArray(['lang_id'])->groupBy(['project_id'])->getArray(),
-                'languages'    => $arrayHelper->setArray($languages)->groupBy(['id'])->getArray(),
-                'payments'     => $arrayHelper->setArray($payments)->groupBy(['id'])->getArray(),
-                'currency'     => Currency::getCurrency(),
-                'filterLangs'  => $filterLangs,
+                'languages'   => $arrayHelper->setArray($languages)->groupBy(['id'])->getArray(),
+                'payments'    => $arrayHelper->setArray($payments)->groupBy(['id'])->getArray(),
+                'currency'    => Currency::getCurrency(),
             ];
+        }
+
+        public function getFilterLangs() : array {
+		    return ['filterLangs' => array_column(
+                $this->db->select('languages', 'id,name,own_name,flag,shortname', ['id' => [317,219]])
+                , null, 'shortname'
+            )];
         }
 
         public function getChatMessages(array $chats) {

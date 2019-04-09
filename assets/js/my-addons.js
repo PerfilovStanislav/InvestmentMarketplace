@@ -424,7 +424,7 @@ function reCountN(el) {
 
 /* ------------------------------------------------------------ IMAGE SHOW ------------------------------------------ */
 var imgClickInit = function() {
-    $('.mix img').magnificPopup({
+    $('.thumbnail', $(this)).magnificPopup({
       type: 'image',
       callbacks: {
         beforeOpen: function(e) {
@@ -439,7 +439,7 @@ var imgClickInit = function() {
           }, 1000)
         },
         elementParse: function(item) {
-          item.src = item.el.attr('src');
+          item.src = item.el.attr('href');
         }
       },
       overflowY: 'scroll',
@@ -455,8 +455,8 @@ var imgClickInit = function() {
     if (panelScroller.length) {
          panelScroller.each(function(i, e) {
              $(e).scroller({
-                    trackMargin: 2,
-                    handleSize: 20
+                 trackMargin: 2,
+                 handleSize: 20
              });
          });
     }
@@ -517,9 +517,9 @@ var linkClick = function() {
 
 var generateUrlFromParams = function() {
     var params = [STORAGE.pageParams.url];
-    for(var key in STORAGE.pageParams) {
-        if (key === 'url') continue;
-        params.push(key+'/'+STORAGE.pageParams[key])
+    for(var key in STORAGE.pageParams.filter) {
+        if (key === 'page'&& STORAGE.pageParams.filter[key] == 1) continue;
+        params.push(key+'/'+ STORAGE.pageParams.filter[key])
     }
     return params ? '/' + params.join('/') : '';
 }
@@ -627,6 +627,6 @@ var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
 };
 
-var changePageParams = function(data) {
-    STORAGE.pageParams = _.extend({}, STORAGE.pageParams, data)
+var changePageLang = function(lang) {
+    STORAGE.pageParams.filter.lang = lang
 }

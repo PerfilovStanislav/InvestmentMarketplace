@@ -5,10 +5,10 @@ namespace Views\Layout;
 <html>
 <head>
     <meta charset="utf-8">
-    <title>AbsoluteAdmin - A Responsive Boostrap 3 Admin Dashboard</title>
+    <title>RichInme - <?=$this->locale['site_title']?></title>
     <meta name="keywords" content="Bootstrap 3 Admin Dashboard Template Theme"/>
-    <meta name="description" content="AdminDesigns - Bootstrap 3 Admin Dashboard Theme">
-    <meta name="author" content="AdminDesigns">
+    <meta name="description" content="RichInMe - Bootstrap 3 Admin Dashboard Theme">
+    <meta name="author" content="RichInMe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <? \Helpers\Scripts::css(
@@ -38,7 +38,7 @@ namespace Views\Layout;
     <header class="navbar navbar-fixed-top navbar-shadow">
         <div class="navbar-branding">
             <a class="navbar-brand" href="dashboard.html">
-                <b>Absolute</b>Admin
+                <b class="first">Rich</b><b class="second">inMe</b>
             </a>
             <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
         </div>
@@ -159,7 +159,7 @@ namespace Views\Layout;
                     </a>
                 </li>
                 <li>
-                    <a href="http://admindesigns.com/demos/absolute/README/index.html">
+                    <a href="http://RichInMe.com/demos/absolute/README/index.html">
                         <span class="glyphicon glyphicon-book"></span>
                         <span class="sidebar-title">Documentation</span>
                     </a>

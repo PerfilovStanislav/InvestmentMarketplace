@@ -11,7 +11,7 @@ namespace Views\Users\Head\NotAuthorized;
                 <? foreach ($this->availableLangs as $shortname => $lang):?>
                     <li>
                         <a class="ajax <?=$shortname === $this->activeLang ? 'selected' : ''?>"
-                           href="/users/changeLanguage/lang/<?=$shortname?>"
+                           href="/Users/changeLanguage/lang/<?=$shortname?>"
                            data-beforesend='{"f":["allClear"]}'>
                             <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
                         </a>

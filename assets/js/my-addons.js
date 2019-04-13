@@ -506,23 +506,12 @@ var linkClick = function() {
         if (functions) {
             applyFunctions('f', functions);
         }
-        var url = $target.attr('href');
-        if (!url) url = generateUrlFromParams();
         abortAllAjax();
         stopTimers();
-        ajax(url, [], $target.hasClass('page'))
+        ajax($target.attr('href'), [], $target.hasClass('page'))
         return false;
     });
 };
-
-var generateUrlFromParams = function() {
-    var params = [STORAGE.pageParams.url];
-    for(var key in STORAGE.pageParams.filter) {
-        if (key === 'page'&& STORAGE.pageParams.filter[key] == 1) continue;
-        params.push(key+'/'+ STORAGE.pageParams.filter[key])
-    }
-    return params ? '/' + params.join('/') : '';
-}
 
 var ajax = function(url, data, page) {
     var tmp = {url: url};
@@ -626,7 +615,3 @@ jQuery(document).ready(function() {
 var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
 };
-
-var changePageLang = function(lang) {
-    STORAGE.pageParams.filter.lang = lang
-}

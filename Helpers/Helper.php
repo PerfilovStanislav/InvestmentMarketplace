@@ -36,6 +36,7 @@ namespace Helpers {
 
 		final private static function layout() {
 			Users::setUserHead();
+			Users::setLeftSide();
 			uksort(self::$r['f'], function($a, $b) {
 				return $a == 'document' ? -1 : 1;
 			});

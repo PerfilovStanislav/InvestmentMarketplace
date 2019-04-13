@@ -14,7 +14,7 @@ namespace Views\Investment\NoShow;
                         <? foreach ($this->filterLangs as $shortname => $lang):?>
                             <li>
                                 <a class="ajax <?=$shortname === $this->filter['lang'] ? 'selected' : ''?> page"
-                                   data-beforesend='{"document":{"changePageLang":"<?=$shortname?>"}}'>
+                                   href="<?=$this->url.'/lang/'.$shortname?>">
                                     <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
                                 </a>
                             </li>

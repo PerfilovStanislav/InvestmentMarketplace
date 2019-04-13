@@ -18050,7 +18050,7 @@ body.tray-rescale .tray-right:hover {
 
 #sidebar_left {
     color: #fff;
-    font-size: 13px;
+    font-size: 15px;
     position: absolute;
     top: 0;
     left: 0;
@@ -18093,14 +18093,14 @@ body.tray-rescale .tray-right:hover {
     top: 0;
     line-height: 37px;
     width: 38px;
-    font-size: 13px;
+    font-size: 15px;
     text-align: center;
     padding-left: 13px;
 }
 /* Sidebar-Menu Top Level - Title */
 
 .sidebar-menu > li > a > span:nth-child(2) {
-    font-weight: 600;
+    font-weight: 500;
     padding-left: 6px;
 }
 /* Sidebar-Menu Top Level - Tray(holds labels,etc) */
@@ -23752,4 +23752,9 @@ body.timeline-page .panel-clone {
 
 ::-ms-input-placeholder { /* Microsoft Edge */
     color:  var(--placeholder-color);
+}
+
+@font-face {
+    font-family: 'PantonLight';
+    src: url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.woff), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.ttf), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.woff2), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.otf), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.eot)
 }

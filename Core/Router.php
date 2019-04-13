@@ -74,6 +74,6 @@ class Router {
     }
 
     public function getCurrentPageUrl() : string {
-	    return $this->controller . '/' . $this->action;
+	    return '/' . $this->controller . '/' . $this->action;
     }
 }

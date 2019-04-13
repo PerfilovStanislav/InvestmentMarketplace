@@ -12,7 +12,8 @@ namespace Controllers {
         Users\Head\NotAuthorized as ViewNotAuthorized,
         Users\Login as ViewLogin,
         Users\Registered as UserRegistered,
-        Users\Registration as UserRegistration
+        Users\Registration as UserRegistration,
+        SideLeft as ViewSideLeft
     };
 
 	class Users extends Controller {
@@ -35,6 +36,7 @@ namespace Controllers {
 			$url = parse_url($_SERVER['HTTP_REFERER']??'');
 			Helper::$r['f']['document']['addToAjaxQueue'] = [
 				'/Users/head',
+				'/Users/left',
 //				'/Investment/leftside',
 				$url['path']
 			];
@@ -100,6 +102,17 @@ namespace Controllers {
 			}
 		}
 
+        final public function left() {
+            return self::setLeftSide();
+        }
+
+        final public static function setLeftSide() {
+            Helper::$r['c']['sidebar_left'] = [
+                ViewSideLeft::class,
+                []
+            ];
+        }
+
 		/*final public function getUsers(array $ids) {
 			$users = $this->model->getUsersByIds($ids);
 
@@ -110,8 +123,11 @@ namespace Controllers {
 		final public function changeLanguage(array $params = []) {
 			if ($langId = ((Locale::getAvailableLanguages()[$params['lang'] ?? null] ?? null)['id'] ?? null)) {
 				if (Auth::isAuthorized()) {
-					$this->model->db->update('user_params', [':lang_id' => $langId], 'user_id = ' . Auth::getUserInfo()
-						['id']);
+					$this->model->db->update(
+					    'user_params',
+                        [':lang_id' => $langId],
+                        'user_id = ' . Auth::getUserInfo()['id']
+                    );
 				}
 				else {
 					$_SESSION['lang'] = $params['lang'];

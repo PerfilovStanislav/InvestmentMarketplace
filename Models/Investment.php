@@ -56,14 +56,14 @@ namespace Models {
             ];
         }
 
-        public function getShowData(int $langId) : array {
+        public function getShowData(int $langId, int $status) : array {
 		    $projects = $this->db->getResult("
                 SELECT p.id, p.name, p.url, l.description
                 	, array_to_json(p.ref_percent) ref_percent
                 	, array_to_json(p.id_payments) id_payments
                 FROM project p
                 JOIN project_lang l ON p.id = l.project_id
-                WHERE l.lang_id = $langId and status_id = 2
+                WHERE l.lang_id = $langId and status_id = $status
                 limit 25
             ");
 

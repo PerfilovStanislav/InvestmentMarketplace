@@ -37,6 +37,7 @@ namespace Controllers {
 			$page = max((int)($params['page'] ?? 1), 1);
 			$lang = Locale::getLangByName($params['lang'] ?? Locale::getLanguage()) ?:
 				Locale::getLangByName(Locale::getLanguage());
+			$status = self::getStatusIdByName($params['status'] ?? '');
 
 			$pageParams = [
                 'filter' => [
@@ -45,13 +46,12 @@ namespace Controllers {
                 ],
                 'url' => Router::getInstance()->getCurrentPageUrl()
             ];
-			$data = $this->model->getShowData($lang['id']);
+			$data = $this->model->getShowData($lang['id'], $status);
 
             Helper::$r['f']['content'] = [
                 'initChat',
                 'panelScrollerInit',
                 'imgClickInit',
-                'setStorage' => ['pageParams' => $pageParams]
             ];
 
             if (!$data) {
@@ -65,6 +65,10 @@ namespace Controllers {
 			$chatParams = array_map(function($a){return ['id'=>$a,'max_id'=>0];}, $data['projectIds']);
 			$this->getChatMessages($chatParams);
 		}
+
+		final private static function getStatusIdByName(string $name) : int {
+            return ['not_published' => 1, 'active' => 2, 'paywait' => 3, 'scam' => 4][$name] ?? 2;
+        }
 
 
 		final public function add(array $params = []) {

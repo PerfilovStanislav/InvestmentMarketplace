@@ -7,6 +7,7 @@ namespace Helpers\Locales {
 	class Ru implements LocaleInterface {
         final public static function getLocale():array {
             return [
+            	'active'			=> 'Активные',
             	'add'				=> 'Добавить',
 				'add_level'         => 'Добавить уровень',
 				'add_plan'          => 'Добавить план',
@@ -34,10 +35,12 @@ namespace Helpers\Locales {
 				'level'             => 'уровень',
 				'login'             => 'Логин',
                 'login_is_busy'     => 'Данный логин уже зарегистрирован. Введите другой',
+                'menu'              => 'Меню',
 				'name'              => 'Имя',
 				'no'                => 'Нет',
                 'no_user'           => 'Пользователь не найден',
                 'no_project'        => 'Проект не найден',
+                'not_published'     => 'Неопубликованные',
 				'options'           => 'Опции',
 				'or'                => 'или',
 				'password'          => 'Пароль',

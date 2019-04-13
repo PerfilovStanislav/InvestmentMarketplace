@@ -7,6 +7,7 @@ namespace Helpers\Locales {
 	class En implements LocaleInterface {
         final public static function getLocale():array {
             return [
+                'active'			=> 'Active',
 				'add'				=> 'Add',
 				'add_level'         => 'Add level',
 				'add_plan'          => 'Add plan',
@@ -34,10 +35,12 @@ namespace Helpers\Locales {
 				'level'             => 'level',
 				'login'             => 'Login',
 				'login_is_busy'     => 'This login is already registered. Please enter another',
+				'menu'              => 'Menu',
 				'name'              => 'Name',
 				'no'                => 'No',
 				'no_user'           => 'User is not found',
                 'no_project'        => 'Project not found',
+                'not_published'     => 'Not published',
 				'options'           => 'Options',
 				'or'                => 'or',
 				'password'          => 'Password',

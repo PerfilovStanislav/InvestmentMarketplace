@@ -3,7 +3,6 @@
 namespace {
 
 	use Core\Auth;
-	use Helpers\Helper;
 
 	define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));

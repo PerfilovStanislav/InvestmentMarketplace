@@ -1,4 +1,4 @@
-<?php
+<?
 namespace Views\Layout;
 ?>
 <!DOCTYPE html>
@@ -29,7 +29,7 @@ namespace Views\Layout;
     <meta property="og:url" content="http://richinme.com">
     <meta property="og:image" content="http://richinme.com/og-image.jpg">
 
-    <?\Helpers\Scripts::css(
+    <? \Helpers\Scripts::css(
         [
             '/assets/default_skin/css/' => ['theme', 'base64'],
             '/assets/' => [
@@ -69,7 +69,7 @@ namespace Views\Layout;
     </aside>
     <section id="content_wrapper">
         <div id="content" class="animated fadeIn">
-            <?php echo $this->content; ?>
+            <?= $this->content; ?>
         </div>
     </section>
 </div>
@@ -83,7 +83,7 @@ namespace Views\Layout;
 
 <?=(new \Core\View(\Views\Investment\ChatMessage::class, []))->get()?>
 
-<?\Helpers\Scripts::js(
+<? \Helpers\Scripts::js(
     [
         '/assets/jquery/' => ['jquery-3.3.1.min', 'jquery-ui.min'],
         '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
@@ -91,10 +91,10 @@ namespace Views\Layout;
     ]
 ) ?>
 
-<?php if ($this->f): ?>
+<? if ($this->f): ?>
     <script>
         applyFunctions('f',  <?=json_encode($this->f)?>);
     </script>
-<?php endif; ?>
+<? endif; ?>
 </body>
 </html>

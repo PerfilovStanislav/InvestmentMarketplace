@@ -29,7 +29,7 @@ namespace Views\Layout;
     <meta property="og:url" content="http://richinme.com">
     <meta property="og:image" content="http://richinme.com/og-image.jpg">
 
-    <? \Helpers\Scripts::css(
+    <?\Helpers\Scripts::css(
         [
             '/assets/default_skin/css/' => ['theme', 'base64'],
             '/assets/' => [
@@ -81,9 +81,9 @@ namespace Views\Layout;
     </div>
 </div>
 
-<?= (new \Core\View(\Views\Investment\ChatMessage::class, []))->get() ?>
+<?=(new \Core\View(\Views\Investment\ChatMessage::class, []))->get()?>
 
-<? \Helpers\Scripts::js(
+<?\Helpers\Scripts::js(
     [
         '/assets/jquery/' => ['jquery-3.3.1.min', 'jquery-ui.min'],
         '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],

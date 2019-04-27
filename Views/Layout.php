@@ -31,7 +31,7 @@ namespace Views\Layout;
 
     <? \Helpers\Scripts::css(
         [
-            '/assets/default_skin/css/' => ['theme', 'base64'],
+            '/assets/default_skin/css/' => ['theme.clear', 'base64'],
             '/assets/' => [
                 'fullcalendar/fullcalendar.min',
                 'google/fonts',
@@ -46,7 +46,7 @@ namespace Views\Layout;
     ) ?>
 
     <!--[if lt IE 9]>
-    <script src="/assets/js/3.7.0/html5shiv.js"></script>
+    <script src="/assets/js/html5shiv.js"></script>
     <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 </head>

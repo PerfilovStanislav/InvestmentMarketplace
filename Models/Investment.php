@@ -31,7 +31,7 @@ namespace Models {
 				'plan_currency_type'	=> [[Arrays::joinForInsert($data['plan_currency_type'])]],
 				'ref_percent'			=> [[Arrays::joinForInsert($data['ref_percent'])]],
 				'id_payments'			=> [[Arrays::joinForInsert($data['id_payments'])]],
-                'status_id'             => (Auth::getUserInfo()['status_id'] ?? null) == 3 ? 2 : 1,
+                'status_id'             => [[(Auth::getUserInfo()['status_id'] ?? null) == 3 ? 2 : 1], \PDO::PARAM_INT],
 			];
 
 			if (!$this->db->insert('project', $in_data)) return null;

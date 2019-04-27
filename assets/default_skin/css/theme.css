@@ -632,8 +632,8 @@
 }
 @font-face {
     font-family: "AdminDesigns";
-    src: url("../../fonts/admindesigns/admindesigns.eot");
-    src: url("../../fonts/admindesigns/admindesignsd41d.eot?#iefix") format("embedded-opentype"), url("../../fonts/admindesigns/admindesigns.woff") format("woff"), url("../../fonts/admindesigns/admindesigns.ttf") format("truetype"), url("../../fonts/admindesigns/admindesigns.svg#admindesigns") format("svg");
+    src: url("/assets/fonts/admindesigns/admindesigns.eot");
+    src: url("/assets/fonts/admindesigns/admindesignsd41d.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/admindesigns/admindesigns.woff") format("woff"), url("/assets/fonts/admindesigns/admindesigns.ttf") format("truetype"), url("/assets/fonts/admindesigns/admindesigns.svg#admindesigns") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -667,8 +667,8 @@
 }
 @font-face {
     font-family: 'Glyphicons Halflings';
-    src: url('../../fonts/glyphicons/glyphicons-halflings-regular.eot');
-    src: url('../../fonts/glyphicons/glyphicons-halflings-regulard41d.eot?#iefix') format('embedded-opentype'), url('../../fonts/glyphicons/glyphicons-halflings-regular.html') format('woff2'), url('../../fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'), url('../../fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'), url('../../fonts/glyphicons/glyphicons-halflings-regular.svg#@glyphicons_halflingsregular') format('svg');
+    src: url('/assets/fonts/glyphicons/glyphicons-halflings-regular.eot');
+    src: url('/assets/fonts/glyphicons/glyphicons-halflings-regulard41d.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.html') format('woff2'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.svg#@glyphicons_halflingsregular') format('svg');
 }
 .glyphicon {
     position: relative;
@@ -1458,8 +1458,8 @@
 }
 @font-face {
     font-family: 'FontAwesome';
-    src: url('../../fonts/font-awesome/fontawesome-webfonte0a5.eot?v=4.3.0');
-    src: url('../../fonts/font-awesome/fontawesome-webfontd41d.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../../fonts/font-awesome/fontawesome-webfonte0a5.html?v=4.3.0') format('woff2'), url('../../fonts/font-awesome/fontawesome-webfonte0a5.woff?v=4.3.0') format('woff'), url('../../fonts/font-awesome/fontawesome-webfonte0a5.ttf?v=4.3.0') format('truetype'), url('../../fonts/font-awesome/fontawesome-webfonte0a5.svg?v=4.3.0#fontawesomeregular') format('svg');
+    src: url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.eot?v=4.3.0');
+    src: url('/assets/fonts/font-awesome/fontawesome-webfontd41d.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.html?v=4.3.0') format('woff2'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff?v=4.3.0') format('woff'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.ttf?v=4.3.0') format('truetype'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.svg?v=4.3.0#fontawesomeregular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -3253,8 +3253,8 @@
 }
 @font-face {
     font-family: 'StateFaceRegular';
-    src: url('../../fonts/stateface/stateface-regular-webfont.eot');
-    src: url('../../fonts/stateface/stateface-regular-webfontd41d.eot?#iefix') format('embedded-opentype'), url('../../fonts/stateface/stateface-regular-webfont.woff') format('woff'), url('../../fonts/stateface/stateface-regular-webfont.ttf') format('truetype'), url('../../fonts/stateface/stateface-regular-webfont.svg#StateFaceRegular') format('svg');
+    src: url('/assets/fonts/stateface/stateface-regular-webfont.eot');
+    src: url('/assets/fonts/stateface/stateface-regular-webfontd41d.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/stateface/stateface-regular-webfont.woff') format('woff'), url('/assets/fonts/stateface/stateface-regular-webfont.ttf') format('truetype'), url('/assets/fonts/stateface/stateface-regular-webfont.svg#StateFaceRegular') format('svg');
     font-weight: normal;
     font-style: normal;
 }

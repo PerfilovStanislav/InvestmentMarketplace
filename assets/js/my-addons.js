@@ -5,7 +5,7 @@ var setDefaultStorage = function() {
 };
 setDefaultStorage();
 var xhrId = 0, Q = {};
-// устанавливаем параметры для всех аякс запросов
+/* устанавливаем параметры для всех аякс запросов*/
 $.ajaxSetup({
     type: "POST",
     data: {ajax:' 1'},
@@ -55,7 +55,7 @@ var stopTimers = function() {
     clearTimeout(STORAGE.chatTimer);
 };
 
-// вызов массив функций для определённой области , элимента, формы
+/* вызов массив функций для определённой области , элимента, формы*/
 /*var callFunctions = function() {
     for (var i in arguments) {
         if (typeof(arguments[i]) == 'function') arguments[i].apply(this);      // вызов функции без параметров
@@ -63,20 +63,21 @@ var stopTimers = function() {
     }
 };*/
 
-// вызывается после каждого ответа с сервера
+/* вызывается после каждого ответа с сервера
 // умеет: отрисовывать вьюшки, вызывать методы, показывать ошибки и удачные запросы
 // Порядок обработки находится в system/helpers/json_helper/default_sort
+*/
 var applyFunctions = function(key, value) {
     if (key === 'c') {
-        //отрисовываем вьюшки
+        /*отрисовываем вьюшки*/
         $.each(value, function(k,v) {
             $('#' + k).html(v);
         });
     }
-    else if (key === 'data') {        // data обрабатывается самими функциями
+    else if (key === 'data') {        /* data обрабатывается самими функциями*/
         return true;
     }
-    // всё хорошо  либо просто уведомление
+    /* всё хорошо  либо просто уведомление*/
     else if (key === 'alert') {
         $.each(value, function(type,data) {
             $.each(data, function(title,text) {
@@ -132,10 +133,10 @@ var applyFunctions = function(key, value) {
         })
     }
     else if (key === 'f') {
-        //вызов методов в необходимой области видимости
+        /*вызов методов в необходимой области видимости*/
         $.each(value, function(scope,functions) {
             $.each(functions, function(a, b) {
-                if (parseInt(a).toString() == a) { // if is number
+                if (parseInt(a).toString() == a) { /* if is number*/
                     a = b;
                     b = null;
                 }
@@ -304,8 +305,8 @@ var ProjectRegistration = function(a) {
             return !1;
         }
         else if ($('#full_site_image').attr('src') === "") {
-            // @TODO Локализация с сервера
-            // ОТДЕЛЬНЫЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ СОобЩЕНИЙ С ЛОКАЛИЗАЦИЕЙ
+            /* @TODO Локализация с сервера
+            // ОТДЕЛЬНЫЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ СОобЩЕНИЙ С ЛОКАЛИЗАЦИЕЙ*/
             alert('Загрузите скриншот сайта');
             return !1;
         }
@@ -344,7 +345,6 @@ var ProjectRegistration = function(a) {
 
 
 
-      // Methods
       $('.docs-buttons').on('click', '[data-method]', function () {
         var $this = $(this);
         var data = $this.data();
@@ -371,7 +371,7 @@ var ProjectRegistration = function(a) {
       });
 
 
-        // Import image
+        /* Import image*/
         var $inputImage = $('#inputImage');
         var URL = window.URL || window.webkitURL;
         var blobURL;
@@ -547,7 +547,7 @@ var initChat = function() {
 
 var startChatCheck = function() {
     if (STORAGE.status != 6) {
-        STORAGE.status = 2; // подготовка к отправке
+        STORAGE.status = 2; /* подготовка к отправке*/
         STORAGE.chatTimer = setTimeout(checkChats, 3000);
     }
 };
@@ -557,11 +557,11 @@ var checkChats = function() {
         var id = $(el).attr('chat_id');
         return {id: id, max_id:(_.isEmpty(STORAGE.chat[id])?0:STORAGE.chat[id].max)}
     }).get();
-    STORAGE.status = 3; // отправлен запрос на проверку наличия новых сообщений
+    STORAGE.status = 3; /* отправлен запрос на проверку наличия новых сообщений*/
     ajax('/investment/getChatMessages/', {chats:data});
 };
 var setNewChatMessages = function(data) {
-    STORAGE.status = 4; // сообщения получены
+    STORAGE.status = 4; /* сообщения получены*/
     if (!_.isEmpty(data)) {
         var messages = data.messages;
         for (var project_id in messages) {
@@ -589,7 +589,7 @@ var setNewChatMessages = function(data) {
             $scroller_content.css('scroll-behavior', '');
         }
     }
-    STORAGE.status = 5; // сообщения отрисованы
+    STORAGE.status = 5; /* сообщения отрисованы*/
 };
 
 var getRandomNameBySessionId = function(sessionId) {

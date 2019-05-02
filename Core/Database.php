@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Core {
 	use \PDO;
 	use Helpers\{Validator, Helper};
@@ -23,12 +22,12 @@ namespace Core {
 
 		function __construct() {
 			$this->db_dns = "pgsql:dbname={$this->db_name};host={$this->db_host};port={$this->db_port}";
-            parent::__construct($this->db_dns, $this->db_user, $this->db_pass, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+            parent::__construct($this->db_dns
+                , $this->db_user
+                , $this->db_pass
+                , [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+            );
 		}
-
-        /*final public static function getInstance():self {
-            return self::$_instance?:(self::$_instance = new self());
-        }*/
 
 		public function insert($table, array $params) {
 			if (empty($params)) return null;
@@ -198,14 +197,6 @@ namespace Core {
             $res = $this->debugselect($table, $fields, $where, $order, 1);
             return $res[0] ?? null;
         }
-
-		/*public function getByClass() {
-			$sth = $this->query("SELECT * FROM users");
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Classes\Person');
-			$person = $sth->fetchAll();
-			echo '<pre>';
-			var_dump($person[0]->id); die();
-		}*/
 
 		public function lastID($table, $where = null) {
 			$q = 'SELECT max(id) as id FROM '.$table;

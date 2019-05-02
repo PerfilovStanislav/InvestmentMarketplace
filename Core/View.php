@@ -16,7 +16,7 @@ namespace Core {
 			require_once real_path($template . '.php');
 			$this->pageView = ob_get_clean();
 			$this->pageView = str_replace(["\n", "\r"], ' ', $this->pageView);
-			$this->pageView = preg_replace('/\<!--.*?--\>/i', ' ', $this->pageView);
+			$this->pageView = preg_replace('/\<!--.*?--\>/i', '', $this->pageView);
 			$this->pageView = preg_replace('/\s+/', ' ', $this->pageView);
 		}
 

@@ -11,7 +11,7 @@ namespace Views\Layout;
     <meta name="author" content="RichInMe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/assets/icons/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
@@ -29,21 +29,7 @@ namespace Views\Layout;
     <meta property="og:url" content="http://richinme.com">
     <meta property="og:image" content="http://richinme.com/og-image.jpg">
 
-    <? \Helpers\Scripts::css(
-        [
-            '/assets/default_skin/css/' => ['theme.clear', 'base64'],
-            '/assets/' => [
-                'fullcalendar/fullcalendar.min',
-                'google/fonts',
-                'cropper/cropper',
-                'admin-forms/css/admin-forms.min',
-                'glyphicons-pro/glyphicons-pro',
-                'flags/flags',
-                'payments/payments',
-                'magnific/magnific-popup',
-            ]
-        ]
-    ) ?>
+    <? \Helpers\Scripts::css(['/assets/' => ['full',]]) ?>
 
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.js"></script>
@@ -83,13 +69,7 @@ namespace Views\Layout;
 
 <?=(new \Core\View(\Views\Investment\ChatMessage::class, []))->get()?>
 
-<? \Helpers\Scripts::js(
-    [
-        '/assets/jquery/' => ['jquery-3.3.1.min', 'jquery-ui.min'],
-        '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
-        '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
-    ]
-) ?>
+<? \Helpers\Scripts::js(['/assets/' => ['full',]]) ?>
 
 <? if ($this->f): ?>
     <script>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace  {
 
     class R {
-        function __construct() {
+        private function __construct() {
         }
 
         final public static function r(array $data) {

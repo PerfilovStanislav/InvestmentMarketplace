@@ -273,8 +273,8 @@ var Core = function(options) {
          } else {
             Body.removeClass('tray-rescale tray-rescale-left tray-rescale-right');
          }
-		// #TODO Added by Me
-		// setTimeout(changeScrollContentHeight(), 10);
+		/* #TODO Added by Me
+		 setTimeout(changeScrollContentHeight(), 10);*/
       }
       var lazyLayout = _.debounce(rescale, 300);
       if (!Body.hasClass('disable-tray-rescale')) {
@@ -329,7 +329,7 @@ var Core = function(options) {
          Popovers.popover();
       }
       $('.dropdown-menu.dropdown-persist').on('click', function(e) {
-         // e.preventDefault();
+         /* e.preventDefault();*/
       });
       $('.dropdown-menu .nav-tabs li a').on('click', function(e) {
          e.preventDefault();
@@ -346,7 +346,7 @@ var Core = function(options) {
             $(this).addClass('active').siblings().removeClass('active');
          });
       }
-      //panelScrollerInit();
+      /*panelScrollerInit();*/
       var SmoothScroll = $('[data-smoothscroll]');
       if (SmoothScroll.length) {
          SmoothScroll.each(function(i, e) {
@@ -372,8 +372,8 @@ var Core = function(options) {
          runAnimations();
          runHeader();*/
          runSideMenu(options);
-         //runFooter();
-         // runTrays();
+         /*runFooter();
+          runTrays();*/
          runFormElements();
       }
    }

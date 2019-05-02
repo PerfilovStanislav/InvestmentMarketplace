@@ -1,29 +1,15 @@
-/*!
- * Cropper v2.2.5
- * https://github.com/fengyuanchen/cropper
- *
- * Copyright (c) 2014-2016 Fengyuan Chen and contributors
- * Released under the MIT license
- *
- * Date: 2016-01-18T05:42:50.800Z
- */
-
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
-    // AMD. Register as anonymous module.
     define(['jquery'], factory);
   } else if (typeof exports === 'object') {
-    // Node / CommonJS
     factory(require('jquery'));
   } else {
-    // Browser globals.
     factory(jQuery);
   }
 })(function ($) {
 
   'use strict';
 
-  // Globals
   var $window = $(window);
   var $document = $(document);
   var location = window.location;
@@ -32,10 +18,8 @@
   var DataView = window.DataView;
   var btoa = window.btoa;
 
-  // Constants
   var NAMESPACE = 'cropper';
 
-  // Classes
   var CLASS_MODAL = 'cropper-modal';
   var CLASS_HIDE = 'cropper-hide';
   var CLASS_HIDDEN = 'cropper-hidden';
@@ -45,7 +29,6 @@
   var CLASS_DISABLED = 'cropper-disabled';
   var CLASS_BG = 'cropper-bg';
 
-  // Events
   var EVENT_MOUSE_DOWN = 'mousedown touchstart pointerdown MSPointerDown';
   var EVENT_MOUSE_MOVE = 'mousemove touchmove pointermove MSPointerMove';
   var EVENT_MOUSE_UP = 'mouseup touchend touchcancel pointerup pointercancel MSPointerUp MSPointerCancel';
@@ -53,7 +36,7 @@
   var EVENT_DBLCLICK = 'dblclick';
   var EVENT_LOAD = 'load.' + NAMESPACE;
   var EVENT_ERROR = 'error.' + NAMESPACE;
-  var EVENT_RESIZE = 'resize.' + NAMESPACE; // Bind to window with namespace
+  var EVENT_RESIZE = 'resize.' + NAMESPACE;
   var EVENT_BUILD = 'build.' + NAMESPACE;
   var EVENT_BUILT = 'built.' + NAMESPACE;
   var EVENT_CROP_START = 'cropstart.' + NAMESPACE;
@@ -62,17 +45,14 @@
   var EVENT_CROP = 'crop.' + NAMESPACE;
   var EVENT_ZOOM = 'zoom.' + NAMESPACE;
 
-  // RegExps
   var REGEXP_ACTIONS = /e|w|s|n|se|sw|ne|nw|all|crop|move|zoom/;
   var REGEXP_DATA_URL = /^data\:/;
   var REGEXP_DATA_URL_HEAD = /^data\:([^\;]+)\;base64,/;
   var REGEXP_DATA_URL_JPEG = /^data\:image\/jpeg.*;base64,/;
 
-  // Data keys
   var DATA_PREVIEW = 'preview';
   var DATA_ACTION = 'action';
 
-  // Actions
   var ACTION_EAST = 'e';
   var ACTION_WEST = 'w';
   var ACTION_SOUTH = 's';
@@ -87,10 +67,8 @@
   var ACTION_ZOOM = 'zoom';
   var ACTION_NONE = 'none';
 
-  // Supports
   var SUPPORT_CANVAS = $.isFunction($('<canvas>')[0].getContext);
 
-  // Maths
   var num = Number;
   var min = Math.min;
   var max = Math.max;
@@ -101,7 +79,6 @@
   var round = Math.round;
   var floor = Math.floor;
 
-  // Utilities
   var fromCharCode = String.fromCharCode;
 
   function isNumber(n) {
@@ -115,7 +92,6 @@
   function toArray(obj, offset) {
     var args = [];
 
-    // This is necessary for IE8
     if (isNumber(offset)) {
       args.push(offset);
     }
@@ -123,7 +99,6 @@
     return args.slice.apply(obj, args);
   }
 
-  // Custom proxy to avoid jQuery's guid
   function proxy(fn, context) {
     var args = toArray(arguments, 2);
 
@@ -155,12 +130,10 @@
   function getImageSize(image, callback) {
     var newImage;
 
-    // Modern browsers
     if (image.naturalWidth) {
       return callback(image.naturalWidth, image.naturalHeight);
     }
 
-    // IE8: Don't use `new Image()` here (#319)
     newImage = document.createElement('img');
 
     newImage.onload = function () {
@@ -264,7 +237,6 @@
       context.rotate(rotate * Math.PI / 180);
     }
 
-    // Should call `scale` after rotated
     if (scalable) {
       context.scale(scaleX, scaleY);
     }
@@ -324,7 +296,6 @@
     var offset;
     var i;
 
-    // Only handle JPEG image (start by 0xFFD8)
     if (dataView.getUint8(0) === 0xFF && dataView.getUint8(1) === 0xD8) {
       offset = 2;
 
@@ -366,13 +337,10 @@
 
         if (dataView.getUint16(offset, littleEndian) === 0x0112 /* Orientation */) {
 
-          // 8 is the offset of the current tag's value
           offset += 8;
 
-          // Get the original orientation value
           orientation = dataView.getUint16(offset, littleEndian);
 
-          // Override the orientation with the default value: 1
           dataView.setUint16(offset, 1, littleEndian);
           break;
         }
@@ -397,7 +365,6 @@
     return arrayBuffer;
   }
 
-  // Only available for JPEG image
   function arrayBufferToDataURL(arrayBuffer) {
     var dataView = new Uint8Array(arrayBuffer);
     var length = dataView.length;
@@ -440,15 +407,12 @@
       if ($this.is('img')) {
         this.isImg = !0;
 
-        // Should use `$.fn.attr` here. e.g.: "img/picture.jpg"
         this.originalUrl = url = $this.attr('src');
 
-        // Stop when it's a blank image
         if (!url) {
           return;
         }
 
-        // Should use `$.fn.prop` here. e.g.: "http://example.com/img/picture.jpg"
         url = $this.prop('src');
       } else if ($this.is('canvas') && SUPPORT_CANVAS) {
         url = $this[0].toDataURL();
@@ -457,7 +421,6 @@
       this.load(url);
     },
 
-    // A shortcut for triggering custom events
     trigger: function (type, data) {
       var e = $.Event(type, data);
 
@@ -476,7 +439,6 @@
         return;
       }
 
-      // Trigger build event first
       $this.one(EVENT_BUILD, options.build);
 
       if (this.trigger(EVENT_BUILD).isDefaultPrevented()) {
@@ -492,7 +454,6 @@
 
       read = $.proxy(this.read, this);
 
-      // XMLHttpRequest disallows to open a Data URL in some browsers like IE11 and Safari
       if (REGEXP_DATA_URL.test(url)) {
         return REGEXP_DATA_URL_JPEG.test(url) ?
           read(dataURLToArrayBuffer(url)) :
@@ -527,39 +488,32 @@
 
         switch (orientation) {
 
-          // flip horizontal
           case 2:
             scaleX = -1;
             break;
 
-          // rotate left 180°
           case 3:
             rotate = -180;
             break;
 
-          // flip vertical
           case 4:
             scaleY = -1;
             break;
 
-          // flip vertical + rotate right 90°
           case 5:
             rotate = 90;
             scaleY = -1;
             break;
 
-          // rotate right 90°
           case 6:
             rotate = 90;
             break;
 
-          // flip horizontal + rotate right 90°
           case 7:
             rotate = 90;
             scaleX = -1;
             break;
 
-          // rotate left 90°
           case 8:
             rotate = -90;
             break;
@@ -594,7 +548,6 @@
         } else {
           crossOrigin = 'anonymous';
 
-          // Bust cache (#148) when there is not a "crossOrigin" property
           crossOriginUrl = addTimestamp(url);
         }
       }
@@ -656,12 +609,10 @@
         return;
       }
 
-      // Unbuild first when replace
       if (this.isBuilt) {
         this.unbuild();
       }
 
-      // Create cropper elements
       this.$container = $this.parent();
       this.$cropper = $cropper = $(Cropper.TEMPLATE);
       this.$canvas = $cropper.find('.cropper-canvas').append($clone);
@@ -670,10 +621,8 @@
       this.$viewBox = $cropper.find('.cropper-view-box');
       this.$face = $face = $cropBox.find('.cropper-face');
 
-      // Hide the original image
       $this.addClass(CLASS_HIDDEN).after($cropper);
 
-      // Show the clone image if is hidden
       if (!this.isImg) {
         $clone.removeClass(CLASS_HIDE);
       }
@@ -724,7 +673,6 @@
       this.setData(options.data);
       $this.one(EVENT_BUILT, options.built);
 
-      // Trigger the built event asynchronously to keep `data('cropper')` is defined
       setTimeout($.proxy(function () {
         this.trigger(EVENT_BUILT);
         this.isCompleted = !0;
@@ -740,13 +688,11 @@
       this.isCompleted = !1;
       this.initialImage = null;
 
-      // Clear `initialCanvas` is necessary when replace
       this.initialCanvas = null;
       this.initialCropBox = null;
       this.container = null;
       this.canvas = null;
 
-      // Clear `cropBox` is necessary when replace
       this.cropBox = null;
       this.unbind();
 
@@ -793,7 +739,6 @@
       $cropper.removeClass(CLASS_HIDDEN);
     },
 
-    // Canvas (image wrapper)
     initCanvas: function () {
       var viewMode = this.options.viewMode;
       var container = this.container;
@@ -964,7 +909,6 @@
       if (this.isRotated) {
         this.isRotated = !1;
 
-        // Computes rotated sizes with image sizes
         rotated = getRotatedSizes({
           width: image.width,
           height: image.height,
@@ -982,7 +926,6 @@
           canvas.naturalWidth = naturalWidth;
           canvas.naturalHeight = naturalHeight;
 
-          // Computes rotated sizes with natural image sizes
           if (rotate % 180) {
             rotated = getRotatedSizes({
               width: naturalWidth,
@@ -1092,11 +1035,9 @@
       this.cropBox = cropBox;
       this.limitCropBox(!0, !0);
 
-      // Initialize auto crop area
       cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
       cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
 
-      // The width of auto crop area must large than "minWidth", and the height too. (#164)
       cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
       cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
       cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
@@ -1123,7 +1064,6 @@
         minCropBoxWidth = num(options.minCropBoxWidth) || 0;
         minCropBoxHeight = num(options.minCropBoxHeight) || 0;
 
-        // The min/maxCropBoxWidth/Height must be less than containerWidth/Height
         minCropBoxWidth = min(minCropBoxWidth, containerWidth);
         minCropBoxHeight = min(minCropBoxHeight, containerHeight);
         maxCropBoxWidth = min(containerWidth, isLimited ? canvas.width : containerWidth);
@@ -1149,7 +1089,6 @@
           }
         }
 
-        // The minWidth/Height must be less than maxWidth/Height
         cropBox.minWidth = min(minCropBoxWidth, maxCropBoxWidth);
         cropBox.minHeight = min(minCropBoxHeight, maxCropBoxHeight);
         cropBox.maxWidth = maxCropBoxWidth;
@@ -1196,7 +1135,6 @@
 
       if (options.movable && options.cropBoxMovable) {
 
-        // Turn to move the canvas when the crop box is equal to the container
         this.$face.data(DATA_ACTION, (cropBox.width === containerWidth && cropBox.height === containerHeight) ? ACTION_MOVE : ACTION_ALL);
       }
 
@@ -1223,7 +1161,6 @@
         this.trigger(EVENT_CROP, this.getData());
       } else if (!this.isBuilt) {
 
-        // Only trigger one crop event before complete
         this.$element.one(EVENT_BUILT, $.proxy(function () {
           this.trigger(EVENT_CROP, this.getData());
         }, this));
@@ -1239,7 +1176,6 @@
       this.$preview.each(function () {
         var $this = $(this);
 
-        // Save the original size for recover
         $this.data(DATA_PREVIEW, {
           width: $this.width(),
           height: $this.height(),
@@ -1425,14 +1361,12 @@
       var cropBoxData;
       var ratio;
 
-      // Check `container` is necessary for IE8
       if (this.isDisabled || !container) {
         return;
       }
 
       ratio = $container.width() / container.width;
 
-      // Resize when width changed or height changed
       if (ratio !== 1 || $container.height() !== container.height) {
         if (restore) {
           canvasData = this.getCanvasData();
@@ -1475,7 +1409,6 @@
 
       event.preventDefault();
 
-      // Limit wheel speed to prevent zoom too fast
       if (this.wheeling) {
         return;
       }
@@ -1541,8 +1474,6 @@
         this.action = action;
         this.cropping = !1;
 
-        // IE8  has `event.pageX/Y`, but not `event.originalEvent.pageX/Y`
-        // IE10 has `event.originalEvent.pageX/Y`, but not `event.pageX/Y`
         this.startX = e.pageX || originalEvent && originalEvent.pageX;
         this.startY = e.pageY || originalEvent && originalEvent.pageY;
 
@@ -1644,7 +1575,6 @@
       var offset;
       var range;
 
-      // Locking aspect ratio in "free mode" by holding shift key (#259)
       if (!aspectRatio && shiftKey) {
         aspectRatio = width && height ? width / height : 1;
       }
@@ -1667,13 +1597,11 @@
       }
 
       switch (action) {
-        // Move crop box
         case ACTION_ALL:
           left += range.x;
           top += range.y;
           break;
 
-        // Resize crop box
         case ACTION_EAST:
           if (range.x >= 0 && (right >= maxWidth || aspectRatio &&
             (top <= minTop || bottom >= maxHeight))) {
@@ -1948,13 +1876,11 @@
 
           break;
 
-        // Move canvas
         case ACTION_MOVE:
           this.move(range.x, range.y);
           renderable = !1;
           break;
 
-        // Zoom canvas
         case ACTION_ZOOM:
           this.zoom((function (x1, y1, x2, y2) {
             var z1 = sqrt(x1 * x1 + y1 * y1);
@@ -1972,7 +1898,6 @@
           renderable = !1;
           break;
 
-        // Create crop box
         case ACTION_CROP:
           if (!range.x || !range.y) {
             renderable = !1;
@@ -1996,7 +1921,6 @@
             top -= height;
           }
 
-          // Show the crop box if is hidden
           if (!this.isCropped) {
             this.$cropBox.removeClass(CLASS_HIDDEN);
             this.isCropped = !0;
@@ -2008,8 +1932,7 @@
 
           break;
 
-        // No default
-      }
+        }
 
       if (renderable) {
         cropBox.width = width;
@@ -2021,12 +1944,10 @@
         this.renderCropBox();
       }
 
-      // Override
       this.startX = this.endX;
       this.startY = this.endY;
     },
 
-    // Show the crop box manually
     crop: function () {
       if (!this.isBuilt || this.isDisabled) {
         return;
@@ -2046,7 +1967,6 @@
       this.setCropBoxData(this.initialCropBox);
     },
 
-    // Reset the image and crop box to their initial states
     reset: function () {
       if (!this.isBuilt || this.isDisabled) {
         return;
@@ -2063,7 +1983,6 @@
       }
     },
 
-    // Clear the crop box
     clear: function () {
       if (!this.isCropped || this.isDisabled) {
         return;
@@ -2081,7 +2000,6 @@
 
       this.limitCanvas(!0, !0);
 
-      // Render canvas after crop box rendered
       this.renderCanvas();
 
       this.$dragBox.removeClass(CLASS_MODAL);
@@ -2100,13 +2018,11 @@
           this.$element.attr('src', url);
         }
 
-        // Clear previous data
         this.options.data = null;
         this.load(url);
       }
     },
 
-    // Enable (unfreeze) the cropper
     enable: function () {
       if (this.isBuilt) {
         this.isDisabled = !1;
@@ -2114,7 +2030,6 @@
       }
     },
 
-    // Disable (freeze) the cropper
     disable: function () {
       if (this.isBuilt) {
         this.isDisabled = !0;
@@ -2122,7 +2037,6 @@
       }
     },
 
-    // Destroy the cropper and remove the instance from the image
     destroy: function () {
       var $this = this.$element;
 
@@ -2169,7 +2083,6 @@
       var canvas = this.canvas;
       var isChanged = !1;
 
-      // If "y" is not present, its default value is "x"
       if (isUndefined(y)) {
         y = x;
       }
@@ -2259,7 +2172,6 @@
             pageY: _event.pageY || originalEvent.pageY || 0
           };
 
-          // Zoom from the triggering point of the event
           canvas.left -= (newWidth - width) * (
             ((center.pageX - offset.left) - canvas.left) / width
           );
@@ -2268,7 +2180,6 @@
           );
         } else {
 
-          // Zoom from the center of the canvas
           canvas.left -= (newWidth - width) / 2;
           canvas.top -= (newHeight - height) / 2;
         }
@@ -2290,8 +2201,7 @@
 
     /**
      * Rotate the canvas to an absolute degree
-     * https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function#rotate()
-     *
+     * https:*
      * @param {Number} degree
      */
     rotateTo: function (degree) {
@@ -2306,8 +2216,7 @@
 
     /**
      * Scale the image
-     * https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function#scale()
-     *
+     * https:*
      * @param {Number} scaleX
      * @param {Number} scaleY (optional)
      */
@@ -2315,7 +2224,6 @@
       var image = this.image;
       var isChanged = !1;
 
-      // If "scaleY" is not present, its default value is "scaleX"
       if (isUndefined(scaleY)) {
         scaleY = scaleX;
       }
@@ -2668,7 +2576,6 @@
         }
       }
 
-      // The canvas element will use `Math.floor` on a float number, so floor first
       canvasWidth = floor(scaledWidth || originalWidth);
       canvasHeight = floor(scaledHeight || originalHeight);
 
@@ -2682,20 +2589,17 @@
         context.fillRect(0, 0, canvasWidth, canvasHeight);
       }
 
-      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D.drawImage
       context.drawImage.apply(context, (function () {
         var source = getSourceCanvas(this.$clone[0], this.image);
         var sourceWidth = source.width;
         var sourceHeight = source.height;
         var args = [source];
 
-        // Source canvas
         var srcX = data.x;
         var srcY = data.y;
         var srcWidth;
         var srcHeight;
 
-        // Destination canvas
         var dstX;
         var dstY;
         var dstWidth;
@@ -2723,10 +2627,8 @@
           srcHeight = dstHeight = min(originalHeight, sourceHeight - srcY);
         }
 
-        // All the numerical parameters should be integer for `drawImage` (#476)
         args.push(floor(srcX), floor(srcY), floor(srcWidth), floor(srcHeight));
 
-        // Scale destination sizes
         if (scaledRatio) {
           dstX *= scaledRatio;
           dstY *= scaledRatio;
@@ -2734,7 +2636,6 @@
           dstHeight *= scaledRatio;
         }
 
-        // Avoid "IndexSizeError" in IE and Firefox
         if (dstWidth > 0 && dstHeight > 0) {
           args.push(floor(dstX), floor(dstY), floor(dstWidth), floor(dstHeight));
         }
@@ -2755,7 +2656,6 @@
 
       if (!this.isDisabled && !isUndefined(aspectRatio)) {
 
-        // 0 -> NaN
         options.aspectRatio = max(0, aspectRatio) || NaN;
 
         if (this.isBuilt) {
@@ -2790,7 +2690,6 @@
 
         if (!options.cropBoxMovable) {
 
-          // Sync drag mode to crop box when it is not movable(#300)
           this.$face.
             data(DATA_ACTION, mode).
             toggleClass(CLASS_CROP, croppable).
@@ -2802,85 +2701,54 @@
 
   Cropper.DEFAULTS = {
 
-    // Define the view mode of the cropper
-    viewMode: 1, // 0, 1, 2, 3
+    viewMode: 1, dragMode: 'move', aspectRatio: NaN,
 
-    // Define the dragging mode of the cropper
-    dragMode: 'move', // 'crop', 'move' or 'none'
-
-    // Define the aspect ratio of the crop box
-    aspectRatio: NaN,
-
-    // An object with the previous cropping result data
     data: null,
 
-    // A jQuery selector for adding extra containers to preview
     preview: '',
 
-    // Re-render the cropper when resize the window
     responsive: !0,
 
-    // Restore the cropped area after resize the window
     restore: !0,
 
-    // Check if the current image is a cross-origin image
     checkCrossOrigin: !0,
 
-    // Check the current image's Exif Orientation information
     checkOrientation: !0,
 
-    // Show the black modal
     modal: !0,
 
-    // Show the dashed lines for guiding
     guides: !0,
 
-    // Show the center indicator for guiding
     center: !0,
 
-    // Show the white modal to highlight the crop box
     highlight: !0,
 
-    // Show the grid background
     background: !0,
 
-    // Enable to crop the image automatically when initialize
     autoCrop: !0,
 
-    // Define the percentage of automatic cropping area when initializes
     autoCropArea: 0.9,
 
-    // Enable to move the image
     movable: !0,
 
-    // Enable to rotate the image
     rotatable: !0,
 
-    // Enable to scale the image
     scalable: !0,
 
-    // Enable to zoom the image
     zoomable: !0,
 
-    // Enable to zoom the image by dragging touch
     zoomOnTouch: !0,
 
-    // Enable to zoom the image by wheeling mouse
     zoomOnWheel: !0,
 
-    // Define zoom ratio when zoom the image by wheeling mouse
     wheelZoomRatio: 0.05,
 
-    // Enable to move the crop box
     cropBoxMovable: !0,
 
-    // Enable to resize the crop box
     cropBoxResizable: !0,
 
-    // Toggle drag mode between "crop" and "move" when click twice on the cropper
     toggleDragModeOnDblclick: !1,
 
-    // Size limitation
     minCanvasWidth: 320,
     minCanvasHeight: 240,
     minCropBoxWidth: 32,
@@ -2888,7 +2756,6 @@
     minContainerWidth: 320,
     minContainerHeight: 240,
 
-    // Shortcuts of events
     build: null,
     built: null,
     cropstart: null,
@@ -2930,10 +2797,8 @@
     '</div>'
   );
 
-  // Save the other cropper
   Cropper.other = $.fn.cropper;
 
-  // Register as jQuery plugin
   $.fn.cropper = function (option) {
     var args = toArray(arguments, 1);
     var result;
@@ -2964,7 +2829,6 @@
   $.fn.cropper.Constructor = Cropper;
   $.fn.cropper.setDefaults = Cropper.setDefaults;
 
-  // No conflict
   $.fn.cropper.noConflict = function () {
     $.fn.cropper = Cropper.other;
     return this;

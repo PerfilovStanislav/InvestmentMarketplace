@@ -487,7 +487,6 @@
                var mobile = (controlW + titleW);
                arr[ID] = mobile;
             });
-            console.log(arr)
             $.each(arr, function(i, e) {
                var This = $('#' + i);
                var headingW = This.width() - 75;
@@ -503,7 +502,6 @@
                      },
                      template: '<div data-popover-id="' + i + '" class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
                   }
-                  controls.popover(options);
                } else {
                   controls.removeClass('mobile-controls');
                }
@@ -638,7 +636,7 @@
             };
             var panelColor = function() {
                if (!panel.find('.panel-colorbox').length) {
-                  var colorBox = '<div class="panel-colorbox"> <span class="bg-white" data-panel-color="panel-default"></span> <span class="bg-primary" data-panel-color="panel-primary"></span> <span class="bg-info" data-panel-color="panel-info"></span> <span class="bg-success" data-panel-color="panel-success"></span> <span class="bg-warning" data-panel-color="panel-warning"></span> <span class="bg-danger" data-panel-color="panel-danger"></span> <span class="bg-alert" data-panel-color="panel-alert"></span> <span class="bg-system" data-panel-color="panel-system"></span> <span class="bg-dark" data-panel-color="panel-dark"></span> </div>'
+                  var colorBox = '<div class="panel-colorbox"> <span class="bg-white" data-panel-color="panel-default"></span> <span class="bg-primary" data-panel-color="panel-primary"></span> <span class="bg-info" data-panel-color="panel-info"></span> <span class="bg-success" data-panel-color="panel-success"></span> <span class="bg-warning" data-panel-color="panel-warning"></span> <span class="bg-danger" data-panel-color="panel-danger"></span> <span class="bg-alert" data-panel-color="panel-alert"></span> <span class="bg-system" data-panel-color="panel-system"></span> <span class="bg-dark" data-panel-color="panel-dark"></span> </div>';
                   panelHeading.after(colorBox);
                }
                var panelColorBox = panel.find('.panel-colorbox');

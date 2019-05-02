@@ -153,6 +153,16 @@
 .fa-percent:before {
     content: "%";
 }
+.fa-envelope-o:before {
+    content: "\f003";
+}
+.fa-user:before {
+    content: "\f007";
+}
+.fa-group:before,
+.fa-users:before {
+    content: "\f0c0";
+}
 .nano {
     position: relative;
     width: 100%;

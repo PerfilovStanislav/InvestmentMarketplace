@@ -29,7 +29,7 @@ namespace Views\Layout;
     <meta property="og:url" content="http://richinme.com">
     <meta property="og:image" content="http://richinme.com/og-image.jpg">
 
-    <? \Helpers\Scripts::css(['/assets/' => ['full',]]) ?>
+    <? \Helpers\Scripts::css(['/assets/full/' => ['full',]]) ?>
 
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.js"></script>
@@ -69,7 +69,7 @@ namespace Views\Layout;
 
 <?=(new \Core\View(\Views\Investment\ChatMessage::class, []))->get()?>
 
-<? \Helpers\Scripts::js(['/assets/' => ['full',]]) ?>
+<? \Helpers\Scripts::js(['/assets/full/' => ['full',]]) ?>
 
 <? if ($this->f): ?>
     <script>

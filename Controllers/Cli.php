@@ -57,8 +57,8 @@ namespace Controllers {
                 $buffer = preg_replace("/\}\n\}/si", '}}', $buffer);
             }
 
-            file_put_contents(ROOT.'/assets/full.'.$type, $buffer);
-            file_put_contents(ROOT.'/assets/full.'.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
+            file_put_contents(ROOT.'/assets/full/full.'.$type, $buffer);
+            file_put_contents(ROOT.'/assets/full/full.'.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
         }
     }
 }

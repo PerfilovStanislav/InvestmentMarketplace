@@ -23,7 +23,9 @@ namespace Libraries {
         }
 
         public function save($data, $thumb = false) {
-            if (!file_exists(self::get_folder_path($this->filename))) mkdir(self::get_folder_path($this->filename), 0644);
+            if (!file_exists(self::get_folder_path($this->filename))) {
+                mkdir(self::get_folder_path($this->filename), 0200);
+            }
             $prefix = $thumb ? '_th' : '';
             $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
             file_put_contents(self::get_file_path($this->filename)."{$prefix}.jpg", $data);

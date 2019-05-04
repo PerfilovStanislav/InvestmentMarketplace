@@ -30,7 +30,9 @@ namespace Views\Investment\Show;
     <? foreach ($this->projects as $project_id => $project):?>
         <div class="panel mb25 mt5" project_id="<?=$project_id?>">
             <div class="panel-heading">
-                <span class="panel-title hidden-xs"> <?=$project['name']?></span>
+                <span class="panel-title hidden-xs">
+                    <a target="_blank" href="/Investment/redirect/project/<?=$project_id?>"><?=$project['name']?></a>
+                </span>
                 <ul class="nav panel-tabs-border panel-tabs">
                     <li class="active">
                         <a href="#main_<?=$project_id?>" data-toggle="tab"><?=$this->locale['general']?></a>

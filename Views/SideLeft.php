@@ -19,7 +19,7 @@ namespace Views;
             </a>
         </li>
         <li>
-            <a href="/Investment/registration" class="ajax">
+            <a href="/Investment/registration" class="ajax page">
                 <span class="fa fa-plus text-success"></span>
                 <span class="sidebar-title"><?=$this->locale['add_project']?></span>
 

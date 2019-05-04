@@ -14,35 +14,34 @@ namespace Models {
 		}
 
 		public function addProject(Validator $post) {
-			$data = $post->getData();
-
+		    if (strpos($post->ref_url, 'http://') === false && strpos($post->ref_url, 'https://') === false) {
+                $post->ref_url = 'http://' . $post->ref_url;
+            }
 			// сохраняем информацию по проекту
 			$in_data = [
-				'name' 					=> [[$data['projectname']]],
+				'name' 					=> [[$post->projectname]],
 				'admin' 				=> [[1],								\PDO::PARAM_INT],
-				'url' 					=> [[$data['url']]],
-				'ref_url' 				=> [[$data['ref_url']]],
-				'paymenttype' 			=> [[$data['paymenttype']],				\PDO::PARAM_INT],
-				'start_date'			=> [[$data['date']]],
-				'plan_percents'			=> [[Arrays::joinForInsert($data['plan_percents'])]],
-				'plan_period'			=> [[Arrays::joinForInsert($data['plan_period'])]],
-				'plan_period_type'		=> [[Arrays::joinForInsert($data['plan_period_type'])]],
-				'plan_start_deposit'	=> [[Arrays::joinForInsert($data['plan_start_deposit'])]],
-				'plan_currency_type'	=> [[Arrays::joinForInsert($data['plan_currency_type'])]],
-				'ref_percent'			=> [[Arrays::joinForInsert($data['ref_percent'])]],
-				'id_payments'			=> [[Arrays::joinForInsert($data['id_payments'])]],
+				'url' 					=> [[$post->url]],
+				'ref_url' 				=> [[$post->ref_url]],
+				'paymenttype' 			=> [[$post->paymenttype],				\PDO::PARAM_INT],
+				'start_date'			=> [[$post->date]],
+				'plan_percents'			=> [[Arrays::joinForInsert($post->plan_percents)]],
+				'plan_period'			=> [[Arrays::joinForInsert($post->plan_period)]],
+				'plan_period_type'		=> [[Arrays::joinForInsert($post->plan_period_type)]],
+				'plan_start_deposit'	=> [[Arrays::joinForInsert($post->plan_start_deposit)]],
+				'plan_currency_type'	=> [[Arrays::joinForInsert($post->plan_currency_type)]],
+				'ref_percent'			=> [[Arrays::joinForInsert($post->ref_percent)]],
+				'id_payments'			=> [[Arrays::joinForInsert($post->id_payments)]],
                 'status_id'             => [[(Auth::getUserInfo()['status_id'] ?? null) == 3 ? 2 : 1], \PDO::PARAM_INT],
 			];
 
 			if (!$this->db->insert('project', $in_data)) return null;
-
 			$project_id = $this->db->lastID('project');
 
-
             $this->db->insert('project_lang', [
-                'project_id' 		=> [array_fill(0, count($data['description']), $project_id), \PDO::PARAM_INT],
-                'lang_id' 			=> [array_keys($data['description']),              \PDO::PARAM_INT],
-                'description' 		=> [array_values($data['description'])],
+                'project_id' 		=> [array_fill(0, count($post->description), $project_id), \PDO::PARAM_INT],
+                'lang_id' 			=> [array_keys($post->description),              \PDO::PARAM_INT],
+                'description' 		=> [array_values($post->description)],
             ]);
             return $project_id;
 		}
@@ -64,6 +63,7 @@ namespace Models {
                 FROM project p
                 JOIN project_lang l ON p.id = l.project_id
                 WHERE l.lang_id = $langId and status_id = $status
+                order by id desc
                 limit 25
             ");
 

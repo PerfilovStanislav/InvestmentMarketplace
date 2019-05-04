@@ -4,6 +4,7 @@ namespace Controllers {
 
     use Core\Auth;
 	use Core\Controller;
+    use Core\Database;
     use Core\Router;
     use Helpers\{
 		Arrays, Locale, Validator, Helper, Data\Currency
@@ -12,7 +13,7 @@ namespace Controllers {
 	use Models\Investment as Model;
 	use Models\Users as UserModels;
 	use Views\{
-	    Investment\Show as ViewShow,
+            Investment\Show as ViewShow,
 	    Investment\NoShow as ViewNoShow,
         Investment\Registration as Registration,
         Investment\Added as ProjectAdded
@@ -33,7 +34,7 @@ namespace Controllers {
             Helper::$r['f']['content'] = ['ProjectRegistration' => []];
 		}
 
-		public function show(array $params = []) {
+		final public function show(array $params = []) {
 			$page = max((int)($params['page'] ?? 1), 1);
 			$lang = Locale::getLangByName($params['lang'] ?? Locale::getLanguage()) ?:
 				Locale::getLangByName(Locale::getLanguage());
@@ -70,7 +71,6 @@ namespace Controllers {
             return ['not_published' => 1, 'active' => 2, 'paywait' => 3, 'scam' => 4][$name] ?? 2;
         }
 
-
 		final public function add(array $params = []) {
             $data = $this->post
                 ->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
@@ -100,8 +100,8 @@ namespace Controllers {
             if ($project_id = $this->model->addProject($this->post)) {
                 // Save screenshots
                 $file = new File($project_id);
-                $file->save($_POST['screen_data']);
-                $file->save($_POST['thumb_data'], true);
+                $file->save($_POST['screen_data'])->addIPTC([5 => $this->post->url, 120 => $this->post->url]);
+                $file->save($_POST['thumb_data'], true)->addIPTC([5 => $this->post->url, 120 => $this->post->url]);
 
                 Helper::$r['c']['content'] = [ProjectAdded::class, $data];
                 Helper::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
@@ -169,6 +169,25 @@ namespace Controllers {
 					];
 			}
 			Helper::$r['f']['content'][] = 'startChatCheck';
+        }
+
+        final public function redirect(array $params = []) {
+		    $projectId = (int)($params['project'] ?? 0);
+            $refUrl = $this->model->db->getOne('project', "id = $projectId", 'ref_url'); /** @see Database::getOne() */
+            if (!$refUrl) {
+                return Helper::header(Helper::E404);
+            }
+
+            $info = Auth::getUserInfo();
+            $data = [
+                'user_id'       => [[$info['id']], \PDO::PARAM_INT],
+                'project_id'    => [[$projectId], \PDO::PARAM_INT],
+                'session_id'    => [[$info['session_id']], \PDO::PARAM_INT],
+            ];
+            $this->model->db->insert('redirect', $data);
+
+		    header('HTTP/1.1 200 OK');
+            header('Location: ' . $refUrl);
         }
 	}
 

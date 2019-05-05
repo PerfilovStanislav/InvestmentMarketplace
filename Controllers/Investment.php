@@ -80,7 +80,7 @@ namespace Controllers {
             	->checkAll('percents', 			1, 		null,  Validator::FLOAT,    'plan_percents', 		true, 0)
             	->checkAll('period', 			1, 		null,  Validator::NUM,      'plan_period', 		true, 0)
             	->checkAll('periodtype', 		1, 		6, 	    Validator::NUM,      'plan_period_type', 	true, 0)
-            	->checkAll('minmoney', 			1, 		null, 	Validator::FLOAT, 	   'plan_start_deposit', true, 0)
+            	->checkAll('minmoney', 			0.00001, null, 	Validator::FLOAT, 	   'plan_start_deposit', true, 0)
 				->checkAll('currency', 			1, 		8, 	    Validator::NUM,		'plan_currency_type',true, 0)
 
 				->checkAll('ref_percent', 		null, 	null, 	Validator::FLOAT,     null,                true)

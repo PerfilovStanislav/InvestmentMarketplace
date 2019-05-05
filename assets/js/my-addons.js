@@ -312,8 +312,8 @@ var ProjectRegistration = function(a) {
         }
 
         var d = $('#full_site_image').cropper('getCroppedCanvas');
-        $('[name=screen_data]').val($('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.8) );
-        $('[name=thumb_data]').val($('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 0.8) );
+        $('[name=screen_data]').val($('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.95) );
+        $('[name=thumb_data]').val($('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 1.0) );
         $.ajax({
            url: '/Investment/add',
            data: form.serialize(),
@@ -601,6 +601,17 @@ var getRandomNameBySessionId = function(sessionId) {
         'Ant-eater', 'Mouse', 'Lion', 'Turtle', 'Unicorn', 'Snake', 'Whale', 'Fish', 'Bull', 'Zebra'][(sessionId-1)%30];
 };
 
+var setStorage = function(data) {
+    STORAGE = addToObject(STORAGE, data);
+};
+
+var logoInConsole = function() {
+    var common = 'font-family: "Open Sans", Helvetica, Arial, sans-serif; font-weight: bold; padding-right: 1px;';
+    var blue = 'font-size: 36px; color: #0af; text-shadow: -1px 1px 1px #00425f';
+    var red  = 'font-size: 32px; color: #f33; text-shadow: -1px 1px 1px #722';
+    console.log('%c Rich%cinMe', common+blue, common+red);
+};
+
 jQuery(document).ready(function() {
     Core.init();
     Demo.init();
@@ -610,8 +621,5 @@ jQuery(document).ready(function() {
     });
 
     linkClick();
+    logoInConsole();
 });
-
-var setStorage = function(data) {
-    STORAGE = addToObject(STORAGE, data);
-};

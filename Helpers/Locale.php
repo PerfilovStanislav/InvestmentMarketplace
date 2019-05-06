@@ -5,8 +5,9 @@ namespace Helpers {
     use Core\Database;
 	use Helpers\Locales\En;
 	use Helpers\Locales\Ru;
+    use Libraries\TabgeoCountry;
 
-	class Locale {
+    class Locale {
         private static $defaultLanguage = 'en';
         private static $availableLanguages = null;
         private static $language = null;
@@ -31,14 +32,15 @@ namespace Helpers {
                     arsort($langs, SORT_NUMERIC);
                 }
             }
-            $langs = array_values(array_intersect(array_keys($langs ?? ''), array_column(self::getAvailableLanguages(), 'shortname')));
+            $langs = array_values(array_intersect(array_keys($langs ?? []), array_column(self::getAvailableLanguages(), 'shortname')));
             if (!empty($langs)) return (self::$language = $langs[0]);
 
-            // #TODO
-            // 4: language from ip .. Example module: TabgeoCountry
+            // 4: TabgeoCountry
+            $country = strtolower(TabgeoCountry::getCountry());
+            $lang = self::getLangByFlag($country);
+            if ($lang) return (self::$language = $lang);
 
             // 5: Default
-
             return ($_SESSION['lang'] = self::$language = self::$defaultLanguage);
         }
 
@@ -59,7 +61,7 @@ namespace Helpers {
 
 		final public static function getAvailableLanguages() {
 			return self::$availableLanguages?:(self::$availableLanguages = array_column(
-				Database::getInstance()->select('languages', 'id,name,own_name,flag,shortname', 'available = true')
+				Database::getInstance()->select('languages', 'id,name,own_name,flag,shortname', ['available' => 1])
 				, null, 'shortname'
 			));
 		}
@@ -71,6 +73,10 @@ namespace Helpers {
 		/** @return int|null */
 		final public static function getLangByName(string $shortname) {
 			return Database::getInstance()->getRow('languages', 'id,shortname,flag', ['shortname' => $shortname]);
+		}
+
+		final private static function getLangByFlag(string $flag) {
+            return Database::getInstance()->getOne('languages', ['flag' => $flag, 'available' => 1], 'shortname');
 		}
     }
 }

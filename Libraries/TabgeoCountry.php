@@ -33,6 +33,11 @@ namespace Libraries {
         final public static function getCountry() {
             if (!isset($_SERVER['REMOTE_ADDR'])) return null;
             $ip = $_SERVER['REMOTE_ADDR'];
+            $ip_array = explode('.', $ip);
+
+            if (count(array_filter($ip_array, function ($item) {
+                return $item <= 255 && $item >= 0;
+            })) !== 4) return null;
 
             $fh = fopen(self::$filename, 'rb');
 
@@ -54,8 +59,6 @@ namespace Libraries {
                 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW', 'XA', 'YU', 'CS', 'AN', 'AA', 'EU', 'AP',
             ];
 
-            $ip_array = explode('.', $ip);
-
             fseek($fh, ($ip_array[0] * 256 + $ip_array[1]) * 4);
             $index_bin = fread($fh, 4);
             $index = unpack('Noffset/Clength', "\x00$index_bin");
@@ -70,11 +73,7 @@ namespace Libraries {
             fseek($fh, -(($d['offset'] + 1 + $d['cc_id']) * 2), SEEK_END);
             $bin = fread($fh, ($d['cc_id'] + 1) * 2);
             $d = self::tabgeo_bs(str_split($bin, 2), $ip_array[3], FALSE);
-            $country = strtolower($iso[$d['cc_id']]);
-
-            $db = \Core\Database::
-
-            return ;
+            return $iso[$d['cc_id']];
         }
 
         private static function tabgeo_bs($data_array, $ip, $step) {
@@ -91,18 +90,6 @@ namespace Libraries {
                 if ($unpack['ip'] > $ip) $end = $mid - 1; else $start = $mid + 1;
 
                 $unpack_prev = $unpack;
-            }
-        }
-
-        final public static function updateBase() {
-            $db_md5 = file_get_contents('http://tabgeo.com/api/v4/country/db/md5/');
-            if(md5_file(self::$filename) <> $db_md5){
-                $db_content = file_get_contents('http://tabgeo.com/api/v4/country/db/get/');
-                if($db_md5 == md5($db_content)){
-                    file_put_contents(self::$filename, $db_content);
-                }
-            } else {
-                die('Updated');
             }
         }
     }

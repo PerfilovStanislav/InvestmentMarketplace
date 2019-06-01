@@ -32,7 +32,7 @@ namespace Views\Layout;
     <? /*\Helpers\Scripts::css(['/assets/full/' => ['full',]])*/ ?>
     <? \Helpers\Scripts::css([
         '/assets/' => [
-            'default_skin/css/theme',
+            'default_skin/css/theme.clear',
             'fullcalendar/fullcalendar.min',
             'google/fonts',
             'cropper/cropper',
@@ -84,7 +84,7 @@ namespace Views\Layout;
 
 <? /*\Helpers\Scripts::js(['/assets/full/' => ['full',]]) */?>
 <? \Helpers\Scripts::js([
-        '/assets/jquery/' => ['jquery-3.3.1.min', 'jquery-ui.min'],
+        '/assets/jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
         '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
         '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
     ]); ?>

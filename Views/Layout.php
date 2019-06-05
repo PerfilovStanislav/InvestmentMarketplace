@@ -29,8 +29,8 @@ namespace Views\Layout;
     <meta property="og:url" content="http://richinme.com">
     <meta property="og:image" content="http://richinme.com/og-image.jpg">
 
-    <? /*\Helpers\Scripts::css(['/assets/full/' => ['full',]])*/ ?>
-    <? \Helpers\Scripts::css([
+    <? \Helpers\Scripts::css(['/assets/full/' => ['full',]]) ?>
+    <? /*\Helpers\Scripts::css([
         '/assets/' => [
             'default_skin/css/theme.clear',
             'fullcalendar/fullcalendar.min',
@@ -42,7 +42,7 @@ namespace Views\Layout;
             'payments/payments',
             'magnific/magnific-popup',
         ]
-    ]); ?>
+    ]);*/ ?>
 
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.js"></script>

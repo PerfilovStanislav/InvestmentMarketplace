@@ -43,16 +43,18 @@ namespace Views\Investment\Show;
                     </li>
                 </ul>
             </div>
-            <div class="panel-body p10">
+            <div class="panel-body">
                 <div class="tab-content pn br-n">
                     <div id="main_<?=$project_id?>" class="tab-pane active">
                         <div class="mbn flex inforow">
 
-                            <div class="" style="flex: 0 0">
-                                <img src="/<?=$project['file_name']?>_th.jpg" class="media-object thumbnail" href="/<?=$project['file_name']?>.jpg">
+                            <div class="mnw270">
+                                <div class="thumbnail">
+                                    <img src="/<?=$project['file_name']?>_th.jpg" class="media-object" href="/<?=$project['file_name']?>.jpg">
+                                </div>
                             </div>
 
-                            <div class="mnw220" style="flex: 22 0">
+                            <div class="mnw270" style="flex: 22 0">
                                 <div class="panel-heading lh30 h-30">
                                     <span class="panel-title"><?=$this->locale['plans']?></span>
                                 </div>
@@ -81,7 +83,7 @@ namespace Views\Investment\Show;
                             </div>
 
 
-                            <div class="mnw300" style="flex: 30 0">
+                            <div class="mnw270" style="flex: 30 0">
                                 <div class="panel-heading lh30 h-30">
                                     <span class="panel-title"><?=$this->locale['options']?></span>
                                 </div>
@@ -116,7 +118,7 @@ namespace Views\Investment\Show;
                             </div>
 
 
-                            <div class="mnw400" style="flex: 60 0"> <!--style="width: calc(100% - 889px);"-->
+                            <div class="mnw270" style="flex: 60 0"> <!--style="width: calc(100% - 889px);"-->
                                 <div class="panel-widget chat-widget">
                                     <div class="panel-heading lh30 h-30">
                                 <span class="panel-icon">

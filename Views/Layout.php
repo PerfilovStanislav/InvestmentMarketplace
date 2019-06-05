@@ -82,12 +82,12 @@ namespace Views\Layout;
 
 <?=(new \Core\View(\Views\Investment\ChatMessage::class, []))->get()?>
 
-<? /*\Helpers\Scripts::js(['/assets/full/' => ['full',]]) */?>
-<? \Helpers\Scripts::js([
+<? \Helpers\Scripts::js(['/assets/full/' => ['full',]]) ?>
+<?/* \Helpers\Scripts::js([
         '/assets/jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
         '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
         '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
-    ]); ?>
+    ]); */?>
 
 <? if ($this->f): ?>
     <script>

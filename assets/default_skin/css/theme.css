@@ -1,4 +1,26 @@
 @charset "UTF-8";
+html::-webkit-scrollbar {
+    width: 1.2vw;
+    min-width: 17px;
+}
+
+html::-webkit-scrollbar-corner {
+    color: aquamarine;
+    background: #0a5d5e;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ff8a00), to(#da1b60));
+    background: linear-gradient(to bottom, #ff8a00, #da1b60);
+    border-radius: 30px;
+    -webkit-box-shadow: inset 2px 2px 2px rgba(255, 255, 255, .25), inset -2px -2px 2px rgba(0, 0, 0, .25);
+    box-shadow: inset 2px 2px 2px rgba(255, 255, 255, .25), inset -2px -2px 2px rgba(0, 0, 0, .25)
+}
+
+html::-webkit-scrollbar-track {
+    background: linear-gradient(to bottom, #FFFFFF 60px, #aaa 61px, #eee 61px);
+}
+
 .animated-delay,
 .animated-waypoint {
     opacity: 0;
@@ -10900,9 +10922,6 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
         padding-top: 15.5px;
         padding-bottom: 15.5px;
     }
-    .navbar-nav.navbar-right:last-child {
-        margin-right: -11px;
-    }
 }
 @media (min-width: 480px) {
     .navbar-left {
@@ -10988,9 +11007,6 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
         -webkit-box-shadow: none;
         box-shadow: none;
     }
-    .navbar-form.navbar-right:last-child {
-        margin-right: -11px;
-    }
 }
 .navbar-nav>li>.dropdown-menu {
     margin-top: 0;
@@ -11022,9 +11038,6 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
         float: left;
         margin-left: 11px;
         margin-right: 11px;
-    }
-    .navbar-text.navbar-right:last-child {
-        margin-right: 0;
     }
 }
 .navbar-default {
@@ -16344,7 +16357,6 @@ html {
 body {
     width: 100%;
     height: 100%;
-    min-height: 1100px;
     margin: 0;
     padding: 0;
     background: #e9e9e9;
@@ -16961,10 +16973,9 @@ body.sidebar-collapsed #sidebar:before {
 }
 /* Navbar Right */
 
-.navbar-nav.navbar-right,
-.navbar-nav.navbar-right:last-child {
+.navbar-nav.navbar-right {
     float: right;
-    margin: 0 15px 0 0;
+    margin: 0 25px 0 0;
 }
 /*==========================================================
   Navbar Forms - Specifically Search Form
@@ -17366,9 +17377,6 @@ body.sidebar-collapsed #sidebar:before {
 =========================================================== */
 
 @media (max-width: 1100px) {
-    .navbar .navbar-right:last-child {
-        margin-right: 5px;
-    }
     .navbar .navbar-right > li:last-child > a > img {
         margin-right: 5px !important;
     }
@@ -17470,9 +17478,6 @@ body.sidebar-collapsed #sidebar:before {
     .navbar .navbar-nav > li.dropdown,
     .navbar .navbar-nav > li.dropdown .navbar-btn {
         position: static !important;
-    }
-    .navbar .navbar-right:last-child {
-        margin-right: 0;
     }
     .navbar .nav > li.dropdown.open .dropdown-menu:after,
     .navbar .nav > li.dropdown > .open .dropdown-menu:after {
@@ -23673,7 +23678,7 @@ body.timeline-page .panel-clone {
 }
 @media (max-width: 815px) {
     #content .panel .panel-body {
-        overflow: hidden !important;
+        /*overflow: hidden !important;*/
         min-width: 0 !important;
     }
 }

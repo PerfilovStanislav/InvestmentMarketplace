@@ -4,7 +4,7 @@ namespace Views\Investment\NoShow;
 ?>
 <div class="filters">
     <div class="panel mb25 mt5">
-        <div class="panel-body p10">
+        <div class="panel-body">
             <div class="tab-content pn br-n">
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">

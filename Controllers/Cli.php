@@ -25,7 +25,7 @@ namespace Controllers {
             ], 'css');
 
             self::optimize([
-                '/assets/jquery/' => ['jquery-3.3.1.min', 'jquery-ui.min'],
+                '/assets/jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
                 '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
                 '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
             ], 'js');

@@ -31,7 +31,7 @@ namespace Views\Investment\Registration;
                         <div class="section">
                             <div class="smart-widget sm-right smr-100">
                                 <label class="field prepend-icon">
-                                    <input name="website" class="gui-input onlyUrl"
+                                    <input name="website" class="gui-input onlyUrl" autocomplete="off"
                                            placeholder="<?=$this->locale['project_url']?>">
                                     <label class="field-icon">
                                         <i class="fa fa-globe"></i>

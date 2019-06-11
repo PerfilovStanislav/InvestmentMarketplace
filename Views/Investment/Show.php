@@ -117,7 +117,7 @@ namespace Views\Investment; { final Class Show {} }
                             </div>
 
 
-                            <div class="mnw270" style="flex: 60 0"> <!--style="width: calc(100% - 889px);"-->
+                            <div class="mnw270" style="flex: 60 0">
                                 <div class="panel-widget chat-widget">
                                     <div class="panel-heading lh30 h-30">
                                 <span class="panel-icon">
@@ -126,7 +126,6 @@ namespace Views\Investment; { final Class Show {} }
                                         <span class="panel-title"><?=$this->locale['chat']?></span>
                                     </div>
                                     <div class="panel-body bg-light dark panel-scroller scroller-lg pn mh-179">
-                                        <!--                                --><? //=$this->chats[$project_id]??''?>
                                     </div>
                                     <form class="admin-form chat-footer" chat_id="<?=$project_id?>"
                                           data-chat="<?=$project_id?>" autocomplete="off">
@@ -146,8 +145,10 @@ namespace Views\Investment; { final Class Show {} }
                     <div id="description_<?=$project_id?>" class="tab-pane">
                         <div class="mbn flex inforow">
 
-                            <div class="" style="flex: 0 0">
-                                <img src="/<?=$project['file_name']?>_th.jpg" class="media-object thumbnail">
+                            <div class="mnw270">
+                                <div class="thumbnail">
+                                    <img src="/<?=$project['file_name']?>_th.jpg" class="media-object" href="/<?=$project['file_name']?>.jpg">
+                                </div>
                             </div>
 
                             <div class="mnw220" style="flex: 22 0">

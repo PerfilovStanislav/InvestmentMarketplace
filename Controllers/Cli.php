@@ -9,7 +9,7 @@ namespace Controllers {
             parent::__construct();
         }
 
-        final public static function fullOptimize(array $array) {
+        final public static function fullOptimize() {
             self::optimize([
                 '/assets/' => [
                     'default_skin/css/theme.clear',
@@ -59,6 +59,9 @@ namespace Controllers {
 
             file_put_contents(ROOT.'/assets/full/full.'.$type, $buffer);
             file_put_contents(ROOT.'/assets/full/full.'.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
+
+            system(ROOT . '\\assets\\full\\brotli.bat', $b);
+            echo $b, PHP_EOL;
         }
     }
 }

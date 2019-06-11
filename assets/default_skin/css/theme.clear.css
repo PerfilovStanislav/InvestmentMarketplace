@@ -329,8 +329,6 @@ html>body>.ui-pnotify {
 .scroller {
     height: 100%;
     overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: hidden;
     position: relative;
 }
 .scroller,
@@ -1582,7 +1580,6 @@ button.close {
     padding: 15px;
 }
 .modal-footer {
-    padding: 15px;
     padding: 10px;
     text-align: right;
     border-top: 1px solid #e5e5e5;
@@ -2625,4 +2622,14 @@ fieldset[disabled] .btn-primary.active {
 
 ::-ms-input-placeholder { /* Microsoft Edge */
     color:  var(--placeholder-color);
+}
+
+.text-danger {
+    color: #df5640;
+}
+.lead {
+    margin-bottom: 19px;
+    font-size: 19.5px;
+    font-weight: 300;
+    line-height: 1.4;
 }

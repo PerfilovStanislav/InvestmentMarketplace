@@ -5784,8 +5784,6 @@ form.hide-list-label .bootstrap-duallistbox-container label {
 .scroller {
     height: 100%;
     overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: hidden;
     position: relative;
 }
 /*.scroller,
@@ -5854,7 +5852,6 @@ form.hide-list-label .bootstrap-duallistbox-container label {
 }
 .scroller-horizontal .scroller-content {
     overflow: auto;
-    overflow-x: auto;
     overflow-y: hidden;
     padding: 0 0 16px 0;
 }

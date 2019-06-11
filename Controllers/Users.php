@@ -6,14 +6,14 @@ namespace Controllers {
 		Auth, Controller
 	};
 	use Models\Users as Model;
-	use Helpers\{Validator, Helper, Locale};
+	use Helpers\{Validator, Output, Locale};
     use Views\{
-        Users\Head\Authorized as ViewAuthorized,
-        Users\Head\NotAuthorized as ViewNotAuthorized,
-        Users\Login as ViewLogin,
-        Users\Registered as UserRegistered,
-        Users\Registration as UserRegistration,
-        SideLeft as ViewSideLeft
+        Users\Head\Authorized,
+        Users\Head\NotAuthorized,
+        Users\Login,
+        Users\Registered,
+        Users\Registration,
+        SideLeft
     };
 
 	class Users extends Controller {
@@ -23,8 +23,8 @@ namespace Controllers {
             $this->model = new Model();
 		}
 
-        final public function login (array $page) {
-            $this->view(['content' 	=> [ViewLogin::class, []]]);
+        final public function login () {
+            $this->view(['content' 	=> [Login::class, []]]);
         }
 
         final public function logout() {
@@ -34,7 +34,7 @@ namespace Controllers {
 
         final private function reloadPage() {
 			$url = parse_url($_SERVER['HTTP_REFERER']??'');
-			Helper::$r['f']['document']['addToAjaxQueue'] = [
+			Output::$r['f']['document']['addToAjaxQueue'] = [
 				'/Users/head',
 				'/Users/left',
 //				'/Investment/leftside',
@@ -54,10 +54,8 @@ namespace Controllers {
 		}
 
 		final public function registration() {
-		    $view = Auth::isAuthorized() ? UserRegistered::class : UserRegistration::class;
-
-            Helper::$r['c']['content'] = [$view, []];
-            Helper::$r['f']['content'] = ['UserRegistration'];
+            Output::$r['c']['content'] = [Auth::isAuthorized() ? Registered::class : Registration::class, []];
+            Output::$r['f']['content'] = ['UserRegistration'];
 		}
 
 		final public function add() {
@@ -69,14 +67,15 @@ namespace Controllers {
 
             $res = $this->model->addUser($this->post);
             if ($res['success'] ?? false) {
+                // @TODO
 				return (new Investment())->show([]);
 			}
-			else return Helper::json($res);
+			else return Output::json($res);
 		}
 
         final public static function setUserHead() {
-			Helper::$r['c']['userHead'] = [
-                Auth::isAuthorized() ? ViewAuthorized::class : ViewNotAuthorized::class,
+			Output::$r['c']['userHead'] = [
+                Auth::isAuthorized() ? Authorized::class : NotAuthorized::class,
 				array_merge(
 					Auth::getUserInfo(),
 					[
@@ -86,8 +85,8 @@ namespace Controllers {
 					])
 			];
 
-			Helper::$r['f']['document']['setStorage']['user'] = Auth::getUserInfo();
-			Helper::$r['f']['document'][] = 'UserAuthorization';
+			Output::$r['f']['document']['setStorage']['user'] = Auth::getUserInfo();
+			Output::$r['f']['document'][] = 'UserAuthorization';
 		}
 
 		final public function head() {
@@ -100,6 +99,7 @@ namespace Controllers {
 				$info = Auth::getUserInfo();
 				return sprintf('/assets/img/avatars2/%s.webp', (($info['id'] ?? $info['session_id'] ?? 1)-1)%30+1);
 			}
+			return '';
 		}
 
         final public function left() {
@@ -107,18 +107,11 @@ namespace Controllers {
         }
 
         final public static function setLeftSide() {
-            Helper::$r['c']['sidebar_left'] = [
-                ViewSideLeft::class,
+            Output::$r['c']['sidebar_left'] = [
+                SideLeft::class,
                 []
             ];
         }
-
-		/*final public function getUsers(array $ids) {
-			$users = $this->model->getUsersByIds($ids);
-
-			$arrayHelper = new Arrays();
-			return $arrayHelper->setArray($chats)->groupBy(['project_id', 'id'])->getArray();
-		}*/
 
 		final public function changeLanguage(array $params = []) {
 			if ($langId = ((Locale::getAvailableLanguages()[$params['lang'] ?? null] ?? null)['id'] ?? null)) {

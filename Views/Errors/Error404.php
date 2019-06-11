@@ -1,17 +1,11 @@
 <?php
-namespace Views\Errors\Error404;
+namespace Views\Errors; { final Class Error404 {} }
 ?>
-<!-- Begin: Content -->
-    <!-- begin: .tray-center -->
-    <div class="tray tray-center">
-
-        <!-- Begin: Content Header -->
-        <div class="content-header">
-            <div class="center-block mt50 mw800">
-                <h1 class="error-title"> 404! </h1>
-                <h2 class="error-subtitle">Page Not Found.</h2>
-            </div>
+<div class="tray tray-center">
+    <div class="content-header">
+        <div class="center-block mt50 mw800">
+            <h1 class="error-title"> 404! </h1>
+            <h2 class="error-subtitle">Page Not Found.</h2>
         </div>
     </div>
-    <!-- end: .tray-center -->
-  <!-- End: Content -->
+</div>

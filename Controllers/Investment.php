@@ -2,24 +2,34 @@
 
 namespace Controllers {
 
-    use Core\Auth;
-	use Core\Controller;
-    use Core\Database;
-    use Core\Router;
+    use Core\{
+        Auth,
+        Controller,
+        Database,
+        Router
+    };
     use Helpers\{
-		Arrays, Locale, Validator, Helper, Data\Currency
-	};
+        Arrays,
+        Locale,
+        Validator,
+        Output,
+        Data\Currency
+    };
 	use Libraries\File;
-	use Models\Investment as Model;
-	use Models\Users as UserModels;
-	use Views\{
-            Investment\Show as ViewShow,
-	    Investment\NoShow as ViewNoShow,
-        Investment\Registration as Registration,
-        Investment\Added as ProjectAdded
-	};
+	use Models\{
+        Investment as Model,
+	    Users as UserModels,
+        ProjectStatus
+    };
+    use Params\Investment\ShowParams;
+    use Views\Investment\{
+        Added,
+        Registration,
+        Show,
+        NoShow
+    };
 
-	class Investment extends Controller {
+    class Investment extends Controller {
 		private $model;
 
 		function __construct() {
@@ -27,51 +37,57 @@ namespace Controllers {
 			$this->model = new Model();
 		}
 
-		final public function registration(array $params = []) {
+		final public function registration() {
 		    $data = $this->model->getRegistrationData();
             $data['currency'] = Currency::getCurrency();
-            Helper::$r['c']['content'] = [Registration::class, $data];
-            Helper::$r['f']['content'] = ['ProjectRegistration' => []];
+            Output::$r['c']['content'] = [Registration::class, $data];
+            Output::$r['f']['content'] = ['ProjectRegistration' => []];
 		}
 
-		final public function show(array $params = []) {
-			$page = max((int)($params['page'] ?? 1), 1);
-			$lang = Locale::getLangByName($params['lang'] ?? Locale::getLanguage()) ?:
-				Locale::getLangByName(Locale::getLanguage());
-			$status = self::getStatusIdByName($params['status'] ?? '');
+		final public function show(ShowParams $params) {
+            $filterLangs = $this->model->getFilterLangs();
+
+            $lang = $filterLangs[$params->lang] ?? $filterLangs[ShowParams::$defaults->lang];
+            $params->set([
+                'lang'   => $lang['shortname'],
+                'page'   => max((int)($params->page), 1),
+                'status' => ProjectStatus::getValue($params->status ?? '') ?: ProjectStatus::ACTIVE,
+            ]);
+			unset($filterLangs[$params->lang]);
+
+            $data = $this->model->getShowData($lang['id'], $params->status);
+
+            $params->excludeDefault();
+            if ($params->status) {
+                $params->status = ProjectStatus::getConstName($params->status);
+            }
 
 			$pageParams = [
-                'filter' => [
-                    'lang' => $lang['shortname'],
-                    'page' => $page,
-                ],
-                'url' => Router::getInstance()->getCurrentPageUrl()
-            ];
-			$data = $this->model->getShowData($lang['id'], $status);
+                'filter' => $params,
+                'url'    => Router::getInstance()->getCurrentPageUrl(),
+                'flag'   => $lang['flag'],
+            ] + ['filterLangs' => $filterLangs];
 
-            Helper::$r['f']['content'] = [
+            Output::$r['f']['content'] = [
                 'initChat',
                 'panelScrollerInit',
                 'imgClickInit',
             ];
 
             if (!$data) {
-                return Helper::$r['c']['content'] = [ViewNoShow::class, $pageParams + $this->model->getFilterLangs()];
+                return Output::$r['c']['content'] = [NoShow::class, $pageParams];
             }
 
             foreach ($data['projects'] as $project_id => &$val) {
                 $val['file_name'] = File::get_file_path($project_id);
             }
-            Helper::$r['c']['content'] = [ViewShow::class, $data + $pageParams + $this->model->getFilterLangs()];
+
+            Output::$r['c']['content'] = [Show::class, $data + $pageParams];
 			$chatParams = array_map(function($a){return ['id'=>$a,'max_id'=>0];}, $data['projectIds']);
 			$this->getChatMessages($chatParams);
 		}
 
-		final private static function getStatusIdByName(string $name) : int {
-            return ['not_published' => 1, 'active' => 2, 'paywait' => 3, 'scam' => 4][$name] ?? 2;
-        }
-
-		final public function add(array $params = []) {
+		final public function add() {
             $data = $this->post
                 ->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
 				->checkAll('paymenttype', 		1, 		3, 	    Validator::NUM)
@@ -92,7 +108,7 @@ namespace Controllers {
 
             foreach ($data['languages'] as $key => $val) {
 			    if (!isset($data['description'][$val])) {
-                    Helper::alert(['is_absent' => [$val]], 'error');
+                    Output::alert(['is_absent' => [$val]], 'error');
                 }
             }
 
@@ -103,8 +119,8 @@ namespace Controllers {
                 $file->save($_POST['screen_data'])->addIPTC([5 => $this->post->url, 120 => $this->post->url]);
                 $file->save($_POST['thumb_data'], true)->addIPTC([5 => $this->post->url, 120 => $this->post->url]);
 
-                Helper::$r['c']['content'] = [ProjectAdded::class, $data];
-                Helper::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
+                Output::$r['c']['content'] = [Added::class, $data];
+                Output::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
             }
 		}
 
@@ -114,14 +130,14 @@ namespace Controllers {
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
 
             if (count($url) < 2) {
-				return Helper::fieldError('website', 'wrong_url');
+				return Output::fieldError('website', 'wrong_url');
             }
             else {
                 $url_str = $url[1] . '.' . $url[0];
                 if (($res = $this->model->db->getRow('project', 'id', "url = '{$url_str}'"))) {
-					return Helper::fieldError('website', 'site_exists');
+					return Output::fieldError('website', 'site_exists');
                 }
-                elseif ($params['showsuccess'] ?? false) return Helper::fieldSuccess('website', 'site_is_free');
+                elseif ($params['showsuccess'] ?? false) return Output::fieldSuccess('website', 'site_is_free');
                 else return $url_str;
             }
         }
@@ -145,7 +161,7 @@ namespace Controllers {
 
             $return['f']['content'][] = 'checkChats';
 
-            return Helper::json($return);
+            return Output::json($return);
         }
 
         final public function getChatMessages(array $params = []) {
@@ -159,7 +175,7 @@ namespace Controllers {
 					->getUnique('user_id')
 					->getArray();
 
-				Helper::$r['f']['content']['setNewChatMessages'] =
+				Output::$r['f']['content']['setNewChatMessages'] =
 					[
 						'users' => $usersIds ? $array
 							->setArray((new UserModels())->getUsersByIds($usersIds))
@@ -168,14 +184,14 @@ namespace Controllers {
 						'messages' => $new_messages
 					];
 			}
-			Helper::$r['f']['content'][] = 'startChatCheck';
+			Output::$r['f']['content'][] = 'startChatCheck';
         }
 
         final public function redirect(array $params = []) {
 		    $projectId = (int)($params['project'] ?? 0);
             $refUrl = $this->model->db->getOne('project', "id = $projectId", 'ref_url'); /** @see Database::getOne() */
             if (!$refUrl) {
-                return Helper::header(Helper::E404);
+                return Output::header(Output::E404);
             }
 
             $info = Auth::getUserInfo();
@@ -186,7 +202,7 @@ namespace Controllers {
             ];
             $this->model->db->insert('redirect', $data);
 
-		    header('HTTP/1.1 200 OK');
+            header('HTTP/1.1 200 OK');
             header('Location: ' . $refUrl);
         }
 	}

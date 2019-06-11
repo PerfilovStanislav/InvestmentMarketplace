@@ -3,22 +3,54 @@
 namespace Helpers;
 
 class Scripts {
+    CONST
+        ASSETS_DIR = '/assets/',
 
-	final public static function js(array $arr) {
-		foreach ($arr as $dir => $files) {
+        CSS = [
+            [
+                'full/' => ['full'],
+            ],
+            [ '' => [
+                'default_skin/css/theme.clear',
+                'fullcalendar/fullcalendar.min',
+                'google/fonts',
+                'cropper/cropper',
+                'admin-forms/css/admin-forms.min',
+                'glyphicons-pro/glyphicons-pro',
+                'flags/flags',
+                'payments/payments',
+                'magnific/magnific-popup',
+                ]
+            ]
+        ],
+
+        JS = [
+            [
+                'full/' => ['full'],
+            ],
+            [
+                'jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
+                '' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
+                'js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
+            ]
+        ];
+
+	final public static function loadJS(int $debug) {
+	    $storage = ['js/locales/' => [Locale::getLanguage()]] + self::JS[$debug];
+		foreach ($storage as $dir => $files) {
 			foreach ($files as $file) {
-				$f = $dir.$file.'.js';
+				$f = self::ASSETS_DIR.$dir.$file.'.js';
 				$t = filemtime(ROOT.$f);
 				echo '<script src="'.$f.'?'.$t.'"></script>';
 			}
 		}
 	}
 
-	final public static function css(array $arr) {
-		foreach ($arr as $dir => $files) {
-			foreach ($files as $file) {
-				$f = $dir.$file.'.css';
-				$t = filemtime(ROOT.$f);
+	final public static function loadCSS(int $debug) {
+        foreach (self::CSS[$debug] as $dir => $files) {
+            foreach ($files as $file) {
+                $f = self::ASSETS_DIR.$dir.$file.'.css';
+                $t = filemtime(ROOT.$f);
 				echo '<link rel="stylesheet" type="text/css" href="'.$f.'?'.$t.'">';
 			}
 		}

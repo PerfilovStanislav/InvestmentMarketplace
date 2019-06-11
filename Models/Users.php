@@ -1,25 +1,22 @@
 <?php
 
 namespace Models {
-	use Core\{Database, Model, Auth};
-	use Helpers\{
-		Helper, Locale, Validator, Errors
+	use Core\{
+	    Model, Auth
 	};
-    use Models\Main;
+	use Helpers\{
+		Output, Locale, Validator
+	};
 
 	class Users extends Model{
-
-		function __construct() {
-            parent::__construct();
-		}
 
 		final public function addUser(Validator $post) {
 		    $data = $post->getData();
 		    $scope = 'adduser_form';
 
 			if ($user = $this->db->getRow('users', 'login, email', "login = '{$data['login']}' or email = '{$data['email']}'")) {
-				if ($user['login'] === $data['login']) return Helper::fieldError('login', 'login_is_busy', $scope);
-				if ($user['email'] === $data['email']) return Helper::fieldError('email', 'email_is_busy', $scope);
+				if ($user['login'] === $data['login']) return Output::fieldError('login', 'login_is_busy', $scope);
+				if ($user['email'] === $data['email']) return Output::fieldError('email', 'email_is_busy', $scope);
 			}
 
 			if ($this->db->insert('users', [

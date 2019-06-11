@@ -2,16 +2,16 @@
 
 namespace Models {
 
-    use Core\{Auth, Model};
+    use Core\{
+        Auth, Model
+    };
     use Helpers\{
-        Validator, Arrays, Data\Currency
+        Validator,
+        Arrays,
+        Data\Currency
     };
 
 	class Investment extends Model{
-
-		function __construct() {
-			parent::__construct();
-		}
 
 		public function addProject(Validator $post) {
 		    if (strpos($post->ref_url, 'http://') === false && strpos($post->ref_url, 'https://') === false) {
@@ -124,10 +124,10 @@ namespace Models {
         }
 
         public function getFilterLangs() : array {
-		    return ['filterLangs' => array_column(
+		    return array_column(
                 $this->db->select('languages', 'id,name,own_name,flag,shortname', ['id' => [317,219]])
                 , null, 'shortname'
-            )];
+            );
         }
 
         public function getChatMessages(array $chats) {

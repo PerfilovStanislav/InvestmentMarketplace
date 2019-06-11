@@ -3,8 +3,8 @@
 namespace Controllers {
 
 	use Core\Controller;
-	use Helpers\Helper;
-	use Views\Errors\Error404 as Error404;
+	use Helpers\Output;
+	use Views\Errors\Error404;
 
 	class Errors extends Controller {
 
@@ -13,9 +13,9 @@ namespace Controllers {
         }
 
 		// #TODO логирование ошибок (кто откуда пришёл)
-		public function show(array $page = []) {
-            Helper::header(Helper::E404);
-            Helper::$r['c']['content'] = [Error404::class, []];
+		public function show() {
+            Output::header(Output::E404);
+            Output::$r['c']['content'] = [Error404::class, []];
 		}
 	}
 

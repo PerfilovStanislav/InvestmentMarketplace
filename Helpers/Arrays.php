@@ -54,7 +54,6 @@ namespace Helpers {
             return $this;
         }
 
-        /* @TODO сделать универсальным? Рекурсивный массив по поиску ключей */
         final public function getUnique(string $column_name) {
         	$r = [];
 			foreach ($this->arr as $arr) {
@@ -66,5 +65,13 @@ namespace Helpers {
 			$this->arr = array_keys($r);
 			return $this;
 		}
+
+		final public static function toUri(array $params) : string {
+            $array = [];
+            foreach ($params as $key => $value) {
+                $array[] = "$key/$value";
+            }
+            return implode('/', $array);
+        }
 	}
 }

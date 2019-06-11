@@ -305,9 +305,7 @@ var ProjectRegistration = function(a) {
             return !1;
         }
         else if ($('#full_site_image').attr('src') === "") {
-            /* @TODO Локализация с сервера
-            // ОТДЕЛЬНЫЙ МЕТОД ДЛЯ ПОЛУЧЕНИЯ СОобЩЕНИЙ С ЛОКАЛИЗАЦИЕЙ*/
-            alert('Загрузите скриншот сайта');
+            alert(LOCALE.load_site_screen);
             return !1;
         }
 
@@ -424,7 +422,7 @@ function reCountN(el) {
 
 /* ------------------------------------------------------------ IMAGE SHOW ------------------------------------------ */
 var imgClickInit = function() {
-    $('.thumbnail', $(this)).magnificPopup({
+    $('.thumbnail>img', $(this)).magnificPopup({
       type: 'image',
       callbacks: {
         beforeOpen: function(e) {
@@ -442,7 +440,7 @@ var imgClickInit = function() {
           item.src = item.el.attr('href');
         }
       },
-      overflowY: 'scroll',
+      /*overflowY: 'scroll',*/
       removalDelay: 200,
       prependTo: $('#content_wrapper')
     });

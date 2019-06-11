@@ -3,7 +3,7 @@
 namespace Core {
 
     use Helpers\{
-		Helper, Validator
+		Output, Validator
 	};
     use Traits\Instance;
 
@@ -105,7 +105,7 @@ namespace Core {
 			}
 
 			if (!$res) {
-				Helper::fieldError('login', 'no_user', $scope);
+				Output::fieldError('login', 'no_user', $scope);
 			}
 
 			if (self::confirmPassword($password, $res['password'])) {
@@ -137,7 +137,7 @@ namespace Core {
 //				Helper::$r['success'] = 'user_authorized';
 			}
 			else {
-				Helper::fieldError('password', 'bad_password', $scope);
+				Output::fieldError('password', 'bad_password', $scope);
 			}
 		}
 

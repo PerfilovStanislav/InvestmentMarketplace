@@ -1,5 +1,5 @@
 <?php
-namespace Views\Users\Login;
+namespace Views\Users; { final Class Login {} }
 ?>
 <div class="tray tray-center">
     <div class="admin-form theme-primary mw500 center-block" style="padding-bottom: 175px;">

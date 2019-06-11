@@ -21,7 +21,7 @@ namespace Helpers {
 		private $link;
 		private $errors = null;
 		private $key = null;
-		private $is_array = false;
+		private $isArray = false;
 		private $sameArrays = [];
 
 		function __construct(array $post) {
@@ -33,7 +33,7 @@ namespace Helpers {
 				$this->data[$rename ?? $key] = $this->post[$key];
 				$this->link = &$this->data[$rename ?? $key];
 				$this->key = $key;
-				$this->is_array = is_array($this->post[$key]);
+				$this->isArray = is_array($this->post[$key]);
 			} else {
 				$this->errors[$key][] = sprintf("Отсутствует поле %s", $key);
 				$this->key = null;
@@ -60,7 +60,7 @@ namespace Helpers {
 
 		public function clear($regex):self {
 			if ($this->key !== null) {
-				if (!$this->is_array) $this->link = self::replace($regex, $this->link);
+				if (!$this->isArray) $this->link = self::replace($regex, $this->link);
 				else {
 					foreach ($this->link as &$val) {
 						$val = self::replace($regex, $val);
@@ -72,7 +72,7 @@ namespace Helpers {
 
 		public function min($min, $regex = null):self {
 			if ($this->key !== null) {
-				if (!$this->is_array) {
+				if (!$this->isArray) {
 				    if (in_array($regex, [self::FLOAT, self::NUM])) {
 				        if ((float)$this->link < $min) $this->errors[$this->key][] = sprintf("минимальное значение: %d", $min);
                     }
@@ -93,7 +93,7 @@ namespace Helpers {
 
 		public function max($max, $regex = null):self {
 			if ($this->key !== null) {
-				if (!$this->is_array) {
+				if (!$this->isArray) {
                     if (in_array($regex, [self::FLOAT, self::NUM])) {
                         if ((float)$this->link > $max) $this->errors[$this->key][] = sprintf("максимальное значение: %d", $max);
                     }
@@ -163,11 +163,11 @@ namespace Helpers {
 		}
 
 		final public function exitWithErrors($scope = 'content') {
-            return ($errors = $this->getErrors()) ? Helper::error($errors, $scope) : $this;
+            return ($errors = $this->getErrors()) ? Output::error($errors, $scope) : $this;
         }
 
 		final public function checkAlerts() {
-            return ($errors = $this->getErrors()) ? Helper::alert($errors, 'error') : $this;
+            return ($errors = $this->getErrors()) ? Output::alert($errors, 'error') : $this;
         }
 	}
 

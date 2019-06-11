@@ -1,6 +1,5 @@
 <?php
-namespace Views\Investment\NoShow;
-/** @see \Controllers\Investment::show() */
+namespace Views\Investment; { final Class NoShow {} }
 ?>
 <div class="filters">
     <div class="panel mb25 mt5">

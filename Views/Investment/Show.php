@@ -1,20 +1,19 @@
 <?php
-namespace Views\Investment\Show;
-/** @see \Controllers\Investment::show() */
+namespace Views\Investment; { final Class Show {} }
 ?>
 <div class="filters">
     <div class="panel mb25 mt5">
-        <div class="panel-body p10">
+        <div class="panel-body">
             <div class="tab-content pn br-n">
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                        <span class="flag flag-<?=$this->filterLangs[$this->filter['lang']]['flag']?>"></span>
+                        <span class="flag flag-<?=$this->flag?>"></span>
                     </button>
                     <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
                         <? foreach ($this->filterLangs as $shortname => $lang):?>
                             <li>
-                                <a class="ajax <?=$shortname === $this->filter['lang'] ? 'selected' : ''?> page"
-                                   href="<?=$this->url.'/lang/'.$shortname?>">
+                                <a class="ajax page"
+                                   href="<?=$this->url.'/'.$this->filter->getUriWithNewParam(['lang' => $shortname])?>">
                                     <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
                                 </a>
                             </li>
@@ -30,7 +29,7 @@ namespace Views\Investment\Show;
     <? foreach ($this->projects as $project_id => $project):?>
         <div class="panel mb25 mt5" project_id="<?=$project_id?>">
             <div class="panel-heading">
-                <span class="panel-title hidden-xs">
+                <span class="panel-title">
                     <a target="_blank" href="/Investment/redirect/project/<?=$project_id?>"><?=$project['name']?></a>
                 </span>
                 <ul class="nav panel-tabs-border panel-tabs">

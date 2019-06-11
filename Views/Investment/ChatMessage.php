@@ -1,12 +1,10 @@
 <?php
-namespace Views\Investment\ChatMessage;
+namespace Views\Investment; { final Class ChatMessage {} }
 ?>
 <div id="chatMessage" hidden>
     <div class="media flex">
         <div class="media-position">
-            <a href="widgets_panel.html#">
-                <img class="media-object" alt="64x64">
-            </a>
+            <img class="media-object" alt="64x64">
         </div>
         <div class="media-body">
             <span class="media-heading"></span>

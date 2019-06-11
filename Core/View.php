@@ -8,7 +8,7 @@ namespace Core {
 		private $data = [];
 		private $pageView;
 
-		function __construct(string $template, array $data = []) {
+		final function __construct(string $template, array $data = []) {
             $data = array_merge($data, ['locale' => Locale::getLocale()]);
 			$this->set($data);
 
@@ -20,18 +20,18 @@ namespace Core {
 			$this->pageView = preg_replace('/\s+/', ' ', $this->pageView);
 		}
 
-		public function set($data) {
+		final public function set($data) {
 			foreach($data as $key => $value) {
 				$this->data[$key] = $value;
 			}
 			return $this;
 		}
 
-		public function __get($name) {
+		final public function __get($name) {
 		    return $this->data[$name]??'';
 		}
 
-		public function get() {
+		final public function get() {
 			return $this->pageView;
 		}
 	}

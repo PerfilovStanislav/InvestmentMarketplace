@@ -1,5 +1,5 @@
 <?php
-namespace Views\Investment\Registration;
+namespace Views\Investment; { final Class Registration {} }
 ?>
 <div class="tray tray-center">
     <div class="content-header">

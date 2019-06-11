@@ -6,8 +6,5 @@ namespace Models {
 
 	class Errors extends Model{
 
-		function __construct() {
-			parent::__construct();
-		}
 	}
 }

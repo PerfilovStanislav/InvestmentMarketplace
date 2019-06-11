@@ -2,7 +2,7 @@
 
 namespace Core {
 	use \PDO;
-	use Helpers\{Validator, Helper};
+	use Helpers\{Validator, Output};
     use Traits\Instance;
 
     class Database extends PDO{
@@ -62,8 +62,8 @@ namespace Core {
 			}
 			else {
 				$this->rollBack();
-				Helper::header(Helper::E500);
-                Helper::json(['error' => $stmt->errorInfo()]);
+				Output::header(Output::E500);
+                Output::json(['error' => $stmt->errorInfo()]);
 				return false;
 			}
 		}
@@ -94,8 +94,8 @@ namespace Core {
 			}
 			else {
 				$this->rollBack();
-                Helper::header(Helper::E500);
-                Helper::json(['error' => $stmt->errorInfo()]);
+                Output::header(Output::E500);
+                Output::json(['error' => $stmt->errorInfo()]);
 				return false;
 			}
 		}
@@ -113,8 +113,8 @@ namespace Core {
 			}
 			else {
 				$this->rollBack();
-                Helper::header(Helper::E500);
-                Helper::json(['error' => $stmt->errorInfo()]);
+                Output::header(Output::E500);
+                Output::json(['error' => $stmt->errorInfo()]);
 				return false;
 			}
 		}

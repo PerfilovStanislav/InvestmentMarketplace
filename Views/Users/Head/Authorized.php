@@ -1,5 +1,5 @@
 <?php
-namespace Views\Users\Head\Authorized;
+namespace Views\Users\Head; { final Class Authorized {} }
 ?>
 <ul class="nav navbar-nav navbar-right">
     <li class="dropdown menu-merge">

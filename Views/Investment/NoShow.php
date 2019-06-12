@@ -12,8 +12,8 @@ namespace Views\Investment; { final Class NoShow {} }
                     <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
                         <? foreach ($this->filterLangs as $shortname => $lang):?>
                             <li>
-                                <a class="ajax <?=$shortname === $this->filter['lang'] ? 'selected' : ''?> page"
-                                   href="<?=$this->url.'/lang/'.$shortname?>">
+                                <a class="ajax page"
+                                   href="<?=$this->url.'/'.$this->filter->getUriWithNewParam(['lang' => $shortname])?>">
                                     <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
                                 </a>
                             </li>

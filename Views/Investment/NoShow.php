@@ -7,7 +7,7 @@ namespace Views\Investment; { final Class NoShow {} }
             <div class="tab-content pn br-n">
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                        <span class="flag flag-<?=$this->filterLangs[$this->filter['lang']]['flag']?>"></span>
+                        <span class="flag flag-<?=$this->flag?>"></span>
                     </button>
                     <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
                         <? foreach ($this->filterLangs as $shortname => $lang):?>

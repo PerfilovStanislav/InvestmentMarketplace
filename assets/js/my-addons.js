@@ -511,6 +511,13 @@ var linkClick = function() {
     });
 };
 
+var loadRealThumbs = function () {
+    $('.thumbnail>img', this).each(function(i,img) {
+        var realThumb = img.getAttribute('realthumb');
+        if (realThumb) img.setAttribute('src', realThumb);
+    });
+}
+
 var ajax = function(url, data, page) {
     var tmp = {url: url};
     if (data) tmp.data = data;

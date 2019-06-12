@@ -68,16 +68,18 @@ namespace Controllers {
                 'flag'   => $lang['flag'],
             ] + ['filterLangs' => $filterLangs];
 
-            Output::$r['f']['content'] = [
-                'initChat',
-                'panelScrollerInit',
-                'imgClickInit',
-            ];
-
             if (!$data) {
                 return Output::$r['c']['content'] = [NoShow::class, $pageParams];
             }
 
+            Output::$r['f']['content'] = [
+                'initChat',
+                'panelScrollerInit',
+                'imgClickInit',
+                'loadRealThumbs',
+            ];
+
+            Arrays::reNumber($data['projects']);
             foreach ($data['projects'] as $project_id => &$val) {
                 $val['file_name'] = File::get_file_path($project_id);
             }

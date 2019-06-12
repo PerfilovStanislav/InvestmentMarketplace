@@ -27,9 +27,12 @@ namespace Libraries {
             if (!file_exists(self::get_folder_path($this->filename))) {
                 mkdir(self::get_folder_path($this->filename), 0755);
             }
-            $prefix = $thumb ? '_th' : '';
+            $postfix = $thumb ? '_th' : '';
             $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
-            file_put_contents($this->path = self::get_file_path($this->filename)."{$prefix}.jpg", $data);
+            file_put_contents($this->path = self::get_file_path($this->filename)."{$postfix}.jpg", $data);
+            if ($thumb) {
+                imagewebp(imagecreatefromjpeg($this->path), self::get_file_path($this->filename)."{$postfix}.webp", 0);
+            }
 
             return $this;
         }

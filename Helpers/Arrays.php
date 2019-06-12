@@ -73,5 +73,12 @@ namespace Helpers {
             }
             return implode('/', $array);
         }
+
+        final public static function reNumber(array &$data) {
+            $row = 0;
+            foreach ($data as $key => &$val) {
+                $val['rowNumber'] = ++$row;
+            }
+        }
 	}
 }

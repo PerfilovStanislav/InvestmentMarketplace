@@ -26,7 +26,9 @@ namespace Views\Investment; { final Class Show {} }
 </div>
 
 <div class="investment">
-    <? foreach ($this->projects as $project_id => $project):?>
+    <? foreach ($this->projects as $project_id => $project):
+        $isFirstRow = $project['rowNumber']===1;
+    ?>
         <div class="panel mb25 mt5" project_id="<?=$project_id?>">
             <div class="panel-heading">
                 <span class="panel-title">
@@ -49,7 +51,11 @@ namespace Views\Investment; { final Class Show {} }
 
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <img src="/<?=$project['file_name']?>_th.jpg" class="media-object" href="/<?=$project['file_name']?>.jpg">
+                                    <?$thumbFileName=$project['file_name'].'_th.'?>
+                                    <img src="/<?=$thumbFileName.($isFirstRow?'jpg':'webp')?>"
+                                         class="media-object" href="/<?=$project['file_name']?>.jpg"
+                                         <?=!$isFirstRow?'realthumb="/'.$thumbFileName.'jpg"':''?>
+                                    >
                                 </div>
                             </div>
 

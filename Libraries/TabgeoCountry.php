@@ -5,7 +5,7 @@ namespace Libraries {
 
         private static $filename = 'Libraries/TabgeoCountry.dat';
 
-        final public static function getCountry() {
+        public static function getCountry() {
             if (!isset($_SERVER['REMOTE_ADDR'])) return null;
             $ip = $_SERVER['REMOTE_ADDR'];
             $ip_array = explode('.', $ip);

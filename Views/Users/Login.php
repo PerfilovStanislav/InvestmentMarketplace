@@ -1,12 +1,15 @@
 <?php
-namespace Views\Users; { final Class Login {} }
+/**
+ * @deprecated
+ */
+namespace Views\Users; { Class Login {} }
 ?>
 <div class="tray tray-center">
-    <div class="admin-form theme-primary mw500 center-block" style="padding-bottom: 175px;">
+    <div class="admin-form theme-primary mw800 center-block" style="padding-bottom: 175px;">
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
                 <span class="panel-title">
-                    <i class="fa fa-pencil-square"></i><?=$this->user_authorization?>
+                    <i class="fa fa-pencil-square"></i><?=$this->locale['enter']?>
                 </span>
             </div>
             <form method="post" action="/" id="user_form_authorization">
@@ -14,7 +17,7 @@ namespace Views\Users; { final Class Login {} }
                     <div class="section row">
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="login" class="gui-input onlyEmail" placeholder="<?=$this->Login?>">
+                                <input name="login" class="gui-input onlyEmail" placeholder="<?=$this->locale['login']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-user"></i>
                                 </label>
@@ -24,7 +27,7 @@ namespace Views\Users; { final Class Login {} }
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" name="password" class="gui-input"
-                                       placeholder="<?=$this->Password?>"/>
+                                       placeholder="<?=$this->locale['password']?>"/>
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>

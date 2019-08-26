@@ -5,6 +5,8 @@ namespace Models\Table {
     use Core\AbstractEntity;
     use Helpers\Validator;
     use Interfaces\EntityInterface;
+    use Interfaces\ModelInterface;
+    use Traits\Model;
 
     /**
      * @property int    $id
@@ -12,10 +14,11 @@ namespace Models\Table {
      * @property string $shortname
      * @property string $own_name
      * @property string $flag
-//     * @property int    $status_id
-//     * @property int    $cnt
      */
-    class Language extends AbstractEntity implements EntityInterface {
+    class Language extends AbstractEntity implements EntityInterface, ModelInterface {
+        use Model;
+
+        private static $table = 'languages';
 
         protected $data;
 
@@ -23,12 +26,10 @@ namespace Models\Table {
             $defaults = null,
             $properties = [
                 'id'        => [self::TYPE_INT,    [Validator::MIN    => 1]],
-                'name'      => [self::TYPE_STRING, [Validator::REGEX  => Validator::EN]],
+                'name'      => [self::TYPE_STRING, [Validator::MIN    => 1]],
                 'shortname' => [self::TYPE_STRING, [Validator::LENGTH => 2]],
-                'own_name'  => [self::TYPE_STRING, []],
+                'own_name'  => [self::TYPE_STRING, [Validator::MIN    => 1]],
                 'flag'      => [self::TYPE_STRING, [Validator::LENGTH => 2]],
-//                'status_id' => [self::TYPE_INT,    [Validator::MIN    => 1]],
-//                'cnt'       => [self::TYPE_INT,    [Validator::MIN    => 1]],
             ];
     }
 }

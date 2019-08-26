@@ -6,190 +6,216 @@ namespace Controllers {
         Auth,
         Controller,
         Database,
-        Router
+        Router,
+        View,
     };
     use Helpers\{
-        Arrays,
         Locale,
-        Validator,
+        Errors,
         Output,
-        Data\Currency
+        Data\Currency,
     };
 	use Libraries\File;
-	use Models\{
-        Investment as Model,
-	    Users as UserModels,
-        ProjectStatus
+    use Models\Collection\{
+        Languages,
+        ProjectChatMessages,
+        MVProjectLangs,
+        Payments,
+        ProjectLangs,
+        Projects,
+        MVProjectFilterAvailableLangs,
+        ProjectSearchs,
+        Users,
     };
-    use Params\Investment\ShowParams;
+    use Models\Table\{
+        Language,
+        Project,
+        ProjectChatMessage,
+    };
+    use Models\{
+        AuthModel,
+    };
+    use Models\Constant\{
+        ProjectStatus,
+        UserStatus,
+        Views,
+    };
+    use Requests\Investment\{
+        AddRequest,
+        ChatMessagesRequest,
+        CheckSiteRequest,
+        SetChatMessageRequest,
+        ShowRequest,
+    };
+    use Traits\AuthTrait;
     use Views\Investment\{
         Added,
+        ProjectFilter,
         Registration,
         Show,
-        NoShow
+        NoShow,
     };
 
     class Investment extends Controller {
-		private $model;
+        use AuthTrait;
+        private CONST LIMIT = 20;
 
-		function __construct() {
-			parent::__construct();
-			$this->model = new Model();
+		public function registration() {
+            $params = [
+                'payments'                  => new Payments(),
+                'mainProjectLanguages'      => new Languages('pos is not null'),
+                'secondaryProjectLanguages' => new Languages('pos is null'),
+                'currency'                  => Currency::getCurrency(),
+                'authModel'                 => AuthModel::getInstance(),
+            ];
+
+            Output::addView(Registration::class, $params);
+            Output::addFunction('ProjectRegistration');
 		}
 
-		final public function registration() {
-		    $data = $this->model->getRegistrationData();
-            $data['currency'] = Currency::getCurrency();
-            Output::$r['c']['content'] = [Registration::class, $data];
-            Output::$r['f']['content'] = ['ProjectRegistration' => []];
-		}
+		public function show(ShowRequest $request) {
+            $MVProjectFilterAvailableLangs = new MVProjectFilterAvailableLangs(['status_id' => $request->getActual('status')]);
+            if (!$MVProjectFilterAvailableLangs->get()) {
+                // без фильтра
+                return self::noShow([Views::PROJECT_FILTER => '']);
+            }
+            $languages = new Languages(['id' => $MVProjectFilterAvailableLangs->getValuesByKey()]);
+            /** @var Language $pageLanguage текущий язык*/
+            $pageLanguage = $languages->getByKeyAndValue('shortname', $request->getActual('lang'));
 
-		final public function show(ShowParams $params) {
-            $filterLangs = $this->model->getFilterLangs();
+            $projectFilter = (new View(ProjectFilter::class, [
+                'request'                       => $request,
+                'url'                           => Router::getInstance()->getCurrentPageUrl(),
+                'languages'                     => $languages,
+                'MVProjectFilterAvailableLangs' => $MVProjectFilterAvailableLangs,
+                'pageLanguage'                  => $pageLanguage ?? new Language(['flag' => 'xx']), // фэйк
+            ]));
 
-            $lang = $filterLangs[$params->lang] ?? $filterLangs[ShowParams::$defaults->lang];
-            $params->set([
-                'lang'   => $lang['shortname'],
-                'page'   => max((int)($params->page), 1),
-                'status' => ProjectStatus::getValue($params->status ?? '') ?: ProjectStatus::ACTIVE,
-            ]);
-			unset($filterLangs[$params->lang]);
-
-            $data = $this->model->getShowData($lang['id'], $params->status);
-
-            $params->excludeDefault();
-            if ($params->status) {
-                $params->status = ProjectStatus::getConstName($params->status);
+            if (!$pageLanguage) {
+                return self::noShow([Views::PROJECT_FILTER => $projectFilter]);
             }
 
-			$pageParams = [
-                'filter' => $params,
-                'url'    => Router::getInstance()->getCurrentPageUrl(),
-                'flag'   => $lang['flag'],
-            ] + ['filterLangs' => $filterLangs];
+            // ID найденных проектов
+            $projectSearchs = new ProjectSearchs([
+                'lang_id' => $pageLanguage->id,
+                'status_id' => $request->getActual('status'),
+            ], min(self::LIMIT, $MVProjectFilterAvailableLangs->{$pageLanguage->id}->cnt));
 
-            if (!$data) {
-                return Output::$r['c']['content'] = [NoShow::class, $pageParams];
+            if (empty($projectSearchs->get())) {
+                return self::noShow([Views::PROJECT_FILTER => $projectFilter]);
             }
 
-            Output::$r['f']['content'] = [
+            $projectIds     = $projectSearchs->getValuesByKey();
+            $projects       = new Projects(['id' => $projectIds]);
+            $MVProjectLangs = new MVProjectLangs(['id' => $projectIds]);
+            $payments       = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
+            $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);
+
+            $pageParams = [
+                'projects'       => $projects,
+                'MVProjectLangs' => $MVProjectLangs,
+                'pageLanguage'   => $pageLanguage,
+                'payments'       => $payments,
+                'projectLangs'   => $projectLangs,
+                'projectFilter'  => $projectFilter,
+                'languages'      => $languages,
+            ];
+
+            Output::addFunctions([
+                'setStorage' => ['lang' => $pageLanguage->id, 'chat' => []],
                 'initChat',
                 'panelScrollerInit',
                 'imgClickInit',
                 'loadRealThumbs',
-            ];
+                'checkChats',
+            ], Output::DOCUMENT);
 
-            Arrays::reNumber($data['projects']);
-            foreach ($data['projects'] as $project_id => &$val) {
-                $val['file_name'] = File::get_file_path($project_id);
-            }
-
-            Output::$r['c']['content'] = [Show::class, $data + $pageParams];
-			$chatParams = array_map(function($a){return ['id'=>$a,'max_id'=>0];}, $data['projectIds']);
-			$this->getChatMessages($chatParams);
+            Output::addView(Show::class, $pageParams);
 		}
 
-		final public function add() {
-            $data = $this->post
-                ->checkAll('projectname', 		1, 		null, 	Validator::TEXT)
-				->checkAll('paymenttype', 		1, 		3, 	    Validator::NUM)
-				->checkAll('date', 				10, 	10, 	Validator::DATE)
+		private static function noShow(array $pageParams) {
+            Output::addView(NoShow::class, $pageParams);
+        }
 
-            	->checkAll('percents', 			1, 		null,  Validator::FLOAT,    'plan_percents', 		true, 0)
-            	->checkAll('period', 			1, 		null,  Validator::NUM,      'plan_period', 		true, 0)
-            	->checkAll('periodtype', 		1, 		6, 	    Validator::NUM,      'plan_period_type', 	true, 0)
-            	->checkAll('minmoney', 			0.00001, null, 	Validator::FLOAT, 	   'plan_start_deposit', true, 0)
-				->checkAll('currency', 			1, 		8, 	    Validator::NUM,		'plan_currency_type',true, 0)
+		public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest) {
+            self::needAuthorization();
 
-				->checkAll('ref_percent', 		null, 	null, 	Validator::FLOAT,     null,                true)
-				->checkAll('payment', 			1, 		null, 	Validator::NUM,		'id_payments')
-                ->checkAll('description', 		1, 		null, 	null,                 null,                null,  1)
-                ->checkAll('lang', 				1, 		null, 	Validator::NUM,		'languages',         null,  1)
+            $url = $this->checkWebsite($checkSiteRequest, true);
 
-                ->exitWithErrors()->getData();
-
-            foreach ($data['languages'] as $key => $val) {
-			    if (!isset($data['description'][$val])) {
-                    Output::alert(['is_absent' => [$val]], 'error');
-                }
+            if (count(array_unique([
+                count($request->plan_percents),
+                count($request->plan_period),
+                count($request->plan_period_type),
+                count($request->plan_start_deposit),
+                count($request->plan_currency_type)
+                ])) !== 1)
+            {
+                // Кол-во элементов отличается
+                Errors::add(Locale::get('plans'), 'error', true);
             }
 
-            $this->post->addFields(['url' => $this->checkWebsite()]);
-            if ($project_id = $this->model->addProject($this->post)) {
-                // Save screenshots
-                $file = new File($project_id);
-                $file->save($_POST['screen_data'])->addIPTC([5 => $this->post->url, 120 => $this->post->url]);
-                $file->save($_POST['thumb_data'], true)->addIPTC([5 => $this->post->url, 120 => $this->post->url]);
+            // Сохраняем проект
+            $project = (new Project())->fromArray($request->toArray());
+            $project->admin     = AuthModel::getInstance()->user->id;
+            $project->url       = $url;
+            $project->ref_url   = $checkSiteRequest->website;
+            $project->status_id = AuthModel::getInstance()->user->status_id === UserStatus::ADMIN
+                ? ProjectStatus::ACTIVE
+                : ProjectStatus::NOT_PUBLISHED;
+            $project->save();
 
-                Output::$r['c']['content'] = [Added::class, $data];
-                Output::alert(['Success!' => [Locale::get('project_is_added')]], 'success');
-            }
+            $file = new File($project->id);
+            $file->save($request->screen_data)->addIPTC([5 => $url, 120 => $url]);
+            $file->save($request->thumb_data, true)->addIPTC([5 => $url, 120 => $url]);
+
+            Output::addView(Added::class);
+            Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));
 		}
 
-		final public function checkWebsite(array $params = []) {
-            $ref_url = $this->post->checkAll('website', 1, 128, Validator::URL, 'ref_url')->getData()['ref_url'];
-            $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($ref_url));
+		public function checkWebsite(CheckSiteRequest $request, bool $getUrl = false) : string {
+            $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($request->website));
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
 
             if (count($url) < 2) {
-				return Output::fieldError('website', 'wrong_url');
+                Errors::add('website', Locale::get('wrong_url'), true);
             }
             else {
                 $url_str = $url[1] . '.' . $url[0];
-                if (($res = $this->model->db->getRow('project', 'id', "url = '{$url_str}'"))) {
-					return Output::fieldError('website', 'site_exists');
+                if (($res = Project::getDb()->selectRow(['url' => $url_str]))) {
+                    Errors::add('website', Locale::get('site_exists'), true);
                 }
-                elseif ($params['showsuccess'] ?? false) return Output::fieldSuccess('website', 'site_is_free');
-                else return $url_str;
+                elseif ($getUrl) return $url_str;
+                else Output::addFieldSuccess('website', Locale::get('site_is_free'));
             }
         }
 
-        final public function sendMessage(array $params = []) {
-            $project_id = (int)$params['project'];
+        public function sendMessage(SetChatMessageRequest $request) {
+            (new ProjectChatMessage([
+                'user_id'       => AuthModel::getUserId(),
+                'project_id'    => $request->project,
+                'lang_id'       => $request->lang,
+                'message'       => $request->message,
+                'session_id'    => AuthModel::getInstance()->session_id,
+            ]))->save();
 
-            $post = $this->post
-                ->checkAll('message', 		1, 		2047)
-                ->checkAlerts();
-
-            $info = Auth::getUserInfo();
-            $data = [
-                'user_id'       => [[$info['id']], \PDO::PARAM_INT],
-                'project_id'    => [[$project_id], \PDO::PARAM_INT],
-                'lang_id'       => [[217], \PDO::PARAM_INT],
-                'message'       => [[$post->message]],
-                'session_id'    => [[$info['session_id']], \PDO::PARAM_INT],
-            ];
-            $this->model->db->insert('message', $data);
-
-            $return['f']['content'][] = 'checkChats';
-
-            return Output::json($return);
+            Output::addFunction('checkChats');
         }
 
-        final public function getChatMessages(array $params = []) {
-		    // если есть $params, значит вызвали из $this->show()
-            $chats = $params ?: $this->post->checkAll('chats')->exitWithErrors()->chats;
+        public function getChatMessages(ChatMessagesRequest $request) {
+            $messages = new ProjectChatMessages($request);
 
-            if ($new_messages = $this->model->getChatMessages($chats)) {
-            	$array = new Arrays();
-				$usersIds = $array
-					->setArray($new_messages)
-					->getUnique('user_id')
-					->getArray();
-
-				Output::$r['f']['content']['setNewChatMessages'] =
-					[
-						'users' => $usersIds ? $array
-							->setArray((new UserModels())->getUsersByIds($usersIds))
-							->groupBy(['id'])
-							->getArray() : [],
-						'messages' => $new_messages
-					];
+            if ($messages->get()) {
+                $userIds = $messages->getUniqueValuesByKey('user_id');
+                if (!empty($userIds)) {
+                    $users = new Users(['id' => $messages->getUniqueValuesByKey('user_id')], ['id', 'login', 'name', 'status_id']);
+                    Output::addFunction('setNewChatMessages', ['users' => $users->toArray()]);
+                }
+                Output::addFunction('setNewChatMessages', ['messages' => $messages->toArray()]);
 			}
-			Output::$r['f']['content'][] = 'startChatCheck';
+            Output::addFunction('sleepAndCheckChats');
         }
 
-        final public function redirect(array $params = []) {
+        public function redirect(array $params = []) {
 		    $projectId = (int)($params['project'] ?? 0);
             $refUrl = $this->model->db->getOne('project', "id = $projectId", 'ref_url'); /** @see Database::getOne() */
             if (!$refUrl) {

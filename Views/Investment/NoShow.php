@@ -1,28 +1,16 @@
 <?php
-namespace Views\Investment; { final Class NoShow {} }
+namespace Views\Investment; {
+/**
+ * @var NoShow $this
+ * @property LocaleInterface $locale
+ * @property string|ProjectFilter $projectFilter
+ */
+Class NoShow {} }
+
+use Interfaces\LocaleInterface;
 ?>
-<div class="filters">
-    <div class="panel mb25 mt5">
-        <div class="panel-body">
-            <div class="tab-content pn br-n">
-                <div class="btn-group">
-                    <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                        <span class="flag flag-<?=$this->flag?>"></span>
-                    </button>
-                    <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                        <? foreach ($this->filterLangs as $shortname => $lang):?>
-                            <li>
-                                <a class="ajax page"
-                                   href="<?=$this->url.'/'.$this->filter->getUriWithNewParam(['lang' => $shortname])?>">
-                                    <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
-                                </a>
-                            </li>
-                        <? endforeach;?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="filters" id="projectfilter">
+    <?=$this->projectFilter?>
 </div>
 
 <div class="tray tray-center">

@@ -5,11 +5,8 @@ namespace Controllers {
     use Core\Controller;
 
     class Cli extends Controller {
-        function __construct() {
-            parent::__construct();
-        }
 
-        final public static function fullOptimize() {
+        public static function fullOptimize() {
             self::optimize([
                 '/assets/' => [
                     'default_skin/css/theme.clear',
@@ -27,13 +24,13 @@ namespace Controllers {
             self::optimize([
                 '/assets/jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
                 '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
-                '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
+                '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'chat', 'my-addons']
             ], 'js');
 
             die('OK ' . mt_rand(1, 1000));
         }
 
-        final public static function optimize(array $arr, string $type) {
+        public static function optimize(array $arr, string $type) {
             $buffer = '';
             foreach ($arr as $dir => $files) {
                 foreach ($files as $file) {
@@ -57,11 +54,10 @@ namespace Controllers {
                 $buffer = preg_replace("/\}\n\}/si", '}}', $buffer);
             }
 
-            file_put_contents(ROOT.'/assets/full/full.'.$type, $buffer);
-            file_put_contents(ROOT.'/assets/full/full.'.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
-
-            system(ROOT . '\\assets\\full\\brotli.bat', $b);
-            echo $b, PHP_EOL;
+            $path = ROOT.'/assets/full/full.';
+            file_put_contents($path.$type, $buffer);
+            file_put_contents($path.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
+            file_put_contents($path.$type.'.br', brotli_compress($buffer, 9, 11));
         }
     }
 }

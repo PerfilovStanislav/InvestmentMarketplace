@@ -1,19 +1,31 @@
 <?php
-namespace Views\Users\Head; { final Class NotAuthorized {} }
+namespace Views\Users\Head; {
+    /**
+     * @var NotAuthorized $this
+     * @property Language[] $siteLanguages
+     * @property string[] $selectedLanguage
+     * @property LocaleInterface $locale
+     * @property string $avatar
+     */
+Class NotAuthorized {} }
+
+use Interfaces\LocaleInterface;
+use Models\Constant\DomElements;
+use Models\Table\Language;
 ?>
 <ul class="nav navbar-nav navbar-right">
     <li class="dropdown menu-merge">
         <div class="navbar-btn btn-group">
             <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                <span class="flag flag-<?=$this->availableLangs[$this->activeLang]['flag']?>"></span>
+                <span class="flag flag-<?=$this->siteLanguages->{$this->selectedLanguage}->flag?>"></span>
             </button>
             <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                <? foreach ($this->availableLangs as $shortname => $lang):?>
+                <? foreach ($this->siteLanguages as $shortname => $language):?>
                     <li>
-                        <a class="ajax <?=$shortname === $this->activeLang ? 'selected' : ''?>"
+                        <a class="ajax <?=$shortname === $this->selectedLanguage ? 'selected' : ''?>"
                            href="/Users/changeLanguage/lang/<?=$shortname?>"
                            data-beforesend='{"f":["allClear"]}'>
-                            <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
+                            <span class="flag flag-<?=$language->flag?> mr10"></span> <? printf('%s (%s)', $language->name, $language->own_name)?>
                         </a>
                     </li>
                 <? endforeach;?>
@@ -25,18 +37,18 @@ namespace Views\Users\Head; { final Class NotAuthorized {} }
     </li>
     <li class="dropdown menu-merge">
         <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
-            <img src="<?=$this->photoThumb?>" alt="avatar" class="mw30 br64">
+            <img src="<?=$this->avatar?>" alt="avatar" class="mw30 br64">
             <span class="hidden-xs pl15"> <?=$this->locale['guest']?> </span>
             <span class="caret caret-tp hidden-xs"></span>
         </a>
         <ul class="dropdown-menu list-group dropdown-persist w350" role="menu">
             <li class="dropdown-header clearfix">
                 <div class="admin-form theme-primary w300 center-block">
-                    <form method="post" action="/" id="authorizationuser_form">
+                    <form method="post" action="/" id="<?=DomElements::AUTHORIZATION_USER_FORM?>">
                         <div class="section row mb5">
                             <label class="field prepend-icon">
-                                <input placeholder="<?=$this->locale['login']?> <?=$this->locale['or']?>
-                                <?=$this->locale['email']?>" class="gui-input onlyEmail" autocomplete="login" name="login">
+                                <input placeholder="<?=$this->locale['login']?> <?=$this->locale['or']?> <?=$this->locale['email']?>"
+                                   class="gui-input onlyEmail" autocomplete="login" name="login">
                                 <input type="hidden" name="ajax" value="1">
                                 <label class="field-icon">
                                     <i class="glyphicons glyphicons-user"></i>
@@ -45,7 +57,7 @@ namespace Views\Users\Head; { final Class NotAuthorized {} }
                         </div>
                         <div class="section row mb5">
                             <label class="field prepend-icon">
-                                <input placeholder="Пароль" class="gui-input" autocomplete="password" name="password"
+                                <input placeholder="<?=$this->locale['password']?>" class="gui-input" autocomplete="password" name="password"
                                        type="password"/>
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>

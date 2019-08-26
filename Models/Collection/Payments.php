@@ -8,13 +8,15 @@ namespace Models\Collection {
         ModelInterface
     };
     use Models\Table\Payment;
+    use Traits\IteratorTrait;
     use Traits\Model;
 
     /**
      * @var Payment[] $this
      */
-    class Payments extends AbstractEntity implements EntityInterface, ModelInterface {
+    class Payments extends AbstractEntity implements EntityInterface, ModelInterface, \Iterator, \Countable {
         use Model;
+        use IteratorTrait;
 
         private static $table = 'payments';
 
@@ -26,8 +28,8 @@ namespace Models\Collection {
                 self::COLLECTION  => [self::TYPE_DTO_ARRAY, Payment::class, 'id'],
             ];
 
-        final public function __construct(array $where) {
-            $this->fillCollection(self::getDb()->select($where, Payment::getPropertyKeys()));
+        public function __construct(array $where = []) {
+            $this->fillCollection(self::getDb()->select($where, Payment::getPropertyKeys(), 'pos asc'));
         }
     }
 }

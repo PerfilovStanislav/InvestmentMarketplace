@@ -1,174 +1,147 @@
 <?php
 
-namespace Helpers {
+namespace Helpers;
 
-	class Validator {
-		CONST TEXT = '/[^a-zа-я0-9ё \-+=\\!%№#()\[\]_@:;"{}]/iu';
-		CONST EN = '/[^a-z0-9]/iu';
-		CONST EMAIL = '/[^a-z0-9\-_.@]/i';
-		CONST NUM = '/[^0-9\-]/i';
-		CONST NUMS = '/[^0-9\,]/i';
-		CONST FLOAT = '/[^0-9.]/i';
-		CONST HASH = '/[^a-z0-9\/\.]/i';
-		CONST URI = '/[^a-z0-9-_\/]/i';
-		CONST URL = '/[^a-z0-9\-\/=%#_:?№.]/iu';
-		CONST IP = '/[^0-9\.:]/i';
-		CONST DATE = '/[^\-0-9]/i';
-		CONST TABLENAME = '/[^a-z_]/i';
+use Core\AbstractEntity;
+use Interfaces\ModelInterface;
+use Traits\Collection;
 
-		private $post;
-		private $data = [];
-		private $link;
-		private $errors = null;
-		private $key = null;
-		private $isArray = false;
-		private $sameArrays = [];
+class Validator
+{
+    public CONST
+        MIN            = 1,
+        MAX            = 2,
+        LENGTH         = 3,
+        IN             = 4,
+        REGEX          = 5,
+        MODEL          = 6;
 
-		function __construct(array $post) {
-			$this->post = $post;
-		}
+    public CONST
+        EN             = 'a-z',
+        NUM            = '0-9',
+        LOGIN          = self::EN . self::NUM,
+        FLOAT          = self::NUM . '.',
+        NUMS           = self::NUM .'\,',
+        SITE_URI       = self::EN . self::NUMS . '\/_',
+        PROJECT_NAME   = self::EN . self::NUM . ' \.\-',
+        EMAIL          = self::EN . self::NUM . '\-_.@',
+        HASH           = self::EN . self::NUM . '\/\.',
+        REF_SITE_URL   = self::SITE_URI . '\-=%#_:?№\.',
+        IP             = self::NUM . '\.:',
+        DATE           = self::NUM . '\-';
 
-		public function choose($key, $rename = null):self {
-			if (isset($this->post[$key])) {
-				$this->data[$rename ?? $key] = $this->post[$key];
-				$this->link = &$this->data[$rename ?? $key];
-				$this->key = $key;
-				$this->isArray = is_array($this->post[$key]);
-			} else {
-				$this->errors[$key][] = sprintf("Отсутствует поле %s", $key);
-				$this->key = null;
-			}
-			return $this;
-		}
-
-		public function addFields($arr):self {
-		    foreach ($arr as $key => $val) {
-                $this->data[$key] = $val;
+    public static function validate($key, $value, int $type, array $rules = []) {
+        if ($type === AbstractEntity::TYPE_INT || $type === AbstractEntity::TYPE_FLOAT) {
+            if (!is_numeric($value)) {
+                Errors::add($key, sprintf('Ожидалось число'));
             }
-			return $this;
-		}
+        }
+        elseif ($type === AbstractEntity::TYPE_BOOL) {
+            if (in_array($value, ['1', 1, 'true', true], true)) return true;
+            if (in_array($value, ['0', 0, 'false', false], true)) return false;
+            Errors::add($key, sprintf('неверное значение'));
+        }
 
-		public function checkAll($key, $min = null, $max = null, $regex = null, $rename = null, $removeEmpty = null, $index = null):self {
-			$this->choose($key, $rename);
-			if ($regex          !== null) $this->clear($regex);
-            if ($removeEmpty    !== null) $this->removeEmpty();
-			if ($min            !== null) $this->min($min, $regex);
-			if ($max            !== null) $this->max($max, $regex);
-			if ($index          !== null) $this->count($index);
-			return $this;
-		}
+        switch ($type) {
+            case AbstractEntity::TYPE_INT:      $value = intval($value);           break;
+            case AbstractEntity::TYPE_FLOAT:    $value = floatval($value);         break;
+            case AbstractEntity::TYPE_STRING:   $value = (string)$value;           break;
+            case AbstractEntity::TYPE_DATETIME: $value = mb_substr($value, 0, 19); break;
+            case AbstractEntity::TYPE_DATE:     $value = mb_substr($value, 0, 10); break;
+        }
 
-		public function clear($regex):self {
-			if ($this->key !== null) {
-				if (!$this->isArray) $this->link = self::replace($regex, $this->link);
-				else {
-					foreach ($this->link as &$val) {
-						$val = self::replace($regex, $val);
-					}
-				}
-			}
-			return $this;
-		}
+        if ($type === AbstractEntity::TYPE_DATETIME || $type === AbstractEntity::TYPE_DATE) {
+            $format = $type === AbstractEntity::TYPE_DATE
+                ? AbstractEntity::FORMAT_DATE
+                : AbstractEntity::FORMAT_DATETIME;
+            return self::date($key, $value, $format);
+        }
 
-		public function min($min, $regex = null):self {
-			if ($this->key !== null) {
-				if (!$this->isArray) {
-				    if (in_array($regex, [self::FLOAT, self::NUM])) {
-				        if ((float)$this->link < $min) $this->errors[$this->key][] = sprintf("минимальное значение: %d", $min);
+        foreach ($rules as $operator => $rule) {
+            switch ($operator) {
+                case self::MIN:
+                    switch ($type) {
+                        case AbstractEntity::TYPE_INT:
+                        case AbstractEntity::TYPE_FLOAT:
+                            self::minNumber($key, $value, $rule); break;
+                        case AbstractEntity::TYPE_STRING:
+                            self::minString($key, $value, $rule); break;
+                    }; break;
+                case self::MAX:
+                    switch ($type) {
+                        case AbstractEntity::TYPE_INT:
+                        case AbstractEntity::TYPE_FLOAT:
+                            self::maxNumber($key, $value, $rule); break;
+                        case AbstractEntity::TYPE_STRING:
+                            self::maxString($key, $value, $rule); break;
+                    }; break;
+                case self::LENGTH:
+                    self::lengthString($key, $value, $rule); break;
+                case self::REGEX:
+                    self::regex($key, $value, $rule); break;
+                case self::IN:
+                    if (is_string($rule)) {
+                        /** @var Collection $rule */
+                        $rule = $rule::getValues();
                     }
-					else if (mb_strlen($this->link) < $min) $this->errors[$this->key][] = sprintf("минимальное количество знаков: %d", $min);
-				}
-				else {
-					foreach ($this->link as $key => $val) {
-                        if (in_array($regex, [self::FLOAT, self::NUM])) {
-                            if ((float)$val < $min) $this->errors[$this->key][] = sprintf("минимальное значение: %d", $min);
-                        }
-						else if (mb_strlen($val) < $min) $this->errors[$this->key][$key] = sprintf("минимальное количество знаков: %d", $min);
-					}
-				}
-			}
-
-			return $this;
-		}
-
-		public function max($max, $regex = null):self {
-			if ($this->key !== null) {
-				if (!$this->isArray) {
-                    if (in_array($regex, [self::FLOAT, self::NUM])) {
-                        if ((float)$this->link > $max) $this->errors[$this->key][] = sprintf("максимальное значение: %d", $max);
+                    self::in($key, $value, $rule); break;
+                case self::MODEL:
+                    /** @var ModelInterface $rule */
+                    if ($rule::getDb()->selectById($value, 'id') === null) {
+                        Errors::add($key, sprintf('Неправильное значение: %d', $value));
                     }
-                    else if (mb_strlen($this->link) > $max) $this->errors[$this->key][] = sprintf("максимальное количество знаков: %d", $max);
-				}
-				else {
-					foreach ($this->link as $key => $val) {
-                        if (in_array($regex, [self::FLOAT, self::NUM])) {
-                            if ((float)$val > $max) $this->errors[$this->key][] = sprintf("максимальное значение: %d", $max);
-                        }
-                        else if (mb_strlen($val) > $max) $this->errors[$this->key][$key] = sprintf("максимальное количество знаков: %d", $max);
-					}
-				}
-			}
-			return $this;
-		}
-
-		private function removeEmpty():self {
-		    $this->link = array_diff($this->link, array(''));
-			return $this;
-		}
-
-		private function count($index):self {
-			$this->sameArrays[$index][] = count($this->link);
-			return $this;
-		}
-
-		public function same():bool {
-			foreach ($this->sameArrays as $arr) {
-				if (max($arr) !== min($arr)) return false;
-			}
-			return true;
-		}
-
-		public function getErrors() {
-			foreach ($this->sameArrays as $key => $arr) {
-				if (max($arr) !== min($arr)) $this->addErrors([$key => 'Not same!']);
-			}
-			return $this->errors?:false;
-		}
-
-		public function addErrors(array $errors):self {
-			if (!empty($errors)) foreach ($errors as $k => $v) {
-				$this->errors[$k][] = $v;
-			}
-			return $this;
-		}
-
-		public function getData():array {
-			return $this->data;
-		}
-
-		final public function __get($name) {
-            return $this->data[$name];
+                    break;
+            }
         }
 
-		final public function __set($name, $value) {
-            return $this->data[$name] = $value;
+        return $value;
+    }
+
+    private static function maxNumber($key, $value, $max) {
+        if ($value > $max) Errors::add($key, sprintf('максимальное значение: %d', $max));
+    }
+
+    private static function minNumber($key, $value, $min) {
+        if ($value < $min) {
+            Errors::add($key, sprintf('минимальное значение: %d', $min));
         }
+    }
 
-        final public static function replace($regex, $str):string {
-			switch ($regex) {
-				case self::FLOAT: 	$str = str_replace(',', '.', $str); break;
-//				case self::NUM: 	$str = (int)$str; break;
-			}
-			return preg_replace($regex, '', $str);
-		}
+    private static function maxString($key, $value, $max) {
+        if (mb_strlen($value) > $max) Errors::add($key, sprintf('максимальное количество знаков: %d', $max));
+    }
 
-		final public function exitWithErrors($scope = 'content') {
-            return ($errors = $this->getErrors()) ? Output::error($errors, $scope) : $this;
+    private static function minString($key, $value, $min) {
+        if (mb_strlen($value) < $min) Errors::add($key, sprintf('минимально количество знаков: %d', $min));
+    }
+
+    private static function lengthString($key, $value, $length) {
+        if (mb_strlen($value) != $length) {
+            Errors::add($key, sprintf('фиксированная длина: %d', $length));
         }
+    }
 
-		final public function checkAlerts() {
-            return ($errors = $this->getErrors()) ? Output::alert($errors, 'error') : $this;
+    public static function regex($key, $value, $regex) {
+        if (($return = preg_replace('/[^' . $regex . ']/i', '', $value)) != $value) {
+            Errors::add($key, 'введены запрещённые символы');
         }
-	}
+        return $return;
+    }
 
+    public static function in($key, $value, array $availables) : ?bool {
+        if (!in_array($value, $availables)) {
+            Errors::add($key, sprintf('Возможные значения: %s', implode(', ', $availables)));
+            return null;
+        }
+        return true;
+    }
+
+    public static function date($key, $value, string $format) : ?\DateTime {
+        $date = \DateTime::createFromFormat($format, $value);
+        if (!$date || $date->format($format) !== $value) {
+            Errors::add($key, sprintf('Неверный формат даты'));
+            return null;
+        }
+        return $date;
+    }
 }

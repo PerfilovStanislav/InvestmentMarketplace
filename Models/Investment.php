@@ -25,13 +25,13 @@ namespace Models {
 				'ref_url' 				=> [[$post->ref_url]],
 				'paymenttype' 			=> [[$post->paymenttype],				\PDO::PARAM_INT],
 				'start_date'			=> [[$post->date]],
-				'plan_percents'			=> [[Arrays::joinForInsert($post->plan_percents)]],
-				'plan_period'			=> [[Arrays::joinForInsert($post->plan_period)]],
-				'plan_period_type'		=> [[Arrays::joinForInsert($post->plan_period_type)]],
-				'plan_start_deposit'	=> [[Arrays::joinForInsert($post->plan_start_deposit)]],
-				'plan_currency_type'	=> [[Arrays::joinForInsert($post->plan_currency_type)]],
-				'ref_percent'			=> [[Arrays::joinForInsert($post->ref_percent)]],
-				'id_payments'			=> [[Arrays::joinForInsert($post->id_payments)]],
+				'plan_percents'			=> [[Arrays::toArrayForInsert($post->plan_percents)]],
+				'plan_period'			=> [[Arrays::toArrayForInsert($post->plan_period)]],
+				'plan_period_type'		=> [[Arrays::toArrayForInsert($post->plan_period_type)]],
+				'plan_start_deposit'	=> [[Arrays::toArrayForInsert($post->plan_start_deposit)]],
+				'plan_currency_type'	=> [[Arrays::toArrayForInsert($post->plan_currency_type)]],
+				'ref_percent'			=> [[Arrays::toArrayForInsert($post->ref_percent)]],
+				'id_payments'			=> [[Arrays::toArrayForInsert($post->id_payments)]],
                 'status_id'             => [[(Auth::getUserInfo()['status_id'] ?? null) == 3 ? 2 : 1], \PDO::PARAM_INT],
 			];
 
@@ -56,6 +56,42 @@ namespace Models {
         }
 
         public function getShowData(int $langId, int $status) : array {
+		    'SELECT
+	p.id 
+	, p.name 
+	, p.url 
+	, p.description
+	, array_to_json(p.ref_percent) ref_percent
+	, array_to_json(p.id_payments) id_payments
+	, array_to_json(array_agg(ARRAY[p1, p2, p3, p4, p5])) plans
+  , array_to_json(array_agg(lang_id)) as lang_ids
+from (
+	SELECT 
+		p.id 
+		, p.name 
+		, p.url 
+		, l.description
+		, ref_percent
+		, id_payments
+		, unnest(p.plan_percents)      as p1
+		, unnest(p.plan_period)        as p2
+		, unnest(p.plan_period_type)   as p3 
+		, unnest(p.plan_start_deposit) as p4 
+		, unnest(p.plan_currency_type) as p5
+		, pl2.lang_id
+	FROM project p
+	JOIN project_lang l ON p.id = l.project_id
+  JOIN project_lang pl2 ON pl2.project_id = p.id
+	WHERE l.lang_id = 317 and status_id = 1
+) p
+group by p.id 
+	, p.name 
+	, p.url 
+	, p.description
+  , p.ref_percent
+  , p.id_payments
+order by p.id desc;
+';
 		    $projects = $this->db->getResult("
                 SELECT p.id, p.name, p.url, l.description
                 	, array_to_json(p.ref_percent) ref_percent
@@ -136,7 +172,7 @@ namespace Models {
 		            return "
 		                (SELECT m.id, m.date_create, m.user_id, m.project_id, m.message, m.session_id
                         FROM message m
-                        WHERE m.project_id = {$a['id']} and m.id>{$a['max_id']} and m.lang_id = 217
+                        WHERE m.project_id = {$a['id']} and m.id>{$a['max_id']} and m.lang_id = 219
                         ORDER BY m.id desc
                         limit 50)
 		            ";

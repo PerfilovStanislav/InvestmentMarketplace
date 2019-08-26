@@ -26,7 +26,7 @@ namespace Models\Collection {
                 self::COLLECTION  => [self::TYPE_DTO_ARRAY, ProjectSearch::class, 'id'],
             ];
 
-        final public function __construct(array $where, int $limit) {
+        public function __construct(array $where, int $limit) {
             $this->fillCollection(self::getDb()->select($where, ProjectSearch::getPropertyKeys(), null, $limit));
         }
     }

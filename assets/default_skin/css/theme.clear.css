@@ -148,6 +148,9 @@ html::-webkit-scrollbar-track {
 .fa-plus:before {
     content: "\f067";
 }
+.fa-minus:before {
+    content: "\f068";
+}
 .fa-warning:before,
 .fa-exclamation-triangle:before {
     content: "\f071";
@@ -1809,6 +1812,9 @@ button.close {
 .mw30 {
     max-width: 30px !important;
 }
+.mw500 {
+    max-width: 500px !important;
+}
 .mw800 {
     max-width: 800px !important;
 }
@@ -2629,7 +2635,7 @@ fieldset[disabled] .btn-primary.active {
 }
 .lead {
     margin-bottom: 19px;
-    font-size: 19.5px;
-    font-weight: 300;
+    font-size: 24px;
+    font-weight: 400;
     line-height: 1.4;
 }

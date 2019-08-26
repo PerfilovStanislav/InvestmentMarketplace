@@ -1,16 +1,31 @@
 <?php
-namespace Views\Investment; { final Class Registration {} }
+namespace Views\Investment; {
+
+/**
+ * @var Registration $this
+ * @property Payment[] $payments
+ * @property Language[] $mainProjectLanguages
+ * @property Language[] $secondaryProjectLanguages
+ * @property AuthModel $authModel
+ * @property array currency
+ * @property LocaleInterface $locale
+ */
+Class Registration {} }
+
+use Interfaces\LocaleInterface;
+use Models\AuthModel;
+use Models\Table\Language;
+use Models\Table\Payment;
 ?>
 <div class="tray tray-center">
     <div class="content-header">
-        <?php if (!($this->user_info['id'] ?? null)):?>
-            <p class="lead text-danger"><?=$this->locale['auth_4_add_project']?> </p>
-        <?php endif;?>
-
         <h2> <?=$this->locale['free_4_add_project']?> <b class="text-primary"><?=$this->locale['free']?></b></h2>
+        <?php if (!($this->authModel->is_authorized)):?>
+            <p class="lead text-danger"><?=$this->locale['auth_4_add_project']?></p>
+        <?php endif;?>
     </div>
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
-        <div class="panel heading-border panel-primary">
+        <div class="panel heading-border panel-<?=$this->authModel->is_authorized ? 'primary' : 'danger'?>">
             <div class="panel-heading">
                 <span class="panel-title">
                     <i class="fa fa-pencil-square"></i><?=$this->locale['add_project']?>
@@ -21,7 +36,7 @@ namespace Views\Investment; { final Class Registration {} }
                     <div class="section row">
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="projectname" class="gui-input onlyEn"
+                                <input name="name" class="gui-input onlyEn" autocomplete="off"
                                        placeholder="<?=$this->locale['project_name']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-pencil"></i>
@@ -42,7 +57,7 @@ namespace Views\Investment; { final Class Registration {} }
                         </div>
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input type="text" name="date" class="datepicker gui-input onlyDate"
+                                <input type="text" name="start_date" class="datepicker gui-input onlyDate" autocomplete="off"
                                        placeholder="<?=$this->locale['start_date']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-calendar"></i>
@@ -73,7 +88,7 @@ namespace Views\Investment; { final Class Registration {} }
 
                                         <div class="col-md-8 pln prn">
                                             <label class="field append-icon">
-                                                <input placeholder="<?=$this->locale['profit']?>" class="gui-input onlyNumber" name="percents[]">
+                                                <input placeholder="<?=$this->locale['profit']?>" class="gui-input onlyNumber" name="plan_percents[]" autocomplete="off">
                                                 <label class="field-icon">
                                                     <i class="fa fa-percent"></i>
                                                 </label>
@@ -84,7 +99,7 @@ namespace Views\Investment; { final Class Registration {} }
                                 <div class="col-md-3 prn">
                                     <div class="smart-widget sm-left sml-80">
                                         <label class="field append-icon">
-                                            <input class="gui-input onlyNumber" name="period[]">
+                                            <input class="gui-input onlyNumber" name="plan_period[]" autocomplete="off">
                                             <label class="field-icon">
                                                 <i class="glyphicons glyphicons-clock"></i>
                                             </label>
@@ -94,7 +109,7 @@ namespace Views\Investment; { final Class Registration {} }
                                 </div>
                                 <div class="col-md-2 mln1 pln">
                                     <label class="field select">
-                                        <select name="periodtype[]">
+                                        <select name="plan_period_type[]">
                                             <option value="1">          <?=$this->locale['period_name'][1]?></option>
                                             <option value="2">          <?=$this->locale['period_name'][2]?></option>
                                             <option value="3" selected> <?=$this->locale['period_name'][3]?></option>
@@ -108,7 +123,7 @@ namespace Views\Investment; { final Class Registration {} }
                                 <div class="col-md-3 prn">
                                     <div class="smart-widget sm-left sml-50">
                                         <label class="field append-icon">
-                                            <input class="gui-input onlyNumber" name="minmoney[]">
+                                            <input class="gui-input onlyNumber" name="plan_start_deposit[]" autocomplete="off">
                                             <label class="field-icon">
                                                 <i class="fa fa-money"></i>
                                             </label>
@@ -118,9 +133,10 @@ namespace Views\Investment; { final Class Registration {} }
                                 </div>
                                 <div class="col-md-1 mln1 pln fa" style="top: 0px">
                                     <label class="field select">
-                                        <select name="currency[]">
+                                        <select name="plan_currency_type[]">
                                             <? foreach ($this->currency as $k => $c) {
-                                                printf('<option value="%d" title="%s">%s</option>', $k + 1, $c['t'], $c['i']);
+                                                if ($k == 0) continue;
+                                                printf('<option value="%d" %s title="%s">%s</option>', $k, $k == 1 ? 'selected' : '', $c['t'], $c['i']);
                                             }?>
                                         </select>
                                         <i class="arrow double"></i>
@@ -146,7 +162,7 @@ namespace Views\Investment; { final Class Registration {} }
                                 <div class="col-md-11 pln">
                                     <div class="smart-widget sm-left sml-120">
                                         <label class="field append-icon">
-                                            <input name="ref_percent[]" class="gui-input onlyNumber" placeholder="%">
+                                            <input name="ref_percent[]" class="gui-input onlyNumber" placeholder="%" autocomplete="off">
                                             <label class="field-icon">
                                                 <i class="fa fa-street-view"></i>
                                             </label>
@@ -173,13 +189,15 @@ namespace Views\Investment; { final Class Registration {} }
                         <div class="payments">
                             <div class="section row">
                                 <?php
-                                $div = ceil(sizeof($this->payments) / 3);
-                                foreach ($this->payments as $k => $v) {
-                                    if ($k % $div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
+                                $div = ceil(count($this->payments) / 3);
+                                $i = 0;
+                                foreach ($this->payments as $v) {
+                                    if ($i % $div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
                                     echo '<label class="block mt15 option option-primary">
-                                        <input type="checkbox" name="payment[]" value="' . $v['id'] . '">
-                                        <span class="checkbox"></span> <i class="pay pay-' . $v['name'] . ' mbn" ></i> ' . $v['name'] . '</label>';
-                                    if (($k + 1) % $div === 0 || $k === sizeof($this->payments) - 1) echo '</div>';
+                                        <input type="checkbox" name="id_payments[]" value="' . $v->id . '">
+                                        <span class="checkbox"></span> <i class="pay pay-' . $v->name . ' mbn" ></i> ' . $v->name . '</label>';
+                                    if (($i + 1) % $div === 0 || $i === count($this->payments)) echo '</div>';
+                                    $i++;
                                 }
                                ?>
                             </div>
@@ -190,21 +208,27 @@ namespace Views\Investment; { final Class Registration {} }
                         <div class="langs">
                             <div class="section row">
                                 <?php
-                                $div = ceil(sizeof($this->languages) / 3);
-                                foreach ($this->languages as $k => $v) {
-                                    if ($k % $div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
-                                    echo '<label class="block mt15 option option-primary"><input type="checkbox" name="lang[]" value="' . $v['id'] . '"><span class="checkbox"></span> <i class="flag flag-' . $v['flag'] . '" ></i><txt>' . $v['name'] . " ( {$v['own_name']} )" . '</txt></label>';
-                                    if (($k + 1) % $div === 0 || $k === sizeof($this->languages) - 1) echo '</div>';
+                                $div = ceil(count($this->mainProjectLanguages) / 3);
+                                $i = 0;
+                                foreach ($this->mainProjectLanguages as $v) {
+                                    if ($i % $div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
+                                    echo '<label class="block mt15 option option-primary"><input type="checkbox" name="lang[]" value="' . $v->id . '">',
+                                    '<span class="checkbox"></span> <i class="flag flag-' . $v->flag . '" ></i><txt>' . $v->name . " ( {$v->own_name} )" . '</txt></label>';
+                                    if (($i + 1) % $div === 0 || $i === count($this->mainProjectLanguages)) echo '</div>';
+                                    $i++;
                                 }
                                ?>
                             </div>
                             <div class="section row" hidden>
                                 <?php
-                                $div = ceil(sizeof($this->hidden_languages) / 3);
-                                foreach ($this->hidden_languages as $k => $v) {
-                                    if ($k % $div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
-                                    echo '<label class="block mt15 option option-primary"><input type="checkbox" name="lang[]" value="' . $v['id'] . '"><span class="checkbox"></span> <i class="flag flag-' . $v['flag'] . '" ></i><txt>' . $v['name'] . " ( {$v['own_name']} )" . '</txt></label>';
-                                    if (($k + 1) % $div === 0 || $k === sizeof($this->hidden_languages) - 1) echo '</div>';
+                                $div = ceil(count($this->secondaryProjectLanguages) / 3);
+                                $i = 0;
+                                foreach ($this->secondaryProjectLanguages as $v) {
+                                    if ($i % $div === 0) echo '<div class="col-md-4 pad-r40 border-right">';
+                                    echo '<label class="block mt15 option option-primary"><input type="checkbox" name="lang[]" value="' . $v->id . '">',
+                                    '<span class="checkbox"></span> <i class="flag flag-' . $v->flag . '" ></i><txt>' . $v->name . " ( {$v->own_name} )" . '</txt></label>';
+                                    if (($i + 1) % $div === 0 || $i === count($this->secondaryProjectLanguages) - 1) echo '</div>';
+                                    $i++;
                                 }
                                ?>
                             </div>
@@ -284,7 +308,7 @@ namespace Views\Investment; { final Class Registration {} }
                         </div>
                         <div class="panel-footer text-right">
                             <button type="submit"
-                                    class="button btn-primary" <?php echo ($this->user_info['id'] ?? null) ? '' : 'disabled';?>> <?=$this->locale['send_form']?> </button>
+                                    class="button btn-primary" <?=($this->authModel->is_authorized) ? '' : 'disabled';?>> <?=$this->locale['send_form']?> </button>
                         </div>
                     </div>
                     <input type="hidden" name="ajax" value="1">

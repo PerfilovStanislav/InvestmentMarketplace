@@ -10,7 +10,7 @@ namespace Models {
 
 	class Users extends Model{
 
-		final public function addUser(Validator $post) {
+		public function addUser(Validator $post) {
 		    $data = $post->getData();
 		    $scope = 'adduser_form';
 
@@ -26,7 +26,7 @@ namespace Models {
                     'password' 	=> [[Auth::hashPassword($data['password'])]]
                 ])) {
 
-			    // Add UserParams
+			    // Add UserParam
 			    $user_id = $this->db->lastID('users', "login = '{$data['login']}'");
                 $lang_id = $this->db->getOne('languages', "shortname = '".Locale::getLanguage()."'");
 
@@ -40,7 +40,7 @@ namespace Models {
 			else return ['error' => ['user' => ['adding_error']]];
 		}
 
-		final public function getUsersByIds(array $ids) {
+		public function getUsersByIds(array $ids) {
 			return $this->db->select('users', 'id,name,login,status_id', ['id' => $ids]);
 		}
 	}

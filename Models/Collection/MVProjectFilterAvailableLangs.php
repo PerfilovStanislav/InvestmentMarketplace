@@ -12,7 +12,7 @@ namespace Models\Collection {
     /**
      * @property MVProjectFilterAvailableLang[] $this
      */
-    class MVProjectFilterAvailableLangs extends AbstractEntity implements EntityInterface, ModelInterface, \Iterator {
+    class MVProjectFilterAvailableLangs extends AbstractEntity implements EntityInterface, ModelInterface, \Iterator, \Countable {
         use Model;
         use IteratorTrait;
 
@@ -26,7 +26,7 @@ namespace Models\Collection {
                 self::COLLECTION  => [self::TYPE_DTO_ARRAY, MVProjectFilterAvailableLang::class, 'lang_id'],
             ];
 
-        final public function __construct(array $where) {
+        public function __construct(array $where) {
             $this->fillCollection(self::getDb()->select($where, MVProjectFilterAvailableLang::getPropertyKeys()));
         }
     }

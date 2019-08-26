@@ -4,17 +4,34 @@ namespace Traits;
 
 trait Collection
 {
-    final public static function getCollection() : array {
-       return (new \ReflectionClass(__CLASS__))->getConstants();
+    public static function getCollection() : array {
+        static $cache;
+        if ($cache) return $cache;
+        return ($cache = self::getReflectionClass()->getConstants());
     }
 
-    final public static function getValue(string $key) : ?int {
-        return (new \ReflectionClass(__CLASS__))->getConstant(mb_strtoupper($key)) ?? null;
+    public static function getConstNames() : array {
+        return array_keys(self::getCollection());
     }
 
-    final public static function getConstName(int $key) : string {
+    public static function getValue(string $key) {
+        return self::getReflectionClass()->getConstant(mb_strtoupper($key)) ?? null;
+    }
+
+    public static function getValues() : array {
+        return array_values(self::getCollection());
+    }
+
+    public static function getConstName(int $key) : string {
         foreach (self::getCollection() as $name => $value) {
             if ($value == $key) return mb_strtolower($name);
         }
+    }
+
+    private static function getReflectionClass() : \ReflectionClass {
+        static $cache;
+        if ($cache) return $cache;
+        return ($cache = new \ReflectionClass(__CLASS__));
+
     }
 }

@@ -16,24 +16,24 @@ class Router {
 	        $params,
 	        $additional = [];
 
-	private static $_instance = null;
+	private function __construct() {}
 
-	final public function startRoute() {
+    public function startRoute() {
 		if (!$this->action) {
-			$this->setUri($this->defaultParams)->route();
+            $this->setUri($this->defaultParams)->route();
 		}
 		else if (!$this->route()) {
-			$this->setUri($this->errorParams)->route();
-		}
+            $this->setUri($this->errorParams)->route();
+        }
 	}
 
-	final private function getRequestUri() : string {
+	private function getRequestUri() : string {
 		return substr($_SERVER['REQUEST_URI'], strlen(DIR));
 	}
 
-	final public function setUri(string $uri = null) : self {
+	public function setUri(string $uri = null) : self {
 		$uri 				= $uri ?: $this->getRequestUri();
-		$uri				= Validator::replace(Validator::URI, $uri);
+		$uri				= Validator::regex('uri', $uri, Validator::SITE_URI);
 		$uri                = explode('/', strtolower(trim($uri,'/')));
 		$this->controller   = count($uri) ? ucfirst(array_shift($uri)) : '';
 		$this->action       = count($uri) ? array_shift($uri) : null;
@@ -41,7 +41,7 @@ class Router {
 		return $this;
 	}
 
-	final private function route() : bool {
+	private function route() : bool {
 		$controllerClass = 'Controllers\\'.$this->controller;
 
 		if(!file_exists(real_path($controllerClass).'.php')) { return false; }
@@ -49,27 +49,35 @@ class Router {
 
 		if (!is_callable([$controller, $this->action])) { return false; }
 
-		$this->params = array_filter(
+		$params = array_filter(
             array_map(function(array $a){
                 return $a[1]??false ? [$a[0] => $a[1]] : null;
             }, array_chunk($this->params, 2))
             , function($v) { return $v != null; }
         );
 
-        $this->params = $this->params ? array_unique(call_user_func_array('array_merge', $this->params)) : [];
-        $methodParams = (new \ReflectionMethod($controller,  $this->action))->getParameters();
-        if ($methodParams) {
-            if ($param = $methodParams[0]->getClass()) {
-                $paramsClass = $param->getName();
-                call_user_func([$controller, $this->action], new $paramsClass($this->params));
-            }
-            else {
-                call_user_func([$controller, $this->action], $this->params);
-            }
+        $params = $params ? array_unique(call_user_func_array('array_merge', $params)) : [];
+        $params += $_POST;
+        $reflectionParameters = (new \ReflectionMethod($controller,  $this->action))->getParameters();
+        if ($reflectionParameters) {
+            $params = array_map(function (\ReflectionParameter $reflectionParameter) use (&$params) {
+                if ($reflectionClass = $reflectionParameter->getClass()) {
+                    $class = $reflectionClass->getName();
+                    return new $class($params);
+                }
+                elseif ($param = ($params[$paramName = $reflectionParameter->getName()] ?? null)) {
+                    return $param;
+                }
+                elseif ($reflectionParameter->isArray()) {
+                    return $params;
+                }
+                elseif (($default = $reflectionParameter->getDefaultValue()) !== null) {
+                    return $default;
+                }
+                return null;
+            }, $reflectionParameters);
         }
-        else {
-            call_user_func([$controller, $this->action]);
-        }
+        call_user_func_array([$controller, $this->action], $params);
 		return Output::result();
 	}
 

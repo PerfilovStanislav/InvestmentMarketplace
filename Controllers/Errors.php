@@ -8,14 +8,10 @@ namespace Controllers {
 
 	class Errors extends Controller {
 
-        function __construct() {
-            parent::__construct();
-        }
-
 		// #TODO логирование ошибок (кто откуда пришёл)
 		public function show() {
             Output::header(Output::E404);
-            Output::$r['c']['content'] = [Error404::class, []];
+            Output::addView(Error404::class);
 		}
 	}
 

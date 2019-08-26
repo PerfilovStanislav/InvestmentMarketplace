@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: NewLife
- * Date: 12.05.2018
- * Time: 22:18
- */
 
 namespace Helpers\Data {
 
     use Helpers\Locale;
 
     class Currency {
-        final public static function getCurrency() {
+        public static function getCurrency() {
             $c = Locale::getLocale()['currency'];
             return [
+                [],
                 ['i' => '&#xf155;', 't' => $c[0]],
                 ['i' => '&#xf153;', 't' => $c[1]],
                 ['i' => '&#xf15a;', 't' => $c[2]],

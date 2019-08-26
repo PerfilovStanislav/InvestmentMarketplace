@@ -1,5 +1,5 @@
 <?php
-namespace Views\Investment; { final Class Added {} }
+namespace Views\Investment; { Class Added {} }
 ?>
 <div class="tray tray-center">
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">

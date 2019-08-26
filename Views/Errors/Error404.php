@@ -1,5 +1,5 @@
 <?php
-namespace Views\Errors; { final Class Error404 {} }
+namespace Views\Errors; { Class Error404 {} }
 ?>
 <div class="tray tray-center">
     <div class="content-header">

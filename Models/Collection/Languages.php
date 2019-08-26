@@ -8,13 +8,15 @@ namespace Models\Collection {
         ModelInterface
     };
     use Models\Table\Language;
+    use Traits\IteratorTrait;
     use Traits\Model;
 
     /**
      * @var Language[] $this
      */
-    class Languages extends AbstractEntity implements EntityInterface, ModelInterface {
+    class Languages extends AbstractEntity implements EntityInterface, ModelInterface, \Iterator, \Countable {
         use Model;
+        use IteratorTrait;
 
         private static $table = 'languages';
 
@@ -23,11 +25,11 @@ namespace Models\Collection {
         protected static
             $defaults = null,
             $properties = [
-                self::COLLECTION  => [self::TYPE_DTO_ARRAY, Language::class, 'id'],
+                self::COLLECTION => [self::TYPE_DTO_ARRAY, Language::class, 'id'],
             ];
 
-        final public function __construct(array $where) {
-            $this->fillCollection(self::getDb()->select($where, Language::getPropertyKeys()));
+        public function __construct($where = [], string $order = null) {
+            $this->fillCollection(self::getDb()->select($where, Language::getPropertyKeys(), $order));
         }
     }
 }

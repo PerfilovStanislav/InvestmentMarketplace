@@ -2,194 +2,162 @@
 
 namespace Core {
 
-    use Helpers\{
-		Output, Validator
-	};
+    use Helpers\{Locale, Output, Validator};
+    use Models\Constant\DomElements;
+    use Models\Table\ProjectChatMessage;
+    use Models\Table\Session;
+    use Models\Table\User;
+    use Models\Table\UserRemember;
+    use Requests\User\AuthorizeRequest;
     use Traits\Instance;
+    use Models\AuthModel;
 
     class Auth {
         use Instance;
 
 		private $db;
 		CONST PREFIX = '$2a$08$';
-		private static $isAuthorized = null;
-		private static $sessionStarted = false;
-		private static $defaultUserInfo = [
-			'id'            => null,
-			'session_id'    => -1
-		];
-		private static $userInfo;
-        private static $_instance = null;
 
-		function __construct() {
-			$this->db = Database::getInstance();
-			self::clearUserInfo();
+        private static
+            $userInfo,
+            $sessionStarted = false;
+
+		private function __construct() {
+            self::startSession();
 			$this->login();
 		}
 
-		final private static function clearUserInfo() {
-			self::$userInfo = self::$defaultUserInfo;
-		}
-
-		final private function login() {
-			self::startSession();
-
+		private function login() {
 			$s = &$_SESSION;
 			$c = &$_COOKIE;
 
 			if (isset($s['user_id'])) {
-				$this->setUserInfoFromBase($s['user_id']);
+				Auth::setUserAuth((new User())->getById($s['user_id']));
+				return;
 			}
 			else if (isset($c['user_id']) && isset($c['hash'])) {
-				$user_id = Validator::replace(Validator::NUM,  $c['user_id']);
-				$hash 	 = Validator::replace(Validator::HASH, $c['hash']);
-				setcookie('user_id' , $user_id,	null,'/',DOMAIN,null,false);
-				setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
+				$user_id = Validator::validate('user_id', $c['user_id'], AbstractEntity::TYPE_INT, [Validator::MIN => 1]);
+				$hash 	 = Validator::validate('hash', $c['hash'], AbstractEntity::TYPE_STRING, [Validator::LENGTH => 53, Validator::REGEX => Validator::HASH]);
 
-				if ($this->db->getRow('user_remember', 'hash', [
-					'user_id' => $user_id,
-					'hash' => $hash,
-					'ip' => self::get_ip()
-				])) {
-					$s['user_id'] = $c['user_id'];
-					$this->setUserInfoFromBase($s['user_id']);
+				$userRemember = (new UserRemember())->getRowFromDbAndFill([
+                    'user_id'   => $user_id,
+                    'hash'      => $hash,
+                    'ip'        => self::get_ip()
+                ]);
+				if ($userRemember->id) {
+					$s['user_id'] = $user_id;
+                    setcookie('user_id' , $user_id,	null,'/',DOMAIN,null,false);
+                    setcookie('hash'	, $hash,	null,'/',DOMAIN,null,false);
+					Auth::setUserAuth((new User())->getById($user_id));
+					return;
 				}
 				else {
-					self::$isAuthorized = false;
-				}
+                    $this->removeCookies(['hash', 'user_id']);
+                }
 			}
 
-			self::$userInfo['session_id'] = $s['session_id']??self::getSession();
+			AuthModel::getInstance()->is_authorized = false;
+			AuthModel::getInstance()->session_id    = self::getSessionId();
 		}
 
-		final private static function getSession():int {
-			$session_id = Database::getInstance()->getOne('session', sprintf("uid = '%s'", session_id()));
-			if (!$session_id) {
-				$data = [
-					'uid' => [[session_id()]],
-					'ip' => [[self::get_ip()]],
-				];
-				Database::getInstance()->insert('session', $data);
+		private static function getSessionId() : int {
+		    if ($session_id = ($_SESSION['session_id'] ?? null)) return $session_id;
 
-				$data = [
-					'uid' => $data['uid'][0][0],
-					'ip' => $data['ip'][0][0],
-				];
-				return Database::getInstance()->getOne('session', $data);
-			}
-			return $session_id;
+		    $session = new Session();
+            $session->getRowFromDbAndFill(['uid' => session_id()]);
+
+			if ($session->id) return $session->id;
+
+            $session->fromArray(['ip' => self::get_ip()]);
+            $session->save();
+
+            return $session->id;
 		}
 
-		final public static function isAuthorized():bool {
-			return self::$isAuthorized??false;
+		private static function startSession() {
+            session_name('uid');
+            session_set_cookie_params(1728000, '/', DOMAIN, false, true);
+            session_start();
 		}
 
-		final private static function startSession() {
-			if (!self::$sessionStarted) {
-				session_name('uid');
-				session_set_cookie_params(1728000, '/', DOMAIN, false, true);
-				session_start();
-				self::$sessionStarted = true;
-			}
+		public function authorize(AuthorizeRequest $request) : bool {
+		    if (AuthModel::getInstance()->is_authorized) {
+		        Output::addAlertSuccess('Authorized', Locale::get('you_are_authorized'));
+                return true;
+            }
+            elseif (($user = (new User())->getRowFromDbAndFill([$request->authorizeType => $request->login]))->id) {
+                if (self::confirmPassword($request->password, $user->password)) {
+                    Auth::setUserAuth($user);
+                    ProjectChatMessage::getDb()->update(['user_id' => $user->id], ['session_id' => AuthModel::getInstance()->session_id]);
+                    $s = &$_SESSION;
+                    $s['user_id'] = $user->id;
+
+                    if ($request->remember == 'on') {
+                        $userRemember = (new UserRemember())->getRowFromDbAndFill([
+                            'user_id' => $user->id,
+                            'ip' => self::get_ip()
+                        ]);
+
+                        if (!$userRemember->id) {
+                            $userRemember->fromArray(['hash' => self::hashPassword(uniqid($user->id.self::get_ip(), true))])->save();
+                        }
+                        setcookie('user_id', $user->id,null,'/',DOMAIN,null,false);
+                        setcookie('hash', $userRemember->hash,null,'/',DOMAIN,null,false);
+                    }
+                    return true;
+                }
+                else {
+                    Output::addFieldDanger('password', Locale::get('bad_password'), DomElements::AUTHORIZATION_USER_FORM);
+                }
+            }
+            else {
+                Output::addFieldDanger('login', Locale::get('no_user'), DomElements::AUTHORIZATION_USER_FORM);
+            }
+            return false;
 		}
 
-		final public function authorize($login, $password) {
-		    $scope = 'authorizationuser_form';
-			if (strpos($login, '@') > 0) {
-				$email = Validator::replace(Validator::EMAIL, $login);
-				$res = $this->db->getRow('users', 'id, password', "email = '$email'");
-			}
-			else {
-				$login = Validator::replace(Validator::EN, $login);
-				$res = $this->db->getRow('users', 'id, password', "login = '$login'");
-			}
+		public function logout() : bool {
+			if (!AuthModel::getInstance()->is_authorized) return true;
 
-			if (!$res) {
-				Output::fieldError('login', 'no_user', $scope);
-			}
+			UserRemember::getDb()->delete([
+			    'user_id' => AuthModel::getUserId(),
+			    'ip' => self::get_ip(),
+            ]);
 
-			if (self::confirmPassword($password, $res['password'])) {
-				$user_id = $res['id'];
-				self::startSession();
-				$s = &$_SESSION;
-
-				$this->db->update('message', [':user_id' => $user_id], 'session_id = ' . self::getSession());
-
-				setcookie('user_id', $user_id,null,'/',DOMAIN,null,true);
-				$s['user_id'] = $user_id;
-
-				$res = $this->db->getRow('user_remember', 'hash', [
-					'user_id' => $user_id,
-					'ip' => self::get_ip()]);
-				if ($res) {
-					setcookie('hash', $res['hash'],null,'/',DOMAIN,null,true);
-				}
-				elseif (($_POST['remember'] ?? '') === 'on') {
-					$hash = self::hashPassword(uniqid('rand'.$s['user_id'].self::get_ip(), true));
-					setcookie('hash', $hash,null,'/',DOMAIN,null,true);
-					$this->db->insert('user_remember', [
-						'user_id' 	=> [[$s['user_id']],	\PDO::PARAM_INT],
-						'hash' 		=> [[$hash]],
-						'ip' 		=> [[self::get_ip()]]
-					]);
-				}
-				$this->setUserInfoFromBase($user_id);
-//				Helper::$r['success'] = 'user_authorized';
-			}
-			else {
-				Output::fieldError('password', 'bad_password', $scope);
-			}
-		}
-
-		final public function logout():bool {
-			if (!self::$isAuthorized) return false;
-
-			self::startSession();
-
-			$info = self::getUserInfo();
-			$this->db->deleteOne('user_remember', "user_id={$info['id']} and ip='" . self::get_ip() . "'");
-
-			$session_keys_in_cookies = ['uid', 'hash', 'user_id'];
-			$params = session_get_cookie_params();
-			foreach ($session_keys_in_cookies as $k => $v) {
-				setcookie($v, '', time() - 42000,
-					$params["path"], $params["domain"],
-					$params["secure"], $params["httponly"]
-				);
-			}
+			$this->removeCookies(['uid', 'hash', 'user_id']);
 			session_destroy();
-			self::$isAuthorized = false;
 			return true;
 		}
 
-		final private static function confirmPassword($password, $hash):bool {
+		private static function confirmPassword($password, $hash) : bool {
 			return crypt($password, self::PREFIX.$hash) === self::PREFIX.$hash;
 		}
 
-		final public static function hashPassword($password):string
-		{
+		public static function hashPassword($password): string {
 			$salt = substr(md5(uniqid('St', true)), 0, 22);
 			return substr(crypt($password, self::PREFIX . $salt), 7);
 		}
 
-		final public function setUserInfoFromBase($id) {
-			self::$isAuthorized = true;
-			self::$userInfo = array_merge(self::$userInfo, $this->db->getRow('users u 
-			    left join user_params up ON up.user_id = u.id 
-			    left join languages l ON l.id = up.lang_id',
-				'u.id, u.login, u.status_id, u.name, l.shortname as lang, up.photo',
-				"u.id = {$id}"));
-		}
+        private static function setUserAuth(User $user) {
+            $authModel = AuthModel::getInstance();
+            $authModel->user          = $user;
+            $authModel->is_authorized = true;
+            $authModel->session_id    = self::getSessionId();
+        }
 
-		final public static function getUserInfo():array {
-			return self::$userInfo;
-		}
-
-		final private static function get_ip():string
+		private static function get_ip() : ?string
 		{
-			$ip = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
-			$ip = Validator::replace(Validator::IP, $ip);
-			return $ip;
+			return $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '0.0.0.1';
 		}
+
+		private function removeCookies(array $keys) {
+            $params = session_get_cookie_params();
+            foreach ($keys as $k => $v) {
+                setcookie($v, '', time() - 42000,
+                    $params['path'], $params['domain'],
+                    $params['secure'], $params['httponly']
+                );
+            }
+        }
 	}
 }

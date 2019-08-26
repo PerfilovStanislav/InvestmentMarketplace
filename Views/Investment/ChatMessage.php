@@ -1,5 +1,5 @@
 <?php
-namespace Views\Investment; { final Class ChatMessage {} }
+namespace Views\Investment; { Class ChatMessage {} }
 ?>
 <div id="chatMessage" hidden>
     <div class="media flex">

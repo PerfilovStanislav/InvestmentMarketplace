@@ -11,33 +11,47 @@ namespace Libraries {
             $this->filename = $project_id;
         }
 
-        final private static function get_folder_name($id) {
+        private static function getFolderName(int $id) : string  {
             return ((int)(($id) / 1000)+1)*1000;
         }
 
-        final private static function get_folder_path($id) {
-            return 'screens/'.(self::get_folder_name($id)).'/';
+        private static function getFolderPath(int $id) : string  {
+            return 'screens/'.(self::getFolderName($id)).'/';
         }
 
-        final public static function get_file_path($id) {
-            return self::get_folder_path($id) . ($id);
+        public static function getFilePath(int $id) : string  {
+            return self::getFolderPath($id) . ($id);
         }
 
-        final public function save($data, $thumb = false) {
-            if (!file_exists(self::get_folder_path($this->filename))) {
-                mkdir(self::get_folder_path($this->filename), 0755);
+        public static function getOriginalScreen(int $id) : string {
+            return self::getFilePath($id) . '.jpg';
+        }
+
+        public static function getRealThumb(int $id) : string {
+            return self::getFilePath($id) . '_th.jpg';
+        }
+
+        public static function getPreThumb(int $id) : string {
+            return self::getFilePath($id) . '_th.' . (WEBP ? 'webp' : 'jpeg');
+        }
+
+        public function save($data, $thumb = false) {
+            if (!file_exists(self::getFolderPath($this->filename))) {
+                mkdir(self::getFolderPath($this->filename), 0755);
             }
             $postfix = $thumb ? '_th' : '';
             $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
-            file_put_contents($this->path = self::get_file_path($this->filename)."{$postfix}.jpg", $data);
+            $filePath = self::getFilePath($this->filename);
+            file_put_contents($this->path = "$filePath{$postfix}.jpg", $data);
             if ($thumb) {
-                imagewebp(imagecreatefromjpeg($this->path), self::get_file_path($this->filename)."{$postfix}.webp", 0);
+                imagewebp(imagecreatefromjpeg($this->path), "$filePath{$postfix}.webp", 0);
+                imagejpeg(imagecreatefromjpeg($this->path), "$filePath{$postfix}.jpeg", 10);
             }
 
             return $this;
         }
 
-        final public function addIPTC(array $data = []) {
+        public function addIPTC(array $data = []) {
             // установка IPTC тэгов
             $iptc = $data + [
                   5 => 'richinme.com',        // ObjectName
@@ -63,7 +77,7 @@ namespace Libraries {
             $data = '';
             foreach($iptc as $tag => $string)
             {
-                $data .= self::iptc_make_tag(2, $tag, $string);
+                $data .= self::iptcMakeTag(2, $tag, $string);
             }
             // Встраивание IPTC данных
             $content = iptcembed($data, $this->path);
@@ -74,7 +88,7 @@ namespace Libraries {
             fclose($fp);
         }
 
-        final private static function iptc_make_tag($rec, $data, $value)
+        private static function iptcMakeTag($rec, $data, $value)
         {
             $length = strlen($value);
             $retval = chr(0x1C) . chr($rec) . chr($data);

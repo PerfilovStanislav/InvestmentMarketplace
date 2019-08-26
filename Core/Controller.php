@@ -2,13 +2,13 @@
 
 namespace Core {
 
-    use Helpers\Validator;
+//    use Helpers\Validator;
 
     class Controller {
-        protected  $post;
+//        protected  $post;
 
-		protected function __construct() {
-		    $this->post = new Validator($_POST ?? []);
-		}
+//		protected function __construct() {
+//		    $this->post = new Validator($_POST ?? []);
+//		}
 	}
 }

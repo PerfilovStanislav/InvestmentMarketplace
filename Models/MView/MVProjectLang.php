@@ -18,7 +18,7 @@ namespace Models\MView {
             $defaults = null,
             $properties = [
                 'id'         => [self::TYPE_INT,   [Validator::MIN  => 1]],
-                'lang_id'    => [self::TYPE_ARRAY, []],
+                'lang_id'    => [self::TYPE_INT_ARRAY, []],
             ];
     }
 }

@@ -5,7 +5,7 @@ namespace Core {
 	use Helpers\{Validator, Output};
     use Traits\Instance;
 
-    class Database extends PDO{
+    class Database__ extends PDO{
 	    use Instance;
 
 		private $db_dns,
@@ -29,9 +29,8 @@ namespace Core {
             );
 		}
 
-		public function insert($table, array $params) {
+		public function insertBulk($table, array $params) {
 			if (empty($params)) return null;
-			$table = Validator::replace(Validator::TABLENAME, $table);
 
 			$head 			= array_keys($params);
 			$columnNames 	= implode(',', $head);

@@ -5,7 +5,7 @@ namespace Helpers\Locales {
 	use Interfaces\LocaleInterface;
 
 	class En implements LocaleInterface {
-        final public static function getLocale():array {
+        public static function getLocale():array {
             return [
                 'active'			=> 'Active',
 				'add'				=> 'Add',
@@ -23,8 +23,11 @@ namespace Helpers\Locales {
 				'description'       => 'Description',
 				'download'          => 'Download',
 				'email'             => 'Email',
+                'email_confirmation'=> 'Email confirmation',
+                'email_confirm_sent'=> 'Confirmation code is sent to your email',
 				'email_is_busy'     => 'This email is already registered. Please enter another',
 				'enter'             => 'Enter',
+				'error'             => 'Error',
                 'exit'              => 'Exit',
                 'free'				=> 'free',
 				'free_4_add_project'=> 'Adding a project to the database is completely',
@@ -43,12 +46,15 @@ namespace Helpers\Locales {
 				'login_is_busy'     => 'This login is already registered. Please enter another',
 				'menu'              => 'Menu',
 				'name'              => 'Name',
+				'need_authorization'=> 'You need to log in',
 				'no'                => 'No',
-				'no_user'           => 'User is not found',
+                'no_confirm_code'   => 'Confirmation code not found',
+                'no_user'           => 'User is not found',
                 'no_project'        => 'Project not found',
                 'not_published'     => 'Not published',
 				'options'           => 'Options',
 				'or'                => 'or',
+                'or_copy_link'      => 'Or copy this link into your browser',
 				'password'          => 'Password',
 				'payment_system'    => 'Payment systems',
 				'payment_type'      => ['Withdrawal', 'Manual', 'Instant', 'Automatic'],
@@ -72,16 +78,20 @@ namespace Helpers\Locales {
 				'site_exists'       => 'Site already exists',
 				'site_is_free'      => 'Site is free',
 				'start_date'        => 'Start date of project',
+				'success'           => 'Success',
 				'user_registered'   => 'User is registered',
 				'user_registration' => 'User\'s registration',
+                'verify_account'    => 'Verify my account',
 				'view'              => 'View',
+                'welcome_to'        => 'Welcome to',
                 'write_message'     => 'Write a message...',
 				'wrong_url'   		=> 'Wrong site address',
 				'yes'               => 'Yes',
+                'you_are_authorized'=> 'You are authorized',
             ];
         }
 
-        final public static function getPeriodName(int $i, int $k):string {
+        public static function getPeriodName(int $i, int $k):string {
             return ['minute','hour','day','week','month','year'][$i-1].($k>1?'s':'');
         }
     }

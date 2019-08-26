@@ -1,20 +1,32 @@
 <?php
-namespace Views\Users\Head; { final Class Authorized {} }
+namespace Views\Users\Head; {
+    /**
+     * @var Authorized $this
+     * @property User $user
+     * @property Language[] $siteLanguages
+     * @property string[] $selectedLanguage
+     * @property LocaleInterface $locale
+     * @property string $avatar
+     */
+Class Authorized {} }
+
+use Interfaces\LocaleInterface;
+use Models\Table\Language;
+use Models\Table\User;
 ?>
 <ul class="nav navbar-nav navbar-right">
     <li class="dropdown menu-merge">
         <div class="navbar-btn btn-group">
             <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                <span class="flag flag-<?=$this->availableLangs[$this->activeLang]['flag']?>"></span>
-                <!-- <span class="caret"></span> -->
+                <span class="flag flag-<?=$this->siteLanguages->{$this->selectedLanguage}->flag?>"></span>
             </button>
             <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                <? foreach ($this->availableLangs as $shortname => $lang):?>
+                <? foreach ($this->siteLanguages as $shortname => $language):?>
                     <li>
-                        <a class="ajax <?=$shortname === $this->activeLang ? 'selected' : ''?>"
+                        <a class="ajax <?=$shortname === $this->selectedLanguage ? 'selected' : ''?>"
                            href="/Users/changeLanguage/lang/<?=$shortname?>"
                            data-beforesend='{"f":["allClear"]}'>
-                            <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
+                            <span class="flag flag-<?=$language->flag?> mr10"></span> <? printf('%s (%s)', $language->name, $language->own_name)?>
                         </a>
                     </li>
                 <? endforeach;?>
@@ -26,8 +38,8 @@ namespace Views\Users\Head; { final Class Authorized {} }
     </li>
     <li class="dropdown menu-merge">
         <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
-            <img src="<?=$this->photoThumb?>" alt="avatar" class="mw30 br64">
-            <span class="hidden-xs pl15"> <?=$this->name?> </span>
+            <img src="<?=$this->avatar?>" alt="avatar" class="mw30 br64">
+            <span class="hidden-xs pl15"> <?=$this->user->name?> </span>
             <span class="caret caret-tp hidden-xs"></span>
         </a>
         <ul class="dropdown-menu list-group dropdown-persist w150" role="menu">

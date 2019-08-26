@@ -28,7 +28,7 @@ namespace Models\Table {
             $properties = [
                 'id'        => [self::TYPE_INT,    [Validator::MIN => 1]],
                 'user_id'   => [self::TYPE_INT,    [Validator::MIN => 1]],
-                'hash'      => [self::TYPE_STRING, [Validator::LENGTH => 26]],
+                'hash'      => [self::TYPE_STRING, [Validator::LENGTH => 53]],
                 'ip'        => [self::TYPE_STRING, [Validator::REGEX => Validator::IP]],
             ];
     }

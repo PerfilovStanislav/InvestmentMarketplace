@@ -1,64 +1,58 @@
 <?php
-namespace Views\Investment; { final Class Show {} }
+namespace Views\Investment; {
+/**
+ * @var Show $this
+ * @property Languages $languages
+ * @property ProjectLangs $projectLangs
+ * @property MVProjectLang[] $MVProjectLangs
+ * @property Payment[] payments
+ * @property Project[] $projects
+ * @property LocaleInterface $locale
+ * @property string|ProjectFilter $projectFilter
+ */
+Class Show {} }
+
+use Helpers\Data\Currency;
+use Interfaces\LocaleInterface;
+use Libraries\File;
+use Models\Collection\Languages;
+use Models\Collection\ProjectLangs;
+use Models\MView\MVProjectLang;
+use Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
-<div class="filters">
-    <div class="panel mb25 mt5">
-        <div class="panel-body">
-            <div class="tab-content pn br-n">
-                <div class="btn-group">
-                    <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                        <span class="flag flag-<?=$this->flag?>"></span>
-                    </button>
-                    <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                        <? foreach ($this->filterLangs as $shortname => $lang):?>
-                            <li>
-                                <a class="ajax page"
-                                   href="<?=$this->url.'/'.$this->filter->getUriWithNewParam(['lang' => $shortname])?>">
-                                    <span class="flag flag-<?=$lang['flag']?> mr10"></span> <? printf('%s (%s)', $lang['name'], $lang['own_name'])?>
-                                </a>
-                            </li>
-                        <? endforeach;?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="filters" id="projectfilter">
+    <?= $this->projectFilter ?>
 </div>
 
 <div class="investment">
-    <? foreach ($this->projects as $project_id => $project):
-        $isFirstRow = $project['rowNumber']===1;
-    ?>
-        <div class="panel mb25 mt5" project_id="<?=$project_id?>">
+    <? $isFirstRow = true; foreach ($this->projects as $project): ?>
+        <div class="panel mb25 mt5" project_id="<?=$project->id?>">
             <div class="panel-heading">
                 <span class="panel-title">
-                    <a target="_blank" href="/Investment/redirect/project/<?=$project_id?>"><?=$project['name']?></a>
+                    <a target="_blank" href="/Investment/redirect/project/<?=$project->id?>"><?=$project->name?></a>
                 </span>
                 <ul class="nav panel-tabs-border panel-tabs">
                     <li class="active">
-                        <a href="#main_<?=$project_id?>" data-toggle="tab"><?=$this->locale['general']?></a>
+                        <a href="#main_<?=$project->id?>" data-toggle="tab"><?=$this->locale['general']?></a>
                     </li>
                     <li>
-                        <a href="#description_<?=$project_id?>"
+                        <a href="#description_<?=$project->id?>"
                            data-toggle="tab"><?=$this->locale['description']?></a>
                     </li>
                 </ul>
             </div>
             <div class="panel-body">
                 <div class="tab-content pn br-n">
-                    <div id="main_<?=$project_id?>" class="tab-pane active">
+                    <div id="main_<?=$project->id?>" class="tab-pane active">
                         <div class="mbn flex inforow">
-
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <?$thumbFileName=$project['file_name'].'_th.'?>
-                                    <img src="/<?=$thumbFileName.($isFirstRow?'jpg':'webp')?>"
-                                         class="media-object" href="/<?=$project['file_name']?>.jpg"
-                                         <?=!$isFirstRow?'realthumb="/'.$thumbFileName.'jpg"':''?>
+                                    <img src="/<?=$isFirstRow ? File::getRealThumb($project->id) : File::getPreThumb($project->id)?>"
+                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>.jpg"
+                                         <?=!$isFirstRow ? 'realthumb="/'. File::getRealThumb($project->id) .'"' : ''?>
                                     >
                                 </div>
                             </div>
-
                             <div class="mnw270" style="flex: 22 0">
                                 <div class="panel-heading lh30 h-30">
                                     <span class="panel-title"><?=$this->locale['plans']?></span>
@@ -73,12 +67,12 @@ namespace Views\Investment; { final Class Show {} }
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach ($this->plans[$project_id]['plan'] as $plan) {?>
+                                        <?php foreach ($project->plan_percents as $key => $plan) {?>
                                             <tr>
-                                                <td><?=$plan[0]?>%</td>
-                                                <td><?=$plan[1] . ' ' . \Helpers\Locale::getPeriodName($plan[2], $plan[1])?></td>
-                                                <td><?=$plan[3]?><span
-                                                            class="fa"><?=$this->currency[$plan[4] - 1]['i']?></span>
+                                                <td><?=$project->plan_percents[$key]?>%</td>
+                                                <td><?=$project->plan_period[$key] . ' ' . \Helpers\Locale::getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
+                                                <td><?=$project->plan_currency_type[$key]?><span
+                                                            class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                                 </td>
                                             </tr>
                                         <? }?>
@@ -97,13 +91,14 @@ namespace Views\Investment; { final Class Show {} }
                                         <tbody>
                                         <tr>
                                             <td><?=$this->locale['ref_program']?></td>
-                                            <td><?= implode('%, ', $project['ref_percent']) . '%'?></td>
+                                            <td><?= implode('%, ', $project->ref_percent) . '%'?></td>
                                         </tr>
                                         <tr>
                                             <td><?=$this->locale['languages']?></td>
-                                            <td><? foreach ($this->projectLangs[$project_id]['lang_id'] as $fl):?>
-                                                    <i class="flag flag-<?= ($a = $this->languages[$fl])['flag']?>"
-                                                       title="<?=$a['name'] . " ({$a['own_name']})"?>"></i>
+                                            <td><? foreach ($this->MVProjectLangs->{$project->id}->lang_id as $langId): ;
+                                                    /** @var Language $lang */ $lang = $this->languages->{$langId};?>
+                                                    <i class="flag flag-<?=$lang->flag?>"
+                                                       title="<?=$lang->name . " ({$lang->own_name})"?>"></i>
                                                 <? endforeach;?>
                                             </td>
                                         </tr>
@@ -111,9 +106,11 @@ namespace Views\Investment; { final Class Show {} }
                                             <td>
                                                 <?=$this->locale['payment_system']?>
                                             </td>
-                                            <td><? foreach ($project['id_payments'] as $pay):?>
-                                                    <i class="pay pay-<?=$a = $this->payments[$pay]['name']?> mb10"
-                                                       title="<?=$a?>"></i>
+                                            <td><? foreach ($project->id_payments as $paymentId):
+                                                    /** @var Payment $payment*/ $payment = $this->payments->{$paymentId};
+                                                    ?>
+                                                    <i class="pay pay-<?=$payment->name?> mb10"
+                                                       title="<?=$payment->name?>"></i>
                                                 <? endforeach;?>
                                             </td>
                                         </tr>
@@ -133,8 +130,8 @@ namespace Views\Investment; { final Class Show {} }
                                     </div>
                                     <div class="panel-body bg-light dark panel-scroller scroller-lg pn mh-179">
                                     </div>
-                                    <form class="admin-form chat-footer" chat_id="<?=$project_id?>"
-                                          data-chat="<?=$project_id?>" autocomplete="off">
+                                    <form class="admin-form chat-footer" chat_id="<?=$project->id?>"
+                                          data-chat="<?=$project->id?>" autocomplete="off">
                                         <label class="field prepend-icon">
                                             <input name="message" class="gui-input"
                                                    placeholder="<?=$this->locale['write_message']?>">
@@ -148,12 +145,15 @@ namespace Views\Investment; { final Class Show {} }
                             </div>
                         </div>
                     </div>
-                    <div id="description_<?=$project_id?>" class="tab-pane">
+                    <div id="description_<?=$project->id?>" class="tab-pane">
                         <div class="mbn flex inforow">
 
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <img src="/<?=$project['file_name']?>_th.jpg" class="media-object" href="/<?=$project['file_name']?>.jpg">
+                                    <img src="/<?=$isFirstRow ? File::getRealThumb($project->id) : File::getPreThumb($project->id)?>"
+                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>.jpg"
+                                        <?=!$isFirstRow ? 'realthumb="/'. File::getRealThumb($project->id) .'"' : ''?>
+                                    >
                                 </div>
                             </div>
 
@@ -162,7 +162,8 @@ namespace Views\Investment; { final Class Show {} }
                                     <span class="panel-title"><?=$this->locale['description']?></span>
                                 </div>
                                 <div class="panel-body panel-scroller scroller-xs scroller-active scroller-success mih-220 scroller-content">
-                                    <?=$project['description']?>
+                                    <? /** @var ProjectLang $projectLang */ $projectLang = $this->projectLangs->getByKeyAndValue('project_id', $project->id);?>
+                                    <?= $projectLang->description?>
                                 </div>
                             </div>
                         </div>
@@ -170,5 +171,5 @@ namespace Views\Investment; { final Class Show {} }
                 </div>
             </div>
         </div>
-    <? endforeach;?>
+    <? $isFirstRow = false; endforeach;?>
 </div>

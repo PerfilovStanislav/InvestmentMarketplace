@@ -28,7 +28,7 @@ namespace Models\Collection {
                 self::COLLECTION  => [self::TYPE_DTO_ARRAY, Project::class, 'id'],
             ];
 
-        final public function __construct(array $where) {
+        public function __construct(array $where) {
             $this->fillCollection(self::getDb()->select($where, Project::getPropertyKeys()));
         }
     }

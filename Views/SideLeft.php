@@ -1,5 +1,5 @@
 <?php
-namespace Views; { final Class SideLeft {} }
+namespace Views; { Class SideLeft {} }
 ?>
 <div class="sidebar-left-content nano-content">
     <ul class="nav sidebar-menu">

@@ -12,6 +12,7 @@ class Scripts {
             ],
             [ '' => [
                 'default_skin/css/theme.clear',
+//                'default_skin/css/theme',
                 'fullcalendar/fullcalendar.min',
                 'google/fonts',
                 'cropper/cropper',
@@ -31,11 +32,11 @@ class Scripts {
             [
                 'jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
                 '' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
-                'js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'my-addons']
+                'js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'chat', 'my-addons']
             ]
         ];
 
-	final public static function loadJS(int $debug) {
+	public static function loadJS(int $debug) {
 	    $storage = ['js/locales/' => [Locale::getLanguage()]] + self::JS[$debug];
 		foreach ($storage as $dir => $files) {
 			foreach ($files as $file) {
@@ -46,7 +47,7 @@ class Scripts {
 		}
 	}
 
-	final public static function loadCSS(int $debug) {
+	public static function loadCSS(int $debug) {
         foreach (self::CSS[$debug] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.css';

@@ -1,5 +1,7 @@
 <?php
-namespace Views\Users; { final Class Registration {} }
+namespace Views\Users; { Class Registration {} }
+
+use Models\Constant\DomElements;
 ?>
 <div class="tray tray-center">
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
@@ -9,7 +11,7 @@ namespace Views\Users; { final Class Registration {} }
                       <i class="fa fa-pencil-square"></i><?=$this->locale['user_registration']?>
                     </span>
             </div>
-            <form method="post" action="/" id="adduser_form">
+            <form method="post" action="/" id="<?=DomElements::ADDUSER_FORM?>">
                 <div class="panel-body bg-light">
                     <div class="section row" >
                         <div class="section">
@@ -22,7 +24,7 @@ namespace Views\Users; { final Class Registration {} }
                         </div>
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="name" autocomplete="name" class="gui-input onlyEn"
+                                <input name="name" autocomplete="name" class="gui-input"
 									   placeholder="<?=$this->locale['name']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-group"></i>

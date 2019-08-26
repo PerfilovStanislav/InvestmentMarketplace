@@ -1,8 +1,12 @@
-<?
-namespace Views; { final Class Layout {} }
+<?php
+namespace Views; { Class Layout {} }
+
+use Helpers\Locale;
+use Helpers\Output;
+use Models\Constant\Views;
 ?>
 <!DOCTYPE html>
-<html lang="<?=$this->locale['lang']?>">
+<html lang="<?=Locale::getLanguage()?>">
 <head>
     <meta charset="utf-8">
     <title>RichInme - <?=$this->locale['head']['title']?></title>
@@ -30,11 +34,6 @@ namespace Views; { final Class Layout {} }
     <meta property="og:image" content="http://richinme.com/og-image.jpg">
 
     <? \Helpers\Scripts::loadCSS(DEBUG) ?>
-
-    <!--[if lt IE 9]>
-    <script src="/assets/js/html5shiv.js"></script>
-    <script src="/assets/js/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body class="dashboard-page">
@@ -46,16 +45,16 @@ namespace Views; { final Class Layout {} }
             </a>
             <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
         </div>
-        <div id="userHead" class="animated fadeIn">
-            <?= $this->userHead ?>
+        <div id="<?=Views::USER_HEAD?>" class="animated fadeIn">
+            <?=$this->{Views::USER_HEAD}?>
         </div>
     </header>
-    <aside id="sidebar_left" class="nano nano-light affix">
-        <?= $this->sidebar_left ?>
+    <aside id="<?=Views::SIDEBAR_LEFT?>" class="nano nano-light affix">
+        <?=$this->{Views::SIDEBAR_LEFT}?>
     </aside>
     <section id="content_wrapper">
-        <div id="content" class="animated fadeIn">
-            <?= $this->content; ?>
+        <div id="<?=Views::CONTENT;?>" class="animated fadeIn">
+            <?=$this->{Views::CONTENT}?>
         </div>
     </section>
 </div>
@@ -71,10 +70,11 @@ namespace Views; { final Class Layout {} }
 
 <? \Helpers\Scripts::loadJS(DEBUG) ?>
 
-<? if ($this->f): ?>
-    <script>
-        applyFunctions('f',  <?=json_encode($this->f)?>);
-    </script>
-<? endif; ?>
+<script id="scripts">
+    <? foreach ([Output::FUNCTION, Output::FIELD, Output::ALERT] as $type) {
+    if ($this->{$type}) { ?>
+            applyFunctions('<?=$type?>', <?=json_encode($this->{$type})?>);
+    <? }} ?>
+</script>
 </body>
 </html>

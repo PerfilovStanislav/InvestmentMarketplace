@@ -8,9 +8,10 @@ namespace Views\Investment; {
 Class NoShow {} }
 
 use Interfaces\LocaleInterface;
+use Models\Constant\Views;
 ?>
-<div class="filters" id="projectfilter">
-    <?=$this->projectFilter?>
+<div class="filters" id="<?=Views::PROJECT_FILTER?>">
+    <?=$this->{Views::PROJECT_FILTER}?>
 </div>
 
 <div class="tray tray-center">

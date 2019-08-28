@@ -66,7 +66,7 @@ use Models\Constant\Views;
     </div>
 </div>
 
-<?=(new \Core\View(\Views\Investment\ChatMessage::class, []))->get()?>
+<?=$this->{Views::CHAT_MESSAGE}?>
 
 <? \Helpers\Scripts::loadJS(DEBUG) ?>
 

@@ -24,14 +24,10 @@ namespace Controllers {
         ProjectLangs,
         Projects,
         MVProjectFilterAvailableLangs,
-        ProjectSearchs,
+        MVProjectSearchs,
         Users,
     };
-    use Models\Table\{
-        Language,
-        Project,
-        ProjectChatMessage,
-    };
+    use Models\Table\{Language, Project, ProjectChatMessage, ProjectLang};
     use Models\{
         AuthModel,
     };
@@ -63,7 +59,7 @@ namespace Controllers {
 		public function registration() {
             $params = [
                 'payments'                  => new Payments(),
-                'mainProjectLanguages'      => new Languages('pos is not null'),
+                'mainProjectLanguages'      => new Languages('pos is not null', 'pos asc'),
                 'secondaryProjectLanguages' => new Languages('pos is null'),
                 'currency'                  => Currency::getCurrency(),
                 'authModel'                 => AuthModel::getInstance(),
@@ -96,7 +92,7 @@ namespace Controllers {
             }
 
             // ID найденных проектов
-            $projectSearchs = new ProjectSearchs([
+            $projectSearchs = new MVProjectSearchs([
                 'lang_id' => $pageLanguage->id,
                 'status_id' => $request->getActual('status'),
             ], min(self::LIMIT, $MVProjectFilterAvailableLangs->{$pageLanguage->id}->cnt));
@@ -112,13 +108,13 @@ namespace Controllers {
             $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);
 
             $pageParams = [
-                'projects'       => $projects,
-                'MVProjectLangs' => $MVProjectLangs,
-                'pageLanguage'   => $pageLanguage,
-                'payments'       => $payments,
-                'projectLangs'   => $projectLangs,
-                'projectFilter'  => $projectFilter,
-                'languages'      => $languages,
+                'projects'            => $projects,
+                'MVProjectLangs'      => $MVProjectLangs,
+                'pageLanguage'        => $pageLanguage,
+                'payments'            => $payments,
+                'projectLangs'        => $projectLangs,
+                'languages'           => $languages,
+                Views::PROJECT_FILTER => $projectFilter,
             ];
 
             Output::addFunctions([
@@ -167,6 +163,21 @@ namespace Controllers {
             $file = new File($project->id);
             $file->save($request->screen_data)->addIPTC([5 => $url, 120 => $url]);
             $file->save($request->thumb_data, true)->addIPTC([5 => $url, 120 => $url]);
+
+            // Сохраняем описания
+            foreach ($request->description as $langId => $description) {
+                $projectLang = new ProjectLang();
+                $projectLang->project_id  = $project->id;
+                $projectLang->lang_id     = $langId;
+                $projectLang->description = $description;
+                $projectLang->save();
+                unset($projectLang);
+            }
+
+            // Обновляем вьюшки @TODO перенести в rabbit
+            MVProjectFilterAvailableLangs::refresh();
+            MVProjectLangs::refresh();
+            MVProjectSearchs::refresh();
 
             Output::addView(Added::class);
             Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));

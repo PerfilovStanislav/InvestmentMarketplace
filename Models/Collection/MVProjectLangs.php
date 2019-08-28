@@ -8,13 +8,13 @@ namespace Models\Collection {
         ModelInterface
     };
     use Models\MView\MVProjectLang;
-    use Traits\Model;
+    use Traits\MView;
 
     /**
      * @var MVProjectLang[] $this
      */
     class MVProjectLangs extends AbstractEntity implements EntityInterface, ModelInterface {
-        use Model;
+        use MView;
 
         private static $table = 'mv_projectlangs';
 

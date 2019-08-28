@@ -8,6 +8,7 @@ use Helpers\Locale;
 use Helpers\Validator;
 use Interfaces\EntityInterface;
 use Models\Constant\ProjectStatus;
+use Models\Table\Language;
 
 /**
  * @property string     $name
@@ -43,7 +44,7 @@ class AddRequest extends AbstractEntity implements EntityInterface {
             'plan_currency_type' => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1, Validator::MAX => 8]],
             'id_payments'        => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1, Validator::MAX => 30]],
             'description'        => [self::TYPE_STRING_ARRAY, [Validator::MIN  => 1, Validator::MAX => 5000]],
-            'lang_id'            => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 183, Validator::MAX => 364]],
+            'lang_id'            => [self::TYPE_INT_ARRAY,    [Validator::MODEL => Language::class]],
             'screen_data'        => [self::TYPE_STRING,       [Validator::MIN  => 1, Validator::MAX => 1000000]],
             'thumb_data'         => [self::TYPE_STRING,       [Validator::MIN  => 1, Validator::MAX => 200000]],
         ];

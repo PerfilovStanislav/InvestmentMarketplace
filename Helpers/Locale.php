@@ -15,10 +15,6 @@ namespace Helpers {
         private static $localeFile = null;
 
         public static function getLanguage() : string {
-            return 'en'; //@TODO <<<=== удалить !!!!!!
-            return 'en'; //@TODO <<<=== удалить !!!!!!
-            return 'en'; //@TODO <<<=== удалить !!!!!!
-            return 'en'; //@TODO <<<=== удалить !!!!!!
             if (self::$language !== null) return self::$language;
             // 1: from profile
             if ($user = (AuthModel::getInstance()->user)) {

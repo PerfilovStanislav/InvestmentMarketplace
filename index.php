@@ -3,18 +3,13 @@
 namespace {
     Class Index {};
     use Core\Auth;
-    use Core\View;
-    use Libraries\Mail;
-    use Models\Collection\Languages;
-    use Views\Emails\ConfirmEmail;
-    use Views\Users\Login;
 
     define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));
     define('DOMAIN', 'richinme.org');
     define('SITE', 'https://richinme.com');
     define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
-    define('DEBUG', 1);
+    define('DEBUG', 0);
     error_reporting(E_ALL | E_STRICT);
     define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));
     ini_set('display_errors', 1);

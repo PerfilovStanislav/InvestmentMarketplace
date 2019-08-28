@@ -9,7 +9,7 @@ namespace Models\MView {
     /**
      * @property int    $id
      */
-    class ProjectSearch extends AbstractEntity implements EntityInterface {
+    class MVProjectSearch extends AbstractEntity implements EntityInterface {
 
         protected $data;
 

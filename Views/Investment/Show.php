@@ -17,11 +17,12 @@ use Interfaces\LocaleInterface;
 use Libraries\File;
 use Models\Collection\Languages;
 use Models\Collection\ProjectLangs;
+use Models\Constant\Views;
 use Models\MView\MVProjectLang;
 use Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
-<div class="filters" id="projectfilter">
-    <?= $this->projectFilter ?>
+<div class="filters" id="<?=Views::PROJECT_FILTER?>">
+    <?=$this->{Views::PROJECT_FILTER}?>
 </div>
 
 <div class="investment">
@@ -48,7 +49,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             <div class="mnw270">
                                 <div class="thumbnail">
                                     <img src="/<?=$isFirstRow ? File::getRealThumb($project->id) : File::getPreThumb($project->id)?>"
-                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>.jpg"
+                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>"
                                          <?=!$isFirstRow ? 'realthumb="/'. File::getRealThumb($project->id) .'"' : ''?>
                                     >
                                 </div>

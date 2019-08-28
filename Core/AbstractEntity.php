@@ -2,7 +2,6 @@
 
 namespace Core;
 
-use Helpers\Errors;
 use Helpers\Validator;
 use Interfaces\ConstantInterface;
 use Interfaces\EntityInterface;
@@ -39,7 +38,6 @@ abstract class AbstractEntity implements EntityInterface {
 
     public function __construct(array $data = []) {
         $this->fromArray($data);
-        Errors::showIfExists();
     }
 
     /**
@@ -121,14 +119,6 @@ abstract class AbstractEntity implements EntityInterface {
     public function get() : array {
         return $this->data ?? [];
     }
-
-    /**
-     * @deprecated
-     */
-//    public function set(array $data) : self {
-//        $this->data = $data;
-//        return $this;
-//    }
 
     public function __unset($name) {
         unset($this->data[$name]);

@@ -5,6 +5,8 @@ namespace Models\Table {
     use Core\AbstractEntity;
     use Helpers\Validator;
     use Interfaces\EntityInterface;
+    use Interfaces\ModelInterface;
+    use Traits\Model;
 
     /**
      * @property int    $id
@@ -12,7 +14,10 @@ namespace Models\Table {
      * @property int    $lang_id
      * @property string $description
      */
-    class ProjectLang extends AbstractEntity implements EntityInterface {
+    class ProjectLang extends AbstractEntity implements EntityInterface, ModelInterface {
+        use Model;
+
+        private static $table = 'project_lang';
 
         protected $data;
 

@@ -4,25 +4,19 @@ namespace Helpers {
 
     class Errors
     {
-        private static $errors = [];
+        private static $hasError = false;
 
-        public static function add($key, string $description, bool $showAndExit = false) {
-            self::$errors[$key] = $description;
-            if ($showAndExit) {
-                self::showIfExists();
+        public static function add($key, string $description, bool $exit = false) {
+            self::$hasError = true;
+            Output::addFieldDanger($key, $description);
+            if ($exit) {
+                return Output::result();
             }
         }
 
-        public static function get() {
-            return self::$errors;
-        }
-
-        public static function showIfExists() {
-            if (self::get()) {
-                foreach (self::get() as $key => $description) {
-                    Output::addFieldDanger($key, $description, Output::DOCUMENT);
-                }
-//                return Output::result();
+        public static function exitIfExists() {
+            if (self::$hasError) {
+                return Output::result();
             }
         }
     }

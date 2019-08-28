@@ -5,6 +5,7 @@ namespace Helpers {
     use Controllers\Users;
     use Core\View;
     use Models\Constant\Views;
+    use Views\Investment\ChatMessage;
     use Views\Layout;
 
     class Output
@@ -71,7 +72,7 @@ namespace Helpers {
             self::addFieldStatus($field, self::SUCCESS_TYPE, $text, $scope);
         }
 
-        public static function addFieldDanger(string $field, string $text, string $scope = Views::CONTENT) {
+        public static function addFieldDanger(string $field, string $text, string $scope = Output::DOCUMENT) {
             self::addFieldStatus($field, self::DANGER_TYPE, $text, $scope);
         }
 
@@ -127,7 +128,12 @@ namespace Helpers {
                 }
             }
 
-            return Output::output((new View(Layout::class, self::$result[self::VIEW]))->get());
+            // Дополнительные вьюшки
+            $chatMessage = new View(ChatMessage::class);
+
+            return Output::output((new View(Layout::class, self::$result[self::VIEW] + [
+                    Views::CHAT_MESSAGE => $chatMessage,
+                ]))->get());
         }
 
         public static function json(array $arr) {

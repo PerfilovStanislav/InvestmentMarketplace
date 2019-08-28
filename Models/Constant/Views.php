@@ -12,6 +12,7 @@ namespace Models\Constant {
             USER_HEAD       = 'userHead',
             CONTENT         = 'content',
             PROJECT_FILTER  = 'projectFilter',
-            SIDEBAR_LEFT    = 'sidebar_left';
+            CHAT_MESSAGE    = 'chatMessage',
+            SIDEBAR_LEFT    = 'sidebar_left'; // @TODO не по фэншую
     }
 }

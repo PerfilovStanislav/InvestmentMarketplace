@@ -7,13 +7,13 @@ namespace Models\Collection {
     use Interfaces\ModelInterface;
     use Models\MView\MVProjectFilterAvailableLang;
     use Traits\IteratorTrait;
-    use Traits\Model;
+    use Traits\MView;
 
     /**
      * @property MVProjectFilterAvailableLang[] $this
      */
     class MVProjectFilterAvailableLangs extends AbstractEntity implements EntityInterface, ModelInterface, \Iterator, \Countable {
-        use Model;
+        use MView;
         use IteratorTrait;
 
         private static $table = 'MV_ProjectFilterAvailableLangs';

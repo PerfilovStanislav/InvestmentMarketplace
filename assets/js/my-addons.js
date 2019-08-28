@@ -20,16 +20,12 @@ $.ajaxSetup({
         linkAjaxQueue();
     },
     error: function (xhr, ajaxOptions, thrownError) {
-        console.error(' ajaxError xhr', xhr);
-        /*console.error(' ajaxError', ajaxOptions);
-        console.error(' ajaxError', thrownError);*/
-    }/*,
-    success: function(result,status,xhr) {
-        console.log('success', result,status,xhr);
-    }*/
+        /* console.error(' ajaxError xhr', xhr);
+        console.error(' ajaxError', ajaxOptions);
+        console.error(' ajaxError', thrownError); */
+    }
 });
 
-/* @TODO сделать вызов ajax запросов через очередь */
 var abortAllAjax = function() {
     $.each(Q, function(i, xhr){
         xhr.abort();

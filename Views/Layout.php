@@ -26,12 +26,15 @@ use Models\Constant\Views;
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
 
+    <meta property="og:type" content="website" />
     <meta property="og:image:width" content="279">
     <meta property="og:image:height" content="279">
     <meta property="og:title" content="<?=$this->locale['head']['title']?>">
     <meta property="og:description" content="<?=$this->locale['head']['description']?>">
     <meta property="og:url" content="<?=SITE?>">
-    <meta property="og:image" content="<?=SITE?>/og-image.jpg">
+    <meta property="og:image" content="<?=SITE?>/assets/icons/og-image.jpg">
+    <meta property="og:image:secure_url" content="<?=SITE?>/assets/icons/og-image.jpg">
+    <meta property="og:image:type" content="image/jpeg" />
 
     <? \Helpers\Scripts::loadCSS(DEBUG) ?>
 </head>

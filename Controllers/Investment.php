@@ -108,6 +108,9 @@ namespace Controllers {
 
             $projectIds     = $projectSearchs->getValuesByKey();
             $projects       = new Projects(['id' => $projectIds]);
+            if (!$projects->get()) {
+                return self::noShow([Views::PROJECT_FILTER => $projectFilter]);
+            }
             $MVProjectLangs = new MVProjectLangs(['id' => $projectIds]);
             $payments       = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
             $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);

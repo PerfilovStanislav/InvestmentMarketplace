@@ -7,8 +7,8 @@ namespace {
 
     define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));
-    define('DOMAIN', 'richinme.com');
-    define('SITE', 'https://' . DOMAIN);
+    define('DOMAIN', 'richinme.org');
+    define('SITE', 'http://' . DOMAIN);
     define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
     define('DEBUG', 0);
     error_reporting(E_ALL | E_STRICT);

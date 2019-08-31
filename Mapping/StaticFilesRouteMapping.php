@@ -9,7 +9,7 @@ class StaticFilesRouteMapping
 {
     public static function get(string $uri) : ?string {
         return [
-            'site.webmanifest' => '/Staticfiles/sitemanifest', /** @see Staticfiles::sitemanifest() */ /** @see SiteManifest */
+            '/site.webmanifest' => '/Staticfiles/sitemanifest', /** @see Staticfiles::sitemanifest() */ /** @see SiteManifest */
         ][$uri] ?? null;
     }
 }

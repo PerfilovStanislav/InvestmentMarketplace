@@ -3,6 +3,7 @@
 namespace Core {
 
     use Helpers\{Locale, Output, Validator};
+    use Mapping\StaticFilesRouteMapping;
     use Models\Constant\DomElements;
     use Models\Table\ProjectChatMessage;
     use Models\Table\Session;
@@ -60,13 +61,17 @@ namespace Core {
 			AuthModel::getInstance()->session_id    = self::getSessionId();
 		}
 
-		private static function getSessionId() : int {
+		private static function getSessionId() : ?int {
 		    if ($session_id = ($_SESSION['session_id'] ?? null)) return $session_id;
 
 		    $session = new Session();
             $session->getRowFromDbAndFill(['uid' => session_id()]);
 
 			if ($session->id) return $session->id;
+
+			if (StaticFilesRouteMapping::get($_SERVER['REQUEST_URI'])) {
+			    return null;
+            }
 
             $session->fromArray(['ip' => self::get_ip()]);
             $session->save();

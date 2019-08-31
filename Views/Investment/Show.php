@@ -72,8 +72,8 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                             <tr>
                                                 <td><?=$project->plan_percents[$key]?>%</td>
                                                 <td><?=$project->plan_period[$key] . ' ' . \Helpers\Locale::getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
-                                                <td><?=$project->plan_currency_type[$key]?><span
-                                                            class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
+                                                <td><?=$project->plan_start_deposit[$key]?>
+                                                    <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                                 </td>
                                             </tr>
                                         <? }?>

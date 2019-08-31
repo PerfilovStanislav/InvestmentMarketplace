@@ -177,7 +177,7 @@ namespace Controllers {
                 $projectLang = new ProjectLang();
                 $projectLang->project_id  = $project->id;
                 $projectLang->lang_id     = $langId;
-                $projectLang->description = $description;
+                $projectLang->description = str_replace("\n", '<\br>', $description);
                 $projectLang->save();
                 unset($projectLang);
             }

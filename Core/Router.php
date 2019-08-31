@@ -5,6 +5,7 @@ namespace Core;
 use Helpers\{
 	Output, Validator
 };
+use Mapping\StaticFilesRouteMapping;
 use Traits\Instance;
 
 class Router {
@@ -33,6 +34,7 @@ class Router {
 
 	public function setUri(string $uri = null) : self {
 		$uri 				= $uri ?: $this->getRequestUri();
+        $uri                = StaticFilesRouteMapping::get($uri) ?? $uri;
 		$uri				= Validator::regex('uri', $uri, Validator::SITE_URI);
 		$uri                = explode('/', strtolower(trim($uri,'/')));
 		$this->controller   = count($uri) ? ucfirst(array_shift($uri)) : '';

@@ -5,6 +5,8 @@ namespace Models\Table {
     use Core\AbstractEntity;
     use Helpers\Validator;
     use Interfaces\EntityInterface;
+    use Interfaces\ModelInterface;
+    use Traits\Model;
 
     /**
      * @property int    $id
@@ -13,7 +15,10 @@ namespace Models\Table {
      * @property int    $project_id
      * @property int    $session_id
      */
-    class Redirect extends AbstractEntity implements EntityInterface {
+    class Redirect extends AbstractEntity implements EntityInterface , ModelInterface {
+        use Model;
+
+        private static $table = 'redirect';
 
         protected $data;
 

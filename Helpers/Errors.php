@@ -14,8 +14,15 @@ namespace Helpers {
             }
         }
 
-        public static function exitIfExists() {
-            if (self::$hasError) {
+        public static function hasError() : bool {
+            return self::$hasError;
+        }
+
+        public static function exitIfExists(string $head = null) {
+            if (self::hasError()) {
+                if ($head) {
+                    Output::header($head);
+                }
                 return Output::result();
             }
         }

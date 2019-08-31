@@ -3,9 +3,7 @@
 namespace Controllers {
 
     use Core\{
-        Auth,
         Controller,
-        Database,
         Router,
         View,
     };
@@ -27,7 +25,13 @@ namespace Controllers {
         MVProjectSearchs,
         Users,
     };
-    use Models\Table\{Language, Project, ProjectChatMessage, ProjectLang};
+    use Models\Table\{
+        Language,
+        Project,
+        ProjectChatMessage,
+        ProjectLang,
+        Redirect,
+    };
     use Models\{
         AuthModel,
     };
@@ -40,6 +44,7 @@ namespace Controllers {
         AddRequest,
         ChatMessagesRequest,
         CheckSiteRequest,
+        RedirectRequest,
         SetChatMessageRequest,
         ShowRequest,
     };
@@ -226,23 +231,19 @@ namespace Controllers {
             Output::addFunction('sleepAndCheckChats');
         }
 
-        public function redirect(array $params = []) {
-		    $projectId = (int)($params['project'] ?? 0);
-            $refUrl = $this->model->db->getOne('project', "id = $projectId", 'ref_url'); /** @see Database::getOne() */
-            if (!$refUrl) {
-                return Output::header(Output::E404);
-            }
+        public function redirect(RedirectRequest $request) {
+            Errors::exitIfExists(Output::E404);
 
-            $info = Auth::getUserInfo();
-            $data = [
-                'user_id'       => [[$info['id']], \PDO::PARAM_INT],
-                'project_id'    => [[$projectId], \PDO::PARAM_INT],
-                'session_id'    => [[$info['session_id']], \PDO::PARAM_INT],
-            ];
-            $this->model->db->insert('redirect', $data);
+            (new Redirect([
+                'user_id' => AuthModel::getUserId(),
+                'project_id' => $request->project,
+                'session_id' => AuthModel::getInstance()->session_id,
+            ]))->save();
+
+            $project = (new Project())->getById($request->project);
 
             header('HTTP/1.1 200 OK');
-            header('Location: ' . $refUrl);
+            header('Location: ' . $project->ref_url);
         }
 	}
 

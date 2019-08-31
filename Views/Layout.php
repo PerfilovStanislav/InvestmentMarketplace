@@ -30,8 +30,8 @@ use Models\Constant\Views;
     <meta property="og:image:height" content="279">
     <meta property="og:title" content="<?=$this->locale['head']['title']?>">
     <meta property="og:description" content="<?=$this->locale['head']['description']?>">
-    <meta property="og:url" content="http://richinme.com">
-    <meta property="og:image" content="http://richinme.com/og-image.jpg">
+    <meta property="og:url" content="<?=SITE?>">
+    <meta property="og:image" content="<?=SITE?>/og-image.jpg">
 
     <? \Helpers\Scripts::loadCSS(DEBUG) ?>
 </head>

@@ -2,12 +2,13 @@
 
 namespace {
     Class Index {};
+
     use Core\Auth;
 
     define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));
-    define('DOMAIN', 'richinme.org');
-    define('SITE', 'https://richinme.com');
+    define('DOMAIN', 'richinme.com');
+    define('SITE', 'https://' . DOMAIN);
     define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
     define('DEBUG', 0);
     error_reporting(E_ALL | E_STRICT);

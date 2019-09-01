@@ -31,16 +31,19 @@ use Models\Constant\Views;
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="920">
     <meta property="og:url" content="<?=SITE?>">
-    <meta name="twitter:image" property="og:image" content="<?=SITE?>/assets/img/richinme/<?=Locale::getLanguage()?>.<?=WEBP ? 'webp' : 'png'?>" data-meta-dynamic="true">
+    <meta property="og:image" content="<?=SITE?>/assets/img/richinme/<?=Locale::getLanguage()?>.<?=WEBP ? 'webp' : 'png'?>" data-meta-dynamic="true">
     <meta property="og:image:secure_url" content="<?=SITE?>/assets/img/richinme/<?=Locale::getLanguage()?>.<?=WEBP ? 'webp' : 'png'?>" data-meta-dynamic="true">
     <meta property="og:image:type" content="image/<?=WEBP ? 'webp' : 'png'?>" />
+    <meta property="og:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
 
-    <meta name="twitter:title" property="og:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
-    <meta name="twitter:description" property="og:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
+    <meta property="og:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
 
+    <meta name="twitter:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
     <meta name="twitter:site" content="@richinme" data-meta-dynamic="true">
     <meta name="twitter:creator" content="@richinme" data-meta-dynamic="true">
     <meta name="twitter:image:alt" content="RichInme - <?=$this->locale['head']['title']?>" data-meta-dynamic="true">
+    <meta name="twitter:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
+    <meta name="twitter:image" content="<?=SITE?>/assets/img/richinme/<?=Locale::getLanguage()?>.<?=WEBP ? 'webp' : 'png'?>" data-meta-dynamic="true">
 
 
     <? \Helpers\Scripts::loadCSS(DEBUG) ?>

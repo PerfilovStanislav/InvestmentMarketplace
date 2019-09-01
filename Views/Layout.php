@@ -26,6 +26,7 @@ use Models\Constant\Views;
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
 
+    <meta property="og:locale" content="<?=Locale::getLanguage()?>" />
     <meta property="og:type" content="website" />
     <meta property="og:image:width" content="279">
     <meta property="og:image:height" content="279">

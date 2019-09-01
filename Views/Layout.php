@@ -31,11 +31,19 @@ use Models\Constant\Views;
     <meta property="og:image:width" content="279">
     <meta property="og:image:height" content="279">
     <meta property="og:title" content="<?=$this->locale['head']['title']?>">
-    <meta property="og:description" content="<?=$this->locale['head']['description']?>">
+    <meta property="og:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
     <meta property="og:url" content="<?=SITE?>">
-    <meta property="og:image" content="<?=SITE?>/assets/icons/og-image.jpg">
-    <meta property="og:image:secure_url" content="<?=SITE?>/assets/icons/og-image.jpg">
+    <meta property="og:image" content="<?=SITE?>/assets/icons/og-image.jpg" data-meta-dynamic="true">
+    <meta property="og:image:secure_url" content="<?=SITE?>/assets/icons/og-image.jpg" data-meta-dynamic="true">
     <meta property="og:image:type" content="image/jpeg" />
+
+    <meta name="twitter:image" content="<?=SITE?>/assets/icons/og-image.jpg" data-meta-dynamic="true">
+    <meta name="twitter:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
+    <meta name="twitter:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
+    <meta name="twitter:site" content="@richinme" data-meta-dynamic="true">
+    <meta name="twitter:creator" content="@richinme" data-meta-dynamic="true">
+    <meta name="twitter:image:alt" content="RichInme - <?=$this->locale['head']['title']?>" data-meta-dynamic="true">
+
 
     <? \Helpers\Scripts::loadCSS(DEBUG) ?>
 </head>

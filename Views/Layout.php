@@ -26,7 +26,7 @@ use Models\Constant\Views;
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
 
-    <meta property="og:locale" content="<?=Locale::getLanguage()?>" />
+    <meta property="og:locale" content="ru_RU" />
     <meta property="og:type" content="website" />
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="920">
@@ -35,7 +35,6 @@ use Models\Constant\Views;
     <meta property="og:image:secure_url" content="<?=SITE?>/assets/img/richinme/<?=Locale::getLanguage()?>.<?=WEBP ? 'webp' : 'png'?>" data-meta-dynamic="true">
     <meta property="og:image:type" content="image/<?=WEBP ? 'webp' : 'png'?>" />
     <meta property="og:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
-
     <meta property="og:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
 
     <meta name="twitter:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">

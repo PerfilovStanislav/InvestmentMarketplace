@@ -27,7 +27,7 @@ namespace Models\Table {
             $properties = [
                 'id'          => [self::TYPE_INT,      [Validator::MIN => 1]],
                 'date_create' => [self::TYPE_DATETIME, []],
-                'user_id'     => [self::TYPE_INT,      []],
+                'user_id'     => [self::TYPE_INT,      [], self::TYPE_NULLABLE],
                 'project_id'  => [self::TYPE_INT,      []],
                 'session_id'  => [self::TYPE_INT,      [Validator::MIN => 1]],
             ];

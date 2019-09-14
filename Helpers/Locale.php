@@ -1,8 +1,8 @@
 <?php
 
 namespace Helpers {
-	use Helpers\Locales\En;
-	use Helpers\Locales\Ru;
+    use Helpers\Locales\En;
+    use Helpers\Locales\Ru;
     use Libraries\TabgeoCountry;
     use Models\AuthModel;
     use Models\Collection\MVSiteAvailableLanguages;
@@ -57,9 +57,9 @@ namespace Helpers {
             return self::$locale ?: (self::$locale = self::getLocaleFile()::getLocale());
         }
 
-		/**
-		 * @return En|Ru
-		 */
+        /**
+         * @return En|Ru
+         */
         public static function getLocaleFile():string {
             return self::$localeFile?:(self::$localeFile = '\Helpers\Locales\\'.ucfirst(self::getLanguage()));
         }
@@ -68,8 +68,8 @@ namespace Helpers {
             return self::getLocaleFile()::getPeriodName($i,$k);
         }
 
-		public static function get(string $key) {
-			return self::getLocale()[$key];
-		}
+        public static function get(string $key) {
+            return self::getLocale()[$key];
+        }
     }
 }

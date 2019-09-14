@@ -13,7 +13,7 @@ namespace Controllers {
         Output,
         Data\Currency,
     };
-	use Libraries\File;
+    use Libraries\File;
     use Models\Collection\{
         Languages,
         ProjectChatMessages,
@@ -59,9 +59,11 @@ namespace Controllers {
 
     class Investment extends Controller {
         use AuthTrait;
-        private CONST LIMIT = 20;
+        private CONST
+            LIMIT = 20,
+            GUEST_USER_ID = 2;
 
-		public function registration() {
+        public function registration() {
             $params = [
                 'payments'                  => new Payments(),
                 'mainProjectLanguages'      => new Languages('pos is not null', 'pos asc'),
@@ -72,9 +74,9 @@ namespace Controllers {
 
             Output::addView(Registration::class, $params);
             Output::addFunction('ProjectRegistration');
-		}
+        }
 
-		public function show(ShowRequest $request) {
+        public function show(ShowRequest $request) {
             $MVProjectFilterAvailableLangs = new MVProjectFilterAvailableLangs(['status_id' => $request->getActual('status')]);
             if (!$MVProjectFilterAvailableLangs->get()) {
                 // без фильтра
@@ -135,15 +137,13 @@ namespace Controllers {
             ], Output::DOCUMENT);
 
             Output::addView(Show::class, $pageParams);
-		}
+        }
 
-		private static function noShow(array $pageParams) {
+        private static function noShow(array $pageParams) {
             Output::addView(NoShow::class, $pageParams);
         }
 
-		public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest) {
-            self::needAuthorization();
-
+        public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest) {
             $url = $this->checkWebsite($checkSiteRequest, true);
 
             if (count(array_unique([
@@ -160,7 +160,7 @@ namespace Controllers {
 
             // Сохраняем проект
             $project = (new Project())->fromArray($request->toArray());
-            $project->admin     = AuthModel::getInstance()->user->id;
+            $project->admin     = AuthModel::getUserId() ?? self::GUEST_USER_ID;
             $project->url       = $url;
             $project->ref_url   = $checkSiteRequest->website;
             $project->status_id = AuthModel::getInstance()->user->status_id === UserStatus::ADMIN
@@ -189,9 +189,9 @@ namespace Controllers {
 
             Output::addView(Added::class);
             Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));
-		}
+        }
 
-		public function checkWebsite(CheckSiteRequest $request, bool $getUrl = false) : string {
+        public function checkWebsite(CheckSiteRequest $request, bool $getUrl = false) : string {
             $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($request->website));
             $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
 
@@ -230,7 +230,7 @@ namespace Controllers {
                     Output::addFunction('setNewChatMessages', ['users' => $users->toArray()]);
                 }
                 Output::addFunction('setNewChatMessages', ['messages' => $messages->toArray()]);
-			}
+            }
             Output::addFunction('sleepAndCheckChats');
         }
 
@@ -248,6 +248,6 @@ namespace Controllers {
             header('HTTP/1.1 200 OK');
             header('Location: ' . $project->ref_url);
         }
-	}
+    }
 
 }

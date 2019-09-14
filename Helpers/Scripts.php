@@ -36,24 +36,24 @@ class Scripts {
             ]
         ];
 
-	public static function loadJS(int $debug) {
-	    $storage = ['js/locales/' => [Locale::getLanguage()]] + self::JS[$debug];
-		foreach ($storage as $dir => $files) {
-			foreach ($files as $file) {
-				$f = self::ASSETS_DIR.$dir.$file.'.js';
-				$t = filemtime(ROOT.$f);
-				echo '<script src="'.$f.'?'.$t.'"></script>';
-			}
-		}
-	}
+    public static function loadJS(int $debug) {
+        $storage = ['js/locales/' => [Locale::getLanguage()]] + self::JS[$debug];
+        foreach ($storage as $dir => $files) {
+            foreach ($files as $file) {
+                $f = self::ASSETS_DIR.$dir.$file.'.js';
+                $t = filemtime(ROOT.$f);
+                echo '<script src="'.$f.'?'.$t.'"></script>';
+            }
+        }
+    }
 
-	public static function loadCSS(int $debug) {
+    public static function loadCSS(int $debug) {
         foreach (self::CSS[$debug] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.css';
                 $t = filemtime(ROOT.$f);
-				echo '<link rel="stylesheet" type="text/css" href="'.$f.'?'.$t.'">';
-			}
-		}
-	}
+                echo '<link rel="stylesheet" type="text/css" href="'.$f.'?'.$t.'">';
+            }
+        }
+    }
 }

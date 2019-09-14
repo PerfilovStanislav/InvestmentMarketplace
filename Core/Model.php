@@ -3,9 +3,9 @@
 namespace Core;
 
 class Model {
-	public $db;
-	
+    public $db;
+
     public function __construct() {
-		$this->db = Database::getInstance();
+        $this->db = Database::getInstance();
     }
 }

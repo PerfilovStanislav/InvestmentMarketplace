@@ -20,9 +20,9 @@ use Models\Table\Payment;
 <div class="tray tray-center">
     <div class="content-header">
         <h2> <?=$this->locale['free_4_add_project']?> <b class="text-primary"><?=$this->locale['free']?></b></h2>
-        <?php if (!($this->authModel->is_authorized)):?>
-            <p class="lead text-danger"><?=$this->locale['auth_4_add_project']?></p>
-        <?php endif;?>
+        <?php /*if (!($this->authModel->is_authorized)):*/?><!--
+            <p class="lead text-danger"><?/*=$this->locale['auth_4_add_project']*/?></p>
+        --><?php /*endif;*/?>
     </div>
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
         <div class="panel heading-border panel-<?=$this->authModel->is_authorized ? 'primary' : 'danger'?>">

@@ -47,8 +47,8 @@ use Models\Table\Language;
                     <form method="post" action="/" id="<?=DomElements::AUTHORIZATION_USER_FORM?>">
                         <div class="section row mb5">
                             <label class="field prepend-icon">
-                                <input placeholder="<?=$this->locale['login']?> <?=$this->locale['or']?> <?=$this->locale['email']?>"
-                                   class="gui-input onlyEmail" autocomplete="login" name="login">
+                                <input placeholder="<?=$this->locale['login']?>"
+                                   class="gui-input onlyLogin" autocomplete="login" name="login">
                                 <input type="hidden" name="ajax" value="1">
                                 <label class="field-icon">
                                     <i class="glyphicons glyphicons-user"></i>

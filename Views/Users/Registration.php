@@ -16,7 +16,7 @@ use Models\Constant\DomElements;
                     <div class="section row" >
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="login" class="gui-input onlyEn" placeholder="<?=$this->locale['login']?>">
+                                <input name="login" class="gui-input onlyLogin" placeholder="<?=$this->locale['login']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-user"></i>
                                 </label>
@@ -25,25 +25,25 @@ use Models\Constant\DomElements;
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input name="name" autocomplete="name" class="gui-input"
-									   placeholder="<?=$this->locale['name']?>">
+                                       placeholder="<?=$this->locale['name']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-group"></i>
                                 </label>
                             </label>
                         </div>
-                        <div class="section">
+                        <!--<div class="section">
                             <label class="field prepend-icon">
                                 <input name="email" autocomplete="email" class="gui-input onlyEmail"
-									   placeholder="<?=$this->locale['email']?>">
+                                       placeholder="<?/*=$this->locale['email']*/?>">
                                 <label class="field-icon">
                                     <i class="fa fa-envelope-o"></i>
                                 </label>
                             </label>
-                        </div>
+                        </div>-->
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" name="password" class="gui-input"
-									   placeholder="<?=$this->locale['password']?>" />
+                                       placeholder="<?=$this->locale['password']?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
@@ -52,7 +52,7 @@ use Models\Constant\DomElements;
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" id="confirm_pass" class="gui-input"
-									   placeholder="<?=$this->locale['repeat_password']?>" />
+                                       placeholder="<?=$this->locale['repeat_password']?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>

@@ -27,12 +27,12 @@ namespace Models\Collection {
         public function __construct(ChatMessagesRequest $request) {
             $sql = implode(' UNION ALL ', array_map(function(ChatMessageRequest $param) use ($request) {
                     return "
-		                (SELECT id, date_create, user_id, project_id, message, session_id
+                        (SELECT id, date_create, user_id, project_id, message, session_id
                         FROM message
                         WHERE project_id = {$param->project_id} and id>{$param->id} and lang_id = {$request->lang}
                         ORDER BY id desc
                         limit 50)
-		            ";
+                    ";
                 }, $request->messages
             ));
             $this->fillCollection(Database::getInstance()->rawSelect($sql));

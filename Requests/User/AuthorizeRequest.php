@@ -5,18 +5,14 @@ namespace Requests\User;
 use Core\AbstractEntity;
 use Helpers\Validator;
 use Interfaces\EntityInterface;
+use Models\Table\User;
 
 /**
  * @property string $login
  * @property string $password
  * @property string $remember
- * @property string $authorizeType
  */
 class AuthorizeRequest extends AbstractEntity implements EntityInterface {
-    CONST
-        LOGIN = 'login',
-        EMAIL = 'email';
-
     protected $data;
 
     protected static
@@ -29,14 +25,8 @@ class AuthorizeRequest extends AbstractEntity implements EntityInterface {
         ];
 
     public function __construct(array $data = []) {
+        static::$properties += User::getPropertyByKey('login');
         $data += self::$defaults;
-        if (mb_strpos($data['login'] ?? '', '@') > 0) {
-            self::$properties += ['login' => [self::TYPE_STRING, [Validator::MIN => 5, Validator::REGEX => Validator::EMAIL, Validator::MAX => 64]]];
-            $this->authorizeType = self::EMAIL;
-        } else {
-            self::$properties += ['login' => [self::TYPE_STRING, [Validator::MIN => 2, Validator::REGEX => Validator::LOGIN, Validator::MAX => 32]]];
-            $this->authorizeType = self::LOGIN;
-        }
         parent::__construct($data);
     }
 }

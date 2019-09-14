@@ -145,7 +145,7 @@ function replace(e) {
         case 'onlyNumber'   : filtered_str = str.replace(/[^\d.]/gi,''); break;
         case 'onlyEmail'    : filtered_str = str.replace(/[^a-z0-9\-_.@]/gi,'').replace(/(^[@\._]*)|@(?=.*@)/gi,''); break;
         case 'onlyEn'       : filtered_str = str.replace(/[^a-z0-9 \-]/gi,''); break;
-        case 'onlyText'     : filtered_str = str.replace(/[^a-zа-я0-9ё \-]/gi,''); break;
+        case 'onlyLogin'    : filtered_str = str.replace(/[^a-z0-9\-]/gi,''); break;
         case 'onlyDate'     : filtered_str = str.replace(/[^0-9\-]/gi,''); break;
     }
     if (str !== filtered_str) $el.val(filtered_str);
@@ -156,10 +156,8 @@ function onlyUrl    (e) {replace(e);}
 function onlyNumber (e) {replace(e);}
 function onlyEmail  (e) {replace(e);}
 function onlyEn     (e) {replace(e);}
-function onlyText   (e) {replace(e);}
 
 var initTypes = function(el) {
-	$('.onlyText'   , el).on('input', onlyText);
 	$('.onlyEn'     , el).on('input', onlyEn);
 	$('.onlyEmail'  , el).on('input', onlyEmail);
 	$('.onlyNumber' , el).on('input', onlyNumber).on('change', toFloat);
@@ -438,7 +436,7 @@ var imgClickInit = function() {
 
 /* ------------------------------------------------------------ SCROLLERS ------------------------------------------ */
  var panelScrollerInit = function() {
-    var panelScroller = $(this).find('.panel-scroller');
+    var panelScroller = $(this).find('.panel-scroller:visible');
     if (panelScroller.length) {
          panelScroller.each(function(i, e) {
              $(e).scroller({

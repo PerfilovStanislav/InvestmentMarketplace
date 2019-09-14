@@ -2,7 +2,7 @@
 
 namespace Libraries {
 
-	class File {
+    class File {
 
         private $filename;
         private $path;
@@ -107,5 +107,5 @@ namespace Libraries {
 
             return $retval . $value;
         }
-	}
+    }
 }

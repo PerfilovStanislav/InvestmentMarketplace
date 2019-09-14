@@ -5,29 +5,27 @@ namespace Controllers {
     use Core\{
         Auth,
         Controller,
-        View
     };
-    use Libraries\Mail;
     use Models\{
         AuthModel,
         Collection\MVSiteAvailableLanguages,
         Constant\DomElements,
         Constant\UserStatus,
         Constant\Views,
-        MailMessage,
         Table\User,
-        Table\UserConfirm};
-	use Helpers\{
+        Table\UserConfirm,
+    };
+    use Helpers\{
         Output,
         Locale
-	};
+    };
     use Requests\{
         LanguageAvailableRequest,
         User\AuthorizeRequest,
         User\ConfirmRequest,
         User\RegistrationRequest
     };
-    use Views\{Emails\ConfirmEmail,
+    use Views\{
         Error,
         Success,
         Users\Head\Authorized,
@@ -38,8 +36,7 @@ namespace Controllers {
         SideLeft
     };
 
-	class Users extends Controller {
-
+    class Users extends Controller {
         /**
          * @deprecated как я сюда попадаю?
          */
@@ -48,79 +45,77 @@ namespace Controllers {
         }
 
         public function logout() {
-			Auth::getInstance()->logout();
-			$this->reloadPage();
+            Auth::getInstance()->logout();
+            $this->reloadPage();
         }
 
         private function reloadPage() {
-			$url = parse_url($_SERVER['HTTP_REFERER']??'');
-			Output::addFunctions([
-			    'allClear',
-			    'addToAjaxQueue' => [
+            $url = parse_url($_SERVER['HTTP_REFERER']??'');
+            Output::addFunctions([
+                'allClear',
+                'addToAjaxQueue' => [
                     '/Users/setUserHead',
                     '/Users/setLeftSide',
                     $url['path']
                 ]
             ], Output::DOCUMENT);
-		}
+        }
 
-		public function authorize(AuthorizeRequest $request) {
+        public function authorize(AuthorizeRequest $request) {
             if (Auth::getInstance()->authorize($request)) {
                 $this->reloadPage();
             }
-		}
+        }
 
-		public function registration() {
+        public function registration() {
             Output::addView(
                 AuthModel::getInstance()->is_authorized
                     ? Registered::class
                     : Registration::class
             );
             Output::addFunction('UserRegistration');
-		}
+        }
 
-		public function add(RegistrationRequest $request) {
+        public function add(RegistrationRequest $request) {
             $user = (new User())->getRowFromDbAndFill([
-                'login' => $request->login
+                'login' => strtolower($request->login)
             ]);
             if ($user->id) {
                 Output::addFieldDanger('login', Locale::get('login_is_busy'), DomElements::ADDUSER_FORM);
                 return;
             }
 
-            $user->getRowFromDbAndFill([
-                'email' => $request->email
-            ]);
-            if ($user->id) {
-                Output::addFieldDanger('email', Locale::get('email_is_busy'), DomElements::ADDUSER_FORM);
-                return;
-            }
-
             $user->fromArray([
-                'name' => $request->name,
-                'password' => Auth::hashPassword($request->password),
+                'name'      => $request->name,
+                'password'  => Auth::hashPassword($request->password),
                 'status_id' => UserStatus::NEED_CONFIRM,
-                'lang_id' => MVSiteAvailableLanguages::getInstance()->{Locale::getLanguage()}->id,
+                'lang_id'   => MVSiteAvailableLanguages::getInstance()->{Locale::getLanguage()}->id,
                 'has_photo' => false,
             ])->save();
 
-            $userConfirm = (new UserConfirm())->fromArray([
-                'user_id' => $user->id,
-                'code'    => bin2hex(random_bytes(32)), // 64 random
-            ])->save();
+            // Здесь была проверки почты
+//            $userConfirm = (new UserConfirm())->fromArray([
+//                'user_id' => $user->id,
+//                'code'    => bin2hex(random_bytes(32)), // 64 random
+//            ])->save();
+//
+//            /** @var MailMessage $mailMessage */
+//            $mailMessage = (new MailMessage())->fromArray([
+//                'subject'       => Locale::get('email_confirmation'),
+//                'body'          => (new View(ConfirmEmail::class, ['user' => $user, 'code' => $userConfirm->code]))->get(),
+//                'receiverEmail' => $user->email,
+//                'receiverName'  => $user->name,
+//            ]);
+//            (new Mail())->sendMail($mailMessage);
 
-            /** @var MailMessage $mailMessage */
-            $mailMessage = (new MailMessage())->fromArray([
-                'subject'       => Locale::get('email_confirmation'),
-                'body'          => (new View(ConfirmEmail::class, ['user' => $user, 'code' => $userConfirm->code]))->get(),
-                'receiverEmail' => $user->email,
-                'receiverName'  => $user->name,
-            ]);
-            (new Mail())->sendMail($mailMessage);
+//            Output::addView(Success::class, ['text' => Locale::get('user_registered')]);
+            Output::addAlertSuccess(Locale::get('success'), Locale::get('user_registered'));
 
-            Output::addView(Success::class, ['text' => Locale::get('email_confirm_sent')]);
-            Output::addAlertSuccess(Locale::get('success'), Locale::get('email_confirm_sent'));
-		}
+            $this->authorize(new AuthorizeRequest([
+                'login'    => $request->login,
+                'password' => $request->password,
+            ]));
+        }
 
         public function confirm(ConfirmRequest $request) {
             $userConfirm = new UserConfirm();
@@ -138,7 +133,7 @@ namespace Controllers {
                 Output::addView(Error::class, ['text' => Locale::get('no_confirm_code')]);
                 Output::addAlertDanger(Locale::get('error'), Locale::get('no_confirm_code'));
             }
-		}
+        }
 
         public static function setUserHead() {
             Output::addFunctions([
@@ -147,19 +142,19 @@ namespace Controllers {
                     'auth' => AuthModel::getInstance()->toArray()
                 ],
             ], Output::DOCUMENT, 1);
-		    $params = [
+            $params = [
                 'siteLanguages'     => MVSiteAvailableLanguages::getInstance(),
                 'selectedLanguage'  => Locale::getLanguage(),
                 'avatar'            => AuthModel::getInstance()->getUserAvatar(),
             ];
-		    if (AuthModel::getInstance()->is_authorized) {
+            if (AuthModel::getInstance()->is_authorized) {
                 Output::addView(
                     Authorized::class,
                     $params + ['user' => AuthModel::getInstance()->user],
                     Views::USER_HEAD
                 );
             }
-		    else {
+            else {
                 Output::addView(
                     NotAuthorized::class,
                     $params,
@@ -167,24 +162,24 @@ namespace Controllers {
                 );
                 Output::addFunctions(['UserAuthorization'], Output::DOCUMENT, 1);
             }
-		}
+        }
 
         public static function setLeftSide() {
             Output::addView(SideLeft::class, [], Views::SIDEBAR_LEFT);
         }
 
-		public function changeLanguage(LanguageAvailableRequest $request) {
-			if ($request->lang) {
-				if (AuthModel::getInstance()->is_authorized) {
-				    $user = AuthModel::getInstance()->user;
+        public function changeLanguage(LanguageAvailableRequest $request) {
+            if ($request->lang) {
+                if (AuthModel::getInstance()->is_authorized) {
+                    $user = AuthModel::getInstance()->user;
                     $user->lang_id = MVSiteAvailableLanguages::getInstance()->{$request->lang}->id;
                     $user->save();
-				}
-				else {
-					$_SESSION['lang'] = $request->lang;
-				}
+                }
+                else {
+                    $_SESSION['lang'] = $request->lang;
+                }
                 $this->reloadPage();
-			}
-		}
-	}
+            }
+        }
+    }
 }

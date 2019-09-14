@@ -143,6 +143,10 @@ abstract class AbstractEntity implements EntityInterface {
         return array_keys(static::$properties);
     }
 
+    public static function getPropertyByKey(string $key): array {
+        return [$key => static::$properties[$key]];
+    }
+
     public function fillCollection(array $data) {
         $this->data = $this->fromArray([self::COLLECTION => $data])->{self::COLLECTION};
     }

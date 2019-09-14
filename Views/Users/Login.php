@@ -17,7 +17,7 @@ namespace Views\Users; { Class Login {} }
                     <div class="section row">
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="login" class="gui-input onlyEmail" placeholder="<?=$this->locale['login']?>">
+                                <input name="login" class="gui-input onlyLogin" placeholder="<?=$this->locale['login']?>">
                                 <label class="field-icon">
                                     <i class="fa fa-user"></i>
                                 </label>

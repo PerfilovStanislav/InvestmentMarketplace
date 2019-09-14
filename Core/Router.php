@@ -3,55 +3,55 @@
 namespace Core;
 
 use Helpers\{
-	Output, Validator
+    Output, Validator
 };
 use Mapping\StaticFilesRouteMapping;
 use Traits\Instance;
 
 class Router {
     use Instance;
-	private $defaultParams = 'Investment/show',
-	        $errorParams   = 'Errors/show',
-	        $controller,
-	        $action,
-	        $params,
-	        $additional = [];
+    private $defaultParams = 'Investment/show',
+            $errorParams   = 'Errors/show',
+            $controller,
+            $action,
+            $params,
+            $additional = [];
 
-	private function __construct() {}
+    private function __construct() {}
 
     public function startRoute() {
-		if (!$this->action) {
+        if (!$this->action) {
             $this->setUri($this->defaultParams)->route();
-		}
-		else if (!$this->route()) {
+        }
+        else if (!$this->route()) {
             $this->setUri($this->errorParams)->route();
         }
-	}
+    }
 
-	private function getRequestUri() : string {
-		return substr($_SERVER['REQUEST_URI'], strlen(DIR));
-	}
+    private function getRequestUri() : string {
+        return substr($_SERVER['REQUEST_URI'], strlen(DIR));
+    }
 
-	public function setUri(string $uri = null) : self {
-		$uri 				= $uri ?: $this->getRequestUri();
+    public function setUri(string $uri = null) : self {
+        $uri                 = $uri ?: $this->getRequestUri();
         $uri                = StaticFilesRouteMapping::get('/' . $uri) ?? $uri;
-		$uri				= Validator::regex('uri', $uri, Validator::SITE_URI);
-		$uri                = explode('/', strtolower(trim($uri,'/')));
-		$this->controller   = count($uri) ? ucfirst(array_shift($uri)) : '';
-		$this->action       = count($uri) ? array_shift($uri) : null;
-		$this->params       = count($uri) ? $uri : [];
-		return $this;
-	}
+        $uri                = Validator::regex('uri', $uri, Validator::SITE_URI);
+        $uri                = explode('/', strtolower(trim($uri,'/')));
+        $this->controller   = count($uri) ? ucfirst(array_shift($uri)) : '';
+        $this->action       = count($uri) ? array_shift($uri) : null;
+        $this->params       = count($uri) ? $uri : [];
+        return $this;
+    }
 
-	private function route() : bool {
-		$controllerClass = 'Controllers\\'.$this->controller;
+    private function route() : bool {
+        $controllerClass = 'Controllers\\'.$this->controller;
 
-		if(!file_exists(real_path($controllerClass).'.php')) { return false; }
-		$controller = new $controllerClass();
+        if(!file_exists(real_path($controllerClass).'.php')) { return false; }
+        $controller = new $controllerClass();
 
-		if (!is_callable([$controller, $this->action])) { return false; }
+        if (!is_callable([$controller, $this->action])) { return false; }
 
-		$params = array_filter(
+        $params = array_filter(
             array_map(function(array $a){
                 return $a[1]??false ? [$a[0] => $a[1]] : null;
             }, array_chunk($this->params, 2))
@@ -80,10 +80,10 @@ class Router {
             }, $reflectionParameters);
         }
         call_user_func_array([$controller, $this->action], $params);
-		return Output::result();
-	}
+        return Output::result();
+    }
 
     public function getCurrentPageUrl() : string {
-	    return '/' . $this->controller . '/' . $this->action;
+        return '/' . $this->controller . '/' . $this->action;
     }
 }

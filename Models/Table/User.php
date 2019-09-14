@@ -13,7 +13,6 @@ namespace Models\Table {
      * @property int    $id
      * @property string $login
      * @property string $name
-     * @property string $email
      * @property string $password
      * @property int    $status_id
      * @property string $date_create
@@ -32,9 +31,8 @@ namespace Models\Table {
             $arrayable = ['id', 'login', 'name', 'status_id', 'has_photo', 'lang_id'],
             $properties = [
                 'id'          => [self::TYPE_INT,      [Validator::MIN => 1]],
-                'login'       => [self::TYPE_STRING,   [Validator::MIN => 1, Validator::REGEX => Validator::EN]],
-                'name'        => [self::TYPE_STRING,   [Validator::MIN => 1]],
-                'email'       => [self::TYPE_STRING,   [Validator::MIN => 1, Validator::REGEX => Validator::EMAIL]],
+                'login'       => [self::TYPE_STRING,   [Validator::MIN => 2, Validator::REGEX => Validator::LOGIN, Validator::MAX => 32]],
+                'name'        => [self::TYPE_STRING,   [Validator::MIN => 2, Validator::MAX => 64]],
                 'password'    => [self::TYPE_STRING,   [Validator::LENGTH => 53, Validator::REGEX => Validator::HASH]],
                 'status_id'   => [self::TYPE_INT,      [Validator::IN => UserStatus::class]],
                 'date_create' => [self::TYPE_DATETIME, []],

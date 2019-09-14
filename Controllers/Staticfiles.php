@@ -10,9 +10,9 @@ namespace Controllers {
 
     class Staticfiles extends Controller {
 
-		public function sitemanifest() {
+        public function sitemanifest() {
             Output::header(Output::JSON);
             Output::output((new View(SiteManifest::class))->get());
-		}
-	}
+        }
+    }
 }

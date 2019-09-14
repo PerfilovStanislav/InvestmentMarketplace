@@ -17,7 +17,7 @@ use Models\Table\User;
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AdminDesigns Email Template - Welcome</title>
+    <title>Richinme Welcome!</title>
     <style type="text/css">
         /* Take care of image borders and formatting, client hacks */
         img { max-width: 600px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;}

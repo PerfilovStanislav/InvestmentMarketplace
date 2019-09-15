@@ -39,6 +39,10 @@ namespace Models {
         public static function getUserId() : ?int {
             return static::getInstance()->is_authorized ? static::getInstance()->user->id : null;
         }
+
+        public static function getStatusId() : ?int {
+            return static::getInstance()->is_authorized ? static::getInstance()->user->status_id : null;
+        }
     }
 
 }

@@ -163,7 +163,7 @@ namespace Controllers {
             $project->admin     = AuthModel::getUserId() ?? self::GUEST_USER_ID;
             $project->url       = $url;
             $project->ref_url   = $checkSiteRequest->website;
-            $project->status_id = AuthModel::getInstance()->user->status_id === UserStatus::ADMIN
+            $project->status_id = AuthModel::getStatusId() === UserStatus::ADMIN
                 ? ProjectStatus::ACTIVE
                 : ProjectStatus::NOT_PUBLISHED;
             $project->save();

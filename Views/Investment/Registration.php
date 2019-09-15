@@ -308,7 +308,7 @@ use Models\Table\Payment;
                         </div>
                         <div class="panel-footer text-right">
                             <button type="submit"
-                                    class="button btn-primary" <?=($this->authModel->is_authorized) ? '' : 'disabled';?>> <?=$this->locale['send_form']?> </button>
+                                    class="button btn-primary"> <?=$this->locale['send_form']?> </button>
                         </div>
                     </div>
                     <input type="hidden" name="ajax" value="1">

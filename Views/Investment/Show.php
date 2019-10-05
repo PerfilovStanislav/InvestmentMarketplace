@@ -30,7 +30,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
         <div class="panel mb25 mt5" project_id="<?=$project->id?>">
             <div class="panel-heading">
                 <span class="panel-title">
-                    <a target="_blank" href="/Investment/redirect/project/<?=$project->id?>"><?=$project->name?></a>
+                    <a target="_blank" rel="nofollow" href="/Investment/redirect/project/<?=$project->id?>"><?=$project->name?></a>
                 </span>
                 <ul class="nav panel-tabs-border panel-tabs">
                     <li class="active">

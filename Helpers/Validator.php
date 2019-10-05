@@ -98,12 +98,12 @@ class Validator
     }
 
     private static function maxNumber($key, $value, $max) {
-        if ($value > $max) Errors::add($key, sprintf('максимальное значение: %d', $max));
+        if ($value > $max) Errors::add($key, 'максимальное значение: ',  $max);
     }
 
     private static function minNumber($key, $value, $min) {
         if ($value < $min) {
-            Errors::add($key, sprintf('минимальное значение: %d', $min));
+            Errors::add($key, 'минимальное значение: ' . $min);
         }
     }
 

@@ -13,6 +13,6 @@ namespace Models\Constant {
             CONTENT         = 'content',
             PROJECT_FILTER  = 'projectFilter',
             CHAT_MESSAGE    = 'chatMessage',
-            SIDEBAR_LEFT    = 'sidebar_left'; // @TODO не по фэншую
+            SIDEBAR_LEFT    = 'sidebar_left';
     }
 }

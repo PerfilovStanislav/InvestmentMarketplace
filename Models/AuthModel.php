@@ -5,6 +5,7 @@ namespace Models {
     use Core\AbstractEntity;
     use Helpers\Validator;
     use Interfaces\EntityInterface;
+    use Models\Constant\UserStatus;
     use Models\Table\User;
     use Traits\Instance;
 
@@ -42,6 +43,10 @@ namespace Models {
 
         public static function getStatusId() : ?int {
             return static::getInstance()->is_authorized ? static::getInstance()->user->status_id : null;
+        }
+
+        public static function isAdmin() : bool {
+            return static::getStatusId() === UserStatus::ADMIN;
         }
     }
 

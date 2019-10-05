@@ -2,16 +2,22 @@
 
 namespace Traits;
 
-
 use Helpers\Locale;
 use Helpers\Output;
 use Models\AuthModel;
 
 trait AuthTrait
 {
-    private static function needAuthorization() {
-        if (!AuthModel::getInstance()->user) {
-            Output::addAlertDanger(Locale::get('error'), Locale::get('need_authorization'));
+//    private static function needAuthorization() {
+//        if (!AuthModel::getInstance()->user) {
+//            Output::addAlertDanger(Locale::get('error'), Locale::get('need_authorization'));
+//            return Output::result();
+//        }
+//    }
+
+    private static function adminAccess() {
+        if (!AuthModel::isAdmin()) {
+            Output::addAlertDanger(Locale::get('error'), Locale::get('no_access'));
             return Output::result();
         }
     }

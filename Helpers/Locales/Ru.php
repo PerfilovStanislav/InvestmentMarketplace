@@ -48,6 +48,7 @@ namespace Helpers\Locales {
                 'name'              => 'Имя',
                 'need_authorization'=> 'Вам необходимо авторизоваться',
                 'no'                => 'Нет',
+                'no_access'         => 'Нет доступа',
                 'no_confirm_code'   => 'Не найден код подтверждения',
                 'no_user'           => 'Пользователь не найден',
                 'no_project'        => 'Проект не найден',

@@ -37,11 +37,11 @@ namespace Controllers {
     };
     use Models\Constant\{
         ProjectStatus,
-        UserStatus,
         Views,
     };
     use Requests\Investment\{
         AddRequest,
+        ChangeStatusRequest,
         ChatMessagesRequest,
         CheckSiteRequest,
         RedirectRequest,
@@ -124,6 +124,7 @@ namespace Controllers {
                 'payments'            => $payments,
                 'projectLangs'        => $projectLangs,
                 'languages'           => $languages,
+                'isAdmin'             => AuthModel::isAdmin(),
                 Views::PROJECT_FILTER => $projectFilter,
             ];
 
@@ -163,9 +164,7 @@ namespace Controllers {
             $project->admin     = AuthModel::getUserId() ?? self::GUEST_USER_ID;
             $project->url       = $url;
             $project->ref_url   = $checkSiteRequest->website;
-            $project->status_id = AuthModel::getStatusId() === UserStatus::ADMIN
-                ? ProjectStatus::ACTIVE
-                : ProjectStatus::NOT_PUBLISHED;
+            $project->status_id = AuthModel::isAdmin() ? ProjectStatus::ACTIVE : ProjectStatus::NOT_PUBLISHED;
             $project->save();
 
             $file = new File($project->id);
@@ -182,13 +181,27 @@ namespace Controllers {
                 unset($projectLang);
             }
 
+            self::refreshMViews();
+
+            Output::addView(Added::class);
+            Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));
+        }
+
+        public function changeStatus(ChangeStatusRequest $request) {
+            static::adminAccess();
+
+            $project = (new Project())->getById($request->project);
+            $project->status_id = ProjectStatus::ACTIVE;
+            $project->save();
+
+            self::refreshMViews();
+        }
+
+        private static function refreshMViews() {
             // Обновляем вьюшки @TODO перенести в rabbit
             MVProjectFilterAvailableLangs::refresh();
             MVProjectLangs::refresh();
             MVProjectSearchs::refresh();
-
-            Output::addView(Added::class);
-            Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));
         }
 
         public function checkWebsite(CheckSiteRequest $request, bool $getUrl = false) : string {

@@ -48,6 +48,7 @@ namespace Helpers\Locales {
                 'name'              => 'Name',
                 'need_authorization'=> 'You need to log in',
                 'no'                => 'No',
+                'no_access'         => 'No access',
                 'no_confirm_code'   => 'Confirmation code not found',
                 'no_user'           => 'User is not found',
                 'no_project'        => 'Project not found',

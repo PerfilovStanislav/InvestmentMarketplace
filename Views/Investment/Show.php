@@ -9,6 +9,7 @@ namespace Views\Investment; {
  * @property Project[] $projects
  * @property LocaleInterface $locale
  * @property string|ProjectFilter $projectFilter
+ * @property bool $isAdmin
  */
 Class Show {} }
 
@@ -29,6 +30,20 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
     <? $isFirstRow = true; foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?=$project->id?>">
             <div class="panel-heading">
+                <?php if ($this->isAdmin): ?>
+                    <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+                        <span class="fa fa-pencil"></span>
+                    </button>
+                    <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+                        <li>
+                            <a class="ajax" href="/Investment/changeStatus/status/active/project/<?=$project->id?>">
+                                <span class="glyphicon glyphicon-fire text-warning-dark"></span>
+                                Активировать
+                            </a>
+                        </li>
+                    </ul>
+                <?php endif; ?>
+
                 <span class="panel-title">
                     <a target="_blank" rel="nofollow noopener" href="/Investment/redirect/project/<?=$project->id?>"><?=$project->name?></a>
                 </span>
@@ -49,6 +64,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             <div class="mnw270">
                                 <div class="thumbnail">
                                     <img src="/<?=$isFirstRow ? File::getRealThumb($project->id) : File::getPreThumb($project->id)?>"
+                                         alt="<?=$project->name?>"
                                          class="media-object" href="/<?=File::getOriginalScreen($project->id)?>"
                                          <?=!$isFirstRow ? 'realthumb="/'. File::getRealThumb($project->id) .'"' : ''?>
                                     >
@@ -139,7 +155,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                             <label class="field-icon">
                                                 <i class="fa fa-pencil"></i>
                                             </label>
-                                            <div class="icon_send"></i></div>
+                                            <div class="icon_send"></div>
                                         </label>
                                     </form>
                                 </div>

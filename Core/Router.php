@@ -33,7 +33,7 @@ class Router {
     }
 
     public function setUri(string $uri = null) : self {
-        $uri                 = $uri ?: $this->getRequestUri();
+        $uri                = $uri ?: $this->getRequestUri();
         $uri                = StaticFilesRouteMapping::get('/' . $uri) ?? $uri;
         $uri                = Validator::regex('uri', $uri, Validator::SITE_URI);
         $uri                = explode('/', strtolower(trim($uri,'/')));

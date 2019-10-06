@@ -16,6 +16,7 @@ namespace Helpers {
 
         public static function getLanguage() : string {
             if (self::$language !== null) return self::$language;
+
             // 1: from profile
             if ($user = (AuthModel::getInstance()->user)) {
                 /** @var Language $language */
@@ -26,7 +27,12 @@ namespace Helpers {
             // 2: from session
             if ($lang = ($_SESSION['lang'] ?? false)) return (self::$language = $lang);
 
-            // 3: from browser
+            // 3: from subdomain
+            if ($host = ($_SERVER['HTTP_HOST'] ?? null)) {
+                if ($lang = (array_reverse(explode('.', $host))[2] ?? false)) return (self::$language = $lang);
+            }
+
+            // 4: from browser
             if ($list=($_SERVER['HTTP_ACCEPT_LANGUAGE']??false)) {
                 $list = strtolower($list);
                 if (preg_match_all('/,?([a-z]{2}).*?[,;]?q=([0-9.]*)/', $list, $list)) {
@@ -43,13 +49,13 @@ namespace Helpers {
                 }
             }
 
-            // 4: TabgeoCountry
+            // 5: TabgeoCountry
             $flag = strtolower(TabgeoCountry::getCountry());
             /** @var Language $language */
             $language = MVSiteAvailableLanguages::getInstance()->getByKeyAndValue('flag', $flag);
             if ($language) return (self::$language = $_SESSION['lang'] = $language->shortname);
 
-            // 5: Default
+            // 6: Default
             return ($_SESSION['lang'] = self::$language = self::$defaultLanguage);
         }
 

@@ -29,7 +29,7 @@ namespace Models\Collection {
             ];
 
         public function __construct(array $where) {
-            $this->fillCollection(self::getDb()->select($where, Project::getPropertyKeys()));
+            $this->fillCollection(self::getDb()->select($where, Project::getPropertyKeys(), 'id desc'));
         }
     }
 }

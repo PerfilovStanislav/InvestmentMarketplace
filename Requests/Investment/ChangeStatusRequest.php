@@ -20,6 +20,6 @@ class ChangeStatusRequest extends AbstractEntity implements EntityInterface {
         $defaults = null,
         $properties = [
             'status'    => [self::TYPE_CONSTANTS,  ProjectStatus::class],
-            'project'   => [self::TYPE_INT,    [Validator::MODEL => Project::class]],
+            'project'   => [self::TYPE_INT,        [Validator::MODEL => Project::class]],
         ];
 }

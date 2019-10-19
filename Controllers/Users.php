@@ -46,11 +46,11 @@ namespace Controllers {
 
         public function logout() {
             Auth::getInstance()->logout();
-            $this->reloadPage();
+            Users::reloadPage();
         }
 
-        private function reloadPage() {
-            $url = parse_url($_SERVER['HTTP_REFERER']??'');
+        public static function reloadPage() {
+            $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
             Output::addFunctions([
                 'allClear',
                 'addToAjaxQueue' => [
@@ -63,7 +63,7 @@ namespace Controllers {
 
         public function authorize(AuthorizeRequest $request) {
             if (Auth::getInstance()->authorize($request)) {
-                $this->reloadPage();
+                Users::reloadPage();
             }
         }
 
@@ -178,7 +178,7 @@ namespace Controllers {
                 else {
                     $_SESSION['lang'] = $request->lang;
                 }
-                $this->reloadPage();
+                Users::reloadPage();
             }
         }
     }

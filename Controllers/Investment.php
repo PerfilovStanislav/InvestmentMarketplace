@@ -191,10 +191,11 @@ namespace Controllers {
             static::adminAccess();
 
             $project = (new Project())->getById($request->project);
-            $project->status_id = ProjectStatus::ACTIVE;
+            $project->status_id = $request->status;
             $project->save();
 
             self::refreshMViews();
+            \Controllers\Users::reloadPage();
         }
 
         private static function refreshMViews() {

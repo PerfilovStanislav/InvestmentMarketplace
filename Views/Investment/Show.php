@@ -18,6 +18,7 @@ use Interfaces\LocaleInterface;
 use Libraries\File;
 use Models\Collection\Languages;
 use Models\Collection\ProjectLangs;
+use Models\Constant\ProjectStatus;
 use Models\Constant\Views;
 use Models\MView\MVProjectLang;
 use Models\Table\{Payment, Project, Language, ProjectLang};
@@ -36,10 +37,11 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                     </button>
                     <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
                         <li>
-                            <a class="ajax" href="/Investment/changeStatus/status/active/project/<?=$project->id?>">
-                                <span class="glyphicon glyphicon-fire text-warning-dark"></span>
-                                Активировать
-                            </a>
+                            <?php foreach (array_diff(ProjectStatus::getValues(), [$project->status_id]) as $statusId): ?>
+                                <a class="ajax" href="/Investment/changeStatus/status/<?=ProjectStatus::getConstName($statusId)?>/project/<?=$project->id?>">
+                                    <?=ProjectStatus::getConstName($statusId)?>
+                                </a>
+                            <?php endforeach; ?>
                         </li>
                     </ul>
                 <?php endif; ?>

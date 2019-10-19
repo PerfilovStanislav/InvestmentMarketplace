@@ -63,10 +63,10 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         <div class="mbn flex inforow">
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <img src="/<?=$isFirstRow ? File::getRealThumb($project->id) : File::getPreThumb($project->id)?>"
+                                    <img src="/<?=$isFirstRow ? File::getJpgThumb($project->id) : File::getPreThumb($project->id)?>"
                                          alt="<?=$project->name?>"
                                          class="media-object" href="/<?=File::getOriginalScreen($project->id)?>"
-                                         <?=!$isFirstRow ? 'realthumb="/'. File::getRealThumb($project->id) .'"' : ''?>
+                                         <?=!$isFirstRow ? 'realthumb="/'. File::getThumb($project->id) .'"' : ''?>
                                     >
                                 </div>
                             </div>
@@ -167,9 +167,9 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
 
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <img src="/<?=$isFirstRow ? File::getRealThumb($project->id) : File::getPreThumb($project->id)?>"
-                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>.jpg"
-                                        <?=!$isFirstRow ? 'realthumb="/'. File::getRealThumb($project->id) .'"' : ''?>
+                                    <img src="/<?=$isFirstRow ? File::getJpgThumb($project->id) : File::getPreThumb($project->id)?>"
+                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>"
+                                        <?=!$isFirstRow ? 'realthumb="/'. File::getThumb($project->id) .'"' : ''?>
                                     >
                                 </div>
                             </div>

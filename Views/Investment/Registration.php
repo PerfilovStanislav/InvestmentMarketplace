@@ -245,67 +245,6 @@ use Models\Table\Payment;
                                 </label>
                             </label>
                         </div>
-                        <div class="section-divider mt40 mb25">
-                            <span> <?=$this->locale['screenshot']?> </span>
-                        </div>
-                        <div class="section">
-                            <div class="section row br-a br-greyer mn mb15 p2">
-                                <div class="col-md-6 img-container pl1 mb1">
-                                    <img id="full_site_image" src="/assets/img/screenshot.png"
-                                         alt="<?=$this->locale['screenshot']?>">
-                                    <input type="hidden" name="screen_data">
-                                </div>
-                                <div class="col-md-6 img-container pr1 mb1">
-                                    <img id="thumb_site_image" src="/assets/img/screenshot.png"
-                                         alt="<?=$this->locale['screenshot']?>">
-                                    <input type="hidden" name="thumb_data">
-                                </div>
-                            </div>
-                            <div class="section row">
-                                <div class="col-md-12 docs-buttons">
-                                    <div class="btn-group btn-group-crop">
-                                        <button title="Просмотр" data-toggle="tooltip" type="button"
-                                                class="btn btn-primary disabled" data-method="getCroppedCanvas"
-                                                data-control=1>
-                                            <span class="fa fa-picture-o fa-lg "></span>
-                                        </button>
-                                        <label for="inputImage" class="btn btn-primary btn-upload">
-                                            <input type="file" accept="image/*" id="inputImage" class="sr-only">
-                                            <span data-toggle="tooltip" data-original-title="" title="">
-                                                <span class="fa fa-upload"></span> <?=$this->locale['select_file']?>
-                                            </span>
-                                        </label>
-                                        <button title="<?=$this->locale['view']?>" data-toggle="tooltip" type="button"
-                                                class="btn btn-primary disabled" data-method="getCroppedCanvas"
-                                                data-control=0>
-                                            <span class="fa fa-picture-o fa-lg "></span>
-                                        </button>
-
-                                    </div>
-                                </div>
-                                <div style="display: none;" class="modal fade docs-cropped" id="getCroppedCanvasModal"
-                                     aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog"
-                                     tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">×
-                                                </button>
-                                                <h4 class="modal-title"
-                                                    id="getCroppedCanvasTitle"><?=$this->locale['view']?></h4>
-                                            </div>
-                                            <div class="modal-body"><img id="full_site_image" src="" alt="Picture">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default"
-                                                        data-dismiss="modal"><?=$this->locale['close']?></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="panel-footer text-right">
                             <button type="submit"
                                     class="button btn-primary"> <?=$this->locale['send_form']?> </button>

@@ -4,13 +4,6 @@ namespace Libraries {
 
     class File {
 
-        private $filename;
-        private $path;
-
-        function __construct($project_id) {
-            $this->filename = $project_id;
-        }
-
         private static function getFolderName(int $id) : string  {
             return ((int)(($id) / 1000)+1)*1000;
         }
@@ -23,35 +16,98 @@ namespace Libraries {
             return self::getFolderPath($id) . ($id);
         }
 
-        public static function getOriginalScreen(int $id) : string {
+        public static function getOriginalJpgScreen(int $id) : string {
             return self::getFilePath($id) . '.jpg';
         }
 
-        public static function getRealThumb(int $id) : string {
+        public static function getOriginalWebpScreen(int $id) : string {
+            return self::getFilePath($id) . '.jpg';
+        }
+
+        public static function getOriginalScreen(int $id) : string {
+            return WEBP ? self::getOriginalWebpScreen($id) : self::getOriginalJpgScreen($id);
+        }
+
+        public static function getJpgThumb(int $id) : string {
             return self::getFilePath($id) . '_th.jpg';
         }
 
+        public static function getWebpThumb(int $id) : string {
+            return self::getFilePath($id) . '_th.webp';
+        }
+
+        public static function getJpgPreThumb(int $id) : string {
+            return self::getFilePath($id) . '_pre_th.jpg';
+        }
+
+        public static function getWebpPreThumb(int $id) : string {
+            return self::getFilePath($id) . '_pre_th.webp';
+        }
+
+        public static function getThumb(int $id) : string {
+            return WEBP ? self::getWebpThumb($id) : self::getJpgThumb($id);
+        }
+
         public static function getPreThumb(int $id) : string {
-            return self::getFilePath($id) . '_th.' . (WEBP ? 'webp' : 'jpeg');
+            return WEBP ? self::getWebpPreThumb($id) : self::getJpgPreThumb($id);
         }
 
-        public function save($data, $thumb = false) {
-            if (!file_exists(self::getFolderPath($this->filename))) {
-                mkdir(self::getFolderPath($this->filename), 0755);
-            }
-            $postfix = $thumb ? '_th' : '';
-            $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
-            $filePath = self::getFilePath($this->filename);
-            file_put_contents($this->path = "$filePath{$postfix}.jpg", $data);
-            if ($thumb) {
-                imagewebp(imagecreatefromjpeg($this->path), "$filePath{$postfix}.webp", 0);
-                imagejpeg(imagecreatefromjpeg($this->path), "$filePath{$postfix}.jpeg", 10);
-            }
+        public static function saveScreenShot(string $url, int $id) {
+            self::createFolder($id);
+            
+            require(ROOT . '/composer/vendor/autoload.php');
 
-            return $this;
+            $factory = new \HeadlessChromium\BrowserFactory('google-chrome-unstable');
+            $browser = $factory->createBrowser([
+                'headless' => true,
+                'keepAlive' => false,
+                'windowSize' => [1280, 960],
+                'sendSyncDefaultTimeout' => 45000
+            ]);
+
+            $page = $browser->createPage();
+
+            $page->navigate($url)->waitForNavigation();
+            $page->screenshot([
+                'format'  => 'jpeg',
+                'quality' => 95,
+            ])->saveToFile(self::getOriginalJpgScreen($id));
+
+            self::makeThumb(self::getOriginalJpgScreen($id), self::getJpgThumb($id));
+            self::makeWebp(self::getJpgThumb($id), self::getWebpThumb($id));
+            self::makeWebp(self::getJpgThumb($id), self::getWebpPreThumb($id), 0);
+            self::changeQualityJpg(self::getJpgThumb($id), 10, self::getJpgPreThumb($id));
+            self::addIPTC(self::getOriginalJpgScreen($id), [5 => $url, 120 => $url]);
+            self::addIPTC(self::getJpgThumb($id), [5 => $url, 120 => $url]);
         }
 
-        public function addIPTC(array $data = []) {
+        public static function changeQualityJpg(string $from, int $quality, ?string $to) {
+            imagejpeg(imagecreatefromjpeg($from), $to ?? $from, $quality);
+        }
+
+        public static function makeThumb(string $from, string $to, int $quality = 100) {
+            $w = 320;
+            $h = 240;
+            $imageFrom = imagecreatefromjpeg($from);
+            $imageTo = imagecreatetruecolor($w, $h);
+            imagecopyresampled($imageTo, $imageFrom, 0, 0, 0, 0, $w, $h, imagesx($imageFrom), imagesy($imageFrom));
+
+            imagejpeg($imageTo, $to, $quality);
+            imagedestroy($imageFrom);
+            imagedestroy($imageTo);
+        }
+
+        public static function makeWebp(string $from, string $to, int $quality = 100) {
+            imagewebp(imagecreatefromjpeg($from), $to, $quality);
+        }
+
+        public static function createFolder(int $id) {
+            if (!file_exists(self::getFolderPath($id))) {
+                mkdir(self::getFolderPath($id), 0755);
+            }
+        }
+
+        public static function addIPTC(string $path, array $data = []) {
             // установка IPTC тэгов
             $iptc = $data + [
                   5 => 'richinme.com',        // ObjectName
@@ -80,10 +136,10 @@ namespace Libraries {
                 $data .= self::iptcMakeTag(2, $tag, $string);
             }
             // Встраивание IPTC данных
-            $content = iptcembed($data, $this->path);
+            $content = iptcembed($data, $path);
 
             // запись нового изображения в файл
-            $fp = fopen($this->path, 'wb');
+            $fp = fopen($path, 'wb');
             fwrite($fp, $content);
             fclose($fp);
         }

@@ -3,6 +3,7 @@
 namespace Helpers {
 
     use Controllers\Users;
+    use Core\Database;
     use Core\View;
     use Models\Constant\Views;
     use Views\Investment\ChatMessage;
@@ -142,6 +143,7 @@ namespace Helpers {
         }
 
         public static function output(string $output) : bool {
+            Database::endTransaction();
             echo $output;
             return !0 & die();
         }

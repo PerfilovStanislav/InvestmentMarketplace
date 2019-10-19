@@ -3,11 +3,8 @@
 namespace Requests\Investment;
 
 use Core\AbstractEntity;
-use Helpers\Arrays;
-use Helpers\Locale;
 use Helpers\Validator;
 use Interfaces\EntityInterface;
-use Models\Constant\ProjectStatus;
 use Models\Table\Language;
 
 /**
@@ -23,8 +20,6 @@ use Models\Table\Language;
  * @property integer[]  $id_payments
  * @property string[]   $description
  * @property integer[]  $lang_id
- * @property string     $screen_data
- * @property string     $thumb_data
  */
 class AddRequest extends AbstractEntity implements EntityInterface {
 
@@ -45,7 +40,5 @@ class AddRequest extends AbstractEntity implements EntityInterface {
             'id_payments'        => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1, Validator::MAX => 30]],
             'description'        => [self::TYPE_STRING_ARRAY, [Validator::MIN  => 1, Validator::MAX => 5000]],
             'lang_id'            => [self::TYPE_INT_ARRAY,    [Validator::MODEL => Language::class]],
-            'screen_data'        => [self::TYPE_STRING,       [Validator::MIN  => 1, Validator::MAX => 1000000]],
-            'thumb_data'         => [self::TYPE_STRING,       [Validator::MIN  => 1, Validator::MAX => 200000]],
         ];
 }

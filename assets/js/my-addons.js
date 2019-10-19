@@ -282,24 +282,25 @@ var ProjectRegistration = function(a) {
         var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).filter(function(i) {return $(this).val() === "";})
             .add('div.payments:not(:has(:checked)) label,div.langs:not(:has(:checked)) label', form)
             .parent();
-        if ($('#full_site_image').attr('src') === "") {
+        /*if ($('#full_site_image').attr('src') === "") {
             $('label[for=inputImage]').addClass('btn-danger').removeClass('btn-primary');
             a = a.add('label[for=inputImage]');
-        }
+        }*/
         if (a.length) {
             a.addClass('state-error');
             var v = a.eq(0).offset().top;
             $('html,body').animate({ scrollTop: v - 75}, 250+Math.abs($(document).scrollTop()-v)*0.5, 'easeOutQuad');
             return !1;
         }
-        else if ($('#full_site_image').attr('src') === "") {
+        /*else if ($('#full_site_image').attr('src') === "") {
             alert(LOCALE.load_site_screen);
             return !1;
-        }
+        }*/
 
-        var d = $('#full_site_image').cropper('getCroppedCanvas');
+        /*var d = $('#full_site_image').cropper('getCroppedCanvas');
         $('[name=screen_data]').val($('#full_site_image').cropper('getCroppedCanvas', {width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg', 0.95) );
         $('[name=thumb_data]').val($('#thumb_site_image').cropper('getCroppedCanvas', {width:320}).toDataURL('image/jpeg', 1.0) );
+        */
         $.ajax({
            url: '/Investment/add',
            data: form.serialize(),
@@ -308,7 +309,7 @@ var ProjectRegistration = function(a) {
         return false;
     });
 
-    $(function () {
+    /*$(function () {
         'use strict';
 
         function debugBase64(base64URL){
@@ -357,7 +358,7 @@ var ProjectRegistration = function(a) {
       });
 
 
-        /* Import image*/
+        /!* Import image*!/
         var $inputImage = $('#inputImage');
         var URL = window.URL || window.webkitURL;
         var blobURL;
@@ -393,7 +394,7 @@ var ProjectRegistration = function(a) {
           $inputImage.prop('disabled', true).parent().addClass('disabled');
         }
 
-    });
+    });*/
 
 };
 

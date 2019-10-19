@@ -19,6 +19,7 @@ namespace Core {
             $db_pass = 'Itsall4you&me';
 
         private $table = null;
+        private static $transactionStarted = null;
 
         private function __construct() {
             $db_dns = "pgsql:dbname={$this->db_name};host={$this->db_host};port={$this->db_port}";
@@ -33,6 +34,27 @@ namespace Core {
         public function setTable(string $table): self {
             $this->table = $table;
             return $this;
+        }
+
+        public static function startTransaction() {
+            if (!self::$transactionStarted) {
+                self::$transactionStarted = true;
+                self::getInstance()->beginTransaction();
+            }
+        }
+
+        public static function endTransaction() {
+            if (self::$transactionStarted) {
+                self::getInstance()->commit();
+                self::$transactionStarted = false;
+            }
+        }
+
+        public static function rollBackTransaction() {
+            if (self::$transactionStarted) {
+                self::getInstance()->rollBack();
+                self::$transactionStarted = false;
+            }
         }
 
         /**
@@ -109,9 +131,7 @@ namespace Core {
         }
 
         private function execute(PDOStatement $stmt, bool $isInsert = false) : int {
-            $this->beginTransaction();
             if ($stmt->execute() && $stmt->errorCode() === '00000') {
-                $this->commit();
                 return $isInsert ? $this->lastInsertId() : $stmt->rowCount();
             }
             else {
@@ -197,7 +217,7 @@ namespace Core {
         }
 
         private function outputError(PDOStatement $stmt) {
-            $this->rollBack();
+//            $this->rollBack();
             Output::header(Output::E500);
             Output::addAlertDanger('query error', json_encode($stmt->errorInfo()));
         }

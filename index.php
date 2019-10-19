@@ -4,6 +4,7 @@ namespace {
     Class Index {};
 
     use Core\Auth;
+    use Core\Database;
 
     define('DIR', dirname($_SERVER['SCRIPT_NAME']));
     define('ROOT', dirname(__FILE__));
@@ -32,6 +33,7 @@ namespace {
         Auth::getInstance();
         (Core\Router::getInstance())->setUri()->startRoute();
     } catch (\Exception $exception) {
+        Database::rollBackTransaction();
         dd($exception);
     }
 }

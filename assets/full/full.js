@@ -2153,20 +2153,10 @@ var initTypes = function(el) {$('.onlyEn' ,el).on('input',onlyEn);$('.onlyEmail'
  else {$('#desc_'+$(this).val()).remove();}
  });$('div.langs :checkbox:checked').attr('checked',false).trigger('click');form.submit(function(){var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible',form).filter(function(i) {return $(this).val() === "";})
  .add('div.payments:not(:has(:checked)) label,div.langs:not(:has(:checked)) label',form)
- .parent();if ($('#full_site_image').attr('src') === "") {$('label[for=inputImage]').addClass('btn-danger').removeClass('btn-primary');a = a.add('label[for=inputImage]');}
- if (a.length) {a.addClass('state-error');var v = a.eq(0).offset().top;$('html,body').animate({scrollTop: v - 75},250+Math.abs($(document).scrollTop()-v)*0.5,'easeOutQuad');return !1;}
- else if ($('#full_site_image').attr('src') === "") {alert(LOCALE.load_site_screen);return !1;}
- var d = $('#full_site_image').cropper('getCroppedCanvas');$('[name=screen_data]').val($('#full_site_image').cropper('getCroppedCanvas',{width:Math.min(1280,d.width*960/d.height,d.width)}).toDataURL('image/jpeg',0.95) );$('[name=thumb_data]').val($('#thumb_site_image').cropper('getCroppedCanvas',{width:320}).toDataURL('image/jpeg',1.0) );$.ajax({url: '/Investment/add',data: form.serialize(),});return false;});$(function () {'use strict';function debugBase64(base64URL){var win = window.open();win.document.write('<iframe src="' + base64URL + '" frameborder="0" style="border:0;top:0px;left:0px;bottom:0px;right:0px;width:100%;height:100%;" allowfullscreen></iframe>');}
- var console = window.console || {log: function () {} };var $full_site_image = $('#full_site_image');var $thumb_site_image = $('#thumb_site_image');var base64 = '';$('#download').on('click',function () {debugBase64(base64);})
- $full_site_image.cropper();$thumb_site_image.cropper({aspectRatio: 4/3});$('.docs-buttons').on('click','[data-method]',function () {var $this = $(this);var data = $this.data();var result;var $preview = data.control == 1 ? $full_site_image : $thumb_site_image;if ($this.prop('disabled') || $this.hasClass('disabled')) {return;}
-
- if ($preview.data('cropper') && data.method) {if (data.control == 1) {var d = $preview.cropper('getCroppedCanvas');data.option = {width:Math.min(1280,d.width*960/d.height,d.width)};} else {data.option = {width:320};}
- data = $.extend({},data);result = $preview.cropper(data.method,data.option);base64 = result.toDataURL('image/jpeg',0.9);$('#getCroppedCanvasModal').modal().find('.modal-body').html(result);}
- });var $inputImage = $('#inputImage');var URL = window.URL || window.webkitURL;var blobURL;if (URL) {$inputImage.change(function () {$inputImage.parent().addClass('btn-primary').removeClass('btn-danger');var files = this.files;var file;if (!$full_site_image.data('cropper')) {return;}
- if (files && files.length) {file = files[0];if (/^image\/\w+$/.test(file.type)) {blobURL = URL.createObjectURL(file);$full_site_image.one('built.cropper',function () {$thumb_site_image.one('built.cropper',function () {URL.revokeObjectURL(blobURL);$('button[data-control]').removeClass('disabled');}).cropper('reset').cropper('replace',blobURL);}).cropper('reset').cropper('replace',blobURL);$inputImage.val('');} else {window.alert('Please choose an image file.');}
- }
- });} else {$inputImage.prop('disabled',true).parent().addClass('disabled');}
- });};function remove() {var p = $(this).closest('div[role=row]');var g = p.closest('div[role=group]');if (g.find('>div').length !== 1) p.remove();reCountN(g);}
+ .parent();if (a.length) {a.addClass('state-error');var v = a.eq(0).offset().top;$('html,body').animate({scrollTop: v - 75},250+Math.abs($(document).scrollTop()-v)*0.5,'easeOutQuad');return !1;}
+ 
+ 
+ $.ajax({url: '/Investment/add',data: form.serialize(),});return false;});};function remove() {var p = $(this).closest('div[role=row]');var g = p.closest('div[role=group]');if (g.find('>div').length !== 1) p.remove();reCountN(g);}
 function reCountN(el) {$(el).find('n').each(function(i) {$(this).text(i+1)});}
 
 var imgClickInit = function() {$('.thumbnail>img',$(this)).magnificPopup({type: 'image',callbacks: {beforeOpen: function(e) {$('body').addClass('mfp-bg-open');this.st.mainClass = 'mfp-zoomIn';this.contentContainer.addClass('mfp-with-anim');},afterClose: function(e) {setTimeout(function() {$('body').removeClass('mfp-bg-open');$(window).trigger('resize');},1000)

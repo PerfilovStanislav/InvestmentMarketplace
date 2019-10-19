@@ -4,8 +4,9 @@ namespace Controllers {
 
     use Core\{
         Controller,
+        Database,
         Router,
-        View,
+        View
     };
     use Helpers\{
         Locale,
@@ -145,6 +146,7 @@ namespace Controllers {
         }
 
         public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest) {
+            Database::startTransaction();
             $url = $this->checkWebsite($checkSiteRequest, true);
 
             if (count(array_unique([
@@ -167,9 +169,7 @@ namespace Controllers {
             $project->status_id = AuthModel::isAdmin() ? ProjectStatus::ACTIVE : ProjectStatus::NOT_PUBLISHED;
             $project->save();
 
-            $file = new File($project->id);
-            $file->save($request->screen_data)->addIPTC([5 => $url, 120 => $url]);
-            $file->save($request->thumb_data, true)->addIPTC([5 => $url, 120 => $url]);
+            File::saveScreenShot($url, $project->id);
 
             // Сохраняем описания
             foreach ($request->description as $langId => $description) {
@@ -205,20 +205,32 @@ namespace Controllers {
         }
 
         public function checkWebsite(CheckSiteRequest $request, bool $getUrl = false) : string {
-            $url = 'http://'.str_replace(['www.', 'https://', 'http://'], '', strtolower($request->website));
-            $url = array_reverse(explode('.', parse_url($url, PHP_URL_HOST)));
+            $url = self::getParsedUrl(str_replace('www.', '', strtolower($request->website)));
 
-            if (count($url) < 2) {
-                Errors::add('website', Locale::get('wrong_url'), true);
+            if (($res = Project::getDb()->selectRow(['url' => $url]))) {
+                Errors::add('website', Locale::get('site_exists'), true);
             }
-            else {
-                $url_str = $url[1] . '.' . $url[0];
-                if (($res = Project::getDb()->selectRow(['url' => $url_str]))) {
-                    Errors::add('website', Locale::get('site_exists'), true);
+            elseif ($getUrl) return $url;
+            else Output::addFieldSuccess('website', Locale::get('site_is_free'));
+        }
+
+        private static function getParsedUrl(string $url) {
+            $urlParsed = parse_url($url);
+
+            if (isset($urlParsed['scheme'], $urlParsed['host'])) {
+                if (count(explode('.', $url)) < 2) {
+                    Errors::add('website', Locale::get('wrong_url'), true);
                 }
-                elseif ($getUrl) return $url_str;
-                else Output::addFieldSuccess('website', Locale::get('site_is_free'));
+                $url = $urlParsed['scheme'] . '://' . $urlParsed['host'];
             }
+            elseif (isset($urlParsed['host'])) {
+                $url = 'http://' . $urlParsed['host'];
+            }
+            elseif (isset($urlParsed['path'])) {
+                return self::getParsedUrl('http://' . $urlParsed['path']);
+            }
+
+            return $url;
         }
 
         public function sendMessage(SetChatMessageRequest $request) {

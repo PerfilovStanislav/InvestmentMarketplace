@@ -27,7 +27,7 @@ namespace Models\Collection {
             ];
 
         public function __construct(array $where) {
-            $this->fillCollection(self::getDb()->select($where, MVProjectFilterAvailableLang::getPropertyKeys()));
+            $this->fillCollection(self::getDb()->select($where, MVProjectFilterAvailableLang::getPropertyKeys(), 'cnt desc'));
         }
     }
 }

@@ -21,11 +21,12 @@ namespace Libraries {
         }
 
         public static function getOriginalWebpScreen(int $id) : string {
-            return self::getFilePath($id) . '.jpg';
+            return self::getFilePath($id) . '.webp';
         }
 
         public static function getOriginalScreen(int $id) : string {
-            return WEBP ? self::getOriginalWebpScreen($id) : self::getOriginalJpgScreen($id);
+            // Убрать в будущем && file_exists
+            return WEBP && file_exists(self::getOriginalWebpScreen($id)) ? self::getOriginalWebpScreen($id) : self::getOriginalJpgScreen($id);
         }
 
         public static function getJpgThumb(int $id) : string {
@@ -57,7 +58,7 @@ namespace Libraries {
             
             require(ROOT . '/composer/vendor/autoload.php');
 
-            $factory = new \HeadlessChromium\BrowserFactory('google-chrome-unstable');
+            $factory = new \HeadlessChromium\BrowserFactory('google-chrome');
             $browser = $factory->createBrowser([
                 'headless' => true,
                 'keepAlive' => false,
@@ -73,6 +74,7 @@ namespace Libraries {
                 'quality' => 95,
             ])->saveToFile(self::getOriginalJpgScreen($id));
 
+            self::makeWebp(self::getOriginalJpgScreen($id), self::getOriginalWebpScreen($id));
             self::makeThumb(self::getOriginalJpgScreen($id), self::getJpgThumb($id));
             self::makeWebp(self::getJpgThumb($id), self::getWebpThumb($id));
             self::makeWebp(self::getJpgThumb($id), self::getWebpPreThumb($id), 0);

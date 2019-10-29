@@ -516,6 +516,10 @@ var ajax = function(url, data, isNewPage) {
     $.ajax(tmp);
 };
 
+var changeUrl = function(data) {
+    window.history.pushState(null, null, data.url);
+};
+
 var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
 };

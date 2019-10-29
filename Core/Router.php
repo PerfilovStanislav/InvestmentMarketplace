@@ -10,9 +10,12 @@ use Traits\Instance;
 
 class Router {
     use Instance;
-    private $defaultParams = 'Investment/show',
-            $errorParams   = 'Errors/show',
-            $controller,
+
+    CONST
+        DEFAULT_PARAMS = '/Investment/show',
+        ERROR_PARAMS = '/Errors/show';
+
+    private $controller,
             $action,
             $params,
             $additional = [];
@@ -21,10 +24,10 @@ class Router {
 
     public function startRoute() {
         if (!$this->action) {
-            $this->setUri($this->defaultParams)->route();
+            $this->setUri(self::DEFAULT_PARAMS)->route();
         }
         else if (!$this->route()) {
-            $this->setUri($this->errorParams)->route();
+            $this->setUri(self::ERROR_PARAMS)->route();
         }
     }
 

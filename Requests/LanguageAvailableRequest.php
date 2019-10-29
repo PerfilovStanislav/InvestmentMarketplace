@@ -3,11 +3,10 @@
 namespace Requests;
 
 use Core\AbstractEntity;
-use Helpers\Locale;
+use Helpers\Errors;
 use Helpers\Validator;
 use Interfaces\EntityInterface;
 use Models\Collection\MVSiteAvailableLanguages;
-use Models\ProjectAvailableLangs;
 
 /**
  * @property string $lang
@@ -30,5 +29,6 @@ class LanguageAvailableRequest extends AbstractEntity implements EntityInterface
             ],
         ];
         $this->fromArray($data);
+        Errors::exitIfExists();
     }
 }

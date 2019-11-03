@@ -49,6 +49,7 @@ namespace Controllers {
         SetChatMessageRequest,
         ShowRequest,
     };
+    use Requests\Telegram\SendMessageRequest;
     use Traits\AuthTrait;
     use Views\Investment\{
         Added,
@@ -185,6 +186,11 @@ namespace Controllers {
 
             Output::addView(Added::class);
             Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));
+
+            $message = new SendMessageRequest();
+            $message->chat_id = Telegram::MY_TELEGRAM_ID;
+            $message->text = 'New project id added ' . $project->url;
+            Telegram::sendMessage($message);
         }
 
         public function changeStatus(ChangeStatusRequest $request) {

@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Requests\Telegram\SendMessageRequest;
 use Helpers\Errors;
+use Requests\Telegram\SendPhotoRequest;
 
 class Telegram
 {
@@ -20,9 +21,10 @@ class Telegram
             CURLOPT_HEADER         => false,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST           => 1,
-            CURLOPT_POSTFIELDS     => ($params),
+            CURLOPT_POSTFIELDS     => $params,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_CAINFO         => '/etc/ssl/richinme_com.pem',
+            CURLOPT_HTTPHEADER     => ['Content-Type:multipart/form-data'],
         ]);
         $result = curl_exec($ch);
 //        $error = curl_error($ch);
@@ -40,6 +42,18 @@ class Telegram
         ];
 
         return self::send('sendMessage', $params);
+    }
+
+    public static function sendPhoto(SendPhotoRequest $request) {
+        Errors::exitIfExists();
+
+        $params = [
+            'chat_id' => $request->chat_id,
+            'caption' => $request->caption,
+            'photo' => new \CURLFile(realpath($request->photo),'image/jpeg','test_name.jpg'),
+        ];
+
+        return self::send('sendPhoto', $params);
     }
 
 }

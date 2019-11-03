@@ -1,10 +1,12 @@
 <?php
 
-namespace Controllers;
+namespace Libraries;
 
-use Requests\Telegram\SendMessageRequest;
+use Requests\Telegram\{
+    SendMessageRequest,
+    SendPhotoRequest,
+};
 use Helpers\Errors;
-use Requests\Telegram\SendPhotoRequest;
 
 class Telegram
 {

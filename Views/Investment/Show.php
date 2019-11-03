@@ -15,7 +15,7 @@ Class Show {} }
 
 use Helpers\Data\Currency;
 use Interfaces\LocaleInterface;
-use Libraries\File;
+use Libraries\Screens;
 use Models\Collection\Languages;
 use Models\Collection\ProjectLangs;
 use Models\Constant\ProjectStatus;
@@ -65,10 +65,10 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         <div class="mbn flex inforow">
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <img src="/<?=$isFirstRow ? File::getJpgThumb($project->id) : File::getPreThumb($project->id)?>"
+                                    <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
                                          alt="<?=$project->name?>"
-                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>"
-                                         <?=!$isFirstRow ? 'realthumb="/'. File::getThumb($project->id) .'"' : ''?>
+                                         class="media-object" href="/<?=Screens::getOriginalScreen($project->id)?>"
+                                         <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
                                     >
                                 </div>
                             </div>
@@ -169,9 +169,9 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
 
                             <div class="mnw270">
                                 <div class="thumbnail">
-                                    <img src="/<?=$isFirstRow ? File::getJpgThumb($project->id) : File::getPreThumb($project->id)?>"
-                                         class="media-object" href="/<?=File::getOriginalScreen($project->id)?>"
-                                        <?=!$isFirstRow ? 'realthumb="/'. File::getThumb($project->id) .'"' : ''?>
+                                    <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
+                                         class="media-object" href="/<?=Screens::getOriginalScreen($project->id)?>"
+                                        <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
                                     >
                                 </div>
                             </div>

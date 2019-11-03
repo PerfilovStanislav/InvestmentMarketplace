@@ -11,7 +11,7 @@ use Models\Constant\TelegramParseMode;
  * @property int    $chat_id
  * @property string $caption
  * @property string $parse_mode
- * @property string $photo
+ * @property \CURLFile $photo
  */
 class SendPhotoRequest extends AbstractEntity implements EntityInterface {
 
@@ -23,7 +23,7 @@ class SendPhotoRequest extends AbstractEntity implements EntityInterface {
         ],
         $properties = [
             'chat_id'     => [self::TYPE_INT,        [Validator::MIN => 1]],
-            'photo'       => [self::TYPE_STRING,     [Validator::MIN => 1]],
+            'photo'       => [self::TYPE_CURL_FILE,  [Validator::MIN => 1]],
             'parse_mode'  => [self::TYPE_CONSTANTS,  TelegramParseMode::class],
             'caption'     => [self::TYPE_STRING,     [Validator::MIN => 0]],
         ];

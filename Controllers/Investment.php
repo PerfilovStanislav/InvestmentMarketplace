@@ -14,7 +14,7 @@ namespace Controllers {
         Output,
         Data\Currency,
     };
-    use Libraries\File;
+    use Libraries\Screens;
     use Models\Collection\{
         Languages,
         ProjectChatMessages,
@@ -49,7 +49,7 @@ namespace Controllers {
         SetChatMessageRequest,
         ShowRequest,
     };
-    use Requests\Telegram\SendMessageRequest;
+    use Requests\Telegram\SendPhotoRequest;
     use Traits\AuthTrait;
     use Views\Investment\{
         Added,
@@ -170,7 +170,7 @@ namespace Controllers {
             $project->status_id = AuthModel::isAdmin() ? ProjectStatus::ACTIVE : ProjectStatus::NOT_PUBLISHED;
             $project->save();
 
-            File::saveScreenShot($url, $project->id);
+            Screens::saveScreenShot($url, $project->id);
 
             // Сохраняем описания
             foreach ($request->description as $langId => $description) {
@@ -187,10 +187,12 @@ namespace Controllers {
             Output::addView(Added::class);
             Output::addAlertSuccess(Locale::get('success'), Locale::get('project_is_added'));
 
-            $message = new SendMessageRequest();
-            $message->chat_id = Telegram::MY_TELEGRAM_ID;
-            $message->text = 'New project id added ' . $project->url;
-            Telegram::sendMessage($message);
+            $message = new SendPhotoRequest([
+                'chat_id' => Telegram::MY_TELEGRAM_ID,
+                'caption' => sprintf('New project id added *%s* (%s)', $project->name, $project->url),
+                'photo'   => Screens::getOriginalWebpScreen($project->id),
+            ]);
+            Telegram::sendPhoto($message);
         }
 
         public function changeStatus(ChangeStatusRequest $request) {

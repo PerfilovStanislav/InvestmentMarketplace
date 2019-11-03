@@ -50,7 +50,7 @@ class Telegram
         $params = [
             'chat_id' => $request->chat_id,
             'caption' => $request->caption,
-            'photo' => new \CURLFile(realpath($request->photo),'image/jpeg','test_name.jpg'),
+            'photo'   => $request->photo,
         ];
 
         return self::send('sendPhoto', $params);

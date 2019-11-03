@@ -23,7 +23,8 @@ abstract class AbstractEntity implements EntityInterface {
         TYPE_NULLABLE     = 10,
         TYPE_INT_ARRAY    = 11,
         TYPE_FLOAT_ARRAY  = 12,
-        TYPE_STRING_ARRAY = 13;
+        TYPE_STRING_ARRAY = 13,
+        TYPE_CURL_FILE    = 14;
 
     CONST
         FORMAT_DATE     = 'Y-m-d',
@@ -60,6 +61,7 @@ abstract class AbstractEntity implements EntityInterface {
                     case self::TYPE_STRING:
                     case self::TYPE_INT:
                     case self::TYPE_FLOAT:
+                    case self::TYPE_CURL_FILE:
                         $this->data[$key] = Validator::validate($key, $value, $type, $params[1] ?? []);
                         break;
                     case self::TYPE_DTO:

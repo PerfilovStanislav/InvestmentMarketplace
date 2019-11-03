@@ -43,11 +43,13 @@ class Validator
         }
 
         switch ($type) {
-            case AbstractEntity::TYPE_INT:      $value = intval($value);           break;
-            case AbstractEntity::TYPE_FLOAT:    $value = floatval($value);         break;
-            case AbstractEntity::TYPE_STRING:   $value = (string)$value;           break;
-            case AbstractEntity::TYPE_DATETIME: $value = mb_substr($value, 0, 19); break;
-            case AbstractEntity::TYPE_DATE:     $value = mb_substr($value, 0, 10); break;
+            case AbstractEntity::TYPE_INT:       $value = intval($value);           break;
+            case AbstractEntity::TYPE_FLOAT:     $value = floatval($value);         break;
+            case AbstractEntity::TYPE_STRING:
+            case AbstractEntity::TYPE_CURL_FILE:
+                                                 $value = (string)$value;           break;
+            case AbstractEntity::TYPE_DATETIME:  $value = mb_substr($value, 0, 19); break;
+            case AbstractEntity::TYPE_DATE:      $value = mb_substr($value, 0, 10); break;
         }
 
         if ($type === AbstractEntity::TYPE_DATETIME || $type === AbstractEntity::TYPE_DATE) {
@@ -65,6 +67,7 @@ class Validator
                         case AbstractEntity::TYPE_FLOAT:
                             self::minNumber($key, $value, $rule); break;
                         case AbstractEntity::TYPE_STRING:
+                        case AbstractEntity::TYPE_CURL_FILE:
                             self::minString($key, $value, $rule); break;
                     }; break;
                 case self::MAX:
@@ -73,6 +76,7 @@ class Validator
                         case AbstractEntity::TYPE_FLOAT:
                             self::maxNumber($key, $value, $rule); break;
                         case AbstractEntity::TYPE_STRING:
+                        case AbstractEntity::TYPE_CURL_FILE:
                             self::maxString($key, $value, $rule); break;
                     }; break;
                 case self::LENGTH:
@@ -92,6 +96,13 @@ class Validator
                     }
                     break;
             }
+        }
+
+        if ($type === AbstractEntity::TYPE_CURL_FILE) {
+            if (!file_exists($value)) {
+                Errors::add($key, sprintf('Файл %s не найден', $value));
+            }
+            return new \CURLFile($value);
         }
 
         return $value;

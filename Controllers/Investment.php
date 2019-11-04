@@ -151,6 +151,8 @@ namespace Controllers {
 
         public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest) {
             Database::startTransaction();
+            Errors::exitIfExists();
+
             $url = $this->checkWebsite($checkSiteRequest, true);
 
             if (count(array_unique([
@@ -180,7 +182,7 @@ namespace Controllers {
                 $projectLang = new ProjectLang();
                 $projectLang->project_id  = $project->id;
                 $projectLang->lang_id     = $langId;
-                $projectLang->description = str_replace("\n", '<\br>', $description);
+                $projectLang->description = str_replace("\n", '</br>', $description);
                 $projectLang->save();
                 unset($projectLang);
             }

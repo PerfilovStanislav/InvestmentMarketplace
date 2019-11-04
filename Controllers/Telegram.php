@@ -24,7 +24,7 @@ class Telegram
     {
         $request = new SendMessageRequest([
             'chat_id'     => TelegramLibrary::MY_TELEGRAM_ID,
-            'text'        => json_encode($params, JSON_PRETTY_PRINT),
+            'text'        => is_string($params) ? $params : json_encode($params, JSON_PRETTY_PRINT),
         ]);
         TelegramLibrary::sendMessage($request);
     }

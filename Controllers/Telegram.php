@@ -8,7 +8,7 @@ use Libraries\Telegram as TelegramLibrary;
 
 class Telegram
 {
-    public static function setWebhook(string $token, array $params = [])
+    public static function setWebhook()
     {
         $request = new SetWebhookRequest([
             'url'             => 'https://richinme.com/Telegram/getWebhook/token/' . \Config::GET_WEBHOOK_KEY,

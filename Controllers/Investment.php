@@ -192,7 +192,7 @@ namespace Controllers {
 
             $message = new SendPhotoRequest([
                 'chat_id' => Telegram::MY_TELEGRAM_ID,
-                'caption' => sprintf('New project id added *%s* (%s)', $project->name, $project->url),
+                'caption' => sprintf('New project is added *%s* (%s)', $project->name, $project->url),
                 'photo'   => Screens::getOriginalWebpScreen($project->id),
             ]);
             Telegram::sendPhoto($message);

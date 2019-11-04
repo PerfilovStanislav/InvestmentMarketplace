@@ -50,9 +50,10 @@ class Telegram
         Errors::exitIfExists();
 
         $params = [
-            'chat_id' => $request->chat_id,
-            'caption' => $request->caption,
-            'photo'   => $request->photo,
+            'chat_id'    => $request->chat_id,
+            'caption'    => $request->caption,
+            'photo'      => $request->photo,
+            'parse_mode' => $request->parse_mode,
         ];
 
         return self::send('sendPhoto', $params);

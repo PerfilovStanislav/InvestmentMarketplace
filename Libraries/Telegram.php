@@ -3,10 +3,7 @@
 namespace Libraries;
 
 use Core\AbstractEntity;
-use Requests\Telegram\{
-    SendMessageRequest,
-    SendPhotoRequest,
-};
+use Requests\Telegram\{SendMessageRequest, SendPhotoRequest, SetWebhookRequest};
 use Helpers\Errors;
 
 class Telegram
@@ -42,6 +39,11 @@ class Telegram
     public static function sendPhoto(SendPhotoRequest $request) {
         Errors::exitIfExists();
         return self::send('sendPhoto', $request);
+    }
+
+    public static function setWebhook(SetWebhookRequest $request) {
+        Errors::exitIfExists();
+        return self::send('setWebhook', $request);
     }
 
 }

@@ -15,10 +15,12 @@ class Telegram
             'certificate'     => '/etc/ssl/richinme_com.pem',
             'max_connections' => 20,
         ]);
-        TelegramLibrary::setWebhook($request);
+        $result = TelegramLibrary::setWebhook($request);
+
+        self::getWebhook('xxx', $result);
     }
 
-    public static function getWebhook(string $token, array $params = [])
+    public static function getWebhook(string $token, $params = [])
     {
         $request = new SendMessageRequest([
             'chat_id'     => TelegramLibrary::MY_TELEGRAM_ID,

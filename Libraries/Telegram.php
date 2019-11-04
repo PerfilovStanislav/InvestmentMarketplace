@@ -11,9 +11,7 @@ use Helpers\Errors;
 
 class Telegram
 {
-    private CONST
-        TOKEN = '',
-        TELEGRAM_API = 'https://api.telegram.org/bot' . self::TOKEN;
+    private CONST TELEGRAM_API = 'https://api.telegram.org/bot' . \Config::TOKEN;
 
     CONST MY_TELEGRAM_ID = 228245070;
 

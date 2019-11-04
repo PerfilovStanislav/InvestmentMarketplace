@@ -74,7 +74,7 @@ namespace Libraries {
                 'quality' => 95,
             ])->saveToFile(self::getOriginalJpgScreen($id));
 
-            self::makeWebp(self::getOriginalJpgScreen($id), self::getOriginalWebpScreen($id));
+//            self::makeWebp(self::getOriginalJpgScreen($id), self::getOriginalWebpScreen($id)); // Занимает больше jpg =(
             self::makeThumb(self::getOriginalJpgScreen($id), self::getJpgThumb($id));
             self::makeWebp(self::getJpgThumb($id), self::getWebpThumb($id));
             self::makeWebp(self::getJpgThumb($id), self::getWebpPreThumb($id), 0);

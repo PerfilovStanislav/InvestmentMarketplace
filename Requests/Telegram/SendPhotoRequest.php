@@ -8,9 +8,9 @@ use Interfaces\EntityInterface;
 use Models\Constant\TelegramParseMode;
 
 /**
- * @property int    $chat_id
- * @property string $caption
- * @property string $parse_mode
+ * @property int       $chat_id
+ * @property string    $caption
+ * @property string    $parse_mode
  * @property \CURLFile $photo
  */
 class SendPhotoRequest extends AbstractEntity implements EntityInterface {

@@ -12,5 +12,5 @@ interface ConstantInterface
 
     static function getValue(string $key);
 
-    static function getConstName(int $key): string ;
+    static function getConstName($key): string ;
 }

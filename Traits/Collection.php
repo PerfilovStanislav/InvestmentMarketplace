@@ -22,7 +22,7 @@ trait Collection
         return array_values(self::getCollection());
     }
 
-    public static function getConstName(int $key) : string {
+    public static function getConstName($key) : string {
         foreach (self::getCollection() as $name => $value) {
             if ($value == $key) return mb_strtolower($name);
         }

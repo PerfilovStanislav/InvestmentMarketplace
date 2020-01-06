@@ -23755,8 +23755,3 @@ body.timeline-page .panel-clone {
 ::-ms-input-placeholder { /* Microsoft Edge */
     color:  var(--placeholder-color);
 }
-
-@font-face {
-    font-family: 'PantonLight';
-    src: url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.woff), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.ttf), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.woff2), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.otf), url(https://d26ik0aqrns2ec.cloudfront.net/Panton/Light.eot)
-}

@@ -6,29 +6,29 @@ namespace Views\Investment; {
  * @property Payment[] $payments
  * @property Language[] $mainProjectLanguages
  * @property Language[] $secondaryProjectLanguages
- * @property AuthModel $authModel
+ * @property CurrentUser $authModel
  * @property array currency
- * @property LocaleInterface $locale
+ * @property AbstractLanguage $locale
  */
 Class Registration {} }
 
-use Interfaces\LocaleInterface;
-use Models\AuthModel;
+use Helpers\Locales\AbstractLanguage;
+use Models\CurrentUser;
 use Models\Table\Language;
 use Models\Table\Payment;
 ?>
 <div class="tray tray-center">
     <div class="content-header">
-        <h2> <?=$this->locale['free_4_add_project']?> <b class="text-primary"><?=$this->locale['free']?></b></h2>
+        <h2> <?=Translate()->freeForAddProject?> <b class="text-primary"><?=Translate()->free?></b></h2>
         <?php /*if (!($this->authModel->is_authorized)):*/?><!--
-            <p class="lead text-danger"><?/*=$this->locale['auth_4_add_project']*/?></p>
+            <p class="lead text-danger"><?/*=Translate()->auth_4_addProject*/?></p>
         --><?php /*endif;*/?>
     </div>
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
         <div class="panel heading-border panel-<?=$this->authModel->is_authorized ? 'primary' : 'danger'?>">
             <div class="panel-heading">
                 <span class="panel-title">
-                    <i class="fa fa-pencil-square"></i><?=$this->locale['add_project']?>
+                    <i class="fa fa-pencil-square"></i><?=Translate()->addProject?>
                 </span>
             </div>
             <form method="post" action="/" id="addproject_form">
@@ -37,7 +37,7 @@ use Models\Table\Payment;
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input name="name" class="gui-input onlyEn" autocomplete="off"
-                                       placeholder="<?=$this->locale['project_name']?>">
+                                       placeholder="<?=Translate()->projectName?>">
                                 <label class="field-icon">
                                     <i class="fa fa-pencil"></i>
                                 </label>
@@ -47,18 +47,18 @@ use Models\Table\Payment;
                             <div class="smart-widget sm-right smr-100">
                                 <label class="field prepend-icon">
                                     <input name="website" class="gui-input onlyUrl" autocomplete="off"
-                                           placeholder="<?=$this->locale['project_url']?>">
+                                           placeholder="<?=Translate()->projectUrl?>">
                                     <label class="field-icon">
                                         <i class="fa fa-globe"></i>
                                     </label>
-                                    <label class="button btn-primary check"><?=$this->locale['check']?></label>
+                                    <label class="button btn-primary check"><?=Translate()->check?></label>
                                 </label>
                             </div>
                         </div>
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="text" name="start_date" class="datepicker gui-input onlyDate" autocomplete="off"
-                                       placeholder="<?=$this->locale['start_date']?>">
+                                       placeholder="<?=Translate()->startDate?>">
                                 <label class="field-icon">
                                     <i class="fa fa-calendar"></i>
                                 </label>
@@ -67,28 +67,28 @@ use Models\Table\Payment;
                         <div class="section">
                             <label class="field select">
                                 <select name="paymenttype">
-                                    <option value=""><?=$this->locale['payment_type'][0]?></option>
-                                    <option value="1"><?=$this->locale['payment_type'][1]?></option>
-                                    <option value="2"><?=$this->locale['payment_type'][2]?></option>
-                                    <option value="3"><?=$this->locale['payment_type'][3]?></option>
+                                    <option value=""><?=Translate()->paymentType[0]?></option>
+                                    <option value="1"><?=Translate()->paymentType[1]?></option>
+                                    <option value="2"><?=Translate()->paymentType[2]?></option>
+                                    <option value="3"><?=Translate()->paymentType[3]?></option>
                                 </select>
                                 <i class="arrow double"></i>
                             </label>
                         </div>
                         <div class="section-divider mt40 mb25">
-                            <span> <?=$this->locale['plans']?> </span>
+                            <span> <?=Translate()->plans?> </span>
                         </div>
                         <div class="section mb10" role="group">
                             <div class="section row mb10" role="row">
                                 <div class="col-md-3">
                                     <div class="section row mbn">
                                         <div class="col-md-3 w50 mr20">
-                                            <button class="button btn-warning remove glyphicons glyphicons-remove_2" type="button" title="<?=$this->locale['remove']?>"> </button>
+                                            <button class="button btn-warning remove glyphicons glyphicons-remove_2" type="button" title="<?=Translate()->remove?>"> </button>
                                         </div>
 
                                         <div class="col-md-8 pln prn">
                                             <label class="field append-icon">
-                                                <input placeholder="<?=$this->locale['profit']?>" class="gui-input onlyNumber" name="plan_percents[]" autocomplete="off">
+                                                <input placeholder="<?=Translate()->profit?>" class="gui-input onlyNumber" name="plan_percents[]" autocomplete="off">
                                                 <label class="field-icon">
                                                     <i class="fa fa-percent"></i>
                                                 </label>
@@ -104,18 +104,18 @@ use Models\Table\Payment;
                                                 <i class="glyphicons glyphicons-clock"></i>
                                             </label>
                                         </label>
-                                        <label class="button w15"><?=$this->locale['after']?></label>
+                                        <label class="button w15"><?=Translate()->after?></label>
                                     </div>
                                 </div>
                                 <div class="col-md-2 mln1 pln">
                                     <label class="field select">
                                         <select name="plan_period_type[]">
-                                            <option value="1">          <?=$this->locale['period_name'][1]?></option>
-                                            <option value="2">          <?=$this->locale['period_name'][2]?></option>
-                                            <option value="3" selected> <?=$this->locale['period_name'][3]?></option>
-                                            <option value="4">          <?=$this->locale['period_name'][4]?></option>
-                                            <option value="5">          <?=$this->locale['period_name'][5]?></option>
-                                            <option value="6">          <?=$this->locale['period_name'][6]?></option>
+                                            <option value="1">          <?=Translate()->periodName[1]?></option>
+                                            <option value="2">          <?=Translate()->periodName[2]?></option>
+                                            <option value="3" selected> <?=Translate()->periodName[3]?></option>
+                                            <option value="4">          <?=Translate()->periodName[4]?></option>
+                                            <option value="5">          <?=Translate()->periodName[5]?></option>
+                                            <option value="6">          <?=Translate()->periodName[6]?></option>
                                         </select>
                                         <i class="arrow double"></i>
                                     </label>
@@ -128,7 +128,7 @@ use Models\Table\Payment;
                                                 <i class="fa fa-money"></i>
                                             </label>
                                         </label>
-                                        <label class="button prn pln"><?=$this->locale['from']?></label>
+                                        <label class="button prn pln"><?=Translate()->from?></label>
                                     </div>
                                 </div>
                                 <div class="col-md-1 mln1 pln fa" style="top: 0px">
@@ -146,17 +146,17 @@ use Models\Table\Payment;
                         </div>
                         <div class="section">
                             <button type="button"
-                                    class="button btn-primary copy"> <?=$this->locale['add_plan']?> </button>
+                                    class="button btn-primary copy"> <?=Translate()->addPlan?> </button>
                         </div>
                         <div class="section-divider mt40 mb25">
-                            <span> <?=$this->locale['ref_program']?> </span>
+                            <span> <?=Translate()->refProgram?> </span>
                         </div>
                         <div class="section mb10 mrn20" role="group">
                             <div class="section row mb10 mrn" role="row">
                                 <div class="col-md-1 w50 mr20">
                                     <button type="button"
                                             class="button btn-warning remove glyphicons glyphicons-remove_2"
-                                            title="<?=$this->locale['remove']?>"> </button>
+                                            title="<?=Translate()->remove?>"> </button>
                                 </div>
 
                                 <div class="col-md-11 pln">
@@ -168,7 +168,7 @@ use Models\Table\Payment;
                                             </label>
                                         </label>
                                         <label class="button prn pln">
-                                            <n>1</n> <?=$this->locale['level']?></label>
+                                            <n>1</n> <?=Translate()->level?></label>
                                     </div>
                                 </div>
                                 <!-- end section -->
@@ -177,13 +177,13 @@ use Models\Table\Payment;
 
                         <div class="section">
                             <button type="button"
-                                    class="button btn-primary copy"> <?=$this->locale['add_level']?> </button>
+                                    class="button btn-primary copy"> <?=Translate()->addLevel?> </button>
                         </div>
                         <!-- end section -->
 
 
                         <div class="section-divider mt40 mb25">
-                            <span> <?=$this->locale['payment_system']?> </span>
+                            <span> <?=Translate()->paymentSystem?> </span>
                         </div>
 
                         <div class="payments">
@@ -203,7 +203,7 @@ use Models\Table\Payment;
                             </div>
                         </div>
                         <div class="section-divider mt40 mb25">
-                            <span> <?=$this->locale['languages']?> </span>
+                            <span> <?=Translate()->languages?> </span>
                         </div>
                         <div class="langs">
                             <div class="section row">
@@ -234,20 +234,20 @@ use Models\Table\Payment;
                             </div>
                             <div class="section">
                                 <button type="button"
-                                        class="button btn-primary showPrev"> <?=$this->locale['show_all_langs']?> </button>
+                                        class="button btn-primary showPrev"> <?=Translate()->showAllLangs?> </button>
                             </div>
                         </div>
                         <div class="section description" hidden>
                             <label class="field prepend-icon">
                                 <textarea class="gui-textarea" name="description"
-                                          placeholder="<?=$this->locale['description']?> "></textarea>
+                                          placeholder="<?=Translate()->description?> "></textarea>
                                 <label class="field-icon">
                                 </label>
                             </label>
                         </div>
                         <div class="panel-footer text-right">
                             <button type="submit"
-                                    class="button btn-primary"> <?=$this->locale['send_form']?> </button>
+                                    class="button btn-primary"> <?=Translate()->sendForm?> </button>
                         </div>
                     </div>
                     <input type="hidden" name="ajax" value="1">

@@ -7,7 +7,7 @@ var initChat = function() {
     $("form[chat_id]").submit(function(e){
         var message = $(this).find('[name=message]').val();
         console.log(STORAGE.status);
-        if (!message.length || STORAGE.status == 5) return false;
+        if (!message.length || STORAGE.status === 5) return false;
 
         STORAGE.status = 5; /* Отправляем сообщение */
         abortAllAjax();
@@ -44,11 +44,11 @@ var setNewChatMessages = function(data) {
             var message = data.messages[messageId];
             var project_id = message.project_id;
             var SCP = (STORAGE.chat[project_id] = _.extend({project_id:project_id}, STORAGE.chat[project_id]));
-            SCP.id = SCP.id == undefined ? message.id : _.max([SCP.id, message.id]);
+            SCP.id = SCP.id === undefined ? message.id : _.max([SCP.id, message.id]);
             var $panel_scroller = $('[project_id='+project_id+'] .chat-widget .panel-scroller').eq(0);
             var $scroller_content = $panel_scroller.find('.scroller-content').eq(0);
             var $chat_block = $('#chatMessage').children().clone();
-            $chat_block.find('.media-position').addClass('media-' + ((STORAGE.auth.is_authorized ? STORAGE.auth.user.id : 0) == message.user_id  ||  (STORAGE.auth.session_id||0) == message.session_id ? 'right' : 'left'))
+            $chat_block.find('.media-position').addClass('media-' + ((STORAGE.auth.is_authorized ? STORAGE.auth.user.id : 0) === message.user_id  ||  (STORAGE.auth.session_id||0) === message.session_id ? 'right' : 'left'))
                 .find('img.media-object').attr('src', '/assets/img/avatars/'+(((message.user_id||message.session_id||1)-1)%30+1)+(STORAGE.webp ? '.webp' : '.jpg'))
             $chat_block.find('.date_create').text(message.date_create);
             $chat_block.find('.message').text(message.message);

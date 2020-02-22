@@ -4,7 +4,6 @@ namespace Requests\Telegram;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 use Models\Constant\TelegramParseMode;
 
 /**
@@ -12,22 +11,18 @@ use Models\Constant\TelegramParseMode;
  * @property string $text
  * @property string $parse_mode
  */
-class SendMessageRequest extends AbstractEntity implements EntityInterface {
+class SendMessageRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = [
-            'parse_mode' => TelegramParseMode::MARKDOWN,
-        ],
+    protected static array
         $properties = [
             'chat_id'     => [self::TYPE_INT,        [Validator::MIN => 1]],
             'text'        => [self::TYPE_STRING,     [Validator::MIN => 1]],
             'parse_mode'  => [self::TYPE_CONSTANTS,  TelegramParseMode::class],
         ];
 
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data + self::$defaults);
+    public static function getDefaults(): array {
+        return [
+            'parse_mode' => TelegramParseMode::MARKDOWN,
+        ];
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
-namespace Core {
+namespace Core;
 
-    abstract class Controller {
-    }
+abstract class Controller {
 }

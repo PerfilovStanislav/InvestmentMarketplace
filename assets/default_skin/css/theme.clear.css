@@ -116,6 +116,18 @@ html::-webkit-scrollbar-track {
     line-height: 0.75em;
     vertical-align: -15%;
 }
+.fa-comments:before {
+    content: "\f086";
+}
+.fa-newspaper-o:before {
+    content: "\f1ea";
+}
+.fa-gear:before{
+    content: "\f013";
+}
+.fa-signal:before {
+    content: "\f012";
+}
 .pull-right {
     float: right;
 }
@@ -955,6 +967,11 @@ fieldset[disabled] .btn {
     display: block;
     width: 100%;
 }
+.btn-details {
+    padding: 2px 10px;
+    border-radius: 5px;
+    background-color: white;
+}
 .fade {
     opacity: 0;
     -webkit-transition: opacity 0.15s linear;
@@ -1207,9 +1224,22 @@ fieldset[disabled] .btn {
 div.thumbnail {
     padding: 4px;
     border: 1px solid #dddddd;
-    max-width: 328px;
 }
 div.thumbnail > img {
+    display: block;
+    line-height: 1.49;
+    background-color: #ffffff;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    height: 100%;
+}
+div.original-photo {
+    padding: 4px;
+    border: 1px solid #dddddd;
+}
+div.original-photo > img {
     display: block;
     line-height: 1.49;
     background-color: #ffffff;
@@ -1696,6 +1726,9 @@ button.close {
 }
 .mh-179 {
     max-height: 179px !important;
+}
+.mh-500 {
+    max-height: 500px !important;
 }
 .mih-220 {
     min-height: 220px !important;
@@ -2300,17 +2333,17 @@ body.sb-l-m.mobile-view .nano > .nano-pane {
 }
 @media (max-width: 900px) {
     /* Sidebar Minified State */
-    body.sb-l-m #sidebar_left {
+    /*body.sb-l-m #sidebar_left {
         width: 45px;
-    }
+    }*/
 
-    body.sb-l-m .sidebar-menu > li > a > span:nth-child(1) {
+    /*body.sb-l-m .sidebar-menu > li > a > span:nth-child(1) {
         left: -1px;
         width: 45px;
         font-size: 18px;
-    }
+    }*/
 
-    body.sb-l-m .sidebar-menu > li > a > .sidebar-title {
+    /*body.sb-l-m .sidebar-menu > li > a > .sidebar-title {
         position: absolute;
         left: 45px;
         top: -4px;
@@ -2321,24 +2354,24 @@ body.sb-l-m.mobile-view .nano > .nano-pane {
         padding-left: 15px;
         border-left: 1px solid #222;
         background-color: #282d33;
-    }
+    }*/
 
-    body.sb-l-m #content_wrapper {
+    /*body.sb-l-m #content_wrapper {
         margin-left: 45px;
-    }
+    }*/
 
-    body.sb-l-o .navbar-brand,
+    /*body.sb-l-o .navbar-brand,
     body.sb-l-m .navbar-brand {
         display: none;
-    }
+    }*/
 
-    body.sb-l-o .navbar-branding,
+    /*body.sb-l-o .navbar-branding,
     body.sb-l-m .navbar-branding {
         max-width: 45px;
         margin-right: 5px;
-    }
+    }*/
 
-    body.sb-l-o .navbar #toggle_sidemenu_l {
+    /*body.sb-l-o .navbar #toggle_sidemenu_l {
         transform: rotate(90deg);
     }
 
@@ -2349,30 +2382,24 @@ body.sb-l-m.mobile-view .nano > .nano-pane {
     body.sb-l-o .navbar #toggle_sidemenu_l,
     body.sb-l-m .navbar #toggle_sidemenu_l {
         width: 45px;
-    }
+    }*/
 }
 .sb-l-o #sidebar_left {
     left: 0;
     overflow: hidden;
 }
+.sb-l-c #sidebar_left {
+    left: -250px;
+    overflow: hidden;
+}
 .sb-l-o #content_wrapper {
     margin-left: 250px;
 }
+.sb-l-c #content_wrapper {
+    margin-left: 0px;
+}
 .sb-r-c #content_wrapper {
     margin-right: 0;
-}
-@media (max-width: 1100px) {
-    /* Sidebar Left Open/Default */
-    #content_wrapper,
-    .sb-l-o #content_wrapper {
-        margin-left: 0;
-        left: 250px;
-    }
-
-    /* Sidebar Left Minified */
-    .sb-l-m #content_wrapper {
-        left: 0;
-    }
 }
 .bg-light {
     background-color: #FAFAFA;
@@ -2596,9 +2623,6 @@ fieldset[disabled] .btn-primary.active {
 }
 
 .error-title {
-    padding-top: 110px;
-}
-.error-title {
     font-size: 140px;
     font-weight: 800;
     color: #3498db;
@@ -2610,9 +2634,15 @@ fieldset[disabled] .btn-primary.active {
 .error-subtitle {
     font-weight: 400;
     text-align: center;
-    font-size: 40px;
+    font-size: 30px;
     color: #AAA;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
+}
+.error-subtitle-danger {
+    font-weight: 400;
+    text-align: center;
+    font-size: 40px;
+    color: #F00;
 }
 
 :root {

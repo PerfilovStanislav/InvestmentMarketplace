@@ -4,7 +4,6 @@ namespace Requests\Investment;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 use Models\Table\Language;
 
 /**
@@ -21,12 +20,9 @@ use Models\Table\Language;
  * @property string[]   $description
  * @property integer[]  $lang_id
  */
-class AddRequest extends AbstractEntity implements EntityInterface {
+class AddRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties = [
             'name'               => [self::TYPE_STRING,       [Validator::MIN => 1, Validator::MAX => 50, Validator::REGEX => Validator::PROJECT_NAME]],
             'paymenttype'        => [self::TYPE_INT,          [Validator::MIN => 1, Validator::MAX => 3]],

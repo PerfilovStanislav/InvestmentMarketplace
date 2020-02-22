@@ -3,11 +3,7 @@
 namespace Requests\Investment;
 
 use Core\AbstractEntity;
-use Helpers\Arrays;
-use Helpers\Locale;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
-use Models\Constant\ProjectStatus;
 use Models\Table\Language;
 use Models\Table\Project;
 
@@ -16,12 +12,9 @@ use Models\Table\Project;
  * @property int    $project
  * @property string $message
  */
-class SetChatMessageRequest extends AbstractEntity implements EntityInterface {
+class SetChatMessageRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties = [
             'lang'    => [self::TYPE_INT,    [Validator::MODEL => Language::class]],
             'project' => [self::TYPE_INT,    [Validator::MODEL => Project::class]],

@@ -6,19 +6,15 @@ interface EntityInterface
 {
     function fromArray(array $data);
 
-    function __get($name);
+    function __get($key);
 
     function __set($name, $value);
 
     function __unset($name);
 
-    function get() : array;
+//    function excludeDefault();
 
-    function excludeDefault();
-
-    static function getDefaults();
-
-    function getActual($key);
+    static function getDefaults() : array;
 
     static function getPropertyKeys(): array;
 }

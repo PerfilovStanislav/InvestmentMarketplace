@@ -3,20 +3,14 @@
 namespace Requests;
 
 use Core\AbstractEntity;
-use Helpers\Errors;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
-use Models\Collection\MVSiteAvailableLanguages;
 
 /**
  * @property string $lang
  */
-class LanguageAvailableRequest extends AbstractEntity implements EntityInterface {
+class LanguageAvailableRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties;
 
     public function __construct(array $data = []) {
@@ -24,11 +18,11 @@ class LanguageAvailableRequest extends AbstractEntity implements EntityInterface
             'lang' => [self::TYPE_STRING,
                 [
                     Validator::REGEX => Validator::EN,
-                    Validator::IN => MVSiteAvailableLanguages::getInstance()->getUniqueValuesByKey('shortname')
+                    Validator::IN => App()->siteLanguages()->getUniqueValuesByKey('shortname')
                 ]
             ],
         ];
         $this->fromArray($data);
-        Errors::exitIfExists();
+        Error()->exitIfExists();
     }
 }

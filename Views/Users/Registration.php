@@ -8,15 +8,15 @@ use Models\Constant\DomElements;
         <div class="panel heading-border panel-primary">
             <div class="panel-heading">
                     <span class="panel-title">
-                      <i class="fa fa-pencil-square"></i><?=$this->locale['user_registration']?>
+                      <i class="fa fa-pencil-square"></i><?=Translate()->userRegistration?>
                     </span>
             </div>
-            <form method="post" action="/" id="<?=DomElements::ADDUSER_FORM?>">
+            <form method="post" action="/" id="<?=DomElements::ADD_USER_FORM?>">
                 <div class="panel-body bg-light">
                     <div class="section row" >
                         <div class="section">
                             <label class="field prepend-icon">
-                                <input name="login" class="gui-input onlyLogin" placeholder="<?=$this->locale['login']?>">
+                                <input name="login" class="gui-input onlyLogin" placeholder="<?=Translate()->login?>">
                                 <label class="field-icon">
                                     <i class="fa fa-user"></i>
                                 </label>
@@ -25,7 +25,7 @@ use Models\Constant\DomElements;
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input name="name" autocomplete="name" class="gui-input"
-                                       placeholder="<?=$this->locale['name']?>">
+                                       placeholder="<?=Translate()->name?>">
                                 <label class="field-icon">
                                     <i class="fa fa-group"></i>
                                 </label>
@@ -34,7 +34,7 @@ use Models\Constant\DomElements;
                         <!--<div class="section">
                             <label class="field prepend-icon">
                                 <input name="email" autocomplete="email" class="gui-input onlyEmail"
-                                       placeholder="<?/*=$this->locale['email']*/?>">
+                                       placeholder="<?/*=Translate()->email*/?>">
                                 <label class="field-icon">
                                     <i class="fa fa-envelope-o"></i>
                                 </label>
@@ -43,7 +43,7 @@ use Models\Constant\DomElements;
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" name="password" class="gui-input"
-                                       placeholder="<?=$this->locale['password']?>" />
+                                       placeholder="<?=Translate()->password?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
@@ -52,14 +52,14 @@ use Models\Constant\DomElements;
                         <div class="section">
                             <label class="field prepend-icon">
                                 <input type="password" autocomplete="password" id="confirm_pass" class="gui-input"
-                                       placeholder="<?=$this->locale['repeat_password']?>" />
+                                       placeholder="<?=Translate()->repeatPassword?>" />
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
                                 </label>
                             </label>
                         </div>
                         <div class="panel-footer text-right">
-                            <button type="submit" class="button btn-primary"> <?=$this->locale['send_form']?> </button>
+                            <button type="submit" class="button btn-primary"> <?=Translate()->sendForm?> </button>
                         </div>
                     </div>
                     <input type="hidden" name="ajax" value="1">

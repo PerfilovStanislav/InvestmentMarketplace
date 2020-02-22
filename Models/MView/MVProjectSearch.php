@@ -1,22 +1,17 @@
 <?php
 
-namespace Models\MView {
+namespace Models\MView;
 
-    use Core\AbstractEntity;
-    use Helpers\Validator;
-    use Interfaces\EntityInterface;
+use Core\AbstractEntity;
+use Helpers\Validator;
 
-    /**
-     * @property int    $id
-     */
-    class MVProjectSearch extends AbstractEntity implements EntityInterface {
+/**
+ * @property int    $id
+ */
+class MVProjectSearch extends AbstractEntity {
 
-        protected $data;
-
-        protected static
-            $defaults = null,
-            $properties = [
-                'id' => [self::TYPE_INT, [Validator::MIN => 1]],
-            ];
-    }
+    protected static array
+        $properties = [
+            'id' => [self::TYPE_INT, [Validator::MIN => 1]],
+        ];
 }

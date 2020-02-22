@@ -1,33 +1,28 @@
 <?php
 
-namespace Models\Collection {
+namespace Models\Collection;
 
-    use Core\AbstractEntity;
-    use Interfaces\{
-        EntityInterface,
-        ModelInterface
-    };
-    use Models\MView\MVProjectSearch;
-    use Traits\MView;
+use Core\AbstractEntity;
+use Interfaces\ModelInterface;
+use Models\MView\MVProjectSearch;
+use Traits\IteratorTrait;
+use Traits\MView;
 
-    /**
-     * @var MVProjectSearch[] $this
-     */
-    class MVProjectSearchs extends AbstractEntity implements EntityInterface, ModelInterface {
-        use MView;
+/**
+ * @var MVProjectSearch[] $this
+ */
+class MVProjectSearchs extends AbstractEntity implements ModelInterface, \Iterator, \Countable {
+    use MView;
+    use IteratorTrait;
 
-        private static $table = 'MV_ProjectSearchs';
+    private static string $table = 'MV_ProjectSearchs';
 
-        protected $data;
+    protected static array
+        $properties = [
+            self::COLLECTION  => [self::TYPE_DTO_ARRAY, MVProjectSearch::class, 'id'],
+        ];
 
-        protected static
-            $defaults = null,
-            $properties = [
-                self::COLLECTION  => [self::TYPE_DTO_ARRAY, MVProjectSearch::class, 'id'],
-            ];
-
-        public function __construct(array $where, int $limit) {
-            $this->fillCollection(self::getDb()->select($where, MVProjectSearch::getPropertyKeys(), null, $limit));
-        }
+    public function __construct(array $where, int $limit) {
+        $this->fillCollection(static::getDb()->select($where, MVProjectSearch::getPropertyKeys(), null, $limit));
     }
 }

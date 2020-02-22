@@ -7,7 +7,7 @@ use Core\Database;
 trait Model
 {
     public static function getDb() : Database {
-        return Database::getInstance()->setTable(self::$table);
+        return Db()->setTable(self::$table);
     }
 
     public function save() : self {
@@ -22,8 +22,7 @@ trait Model
 
     public function getRowFromDbAndFill(array $where) : self {
         $data = self::getDb()->selectRow($where);
-        $this->fromArray($where + ($data ?? []));
-        return $this;
+        return $this->fromArray($where + ($data ?? []));
     }
 
     public function getById(int $id) : self {

@@ -1,185 +1,157 @@
 <?php
 
-namespace Controllers {
+namespace Controllers;
 
-    use Core\{
-        Auth,
-        Controller,
-    };
-    use Models\{
-        AuthModel,
-        Collection\MVSiteAvailableLanguages,
-        Constant\DomElements,
-        Constant\UserStatus,
-        Constant\Views,
-        Table\User,
-        Table\UserConfirm,
-    };
-    use Helpers\{
-        Output,
-        Locale
-    };
-    use Requests\{
-        LanguageAvailableRequest,
-        User\AuthorizeRequest,
-        User\ConfirmRequest,
-        User\RegistrationRequest
-    };
-    use Views\{
-        Error,
-        Success,
-        Users\Head\Authorized,
-        Users\Head\NotAuthorized,
-        Users\Login,
-        Users\Registered,
-        Users\Registration,
-        SideLeft
-    };
+use Core\Controller;
+use Models\{
+    Constant\DomElements,
+    Constant\UserStatus,
+    Constant\Views,
+    Table\User,
+};
+use Helpers\Output;
+use Requests\{
+    LanguageAvailableRequest,
+    User\AuthorizeRequest,
+    User\RegistrationRequest
+};
+use Views\{
+    Users\Head\Authorized,
+    Users\Head\NotAuthorized,
+    Users\Login,
+    Users\Registered,
+    Users\Registration,
+    SideLeft
+};
 
-    class Users extends Controller {
-        /**
-         * @deprecated как я сюда попадаю?
-         */
-        public function login() {
-            Output::addView(Login::class);
+class Users extends Controller {
+    /**
+     * @deprecated как я сюда попадаю?
+     */
+    public function login() {
+        Output()->addView(Login::class);
+    }
+
+    public function logout(): Output {
+        App()->auth()->logout();
+        return self::reloadPage();
+    }
+
+    public static function reloadPage(): Output {
+        $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
+        return Output()->addFunctions([
+            'allClear',
+            'addToAjaxQueue' => [
+                '/Users/setUserHead',
+                '/Users/setLeftSide',
+                $url['path']
+            ]
+        ], Output::DOCUMENT);
+    }
+
+    public function authorize(AuthorizeRequest $request): Output {
+        if (App()->auth()->authorize($request)) {
+            return self::reloadPage();
+        }
+        return Output();
+    }
+
+    public function registration(): Output {
+        return Output()
+            ->addView(
+            CurrentUser()->is_authorized
+                ? Registered::class
+                : Registration::class
+            )->addFunction('UserRegistration');
+    }
+
+    public function add(RegistrationRequest $request): Output {
+        $user = (new User())->getRowFromDbAndFill([
+            'login' => strtolower($request->login)
+        ]);
+        if ($user->id) {
+            return Output()->addFieldDanger('login', Translate()->loginIsBusy, DomElements::ADD_USER_FORM);
         }
 
-        public function logout() {
-            Auth::getInstance()->logout();
-            Users::reloadPage();
-        }
+        $user->fromArray([
+            'name'      => $request->name,
+            'password'  => App()->auth()->hashPassword($request->password),
+            'status_id' => UserStatus::NEED_CONFIRM,
+            'lang_id'   => App()->siteLanguages()->{App()->locale()->getLanguage()}->id,
+            'has_photo' => false,
+        ])->save();
 
-        public static function reloadPage() {
-            $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
-            Output::addFunctions([
-                'allClear',
-                'addToAjaxQueue' => [
-                    '/Users/setUserHead',
-                    '/Users/setLeftSide',
-                    $url['path']
-                ]
-            ], Output::DOCUMENT);
-        }
+        Output()->addAlertSuccess(Translate()->success, Translate()->userRegistered);
 
-        public function authorize(AuthorizeRequest $request) {
-            if (Auth::getInstance()->authorize($request)) {
-                Users::reloadPage();
-            }
-        }
+        $this->authorize(new AuthorizeRequest([
+            'login'    => $request->login,
+            'password' => $request->password,
+        ]));
+    }
 
-        public function registration() {
-            Output::addView(
-                AuthModel::getInstance()->is_authorized
-                    ? Registered::class
-                    : Registration::class
+    /*public function confirm(ConfirmRequest $request) {
+        $userConfirm = new UserConfirm();
+        $userConfirm->getRowFromDbAndFill(['code' => $request->code]);
+
+        if ($userConfirm->id) {
+            $user = (new User())->getById($userConfirm->user_id);
+            $user->status_id = UserStatus::USER;
+            $user->save();
+
+            Output()->addView(Success::class, ['text' => Translate()->success]);
+            Output()->addAlertSuccess(Translate()->success, Translate()->emailConfirmation);
+        }
+        else {
+            Output()->addView(Error::class, ['text' => Translate()->noConfirmCode]);
+            Output()->addAlertDanger(Translate()->error, Translate()->noConfirmCode);
+        }
+    }*/
+
+    public static function setUserHead(): Output {
+        Output()->addFunctions([
+            'setStorage' => [
+                'webp' => WEBP,
+                'auth' => CurrentUser()->toArray()
+            ],
+        ], Output::DOCUMENT, 1);
+        $params = [
+            'siteLanguages'     => App()->siteLanguages(),
+            'selectedLanguage'  => App()->locale()->getLanguage(),
+            'avatar'            => CurrentUser()->getUserAvatar(),
+        ];
+
+        if (CurrentUser()->is_authorized) {
+            return Output()->addView(
+                Authorized::class,
+                $params + ['user' => CurrentUser()->user],
+                Views::USER_HEAD
             );
-            Output::addFunction('UserRegistration');
         }
-
-        public function add(RegistrationRequest $request) {
-            $user = (new User())->getRowFromDbAndFill([
-                'login' => strtolower($request->login)
-            ]);
-            if ($user->id) {
-                Output::addFieldDanger('login', Locale::get('login_is_busy'), DomElements::ADDUSER_FORM);
-                return;
-            }
-
-            $user->fromArray([
-                'name'      => $request->name,
-                'password'  => Auth::hashPassword($request->password),
-                'status_id' => UserStatus::NEED_CONFIRM,
-                'lang_id'   => MVSiteAvailableLanguages::getInstance()->{Locale::getLanguage()}->id,
-                'has_photo' => false,
-            ])->save();
-
-            // Здесь была проверки почты
-//            $userConfirm = (new UserConfirm())->fromArray([
-//                'user_id' => $user->id,
-//                'code'    => bin2hex(random_bytes(32)), // 64 random
-//            ])->save();
-//
-//            /** @var MailMessage $mailMessage */
-//            $mailMessage = (new MailMessage())->fromArray([
-//                'subject'       => Locale::get('email_confirmation'),
-//                'body'          => (new View(ConfirmEmail::class, ['user' => $user, 'code' => $userConfirm->code]))->get(),
-//                'receiverEmail' => $user->email,
-//                'receiverName'  => $user->name,
-//            ]);
-//            (new Mail())->sendMail($mailMessage);
-
-//            Output::addView(Success::class, ['text' => Locale::get('user_registered')]);
-            Output::addAlertSuccess(Locale::get('success'), Locale::get('user_registered'));
-
-            $this->authorize(new AuthorizeRequest([
-                'login'    => $request->login,
-                'password' => $request->password,
-            ]));
+        else {
+            return Output()->addView(
+                NotAuthorized::class,
+                $params,
+                Views::USER_HEAD
+            )->addFunctions(['UserAuthorization'], Output::DOCUMENT, 1);
         }
+    }
 
-        public function confirm(ConfirmRequest $request) {
-            $userConfirm = new UserConfirm();
-            $userConfirm->getRowFromDbAndFill(['code' => $request->code]);
+    public static function setLeftSide(): Output {
+        return Output()->addView(SideLeft::class, [], Views::SIDEBAR_LEFT);
+    }
 
-            if ($userConfirm->id) {
-                $user = (new User())->getById($userConfirm->user_id);
-                $user->status_id = UserStatus::USER;
+    public function changeLanguage(LanguageAvailableRequest $request): Output {
+        if ($request->lang) {
+            if (CurrentUser()->is_authorized) {
+                $user = CurrentUser()->user;
+                $user->lang_id = App()->siteLanguages()->{$request->lang}->id;
                 $user->save();
-
-                Output::addView(Success::class, ['text' => Locale::get('success')]);
-                Output::addAlertSuccess(Locale::get('success'), Locale::get('email_confirmation'));
             }
             else {
-                Output::addView(Error::class, ['text' => Locale::get('no_confirm_code')]);
-                Output::addAlertDanger(Locale::get('error'), Locale::get('no_confirm_code'));
+                $_SESSION['lang'] = $request->lang;
             }
+            self::reloadPage();
         }
-
-        public static function setUserHead() {
-            Output::addFunctions([
-                'setStorage' => [
-                    'webp' => WEBP,
-                    'auth' => AuthModel::getInstance()->toArray()
-                ],
-            ], Output::DOCUMENT, 1);
-            $params = [
-                'siteLanguages'     => MVSiteAvailableLanguages::getInstance(),
-                'selectedLanguage'  => Locale::getLanguage(),
-                'avatar'            => AuthModel::getInstance()->getUserAvatar(),
-            ];
-            if (AuthModel::getInstance()->is_authorized) {
-                Output::addView(
-                    Authorized::class,
-                    $params + ['user' => AuthModel::getInstance()->user],
-                    Views::USER_HEAD
-                );
-            }
-            else {
-                Output::addView(
-                    NotAuthorized::class,
-                    $params,
-                    Views::USER_HEAD
-                );
-                Output::addFunctions(['UserAuthorization'], Output::DOCUMENT, 1);
-            }
-        }
-
-        public static function setLeftSide() {
-            Output::addView(SideLeft::class, [], Views::SIDEBAR_LEFT);
-        }
-
-        public function changeLanguage(LanguageAvailableRequest $request) {
-            if ($request->lang) {
-                if (AuthModel::getInstance()->is_authorized) {
-                    $user = AuthModel::getInstance()->user;
-                    $user->lang_id = MVSiteAvailableLanguages::getInstance()->{$request->lang}->id;
-                    $user->save();
-                }
-                else {
-                    $_SESSION['lang'] = $request->lang;
-                }
-                Users::reloadPage();
-            }
-        }
+        return Output();
     }
 }

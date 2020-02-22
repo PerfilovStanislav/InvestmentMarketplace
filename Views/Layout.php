@@ -1,22 +1,29 @@
 <?php
-namespace Views; { Class Layout {} }
+namespace Views; {
+/**
+ * @var Layout $this
+ * @package Views
+ * @property AbstractLanguage $locale
+ */
+Class Layout {}}
 
-use Helpers\Locale;
+use Helpers\Locales\AbstractLanguage;
 use Helpers\Output;
 use Models\Constant\Views;
 ?>
 <!DOCTYPE html>
-<html lang="<?=Locale::getLanguage()?>">
+<html lang="<?=App()->locale()->getLanguage()?>">
 <head>
     <meta charset="utf-8">
-    <title>RichInme - <?=$this->locale['head']['title']?></title>
-    <meta name="keywords" content="<?=$this->locale['head']['keywords']?>"/>
-    <meta name="description" content="<?=$this->locale['head']['description']?>">
+    <?=$this->{Views::META}?>
+    <title>RichInme - <?=Translate()->headTitle?></title>
+    <meta name="keywords" content="<?=Translate()->headKeywords?>"/>
+    <meta name="description" content="<?=Translate()->headDescription?>">
     <meta name="author" content="RichInMe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index,follow">
 
-    <meta property="og:locale" content="<?=Locale::getLanguage()?>" />
+    <meta property="og:locale" content="<?=App()->locale()->getLanguage()?>" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Richinme" />
     <meta property="og:image:width" content="1181">
@@ -25,11 +32,11 @@ use Models\Constant\Views;
     <meta property="og:image" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png" data-meta-dynamic="true">
     <meta property="og:image:secure_url" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png" data-meta-dynamic="true">
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
-    <meta property="og:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
+    <meta property="og:description" content="<?=Translate()->headDescription?>" data-meta-dynamic="true">
+    <meta property="og:title" content="<?=Translate()->headTitle?>" data-meta-dynamic="true">
     <meta property="pageType" content="video">
     <meta itemprop="image" content="https://richinme.com/assets/img/richinme/logo-1161x810.png">
-    <meta itemprop="name" content="<?=$this->locale['head']['description']?>">
+    <meta itemprop="name" content="<?=Translate()->headDescription?>">
 
     <link rel="shortcut icon" href="/assets/icons/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
@@ -42,11 +49,11 @@ use Models\Constant\Views;
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
 
-    <meta name="twitter:title" content="<?=$this->locale['head']['title']?>" data-meta-dynamic="true">
+    <meta name="twitter:title" content="<?=Translate()->headTitle?>" data-meta-dynamic="true">
     <meta name="twitter:site" content="@richinme" data-meta-dynamic="true">
     <meta name="twitter:creator" content="@richinme" data-meta-dynamic="true">
-    <meta name="twitter:image:alt" content="RichInme - <?=$this->locale['head']['title']?>" data-meta-dynamic="true">
-    <meta name="twitter:description" content="<?=$this->locale['head']['description']?>" data-meta-dynamic="true">
+    <meta name="twitter:image:alt" content="RichInme - <?=Translate()->headTitle?>" data-meta-dynamic="true">
+    <meta name="twitter:description" content="<?=Translate()->headDescription?>" data-meta-dynamic="true">
     <meta name="twitter:image" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png" data-meta-dynamic="true">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -105,7 +112,7 @@ use Models\Constant\Views;
 
 <script id="scripts">
     <? foreach ([Output::FUNCTION, Output::FIELD, Output::ALERT] as $type) {
-    if ($this->{$type}) { ?>
+    if (isset($this->{$type})) { ?>
         applyFunctions('<?=$type?>', <?=json_encode($this->{$type})?>);
     <? }} ?>
 </script>

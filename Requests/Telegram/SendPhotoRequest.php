@@ -4,7 +4,6 @@ namespace Requests\Telegram;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 use Models\Constant\TelegramParseMode;
 
 /**
@@ -13,14 +12,9 @@ use Models\Constant\TelegramParseMode;
  * @property string    $parse_mode
  * @property \CURLFile $photo
  */
-class SendPhotoRequest extends AbstractEntity implements EntityInterface {
+class SendPhotoRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = [
-            'parse_mode' => TelegramParseMode::MARKDOWN,
-        ],
+    protected static array
         $properties = [
             'chat_id'     => [self::TYPE_INT,        [Validator::MIN => 1]],
             'photo'       => [self::TYPE_CURL_FILE,  [Validator::MIN => 1]],
@@ -28,8 +22,9 @@ class SendPhotoRequest extends AbstractEntity implements EntityInterface {
             'caption'     => [self::TYPE_STRING,     [Validator::MIN => 0]],
         ];
 
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data + self::$defaults);
+    public static function getDefaults(): array {
+        return [
+            'parse_mode' => TelegramParseMode::MARKDOWN,
+        ];
     }
 }

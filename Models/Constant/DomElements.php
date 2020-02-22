@@ -1,15 +1,14 @@
 <?php
 
-namespace Models\Constant {
+namespace Models\Constant;
 
-    use Interfaces\ConstantInterface;
-    use Traits\Collection;
+use Interfaces\ConstantInterface;
+use Traits\Collection;
 
-    class DomElements implements ConstantInterface {
-        use Collection;
+class DomElements implements ConstantInterface {
+    use Collection;
 
-        CONST
-            AUTHORIZATION_USER_FORM = 'authorizationuser_form',
-            ADDUSER_FORM            = 'adduser_form';
-    }
+    public CONST
+        AUTHORIZATION_USER_FORM = 'authorizationuser_form',
+        ADD_USER_FORM           = 'add_user_form';
 }

@@ -1,39 +1,72 @@
 <?php
 
-namespace {
-    Class Index {};
+use Core\App;
+use Core\Database;
+use Core\Router;
+use Helpers\Errors;
+use Helpers\Locales\AbstractLanguage;
+use Helpers\Output;
+use Models\CurrentUser;
 
-    use Core\Auth;
-    use Core\Database;
+define('DIR', dirname($_SERVER['SCRIPT_NAME']));
+define('ROOT', __DIR__);
+define('DOMAIN', 'richinme.org');
+define('SITE', 'http://' . DOMAIN);
+define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
+error_reporting(E_ALL | E_STRICT);
+define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));
+define('START_SHUTDOWN', true);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 
-    define('DIR', dirname($_SERVER['SCRIPT_NAME']));
-    define('ROOT', dirname(__FILE__));
-    define('DOMAIN', 'richinme.com');
-    define('SITE', 'https://' . DOMAIN);
-    define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
-    define('DEBUG', 0);
-    error_reporting(E_ALL | E_STRICT);
-    define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
+spl_autoload_extensions('.php');
+function real_path(string $path): string {
+    return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+}
+function load(string $className) {
+    require_once(real_path($className) . '.php');
+}
+spl_autoload_register('load');
 
-    spl_autoload_extensions('.php');
-    function real_path($path) {
-        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
-    }
-    spl_autoload_register(function ($className) {
-        require_once(real_path($className) . '.php');
-    });
+define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY);
 
-    function dd(... $data) {
-        echo '<pre>', print_r((array)$data,true), print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true), '</pre>', die;
-    }
+require_once './Helpers/Debug.php';
 
-    try {
-        Auth::getInstance();
-        (Core\Router::getInstance())->setUri()->startRoute();
-    } catch (\Exception $exception) {
-        Database::rollBackTransaction();
-        dd($exception);
+register_shutdown_function('shutdown');
+
+function App(): App {
+    return App::getInstance();
+}
+function Db(): Database {
+    return App()->db();
+}
+function Router(): Router {
+    return App()->router();
+}
+function Output(): Output {
+    return App()->output();
+}
+function Error(): Errors {
+    return App()->error();
+}
+function Translate(): AbstractLanguage {
+    return App()->locale()->translate();
+}
+function CurrentUser(): CurrentUser {
+    return App()->currentUser();
+}
+try {
+    App()->start();
+} catch (\Exception $exception) {
+    Db()->rollBackTransaction();
+    dd($exception);
+} finally {
+    //
+}
+
+function shutdown() {
+    if ($error = error_get_last()) {
+//        E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
+        dd(__METHOD__, $error);
     }
 }

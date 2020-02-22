@@ -1,15 +1,14 @@
 <?php
 
-namespace Models\Constant {
+namespace Models\Constant;
 
-    use Interfaces\ConstantInterface;
-    use Traits\Collection;
+use Interfaces\ConstantInterface;
+use Traits\Collection;
 
-    class TelegramParseMode implements ConstantInterface {
-        use Collection;
+class TelegramParseMode implements ConstantInterface {
+    use Collection;
 
-        CONST
-            MARKDOWN = 'Markdown',
-            HTML     = 'HTML';
-    }
+    public CONST
+        MARKDOWN = 'Markdown',
+        HTML     = 'HTML';
 }

@@ -4,19 +4,15 @@ namespace Requests\Telegram;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 
 /**
  * @property string    $url
  * @property \CURLFile $certificate
  * @property int       $max_connections
  */
-class SetWebhookRequest extends AbstractEntity implements EntityInterface {
+class SetWebhookRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties = [
             'url'             => [self::TYPE_STRING,     [Validator::MIN => 1]],
             'certificate'     => [self::TYPE_CURL_FILE,  [Validator::MIN => 1]],

@@ -6,7 +6,7 @@ namespace Views\Investment; { Class Added {} }
         <div class="panel heading-border panel-success">
             <div class="panel-heading">
                 <span class="panel-title">
-                  <i class="fa fa-plus"></i><?=$this->locale['project_is_added']?>
+                  <i class="fa fa-plus"></i><?=Translate()->projectIsAdded?>
                 </span>
             </div>
         </div>

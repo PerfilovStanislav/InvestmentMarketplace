@@ -1,30 +1,31 @@
 <?php
 
-namespace Helpers {
+namespace Helpers;
 
-    class Errors
-    {
-        private static $hasError = false;
+use Exceptions\ErrorException;
+use Traits\Instance;
 
-        public static function add($key, string $description, bool $exit = false) {
-            self::$hasError = true;
-            Output::addFieldDanger($key, $description);
-            if ($exit) {
-                return Output::result();
-            }
+class Errors
+{
+    use Instance;
+
+    private bool $hasError = false;
+
+    public function add($key, string $description, bool $exit = false) {
+        $this->hasError = true;
+        Output()->addFieldDanger($key, $description);
+        if ($exit) {
+            throw new ErrorException($key, $description, 412);
         }
+    }
 
-        public static function hasError() : bool {
-            return self::$hasError;
-        }
+    public function hasError(): bool {
+        return $this->hasError;
+    }
 
-        public static function exitIfExists(string $head = null) {
-            if (self::hasError()) {
-                if ($head) {
-                    Output::header($head);
-                }
-                return Output::result();
-            }
+    public function exitIfExists() {
+        if ($this->hasError()) {
+            throw new ErrorException(Translate()->error, '', 412);
         }
     }
 }

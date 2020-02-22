@@ -1,18 +1,18 @@
 <?php
 
-namespace Models\Constant {
+namespace Models\Constant;
 
-    use Interfaces\ConstantInterface;
-    use Traits\Collection;
+use Interfaces\ConstantInterface;
+use Traits\Collection;
 
-    class Views implements ConstantInterface {
-        use Collection;
+class Views implements ConstantInterface {
+    use Collection;
 
-        CONST
-            USER_HEAD       = 'userHead',
-            CONTENT         = 'content',
-            PROJECT_FILTER  = 'projectFilter',
-            CHAT_MESSAGE    = 'chatMessage',
-            SIDEBAR_LEFT    = 'sidebar_left';
-    }
+    public CONST
+        USER_HEAD       = 'userHead',
+        CONTENT         = 'content',
+        PROJECT_FILTER  = 'projectFilter',
+        CHAT_MESSAGE    = 'chatMessage',
+        META            = 'meta',
+        SIDEBAR_LEFT    = 'sidebar_left';
 }

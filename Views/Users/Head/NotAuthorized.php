@@ -38,7 +38,7 @@ use Models\Table\Language;
     <li class="dropdown menu-merge">
         <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
             <img src="<?=$this->avatar?>" alt="avatar" class="mw30 br64">
-            <span class="hidden-xs pl15"> <?=$this->locale['guest']?> </span>
+            <span class="hidden-xs pl15"> <?=Translate()->guest?> </span>
             <span class="caret caret-tp hidden-xs"></span>
         </a>
         <ul class="dropdown-menu list-group dropdown-persist w350" role="menu">
@@ -47,7 +47,7 @@ use Models\Table\Language;
                     <form method="post" action="/" id="<?=DomElements::AUTHORIZATION_USER_FORM?>">
                         <div class="section row mb5">
                             <label class="field prepend-icon">
-                                <input placeholder="<?=$this->locale['login']?>"
+                                <input placeholder="<?=Translate()->login?>"
                                    class="gui-input onlyLogin" autocomplete="login" name="login">
                                 <input type="hidden" name="ajax" value="1">
                                 <label class="field-icon">
@@ -57,7 +57,7 @@ use Models\Table\Language;
                         </div>
                         <div class="section row mb5">
                             <label class="field prepend-icon">
-                                <input placeholder="<?=$this->locale['password']?>" class="gui-input" autocomplete="password" name="password"
+                                <input placeholder="<?=Translate()->password?>" class="gui-input" autocomplete="password" name="password"
                                        type="password"/>
                                 <label class="field-icon">
                                     <i class="fa fa-lock"></i>
@@ -67,20 +67,20 @@ use Models\Table\Language;
                         <div class="section row mt10 mb5">
                             <label class="switch block switch-success">
                                 <input name="remember" id="remember" type="checkbox">
-                                <label for="remember" data-on="<?=$this->locale['yes']?>"
-                                       data-off="<?=$this->locale['no']?>"></label>
-                                <span><?=$this->locale['remember']?></span>
+                                <label for="remember" data-on="<?=Translate()->yes?>"
+                                       data-off="<?=Translate()->no?>"></label>
+                                <span><?=Translate()->remember?></span>
                             </label>
                         </div>
                         <div class="section row mbn">
                             <div class="pull-left">
                                 <button type="submit"
-                                        class="btn  btn-gradient btn-info btn-block w125"><?=$this->locale['enter']?></button>
+                                        class="btn  btn-gradient btn-info btn-block w125"><?=Translate()->enter?></button>
                             </div>
                             <div class="pull-right">
                                 <a href="/users/registration"
                                    class="btn ajax page btn-gradient btn-success btn-block w125"
-                                ><?=$this->locale['registration']?></a>
+                                ><?=Translate()->registration?></a>
                             </div>
                         </div>
                     </form>

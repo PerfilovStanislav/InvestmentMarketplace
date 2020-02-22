@@ -2,75 +2,98 @@
 
 namespace Core;
 
-use Helpers\{
-    Output, Validator
-};
-use Mapping\StaticFilesRouteMapping;
+use Dto\CustomRoute;
+use Dto\DefaultRoute;
+use Dto\ErrorRoute;
+use Dto\RouteInterface;
+use Helpers\Validator;
+use Mapping\StaticRouteMapping;
+use ReflectionException;
 use Traits\Instance;
+use Views\Errors\ErrorDefault;
+use Views\Investment\Show;
 
 class Router {
     use Instance;
 
-    CONST
-        DEFAULT_PARAMS = '/Investment/show',
-        ERROR_PARAMS = '/Errors/show';
+    private RouteInterface $route;
 
-    private $controller,
-            $action,
-            $params,
-            $additional = [];
+    /**
+     * @param string|null $uri
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function go(string $uri = null) {
+        $uri ??= $this->getRequestUri();
 
-    private function __construct() {}
-
-    public function startRoute() {
-        if (!$this->action) {
-            $this->setUri(self::DEFAULT_PARAMS)->route();
-        }
-        else if (!$this->route()) {
-            $this->setUri(self::ERROR_PARAMS)->route();
+        try {
+            return $this->route($this->getRouteFromUri($uri));
+        } catch (\BadMethodCallException $e) {
+            return $this->route(new ErrorRoute(Translate()->error, Translate()->noPage));
         }
     }
 
-    private function getRequestUri() : string {
-        return substr($_SERVER['REQUEST_URI'], strlen(DIR));
+    private function getRouteFromUri(string $uri): RouteInterface {
+        $uri = Validator::regex('uri', $uri, Validator::SITE_URI);
+
+        $route = StaticRouteMapping::get($uri);
+        if ($route) {
+            return $route;
+        }
+
+        App()->auth();
+        $uriParams = explode('/', strtolower(trim($uri,'/')));
+        return $this->getRouteFromUriParams($uriParams);
     }
 
-    public function setUri(string $uri = null) : self {
-        $uri                = $uri ?: $this->getRequestUri();
-        $uri                = StaticFilesRouteMapping::get('/' . $uri) ?? $uri;
-        $uri                = Validator::regex('uri', $uri, Validator::SITE_URI);
-        $uri                = explode('/', strtolower(trim($uri,'/')));
-        $this->controller   = count($uri) ? ucfirst(array_shift($uri)) : '';
-        $this->action       = count($uri) ? array_shift($uri) : null;
-        $this->params       = count($uri) ? $uri : [];
-        return $this;
+    private function getRouteFromUriParams(array $uriParams): RouteInterface {
+        $uriParams = array_filter($uriParams);
+
+        $count = count($uriParams);
+        if ($count >= 2) {
+            return new CustomRoute(
+                'Controllers\\' . ucfirst(array_shift($uriParams)),
+                array_shift($uriParams),
+                $this->prepareParams($uriParams ?? [])
+            );
+        } elseif ($count === 0) {
+            return new DefaultRoute(); /** @see Investment::show() */ /** @see Show */
+        }
+
+        return new ErrorRoute(Translate()->error, Translate()->noPage); /** @see Errors::show() */ /** @see ErrorDefault */
     }
 
-    private function route() : bool {
-        $controllerClass = 'Controllers\\'.$this->controller;
+    private function getRequestUri(): string {
+        return substr($_SERVER['REQUEST_URI'] ?? '', strlen(DIR));
+    }
 
-        if(!file_exists(real_path($controllerClass).'.php')) { return false; }
+    /**
+     * @param RouteInterface $route
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function route(RouteInterface $route) {
+        $controllerClass = $route->getControllerClass();
+
+        if(!file_exists(real_path($controllerClass).'.php')) {
+            throw new \BadMethodCallException(sprintf('Class %s doesn\'t exist', $controllerClass));
+        }
+
         $controller = new $controllerClass();
+        if (!is_callable([$controller, $route->getAction()])) {
+            throw new \BadMethodCallException(sprintf('Method %s in the class %s is not callable', $route->getAction(), $controllerClass));
+        }
 
-        if (!is_callable([$controller, $this->action])) { return false; }
+        $params = $route->getParams() + $_POST;
 
-        $params = array_filter(
-            array_map(function(array $a){
-                return $a[1]??false ? [$a[0] => $a[1]] : null;
-            }, array_chunk($this->params, 2))
-            , function($v) { return $v != null; }
-        );
-
-        $params = $params ? array_unique(call_user_func_array('array_merge', $params)) : [];
-        $params += $_POST;
-        $reflectionParameters = (new \ReflectionMethod($controller,  $this->action))->getParameters();
+        $reflectionParameters = (new \ReflectionMethod($controller, $route->getAction()))->getParameters();
         if ($reflectionParameters) {
-            $params = array_map(function (\ReflectionParameter $reflectionParameter) use (&$params) {
+            $params = array_map(function (\ReflectionParameter $reflectionParameter) use (/*&*/$params) {
                 if ($reflectionClass = $reflectionParameter->getClass()) {
                     $class = $reflectionClass->getName();
                     return new $class($params);
                 }
-                elseif ($param = ($params[$paramName = $reflectionParameter->getName()] ?? null)) {
+                elseif ($param = ($params[/*$paramName = */$reflectionParameter->getName()] ?? null)) {
                     return $param;
                 }
                 elseif ($reflectionParameter->isArray()) {
@@ -82,11 +105,19 @@ class Router {
                 return null;
             }, $reflectionParameters);
         }
-        call_user_func_array([$controller, $this->action], $params);
-        return Output::result();
+        $this->route = $route;
+        return call_user_func_array([$controller, $route->getAction()], $params);
     }
 
-    public function getCurrentPageUrl() : string {
-        return '/' . $this->controller . '/' . $this->action;
+    private function prepareParams(array $params): array {
+        return call_user_func_array('array_merge',
+                array_filter(
+                    array_map(fn (array $a):array => (isset($a[1]) ? [$a[0] => $a[1]] : []),
+                        array_chunk($params, 2)
+                    )));
+    }
+
+    public function getRoute(): RouteInterface {
+        return $this->route;
     }
 }

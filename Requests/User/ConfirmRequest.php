@@ -4,16 +4,13 @@ namespace Requests\User;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 
 /**
  * @property string $code
  */
-class ConfirmRequest extends AbstractEntity implements EntityInterface {
+class ConfirmRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
+    protected static array
         $properties = [
             'code' => [self::TYPE_STRING, [Validator::LENGTH => 64, Validator::REGEX => Validator::EN.Validator::NUM]],
         ];

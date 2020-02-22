@@ -1,33 +1,26 @@
 <?php
 
-namespace Models\Collection {
+namespace Models\Collection;
 
-    use Core\AbstractEntity;
-    use Interfaces\{
-        EntityInterface,
-        ModelInterface
-    };
-    use Models\Table\ProjectLang;
-    use Traits\Model;
+use Core\AbstractEntity;
+use Interfaces\ModelInterface;
+use Models\Table\ProjectLang;
+use Traits\Model;
 
-    /**
-     * @var ProjectLang[] $this
-     */
-    class ProjectLangs extends AbstractEntity implements EntityInterface, ModelInterface {
-        use Model;
+/**
+ * @var ProjectLang[] $this
+ */
+class ProjectLangs extends AbstractEntity implements ModelInterface {
+    use Model;
 
-        private static $table = 'project_lang';
+    private static string $table = 'project_lang';
 
-        protected $data;
+    protected static array
+        $properties = [
+            self::COLLECTION  => [self::TYPE_DTO_ARRAY, ProjectLang::class, 'id'],
+        ];
 
-        protected static
-            $defaults = null,
-            $properties = [
-                self::COLLECTION  => [self::TYPE_DTO_ARRAY, ProjectLang::class, 'id'],
-            ];
-
-        public function __construct(array $where = []) {
-            $this->fillCollection(self::getDb()->select($where, ProjectLang::getPropertyKeys()));
-        }
+    public function __construct(array $where = []) {
+        $this->fillCollection(self::getDb()->select($where, ProjectLang::getPropertyKeys()));
     }
 }

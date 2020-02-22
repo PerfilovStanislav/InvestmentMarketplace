@@ -4,15 +4,14 @@ namespace Libraries;
 
 use Core\AbstractEntity;
 use Requests\Telegram\{SendMessageRequest, SendPhotoRequest, SetWebhookRequest};
-use Helpers\Errors;
+use Traits\Instance;
 
-class Telegram
-{
-    private CONST TELEGRAM_API = 'https://api.telegram.org/bot' . \Config::TOKEN;
+class Telegram {
+    use Instance;
 
-    CONST MY_TELEGRAM_ID = 228245070;
+    private CONST TELEGRAM_API = 'https://api.telegram.org/bot' . \Config::TELEGRAM_BOT_TOKEN;
 
-    private static function send(string $method, AbstractEntity $params) {
+    private function send(string $method, AbstractEntity $params) {
         $ch = curl_init(self::TELEGRAM_API . '/' . $method);
 
         curl_setopt_array($ch, [
@@ -31,19 +30,19 @@ class Telegram
         return $result;
     }
 
-    public static function sendMessage(SendMessageRequest $request) {
-        Errors::exitIfExists();
-        return self::send('sendMessage', $request);
+    public function sendMessage(SendMessageRequest $request) {
+        Error()->exitIfExists();
+        return $this->send('sendMessage', $request);
     }
 
-    public static function sendPhoto(SendPhotoRequest $request) {
-        Errors::exitIfExists();
-        return self::send('sendPhoto', $request);
+    public function sendPhoto(SendPhotoRequest $request) {
+        Error()->exitIfExists();
+        return $this->send('sendPhoto', $request);
     }
 
-    public static function setWebhook(SetWebhookRequest $request) {
-        Errors::exitIfExists();
-        return self::send('setWebhook', $request);
+    public function setWebhook(SetWebhookRequest $request) {
+        Error()->exitIfExists();
+        return $this->send('setWebhook', $request);
     }
 
 }

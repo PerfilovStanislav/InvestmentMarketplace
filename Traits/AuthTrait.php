@@ -2,23 +2,21 @@
 
 namespace Traits;
 
-use Helpers\Locale;
-use Helpers\Output;
-use Models\AuthModel;
+use Exceptions\ErrorException;
 
 trait AuthTrait
 {
 //    private static function needAuthorization() {
 //        if (!AuthModel::getInstance()->user) {
-//            Output::addAlertDanger(Locale::get('error'), Locale::get('need_authorization'));
-//            return Output::result();
+//            output()->addAlertDanger(Locale()->getLocale()->error, Locale()->getLocale()->needAuthorization);
+//            return output()->result();
 //        }
 //    }
 
     private static function adminAccess() {
-        if (!AuthModel::isAdmin()) {
-            Output::addAlertDanger(Locale::get('error'), Locale::get('no_access'));
-            return Output::result();
+        if (!CurrentUser()->isAdmin()) {
+            Output()->addAlertDanger(Translate()->error, Translate()->noAccess);
+            throw new ErrorException(Translate()->error, Translate()->noAccess, 403);
         }
     }
 }

@@ -190,7 +190,7 @@ var removeAlerts = function(scope) {
 var UserRegistration = function() {
     initTypes(this);
 
-    var form = $("#adduser_form");
+    var form = $("#add_user_form");
     $('input,textarea', form).on('focusin', function(e) {
         $(this).parent().removeClass('state-error').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
     });

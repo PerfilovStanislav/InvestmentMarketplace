@@ -22,24 +22,24 @@ class Validator
         LOGIN          = self::EN . self::NUM,
         FLOAT          = self::NUM . '.',
         NUMS           = self::NUM .'\,',
-        SITE_URI       = self::EN . self::NUMS . '\/_\.',
+        SITE_URI       = self::EN . self::NUMS . '\/_\.\-',
         PROJECT_NAME   = self::EN . self::NUM . ' \.\-',
         EMAIL          = self::EN . self::NUM . '\-_.@',
         HASH           = self::EN . self::NUM . '\/\.',
-        REF_SITE_URL   = self::SITE_URI . '\-=%#_:?№\.',
+        REF_SITE_URL   = self::SITE_URI . ':?№',
         IP             = self::NUM . '\.:',
         DATE           = self::NUM . '\-';
 
     public static function validate($key, $value, int $type, array $rules = []) {
         if ($type === AbstractEntity::TYPE_INT || $type === AbstractEntity::TYPE_FLOAT) {
             if (!is_numeric($value)) {
-                Errors::add($key, sprintf('Ожидалось число'));
+                Error()->add($key, sprintf('Ожидалось число'));
             }
         }
         elseif ($type === AbstractEntity::TYPE_BOOL) {
             if (in_array($value, ['1', 1, 'true', true], true)) return true;
             if (in_array($value, ['0', 0, 'false', false], true)) return false;
-            Errors::add($key, sprintf('неверное значение'));
+            Error()->add($key, sprintf('неверное значение'));
         }
 
         switch ($type) {
@@ -92,7 +92,7 @@ class Validator
                 case self::MODEL:
                     /** @var ModelInterface $rule */
                     if ($rule::getDb()->selectById($value, 'id') === null) {
-                        Errors::add($key, sprintf('Неправильное значение: %d', $value));
+                        Error()->add($key, sprintf('Неправильное значение: %d', $value));
                     }
                     break;
             }
@@ -100,7 +100,7 @@ class Validator
 
         if ($type === AbstractEntity::TYPE_CURL_FILE) {
             if (!file_exists($value)) {
-                Errors::add($key, sprintf('Файл %s не найден', $value));
+                Error()->add($key, sprintf('Файл %s не найден', $value));
             }
             return new \CURLFile($value);
         }
@@ -109,39 +109,39 @@ class Validator
     }
 
     private static function maxNumber($key, $value, $max) {
-        if ($value > $max) Errors::add($key, 'максимальное значение: ',  $max);
+        if ($value > $max) Error()->add($key, 'максимальное значение: ',  $max);
     }
 
     private static function minNumber($key, $value, $min) {
         if ($value < $min) {
-            Errors::add($key, 'минимальное значение: ' . $min);
+            Error()->add($key, 'минимальное значение: ' . $min);
         }
     }
 
     private static function maxString($key, $value, $max) {
-        if (mb_strlen($value) > $max) Errors::add($key, sprintf('максимальное количество знаков: %d', $max));
+        if (mb_strlen($value) > $max) Error()->add($key, sprintf('максимальное количество знаков: %d', $max));
     }
 
     private static function minString($key, $value, $min) {
-        if (mb_strlen($value) < $min) Errors::add($key, sprintf('минимально количество знаков: %d', $min));
+        if (mb_strlen($value) < $min) Error()->add($key, sprintf('минимально количество знаков: %d', $min));
     }
 
     private static function lengthString($key, $value, $length) {
         if (mb_strlen($value) != $length) {
-            Errors::add($key, sprintf('фиксированная длина: %d', $length));
+            Error()->add($key, sprintf('фиксированная длина: %d', $length));
         }
     }
 
     public static function regex($key, $value, $regex) {
-        if (($return = preg_replace('/[^' . $regex . ']/i', '', $value)) != $value) {
-            Errors::add($key, 'введены запрещённые символы');
+        if (($return = preg_replace('/[^' . $regex . ']/i', '', $value)) !== $value) {
+            Error()->add($key, 'введены запрещённые символы');
         }
         return $return;
     }
 
     public static function in($key, $value, array $availables) : ?bool {
         if (!in_array($value, $availables)) {
-            Errors::add($key, sprintf('Возможные значения: %s', implode(', ', $availables)));
+            Error()->add($key, sprintf('Возможные значения: %s', implode(', ', $availables)));
             return null;
         }
         return true;
@@ -150,7 +150,7 @@ class Validator
     public static function date($key, $value, string $format) : ?\DateTime {
         $date = \DateTime::createFromFormat($format, $value);
         if (!$date || $date->format($format) !== $value) {
-            Errors::add($key, sprintf('Неверный формат даты'));
+            Error()->add($key, sprintf('Неверный формат даты'));
             return null;
         }
         return $date;

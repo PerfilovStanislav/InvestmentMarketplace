@@ -4,17 +4,13 @@ namespace Requests\Investment;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 
 /**
  * @property string $website
  */
-class CheckSiteRequest extends AbstractEntity implements EntityInterface {
+class CheckSiteRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties = [
             'website' => [self::TYPE_STRING, [
                 Validator::MIN => 1,

@@ -4,18 +4,14 @@ namespace Requests\Investment;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 use Models\Table\Project;
 
 /**
  * @property integer    $project
  */
-class RedirectRequest extends AbstractEntity implements EntityInterface {
+class RedirectRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties = [
             'project' => [self::TYPE_INT, [Validator::MODEL => Project::class]],
         ];

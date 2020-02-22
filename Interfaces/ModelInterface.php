@@ -6,9 +6,9 @@ use Core\Database;
 
 interface ModelInterface
 {
-    static function getDb() : Database;
+    public static function getDb(): Database;
 
-    function save();
+    public function save();
 
-    function getRowFromDbAndFill(array $where);
+    public function getRowFromDbAndFill(array $where);
 }

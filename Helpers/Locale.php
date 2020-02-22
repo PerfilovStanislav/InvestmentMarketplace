@@ -1,81 +1,68 @@
 <?php
 
-namespace Helpers {
-    use Helpers\Locales\En;
-    use Helpers\Locales\Ru;
-    use Libraries\TabgeoCountry;
-    use Models\AuthModel;
-    use Models\Collection\MVSiteAvailableLanguages;
-    use Models\Table\Language;
+namespace Helpers;
 
-    class Locale {
-        private static $defaultLanguage = 'en';
-        private static $language = null;
-        private static $locale = null;
-        private static $localeFile = null;
+use Helpers\Locales\AbstractLanguage;
+use Helpers\Locales\LanguageCollection;
+use Libraries\TabgeoCountry;
+use Models\Table\Language;
+use Traits\Instance;
 
-        public static function getLanguage() : string {
-            if (self::$language !== null) return self::$language;
+class Locale {
+    use Instance;
 
-            // 1: from profile
-            if ($user = (AuthModel::getInstance()->user)) {
-                /** @var Language $language */
-                $language = MVSiteAvailableLanguages::getInstance()->getByKeyAndValue('id', $user->lang_id);
-                return (self::$language = $language->shortname);
-            }
+    private string  $defaultLanguage = LanguageCollection::EN;
+    private ?string $language        = null;
+    private AbstractLanguage $locale;
 
-            // 2: from session
-            if ($lang = ($_SESSION['lang'] ?? false)) return (self::$language = $lang);
+    public function getLanguage(): string {
+        if ($this->language !== null) {
+            return $this->language;
+        }
 
-            // 3: from subdomain
-            if ($host = ($_SERVER['HTTP_HOST'] ?? null)) {
-                if ($lang = (array_reverse(explode('.', $host))[2] ?? false)) return (self::$language = $lang);
-            }
-
-            // 4: from browser
-            if ($list=($_SERVER['HTTP_ACCEPT_LANGUAGE']??false)) {
-                $list = strtolower($list);
-                if (preg_match_all('/,?([a-z]{2}).*?[,;]?q=([0-9.]*)/', $list, $list)) {
-                    $langs = array_combine($list[1], $list[2]);
-                    foreach ($langs as $k => &$v) {
-                        $v = $v ? (float)$v : 1;
-                    }
-                    arsort($langs, SORT_NUMERIC);
-                }
-            }
-            foreach (array_keys($langs ?? []) as $langName) {
-                if (MVSiteAvailableLanguages::getInstance()->$langName) {
-                    return (self::$language = $_SESSION['lang'] = $langName);
-                }
-            }
-
-            // 5: TabgeoCountry
-            $flag = strtolower(TabgeoCountry::getCountry());
+        // 1: from profile
+        if ($user = (CurrentUser()->user)) {
             /** @var Language $language */
-            $language = MVSiteAvailableLanguages::getInstance()->getByKeyAndValue('flag', $flag);
-            if ($language) return (self::$language = $_SESSION['lang'] = $language->shortname);
-
-            // 6: Default
-            return ($_SESSION['lang'] = self::$language = self::$defaultLanguage);
+            $language = App()->siteLanguages()->getByKeyAndValue('id', $user->lang_id);
+            return ($this->language = $language->shortname);
         }
 
-        public static function getLocale():array {
-            return self::$locale ?: (self::$locale = self::getLocaleFile()::getLocale());
+        // 2: from session
+        if ($lang = ($_SESSION['lang'] ?? null)) {
+            return ($this->language = $lang);
         }
 
-        /**
-         * @return En|Ru
-         */
-        public static function getLocaleFile():string {
-            return self::$localeFile?:(self::$localeFile = '\Helpers\Locales\\'.ucfirst(self::getLanguage()));
+        // 3: from browser
+        if ($list=($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null)) {
+            $list = strtolower($list);
+            if (preg_match_all('/,?([a-z]{2}).*?[,;]?q=([0-9.]*)/', $list, $list)) {
+                $langs = array_combine($list[1], $list[2]);
+                foreach ($langs as $k => &$v) {
+                    $v = $v ? (float)$v : 1;
+                }
+                unset($v);
+                arsort($langs, SORT_NUMERIC);
+            }
+        }
+        foreach (array_keys($langs ?? []) as $langName) {
+            if (App()->siteLanguages()->$langName) {
+                return ($this->language = $_SESSION['lang'] = $langName);
+            }
         }
 
-        public static function getPeriodName($i,$k) {
-            return self::getLocaleFile()::getPeriodName($i,$k);
+        // 4: TabgeoCountry
+        $flag = strtolower(TabgeoCountry::getCountry());
+        /** @var Language $language */
+        $language = App()->siteLanguages()->getByKeyAndValue('flag', $flag);
+        if ($language) {
+            return ($this->language = $_SESSION['lang'] = $language->shortname);
         }
 
-        public static function get(string $key) {
-            return self::getLocale()[$key];
-        }
+        // 5: Default
+        return ($_SESSION['lang'] = $this->language = $this->defaultLanguage);
+    }
+
+    public function translate(): AbstractLanguage {
+        return $this->locale ??= LanguageCollection::get($this->getLanguage());
     }
 }

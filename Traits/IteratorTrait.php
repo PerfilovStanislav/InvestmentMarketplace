@@ -24,11 +24,10 @@ trait IteratorTrait {
 
     public function valid() {
         $key = key($this->data);
-        $var = ($key !== NULL && $key !== FALSE);
-        return $var;
+        return $key !== NULL && $key !== FALSE;
     }
 
     public function count() {
-        return empty($this->data) ? 0 : count($this->data);
+        return count($this->data);
     }
 }

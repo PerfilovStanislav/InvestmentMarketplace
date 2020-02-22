@@ -45,7 +45,7 @@ use Models\Table\User;
         <ul class="dropdown-menu list-group dropdown-persist w150" role="menu">
             <li class="dropdown-footer">
                 <a href="/users/logout" class="ajax btn" data-beforesend='{"f":["allClear"]}'>
-                    <span class="fa fa-power-off pr5"></span> <?=$this->locale['exit']?>
+                    <span class="fa fa-power-off pr5"></span> <?=Translate()->exit?>
                 </a>
             </li>
         </ul>

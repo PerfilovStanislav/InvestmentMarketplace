@@ -2,10 +2,11 @@
 namespace Views\StaticFiles; {
 /**
  * @var SiteManifest $this
- * @property LocaleInterface $locale
+ * @property AbstractLanguage $locale
  */
 Class SiteManifest {} }
-use Interfaces\LocaleInterface;
+
+use Helpers\Locales\AbstractLanguage;
 ?>
 {
     "start_url": "/",
@@ -25,7 +26,7 @@ use Interfaces\LocaleInterface;
     ],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "description": "<?=$this->locale['head']['description']?>",
+    "description": "<?=Translate()->headDescription?>",
     "display": "standalone",
     "screenshots": [{
         "src": "/assets/img/sitescreen.png",

@@ -4,7 +4,6 @@ namespace Requests\Investment;
 
 use Core\AbstractEntity;
 use Helpers\Validator;
-use Interfaces\EntityInterface;
 use Models\Constant\ProjectStatus;
 use Models\Table\Project;
 
@@ -12,12 +11,9 @@ use Models\Table\Project;
  * @property int    $project
  * @property string $status
  */
-class ChangeStatusRequest extends AbstractEntity implements EntityInterface {
+class ChangeStatusRequest extends AbstractEntity {
 
-    protected $data;
-
-    protected static
-        $defaults = null,
+    protected static array
         $properties = [
             'status'    => [self::TYPE_CONSTANTS,  ProjectStatus::class],
             'project'   => [self::TYPE_INT,        [Validator::MODEL => Project::class]],

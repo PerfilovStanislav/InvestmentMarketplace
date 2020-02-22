@@ -6,7 +6,7 @@ namespace Views\Users; { Class Registered {} }
         <div class="panel heading-border panel-success">
             <div class="panel-heading">
                 <span class="panel-title">
-                  <i class="fa fa-pencil-square"></i><?=$this->locale['user_registered']?>
+                  <i class="fa fa-pencil-square"></i><?=Translate()->userRegistered?>
                 </span>
             </div>
         </div>

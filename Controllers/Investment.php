@@ -28,8 +28,8 @@ use Models\Table\{
     ProjectLang,
     Redirect,
 };
+use Models\MView\MVProjectLang;
 use Models\Constant\{
-    MView\MVProjectLang,
     ProjectStatus,
     Views,
 };
@@ -43,7 +43,7 @@ use Requests\Investment\{AddRequest,
     ShowRequest};
 use Requests\Telegram\SendPhotoRequest;
 use Traits\AuthTrait;
-use Views\Investment\{Added, Details, ProjectFilter, Registration, Show, NoShow};
+use Views\Investment\{Added, Details, DetailsMeta, ProjectFilter, Registration, Show, NoShow};
 
 class Investment extends Controller {
     use AuthTrait;
@@ -150,21 +150,27 @@ class Investment extends Controller {
         $payments       = new Payments(['id' => $project->id_payments]);
         $languages      = new Languages(['id' => $MVProjectLang->lang_id]);
 
-        Output()->addFunctions([
-            'setStorage' => ['lang' => $language->id, 'chat' => []],
-            'initChat',
-            'panelScrollerInit',
-            'imgClickInit',
-            'checkChats',
-        ], Output::DOCUMENT);
-
         $pageParams = [
-            'project'        => $project,
-            'projectLang'    => $projectLang,
-            'payments'       => $payments,
-            'languages'      => $languages,
+            'project'     => $project,
+            'projectLang' => $projectLang,
+            'payments'    => $payments,
+            'languages'   => $languages,
+            'language'    => $language,
         ];
-        return Output()->addView(Details::class, $pageParams);
+
+        if (Output()->isLayoutEnabled()) {
+            Output()->addAdditionalLayoutView(Views::META, DetailsMeta::class, $pageParams);
+        }
+
+        return Output()
+            ->addFunctions([
+                'setStorage' => ['lang' => $language->id, 'chat' => []],
+                'initChat',
+                'panelScrollerInit',
+                'imgClickInit',
+                'checkChats',
+            ], Output::DOCUMENT)
+            ->addView(Details::class, $pageParams);
     }
 
     private function noShow(array $pageParams): Output {

@@ -7,7 +7,7 @@ use Core\View;
 use Models\Constant\Views;
 use Traits\Instance;
 use Views\Investment\ChatMessage;
-use Views\Investment\Meta;
+use Views\Investment\ShowMeta;
 use Views\Layout;
 
 class Output
@@ -46,8 +46,8 @@ class Output
         $template = [
             self::LAYOUT => Layout::class,
             self::ADDITIONAL_VIEWS => [
-                Views::CHAT_MESSAGE => ChatMessage::class,
-                Views::META         => Meta::class,
+                Views::CHAT_MESSAGE => [ChatMessage::class, []],
+                Views::META         => [ShowMeta::class, []],
             ],
         ];
 
@@ -141,6 +141,11 @@ class Output
         return $this->addAlert(self::DANGER_TYPE, $title, $text);
     }
 
+    public function addAdditionalLayoutView(string $dom, string $template, array $params = []): self {
+        $this->template[self::ADDITIONAL_VIEWS][$dom] = [$template, $params];
+        return $this;
+    }
+
     public function headers(): self {
         foreach ($this->headers as $head) {
             header($head);
@@ -177,9 +182,11 @@ class Output
                 $str = json_encode($this->result);
             }
         }
-        $str = str_replace(["\n", "\r"], ' ', $str);
-        $str = preg_replace('/\<!--.*?--\>/', '', $str);
-        $str = preg_replace('/\s+/', ' ', $str);
+        if (!DEBUG) {
+            $str = str_replace(["\n", "\r"], ' ', $str);
+            $str = preg_replace('/\<!--.*?--\>/', '', $str);
+            $str = preg_replace('/\s+/', ' ', $str);
+        }
 
         return $str;
     }
@@ -213,8 +220,8 @@ class Output
             }
         }
 
-        return (new View($this->template[self::LAYOUT], $this->result[self::VIEW] +
-            array_map(fn (string $viewClass) => new View($viewClass), $this->template[self::ADDITIONAL_VIEWS])
+        return (new View($this->template[self::LAYOUT], $this->result[self::VIEW]
+            + array_map(fn (array $data) => new View($data[0], $data[1]), $this->template[self::ADDITIONAL_VIEWS])
         ))->render();
     }
 }

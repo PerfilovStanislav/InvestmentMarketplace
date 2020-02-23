@@ -12,31 +12,13 @@ use Helpers\Output;
 use Models\Constant\Views;
 ?>
 <!DOCTYPE html>
-<html lang="<?=App()->locale()->getLanguage()?>">
+<html lang="<?=App()->locale()->getLanguage()?>" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="utf-8">
     <?=$this->{Views::META}?>
-    <title>RichInme - <?=Translate()->headTitle?></title>
-    <meta name="keywords" content="<?=Translate()->headKeywords?>"/>
-    <meta name="description" content="<?=Translate()->headDescription?>">
     <meta name="author" content="RichInMe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index,follow">
-
-    <meta property="og:locale" content="<?=App()->locale()->getLanguage()?>" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Richinme" />
-    <meta property="og:image:width" content="1181">
-    <meta property="og:image:height" content="810">
-    <meta property="og:url" content="<?=SITE?>">
-    <meta property="og:image" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png" data-meta-dynamic="true">
-    <meta property="og:image:secure_url" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png" data-meta-dynamic="true">
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:description" content="<?=Translate()->headDescription?>" data-meta-dynamic="true">
-    <meta property="og:title" content="<?=Translate()->headTitle?>" data-meta-dynamic="true">
-    <meta property="pageType" content="video">
-    <meta itemprop="image" content="https://richinme.com/assets/img/richinme/logo-1161x810.png">
-    <meta itemprop="name" content="<?=Translate()->headDescription?>">
 
     <link rel="shortcut icon" href="/assets/icons/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
@@ -48,30 +30,6 @@ use Models\Constant\Views;
     <meta name="application-name" content="RiM">
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
-
-    <meta name="twitter:title" content="<?=Translate()->headTitle?>" data-meta-dynamic="true">
-    <meta name="twitter:site" content="@richinme" data-meta-dynamic="true">
-    <meta name="twitter:creator" content="@richinme" data-meta-dynamic="true">
-    <meta name="twitter:image:alt" content="RichInme - <?=Translate()->headTitle?>" data-meta-dynamic="true">
-    <meta name="twitter:description" content="<?=Translate()->headDescription?>" data-meta-dynamic="true">
-    <meta name="twitter:image" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png" data-meta-dynamic="true">
-    <meta name="twitter:card" content="summary_large_image">
-
-
-
-
-
-
-    <!--    <meta property="subpageType" content="single">-->
-    <!--    <meta property="pageId" content="vi834191129">-->
-    <!--    <meta name="requestId" content="AZB664H0VFVJ1E90GX9Y">-->
-    <!--    <meta property="fb:app_id" content="115109575169727">-->
-    <!--    <meta property="og:type" content="video.other">-->
-    <!--    <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.imdb.com/list/ls025849840/videoplayer/vi834191129">-->
-    <!--    <link rel="stylesheet" href="https://m.media-amazon.com/images/G/01/imdb/css/collections/video-player-page-813841666._CB441580132_.css">-->
-
-
-
 
     <? \Helpers\Scripts::loadCSS(DEBUG) ?>
 </head>

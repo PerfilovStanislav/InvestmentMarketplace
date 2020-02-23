@@ -11,7 +11,7 @@ use Models\CurrentUser;
 define('DIR', dirname($_SERVER['SCRIPT_NAME']));
 define('ROOT', __DIR__);
 define('DOMAIN', 'richinme.org');
-define('SITE', 'http://' . DOMAIN);
+define('SITE', 'https://' . DOMAIN);
 define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
 error_reporting(E_ALL | E_STRICT);
 define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));

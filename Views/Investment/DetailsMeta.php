@@ -21,8 +21,8 @@ use Models\Table\ProjectLang; ?>
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="<?=$this->language->shortname?>" />
 <meta property="og:site_name" content="Richinme" />
-<meta property="og:image:width" content="1161">
-<meta property="og:image:height" content="810">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="960">
 <meta property="og:url" content="<?=SITE?>">
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:secure_url" content="<?=SITE?>/assets/img/richinme/logo-1161x810.png">

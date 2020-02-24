@@ -16,11 +16,10 @@ use Helpers\Data\Currency;
 use Helpers\Locales\AbstractLanguage;
 use Libraries\Screens;
 use Models\Collection\Languages;
-use Models\Collection\ProjectLangs;
 use Models\Constant\ProjectStatus;
 use Models\Constant\Views;
 use Models\MView\MVProjectLang;
-use Models\Table\{Payment, Project, Language, ProjectLang};
+use Models\Table\{Payment, Project, Language};
 ?>
 <div class="filters" id="<?=Views::PROJECT_FILTER?>">
     <?=$this->{Views::PROJECT_FILTER}?>

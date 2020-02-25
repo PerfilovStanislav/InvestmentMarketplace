@@ -26,7 +26,7 @@ class Validator
         PROJECT_NAME   = self::EN . self::NUM . ' \.\-',
         EMAIL          = self::EN . self::NUM . '\-_.@',
         HASH           = self::EN . self::NUM . '\/\.',
-        REF_SITE_URL   = self::SITE_URI . ':?№',
+        REF_SITE_URL   = self::SITE_URI . ':?№=',
         IP             = self::NUM . '\.:',
         DATE           = self::NUM . '\-';
 

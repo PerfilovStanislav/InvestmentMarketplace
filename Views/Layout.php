@@ -31,7 +31,7 @@ use Models\Constant\Views;
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
 
-    <? \Helpers\Scripts::loadCSS(DEBUG) ?>
+    <?php \Helpers\Scripts::loadCSS(DEBUG) ?>
 </head>
 
 <body class="dashboard-page">
@@ -66,13 +66,13 @@ use Models\Constant\Views;
 
 <?=$this->{Views::CHAT_MESSAGE}?>
 
-<? \Helpers\Scripts::loadJS(DEBUG) ?>
+<?php \Helpers\Scripts::loadJS(DEBUG) ?>
 
 <script id="scripts">
-    <? foreach ([Output::FUNCTION, Output::FIELD, Output::ALERT] as $type) {
+    <?php foreach ([Output::FUNCTION, Output::FIELD, Output::ALERT] as $type) {
     if (isset($this->{$type})) { ?>
         applyFunctions('<?=$type?>', <?=json_encode($this->{$type})?>);
-    <? }} ?>
+    <?php }} ?>
 </script>
 </body>
 </html>

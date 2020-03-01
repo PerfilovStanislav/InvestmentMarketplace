@@ -23,17 +23,17 @@ use Requests\Investment\ShowRequest;
                     <span class="flag flag-<?=$this->pageLanguage->flag?>"></span>
                 </button>
                 <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                    <? foreach ($this->MVProjectFilterAvailableLangs as $MVProjectFilterAvailableLang):
+                    <?php foreach ($this->MVProjectFilterAvailableLangs as $MVProjectFilterAvailableLang):
                         /** @var Language $lang */$lang = $this->languages->{$MVProjectFilterAvailableLang->lang_id};
                         ?>
                         <li>
                             <a class="ajax page"
                                href="<?=$this->url.'/'.$this->request->getUriWithNewParam(['lang' => $lang->shortname])?>">
                                 <span class="flag flag-<?=$lang->flag?> mr10"></span>
-                                <? printf('%s (%s) %d', $lang->name, $lang->own_name, $MVProjectFilterAvailableLang->cnt)?>
+                                <?php printf('%s (%s) %d', $lang->name, $lang->own_name, $MVProjectFilterAvailableLang->cnt)?>
                             </a>
                         </li>
-                    <? endforeach;?>
+                    <?php endforeach;?>
                 </ul>
             </div>
         </div>

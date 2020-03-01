@@ -21,15 +21,15 @@ use Models\Table\User;
                 <span class="flag flag-<?=$this->siteLanguages->{$this->selectedLanguage}->flag?>"></span>
             </button>
             <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                <? foreach ($this->siteLanguages as $shortname => $language):?>
+                <?php foreach ($this->siteLanguages as $shortname => $language):?>
                     <li>
                         <a class="ajax <?=$shortname === $this->selectedLanguage ? 'selected' : ''?>"
                            href="/Users/changeLanguage/lang/<?=$shortname?>"
                            data-beforesend='{"f":["allClear"]}'>
-                            <span class="flag flag-<?=$language->flag?> mr10"></span> <? printf('%s (%s)', $language->name, $language->own_name)?>
+                            <span class="flag flag-<?=$language->flag?> mr10"></span> <?php printf('%s (%s)', $language->name, $language->own_name)?>
                         </a>
                     </li>
-                <? endforeach;?>
+                <?php endforeach;?>
             </ul>
         </div>
     </li>

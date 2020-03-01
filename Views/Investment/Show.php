@@ -26,7 +26,7 @@ use Models\Table\{Payment, Project, Language};
 </div>
 
 <div class="investment">
-    <? $isFirstRow = true; foreach ($this->projects as $project): ?>
+    <?php $isFirstRow = true; foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?=$project->id?>">
             <div class="panel-heading">
                 <?php if ($this->isAdmin): ?>
@@ -87,7 +87,7 @@ use Models\Table\{Payment, Project, Language};
                                             <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                         </td>
                                     </tr>
-                                <? }?>
+                                <?php }?>
                                 </tbody>
                             </table>
                         </div>
@@ -108,23 +108,23 @@ use Models\Table\{Payment, Project, Language};
                                 </tr>
                                 <tr>
                                     <td><?=Translate()->languages?></td>
-                                    <td><? foreach ($this->MVProjectLangs->{$project->id}->lang_id as $langId): ;
+                                    <td><?php foreach ($this->MVProjectLangs->{$project->id}->lang_id as $langId): ;
                                             /** @var Language $lang */ $lang = $this->languages->{$langId};?>
                                             <i class="flag flag-<?=$lang->flag?>"
                                                title="<?=$lang->name . " ({$lang->own_name})"?>"></i>
-                                        <? endforeach;?>
+                                        <?php endforeach;?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <?=Translate()->paymentSystem?>
                                     </td>
-                                    <td><? foreach ($project->id_payments as $paymentId):
+                                    <td><?php foreach ($project->id_payments as $paymentId):
                                             /** @var Payment $payment*/ $payment = $this->payments->{$paymentId};
                                             ?>
                                             <i class="pay pay-<?=$payment->name?> mb10"
                                                title="<?=$payment->name?>"></i>
-                                        <? endforeach;?>
+                                        <?php endforeach;?>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -157,5 +157,5 @@ use Models\Table\{Payment, Project, Language};
                 </div>
             </div>
         </div>
-    <? $isFirstRow = false; endforeach;?>
+    <?php $isFirstRow = false; endforeach;?>
 </div>

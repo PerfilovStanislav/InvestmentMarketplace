@@ -134,7 +134,7 @@ use Models\Table\Payment;
                                 <div class="col-md-1 mln1 pln fa" style="top: 0px">
                                     <label class="field select">
                                         <select name="plan_currency_type[]">
-                                            <? foreach ($this->currency as $k => $c) {
+                                            <?php foreach ($this->currency as $k => $c) {
                                                 if ($k == 0) continue;
                                                 printf('<option value="%d" %s title="%s">%s</option>', $k, $k == 1 ? 'selected' : '', $c['t'], $c['i']);
                                             }?>

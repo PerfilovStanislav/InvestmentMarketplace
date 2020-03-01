@@ -75,7 +75,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                         <span class="fa"><?=Currency::getCurrency()[$this->project->plan_currency_type[$key]]['i']?></span>
                                     </td>
                                 </tr>
-                            <? }?>
+                            <?php }?>
                             </tbody>
                         </table>
                     </div>
@@ -98,23 +98,23 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             </tr>
                             <tr>
                                 <td><?=Translate()->languages?></td>
-                                <td><? foreach ($this->languages as $langId => $language):
+                                <td><?php foreach ($this->languages as $langId => $language):
                                         /** @var Language $language */ ?>
                                         <i class="flag flag-<?=$language->flag?>"
                                            title="<?=$language->name . " ({$language->own_name})"?>"></i>
-                                    <? endforeach;?>
+                                    <?php endforeach;?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <?=Translate()->paymentSystem?>
                                 </td>
-                                <td><? foreach ($this->project->id_payments as $paymentId):
+                                <td><?php foreach ($this->project->id_payments as $paymentId):
                                         /** @var Payment $payment*/ $payment = $this->payments->{$paymentId};
                                         ?>
                                         <i class="pay pay-<?=$payment->name?> mb10"
                                            title="<?=$payment->name?>"></i>
-                                    <? endforeach;?>
+                                    <?php endforeach;?>
                                 </td>
                             </tr>
                             </tbody>

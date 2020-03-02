@@ -27,7 +27,8 @@ abstract class AbstractEntity {
         TYPE_INT_ARRAY    = 11,
         TYPE_FLOAT_ARRAY  = 12,
         TYPE_STRING_ARRAY = 13,
-        TYPE_CURL_FILE    = 14;
+        TYPE_CURL_FILE    = 14,
+        TYPE_JSON         = 15;
 
     public CONST
         FORMAT_DATE     = 'Y-m-d',
@@ -112,6 +113,14 @@ abstract class AbstractEntity {
                     ][$type];
                     foreach ($array as $index => $item) {
                         $this->data[$key][$index] = Validator::validate("{$key}.{$index}", $item, $validatorType, $params[1] ?? []);
+                    }
+                    break;
+                case self::TYPE_JSON:
+                    if (is_string($value)) {
+                        $this->data[$key] = json_decode($value, true);
+                    }
+                    else {
+                        $this->data[$key] = $value;
                     }
                     break;
                 default:
@@ -229,6 +238,9 @@ abstract class AbstractEntity {
                 case self::TYPE_DATE:
                 case self::TYPE_DATETIME:
                     $data[$key] = $item->format(self::getDateFormatByType($type));
+                    break;
+                case self::TYPE_JSON:
+                    $data[$key] = json_encode($item);
                     break;
                 default:
                     $data[$key] = $item;

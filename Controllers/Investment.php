@@ -21,13 +21,7 @@ use Models\Collection\{
     MVProjectSearchs,
     Users,
 };
-use Models\Table\{
-    Language,
-    Project,
-    ProjectChatMessage,
-    ProjectLang,
-    Redirect,
-};
+use Models\Table\{Language, Project, ProjectChatMessage, ProjectLang, Queue, Redirect};
 use Models\MView\MVProjectLang;
 use Models\Constant\{
     ProjectStatus,
@@ -203,8 +197,6 @@ class Investment extends Controller {
         $project->status_id = ProjectStatus::NOT_PUBLISHED;
         $project->save();
 
-        Screens::saveScreenShot($url, $project->id);
-
         // Сохраняем описания
         foreach ($request->description as $langId => $description) {
             $projectLang              = new ProjectLang();
@@ -215,14 +207,13 @@ class Investment extends Controller {
             unset($projectLang);
         }
 
-        self::refreshMViews();
-
-        $message = new SendPhotoRequest([
-            'chat_id' => \Config::TELEGRAM_MY_ID,
-            'caption' => sprintf('New project is added *%s* (%s)', $project->name, $project->url),
-            'photo'   => Screens::getOriginalJpgScreen($project->id),
-        ]);
-        App()->telegram()->sendPhoto($message);
+        (new Queue([
+            'action_id'  => Queue::ACTION_ID_SCREENSHOT,
+            'status_id'  => Queue::STATUS_CREATED,
+            'payload'    => [
+                'project_id' => $project->id,
+            ],
+        ]))->save();
 
         return Output()
             ->addView(Added::class)
@@ -241,7 +232,7 @@ class Investment extends Controller {
         return \Controllers\Users::reloadPage();
     }
 
-    private static function refreshMViews(): void {
+    public static function refreshMViews(): void {
         // Обновляем вьюшки @TODO перенести в rabbit
         MVProjectFilterAvailableLangs::refresh();
         MVProjectLangs::refresh();

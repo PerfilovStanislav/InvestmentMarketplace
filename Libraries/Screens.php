@@ -53,28 +53,7 @@ class Screens {
         return WEBP ? self::getWebpPreThumb($id) : self::getJpgPreThumb($id);
     }
 
-    public static function saveScreenShot(string $url, int $id) {
-        self::createFolder($id);
-
-        require(ROOT . '/composer/vendor/autoload.php');
-
-        $factory = new \HeadlessChromium\BrowserFactory('google-chrome');
-        $browser = $factory->createBrowser([
-            'headless' => true,
-            'keepAlive' => false,
-            'windowSize' => [1280, 960],
-            'sendSyncDefaultTimeout' => 45000
-        ]);
-
-        $page = $browser->createPage();
-
-        $page->navigate($url)->waitForNavigation();
-        $page->screenshot([
-            'format'  => 'jpeg',
-            'quality' => 95,
-        ])->saveToFile(self::getOriginalJpgScreen($id));
-
-//            self::makeWebp(self::getOriginalJpgScreen($id), self::getOriginalWebpScreen($id)); // Занимает больше jpg =(
+    public static function makeThumbs(string $url, int $id) {
         self::makeThumb(self::getOriginalJpgScreen($id), self::getJpgThumb($id));
         self::makeWebp(self::getJpgThumb($id), self::getWebpThumb($id));
         self::makeWebp(self::getJpgThumb($id), self::getWebpPreThumb($id), 0);

@@ -13,6 +13,7 @@ define('ROOT', __DIR__);
 define('DOMAIN', 'richinme.org');
 define('SITE', 'https://' . DOMAIN);
 define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
+define('CLI', php_sapi_name() === 'cli');
 error_reporting(E_ALL | E_STRICT);
 define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));
 define('START_SHUTDOWN', true);
@@ -28,7 +29,7 @@ function load(string $className) {
 }
 spl_autoload_register('load');
 
-define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY);
+define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI);
 
 require_once './Helpers/Debug.php';
 
@@ -55,13 +56,18 @@ function Translate(): AbstractLanguage {
 function CurrentUser(): CurrentUser {
     return App()->currentUser();
 }
-try {
-    App()->start();
-} catch (\Exception $exception) {
-    Db()->rollBackTransaction();
-    dd($exception);
-} finally {
-    //
+if (CLI) {
+    Router()->go($argv[1]);
+}
+else {
+    try {
+        App()->start();
+    } catch (\Exception $exception) {
+        Db()->rollBackTransaction();
+        dd($exception);
+    } finally {
+        //
+    }
 }
 
 function shutdown() {

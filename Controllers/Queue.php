@@ -9,6 +9,13 @@ use Requests\Telegram\SendPhotoRequest;
 
 class Queue
 {
+    public function __construct()
+    {
+        if (!CLI) {
+            throw new \Exception('Only cli available');
+        }
+    }
+
     public function screenshot()
     {
         $queueOriginal = (new QueueModel());

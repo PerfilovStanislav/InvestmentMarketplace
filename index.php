@@ -78,7 +78,7 @@ function shutdown() {
         if (CLI) {
             $message = new SendMessageRequest([
                 'chat_id' => \Config::TELEGRAM_MY_ID,
-                'text' => '```' . json_encode(['error' => $error, 'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)]) . '```',
+                'text' => '```' . json_encode(['error' => $error, 'debug' => debug_backtrace()]) . '```',
             ]);
             App()->telegram()->sendMessage($message);
         }

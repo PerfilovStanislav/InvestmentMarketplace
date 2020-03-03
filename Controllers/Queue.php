@@ -22,6 +22,7 @@ class Queue
 
         require(ROOT . '/composer/vendor/autoload.php');
 
+        echo 'Start chrome', PHP_EOL;
         $factory = new \HeadlessChromium\BrowserFactory('google-chrome');
         $browser = $factory->createBrowser([
             'headless' => true,
@@ -30,8 +31,7 @@ class Queue
             'windowSize' => [1280, 960],
             'sendSyncDefaultTimeout' => 45000
         ]);
-
-        $page = $browser->createPage();
+        echo 'Started chrome', PHP_EOL;
 
         while (1) {
             $queue = clone $queueOriginal;
@@ -53,11 +53,15 @@ class Queue
             $project = (new Project())->getById($queue->payload['project_id']);
 
             Screens::createFolder($project->id);
+
+            $page = $browser->createPage();
             $page->navigate('https://' . $project->url)->waitForNavigation();
             $page->screenshot([
                 'format'  => 'jpeg',
                 'quality' => 95,
             ])->saveToFile(Screens::getOriginalJpgScreen($project->id));
+            $page->close();
+
             Screens::makeThumbs($project->url, $project->id);
 
             Investment::refreshMViews();

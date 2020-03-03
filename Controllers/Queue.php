@@ -18,6 +18,7 @@ class Queue
         $factory = new \HeadlessChromium\BrowserFactory('google-chrome');
         $browser = $factory->createBrowser([
             'headless' => true,
+            'noSandbox' => true,
             'keepAlive' => false,
             'windowSize' => [1280, 960],
             'sendSyncDefaultTimeout' => 45000
@@ -32,7 +33,7 @@ class Queue
                 'status_id' => QueueModel::STATUS_CREATED,
             ]);
 
-            if (!$queue) {
+            if (!$queue->id) {
                 sleep(1);
                 continue;
             }
@@ -45,7 +46,7 @@ class Queue
             $project = (new Project())->getById($queue->payload['project_id']);
 
             Screens::createFolder($project->id);
-            $page->navigate($project->url)->waitForNavigation();
+            $page->navigate('https://' . $project->url)->waitForNavigation();
             $page->screenshot([
                 'format'  => 'jpeg',
                 'quality' => 95,

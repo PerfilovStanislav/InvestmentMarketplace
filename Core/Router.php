@@ -44,6 +44,7 @@ class Router {
         if (!CLI) {
             App()->auth();
         }
+
         $uriParams = explode('/', strtolower(trim($uri,'/')));
         return $this->getRouteFromUriParams($uriParams);
     }

@@ -7,6 +7,7 @@ use Helpers\Errors;
 use Helpers\Locales\AbstractLanguage;
 use Helpers\Output;
 use Models\CurrentUser;
+use Requests\Telegram\SendMessageRequest;
 
 define('DIR', dirname($_SERVER['SCRIPT_NAME']));
 define('ROOT', __DIR__);
@@ -73,6 +74,13 @@ else {
 function shutdown() {
     if ($error = error_get_last()) {
 //        E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
+
+        $message = new SendMessageRequest([
+            'chat_id' => \Config::TELEGRAM_MY_ID,
+            'text'    => '```' . json_encode(['error' => $error, 'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)]) . '```',
+        ]);
+        App()->telegram()->sendMessage($message);
+
         dd(__METHOD__, $error);
     }
 }

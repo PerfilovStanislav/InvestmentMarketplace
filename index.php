@@ -75,11 +75,13 @@ function shutdown() {
     if ($error = error_get_last()) {
 //        E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
 
-        $message = new SendMessageRequest([
-            'chat_id' => \Config::TELEGRAM_MY_ID,
-            'text'    => '```' . json_encode(['error' => $error, 'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)]) . '```',
-        ]);
-        App()->telegram()->sendMessage($message);
+        if (CLI) {
+            $message = new SendMessageRequest([
+                'chat_id' => \Config::TELEGRAM_MY_ID,
+                'text' => '```' . json_encode(['error' => $error, 'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)]) . '```',
+            ]);
+            App()->telegram()->sendMessage($message);
+        }
 
         dd(__METHOD__, $error);
     }

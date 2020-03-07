@@ -34,7 +34,7 @@ class Queue extends AbstractEntity implements ModelInterface {
             'action_id'  => [self::TYPE_INT,      [Validator::MIN  => 1]],
             'status_id'  => [self::TYPE_INT,      [Validator::MIN  => 1]],
             'payload'    => [self::TYPE_JSON,     []],
-            'start_time' => [self::TYPE_DATETIME, []],
-            'end_time'   => [self::TYPE_DATETIME, []],
+            'start_time' => [self::TYPE_DATETIME, [], self::TYPE_NULLABLE],
+            'end_time'   => [self::TYPE_DATETIME, [], self::TYPE_NULLABLE],
         ];
 }

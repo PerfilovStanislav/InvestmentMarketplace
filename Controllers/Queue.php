@@ -73,7 +73,7 @@ class Queue
             ]);
             App()->telegram()->sendPhoto($message);
 
-            $queue->end_time = date("Y-m-d H:i:s");
+            $queue->end_time = date('Y-m-d H:i:s');
             $queue->status_id = QueueModel::STATUS_FINISHED;
             $queue->save();
 

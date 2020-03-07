@@ -227,23 +227,29 @@ abstract class AbstractEntity {
 
     public function toDatabase(): array {
         $data = [];
-        foreach ($this->data as $key => $item) {
+        foreach ($this->data as $key => $value) {
             $type = self::getType($key);
+
+            if (static::$properties[$key][2] === self::TYPE_NULLABLE && $value === null) {
+                $this->data[$key] = null;
+                continue;
+            }
+
             switch ($type) {
                 case self::TYPE_INT_ARRAY:
                 case self::TYPE_FLOAT_ARRAY:
                 case self::TYPE_STRING_ARRAY:
-                    $data[$key] = '{' . implode(',', $item) . '}';
+                    $data[$key] = '{' . implode(',', $value) . '}';
                     break;
                 case self::TYPE_DATE:
                 case self::TYPE_DATETIME:
-                    $data[$key] = $item->format(self::getDateFormatByType($type));
+                    $data[$key] = $value->format(self::getDateFormatByType($type));
                     break;
                 case self::TYPE_JSON:
-                    $data[$key] = json_encode($item);
+                    $data[$key] = json_encode($value);
                     break;
                 default:
-                    $data[$key] = $item;
+                    $data[$key] = $value;
             }
         }
         return $data;

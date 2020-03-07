@@ -228,7 +228,7 @@ class Investment extends Controller {
         $project->save();
 
         self::refreshMViews();
-        Database::getInstance()->setTable('mv_sitemapxml')->refresh();
+        Db()->setTable('mv_sitemapxml')->refresh(false);
         return \Controllers\Users::reloadPage();
     }
 

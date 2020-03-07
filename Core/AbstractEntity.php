@@ -230,7 +230,10 @@ abstract class AbstractEntity {
         foreach ($this->data as $key => $value) {
             $type = self::getType($key);
 
-            if (static::$properties[$key][2] === self::TYPE_NULLABLE && $value === null) {
+            if (!$params = (static::$properties[$key] ?? null)) {
+                continue;
+            }
+            if (($params[2] ?? null) === self::TYPE_NULLABLE && $value === null) {
                 $this->data[$key] = null;
                 continue;
             }

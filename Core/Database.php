@@ -208,7 +208,7 @@ class Database extends PDO {
     }
 
     public function refresh(bool $concurrently = true): bool {
-        $sql = 'REFRESH MATERIALIZED VIEW ' . ($concurrently ? ' CONCURRENTLY' : '') . $this->table;
+        $sql = 'REFRESH MATERIALIZED VIEW ' . ($concurrently ? 'CONCURRENTLY ' : '') . $this->table;
         $stmt = $this->prepare($sql);
         return $stmt->execute();
     }

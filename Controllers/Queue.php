@@ -56,6 +56,7 @@ class Queue
 
             $page = $browser->createPage();
             $page->navigate('https://' . $project->url)->waitForNavigation();
+            sleep(7);
             $page->screenshot([
                 'format'  => 'jpeg',
                 'quality' => 95,

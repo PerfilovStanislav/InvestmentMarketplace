@@ -43,8 +43,14 @@ html::-webkit-scrollbar-track {
 }
 @font-face {
     font-family: "AdminDesigns";
-    src: url("/assets/fonts/admindesigns/admindesigns.eot");
-    src: url("/assets/fonts/admindesigns/admindesignsd41d.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/admindesigns/admindesigns.woff") format("woff"), url("/assets/fonts/admindesigns/admindesigns.ttf") format("truetype"), url("/assets/fonts/admindesigns/admindesigns.svg#admindesigns") format("svg");
+    src:
+        url("/assets/fonts/admindesigns/admindesigns.eot"),
+        url("/assets/fonts/admindesigns/admindesignsd41d.eot?#iefix") format("embedded-opentype"),
+        url("/assets/fonts/admindesigns/admindesigns.woff") format("woff"),
+        url("/assets/fonts/admindesigns/admindesigns.ttf") format("truetype"),
+        url("/assets/fonts/admindesigns/admindesigns.svg#admindesigns") format("svg"),
+        local('Verdana');
+    font-display: swap;
     font-weight: normal;
     font-style: normal;
 }
@@ -63,8 +69,15 @@ html::-webkit-scrollbar-track {
 }
 @font-face {
     font-family: 'Glyphicons Halflings';
-    src: url('/assets/fonts/glyphicons/glyphicons-halflings-regular.eot');
-    src: url('/assets/fonts/glyphicons/glyphicons-halflings-regulard41d.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff2') format('woff2'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/fonts/glyphicons/glyphicons-halflings-regular.svg#@glyphicons_halflingsregular') format('svg');
+    src:
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.eot'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regulard41d.eot?#iefix') format('embedded-opentype'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff2') format('woff2'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.svg#@glyphicons_halflingsregular') format('svg'),
+        local('Verdana');
+    font-display: swap;
 }
 .glyphicon {
     position: relative;
@@ -97,10 +110,17 @@ html::-webkit-scrollbar-track {
 }
 @font-face {
     font-family: 'FontAwesome';
-    src: url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.eot?v=4.3.0');
-    src: url('/assets/fonts/font-awesome/fontawesome-webfontd41d.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff2?v=4.3.0') format('woff2'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff?v=4.3.0') format('woff'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.ttf?v=4.3.0') format('truetype'), url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.svg?v=4.3.0#fontawesomeregular') format('svg');
+    src:
+        /*url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.eot?v=4.3.0'),*/
+        url('/assets/fonts/font-awesome/fontawesome-webfontd41d.eot?#iefix&v=4.3.0') format('embedded-opentype'),
+        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff2?v=4.3.0') format('woff2'),
+        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff?v=4.3.0') format('woff'),
+        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.ttf?v=4.3.0') format('truetype'),
+        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.svg?v=4.3.0#fontawesomeregular') format('svg'),
+        local('Verdana');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 .fa {
     display: inline-block;

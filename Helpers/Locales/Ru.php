@@ -14,6 +14,7 @@ class Ru extends AbstractLanguage {
         $chat              = 'Чат',
         $check             = 'проверить',
         $close             = 'Закрыть',
+        $dateStart         = 'Дата старта',
         $deposit           = 'Депозит',
         $description       = 'Описание',
         $download          = 'Скачать',

@@ -14,6 +14,7 @@ abstract class AbstractLanguage implements LocaleInterface {
         $chat              = 'Chat',
         $check             = 'check',
         $close             = 'Close',
+        $dateStart         = 'Start date',
         $deposit           = 'Deposit',
         $description       = 'Description',
         $download          = 'Download',

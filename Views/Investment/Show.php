@@ -16,6 +16,7 @@ use Helpers\Data\Currency;
 use Helpers\Locales\AbstractLanguage;
 use Libraries\Screens;
 use Models\Collection\Languages;
+use Models\Constant\CurrencyType;
 use Models\Constant\ProjectStatus;
 use Models\Constant\Views;
 use Models\MView\MVProjectLang;
@@ -25,10 +26,10 @@ use Models\Table\{Payment, Project, Language};
     <?=$this->{Views::PROJECT_FILTER}?>
 </div>
 
-<div class="investment">
+<div class="investment" itemscope itemtype="http://schema.org/ItemList">
     <?php $isFirstRow = true; foreach ($this->projects as $project): ?>
-        <div class="panel mb25 mt5" project_id="<?=$project->id?>">
-            <div class="panel-heading">
+        <div class="panel mb25 mt5" project_id="<?=$project->id?>" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
+            <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
                 <?php if ($this->isAdmin): ?>
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
                         <span class="fa fa-pencil"></span>
@@ -48,18 +49,25 @@ use Models\Table\{Payment, Project, Language};
                     <span class="fa fa-newspaper-o text-warning-dark"></span>
                 </a>
                 <span class="panel-title">
-                    <a target="_blank" rel="nofollow noopener" href="/Investment/redirect/project/<?=$project->id?>"><?=$project->name?></a>
+                    <a target="_blank" rel="nofollow noopener" itemprop="url" href="/Investment/redirect/project/<?=$project->id?>">
+                        <span itemprop="name"><?=$project->name?></span>
+                    </a>
                 </span>
             </div>
             <div class="panel-body">
                 <div class="mbn flex inforow">
                     <div class="mnw270">
-                        <div class="thumbnail">
-                            <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
-                                 alt="<?=$project->name?>"
-                                 class="media-object" href="/<?=Screens::getOriginalJpgScreen($project->id)?>"
-                                 <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
-                            >
+                        <div class="thumbnail" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
+                            <meta itemprop="contentUrl" content="<?=SITE.'/'.Screens::getOriginalJpgScreen($project->id)?>">
+                            <meta itemprop="description" content="<?=$project->name?>">
+                            <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+                                <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
+                                     alt="<?=$project->name?>"
+                                     itemprop="image"
+                                     class="media-object" href="/<?=Screens::getOriginalJpgScreen($project->id)?>"
+                                     <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
+                                >
+                            </span>
                         </div>
                     </div>
                     <div class="mnw270" style="flex: 22 0">
@@ -80,10 +88,11 @@ use Models\Table\{Payment, Project, Language};
                                 </thead>
                                 <tbody>
                                 <?php foreach ($project->plan_percents as $key => $plan) {?>
-                                    <tr>
+                                    <tr itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                                         <td><?=$project->plan_percents[$key]?>%</td>
                                         <td><?=$project->plan_period[$key] . ' ' . Translate()->getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
-                                        <td><?=$project->plan_start_deposit[$key]?>
+                                        <td><span itemprop="price"><?=$project->plan_start_deposit[$key]?></span>
+                                            <meta itemprop="priceCurrency" content="<?=CurrencyType::getConstName($project->plan_currency_type[$key])?>" >
                                             <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                         </td>
                                     </tr>
@@ -102,6 +111,10 @@ use Models\Table\{Payment, Project, Language};
                         <div class="panel-body panel-scroller scroller-xs scroller-pn pn scroller-active scroller-success mih-220">
                             <table class="table mbn tc-bold-last table-hover justify">
                                 <tbody>
+                                <tr>
+                                    <td><?=Translate()->dateStart?></td>
+                                    <td itemprop="productionDate"><?=$project->start_date->format('Y-m-d')?></td>
+                                </tr>
                                 <tr>
                                     <td><?=Translate()->refProgram?></td>
                                     <td><?= implode('%, ', $project->ref_percent) . '%'?></td>

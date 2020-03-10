@@ -31,9 +31,9 @@ use Models\Table\ProjectLang; ?>
 <meta property="og:title" content="<?=$this->project->name?>" data-meta-dynamic="true">
 <meta property="pageType" content="video">
 
-<meta itemprop="name" content="<?=$description?>">
-<meta itemprop="image" content="<?=SITE?>/<?=Screens::getOriginalJpgScreen($this->project->id)?>">
-<meta itemprop="description" content="<?=$description?>">
+<meta property="name" content="<?=$description?>">
+<meta property="image" content="<?=SITE?>/<?=Screens::getOriginalJpgScreen($this->project->id)?>">
+<meta property="description" content="<?=$description?>">
 
 <meta name="twitter:title" content="<?=$this->project->name?>" data-meta-dynamic="true">
 <meta name="twitter:site" content="@RichinmeCom" data-meta-dynamic="true">

@@ -19,9 +19,9 @@ namespace Views\Investment; { Class ShowMeta {} }
 <meta property="og:title" content="<?=Translate()->headTitle?>" data-meta-dynamic="true">
 <meta property="pageType" content="video">
 
-<meta itemprop="name" content="<?=Translate()->headDescription?>">
-<meta itemprop="image" content="https://richinme.com/assets/img/richinme/logo-1161x810.png">
-<meta itemprop="description" content="<?=Translate()->headDescription?>">
+<meta property="name" content="<?=Translate()->headDescription?>">
+<meta property="image" content="https://richinme.com/assets/img/richinme/logo-1161x810.png">
+<meta property="description" content="<?=Translate()->headDescription?>">
 
 <meta name="twitter:title" content="<?=Translate()->headTitle?>" data-meta-dynamic="true">
 <meta name="twitter:site" content="@RichinmeCom" data-meta-dynamic="true">

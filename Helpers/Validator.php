@@ -33,13 +33,13 @@ class Validator
     public static function validate($key, $value, int $type, array $rules = []) {
         if ($type === AbstractEntity::TYPE_INT || $type === AbstractEntity::TYPE_FLOAT) {
             if (!is_numeric($value)) {
-                Error()->add($key, sprintf('Ожидалось число'));
+                Error()->add($key, Translate()->expectedNumber);
             }
         }
         elseif ($type === AbstractEntity::TYPE_BOOL) {
             if (in_array($value, ['1', 1, 'true', true], true)) return true;
             if (in_array($value, ['0', 0, 'false', false], true)) return false;
-            Error()->add($key, sprintf('неверное значение'));
+            Error()->add($key, Translate()->wrongValue);
         }
 
         switch ($type) {
@@ -92,7 +92,7 @@ class Validator
                 case self::MODEL:
                     /** @var ModelInterface $rule */
                     if ($rule::getDb()->selectById($value, 'id') === null) {
-                        Error()->add($key, sprintf('Неправильное значение: %d', $value));
+                        Error()->add($key, Translate()->wrongValue . ': ' . $value);
                     }
                     break;
             }
@@ -100,7 +100,7 @@ class Validator
 
         if ($type === AbstractEntity::TYPE_CURL_FILE) {
             if (!file_exists($value)) {
-                Error()->add($key, sprintf('Файл %s не найден', $value));
+                Error()->add($key, sprintf(Translate()->fileNotFound, $value));
             }
             return new \CURLFile($value);
         }
@@ -109,39 +109,39 @@ class Validator
     }
 
     private static function maxNumber($key, $value, $max) {
-        if ($value > $max) Error()->add($key, 'максимальное значение: ',  $max);
+        if ($value > $max) Error()->add($key, Translate()->maxValue . ' ' . $max);
     }
 
     private static function minNumber($key, $value, $min) {
         if ($value < $min) {
-            Error()->add($key, 'минимальное значение: ' . $min);
+            Error()->add($key, Translate()->minValue . ' ' . $min);
         }
     }
 
     private static function maxString($key, $value, $max) {
-        if (mb_strlen($value) > $max) Error()->add($key, sprintf('максимальное количество знаков: %d', $max));
+        if (mb_strlen($value) > $max) Error()->add($key, Translate()->maxLength . ' ' . $max);
     }
 
     private static function minString($key, $value, $min) {
-        if (mb_strlen($value) < $min) Error()->add($key, sprintf('минимально количество знаков: %d', $min));
+        if (mb_strlen($value) < $min) Error()->add($key, Translate()->minLength . ' ' . $min);
     }
 
     private static function lengthString($key, $value, $length) {
         if (mb_strlen($value) != $length) {
-            Error()->add($key, sprintf('фиксированная длина: %d', $length));
+            Error()->add($key, Translate()->fixedLength . ' ' . $length);
         }
     }
 
     public static function regex($key, $value, $regex) {
         if (($return = preg_replace('/[^' . $regex . ']/i', '', $value)) !== $value) {
-            Error()->add($key, 'введены запрещённые символы');
+            Error()->add($key, Translate()->prohibitedChars);
         }
         return $return;
     }
 
     public static function in($key, $value, array $availables) : ?bool {
         if (!in_array($value, $availables)) {
-            Error()->add($key, sprintf('Возможные значения: %s', implode(', ', $availables)));
+            Error()->add($key, Translate()->availableValues . ' ' . implode(', ', $availables));
             return null;
         }
         return true;
@@ -150,7 +150,7 @@ class Validator
     public static function date($key, $value, string $format) : ?\DateTime {
         $date = \DateTime::createFromFormat($format, $value);
         if (!$date || $date->format($format) !== $value) {
-            Error()->add($key, sprintf('Неверный формат даты'));
+            Error()->add($key, Translate()->invalidDateFormat);
             return null;
         }
         return $date;

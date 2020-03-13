@@ -26,7 +26,7 @@ use Models\Table\{Payment, Project, Language};
     <?=$this->{Views::PROJECT_FILTER}?>
 </div>
 
-<div class="investment" itemscope itemtype="http://schema.org/ItemList">
+<div class="investment" itemscope itemtype="http://schema.org/OfferCatalog">
     <?php $isFirstRow = true; foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?=$project->id?>" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
             <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
@@ -93,6 +93,7 @@ use Models\Table\{Payment, Project, Language};
                                         <td><?=$project->plan_period[$key] . ' ' . Translate()->getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
                                         <td><span itemprop="price"><?=$project->plan_start_deposit[$key]?></span>
                                             <meta itemprop="priceCurrency" content="<?=CurrencyType::getConstName($project->plan_currency_type[$key])?>" >
+                                            <link itemprop="availability" href="http://schema.org/InStock">
                                             <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                         </td>
                                     </tr>

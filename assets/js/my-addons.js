@@ -411,7 +411,7 @@ function reCountN(el) {
 
 /* ------------------------------------------------------------ IMAGE SHOW ------------------------------------------ */
 var imgClickInit = function() {
-    $('.thumbnail>img', $(this)).magnificPopup({
+    $('img[href]', this).magnificPopup({
       type: 'image',
       callbacks: {
         beforeOpen: function(e) {
@@ -497,7 +497,7 @@ var linkClick = function() {
 };
 
 var loadRealThumbs = function () {
-    $('.thumbnail>img', this).each(function(i,img) {
+    $('img[realthumb]', this).each(function(i,img) {
         var realThumb = img.getAttribute('realthumb');
         if (realThumb) img.setAttribute('src', realThumb);
     });

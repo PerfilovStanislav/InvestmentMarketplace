@@ -2,25 +2,22 @@
 
 namespace Controllers;
 
-use Core\{Controller, Database, View};
+use Core\{Controller, View};
 use Dto\ErrorRoute;
 use Helpers\{
     Output,
     Data\Currency,
-};
-use Libraries\{
-    Screens,
 };
 use Models\Collection\{
     Languages,
     ProjectChatMessages,
     MVProjectLangs,
     Payments,
+    ProjectLangs,
     Projects,
     MVProjectFilterAvailableLangs,
     MVProjectSearchs,
-    Users,
-};
+    Users};
 use Models\Table\{Language, Project, ProjectChatMessage, ProjectLang, Queue, Redirect};
 use Models\MView\MVProjectLang;
 use Models\Constant\{
@@ -35,7 +32,6 @@ use Requests\Investment\{AddRequest,
     RedirectRequest,
     SetChatMessageRequest,
     ShowRequest};
-use Requests\Telegram\SendPhotoRequest;
 use Traits\AuthTrait;
 use Views\Investment\{Added, Details, DetailsMeta, ProjectFilter, Registration, Show, NoShow};
 
@@ -98,12 +94,14 @@ class Investment extends Controller {
         }
         $MVProjectLangs = new MVProjectLangs(['id' => $projectIds]);
         $payments       = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
+        $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);
 
         $pageParams = [
             'projects'            => $projects,
             'MVProjectLangs'      => $MVProjectLangs,
             'pageLanguage'        => $pageLanguage,
             'payments'            => $payments,
+            'projectLangs'        => $projectLangs,
             'languages'           => $languages,
             'isAdmin'             => CurrentUser()->isAdmin(),
             Views::PROJECT_FILTER => $projectFilter,

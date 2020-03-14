@@ -3,6 +3,7 @@ namespace Views\Investment; {
 /**
  * @var Show $this
  * @property Languages $languages
+ * @property ProjectLangs $projectLangs
  * @property MVProjectLang[] $MVProjectLangs
  * @property Payment[] payments
  * @property Project[] $projects
@@ -16,11 +17,12 @@ use Helpers\Data\Currency;
 use Helpers\Locales\AbstractLanguage;
 use Libraries\Screens;
 use Models\Collection\Languages;
+use Models\Collection\ProjectLangs;
 use Models\Constant\CurrencyType;
 use Models\Constant\ProjectStatus;
 use Models\Constant\Views;
 use Models\MView\MVProjectLang;
-use Models\Table\{Payment, Project, Language};
+use Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
 <div class="filters" id="<?=Views::PROJECT_FILTER?>">
     <?=$this->{Views::PROJECT_FILTER}?>
@@ -29,6 +31,8 @@ use Models\Table\{Payment, Project, Language};
 <div class="investment" itemscope itemtype="http://schema.org/OfferCatalog">
     <?php $isFirstRow = true; foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?=$project->id?>" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
+            <? /** @var ProjectLang $projectLang */ $projectLang = $this->projectLangs->getByKeyAndValue('project_id', $project->id);?>
+            <meta itemprop="description" content="<?=$projectLang->description?>">
             <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
                 <?php if ($this->isAdmin): ?>
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
@@ -64,7 +68,7 @@ use Models\Table\{Payment, Project, Language};
                                 <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
                                      alt="<?=$project->name?>"
                                      itemprop="image"
-                                     class="media-object" href="/<?=Screens::getOriginalJpgScreen($project->id)?>"
+                                     class="media-object" href="/<?=SITE.'/'.Screens::getOriginalJpgScreen($project->id)?>"
                                      <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
                                 >
                             </span>

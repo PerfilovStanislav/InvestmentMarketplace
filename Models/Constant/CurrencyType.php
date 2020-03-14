@@ -9,12 +9,12 @@ class CurrencyType implements ConstantInterface {
     use Collection;
 
     public CONST
-        usd = 1,
-        eur = 2,
-        btc = 3,
-        rub = 4,
-        gbp = 5,
-        jpy = 6,
-        won = 7,
-        inr = 8;
+        USD = 1,
+        EUR = 2,
+        BTC = 3,
+        RUB = 4,
+        GBP = 5,
+        JPY = 6,
+        WON = 7,
+        INR = 8;
 }

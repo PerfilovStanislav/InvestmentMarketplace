@@ -16,13 +16,39 @@ class Queue
         }
     }
 
+    private function getPids(): array
+    {
+        $cmd = 'ps -aux | grep "php.*/queue/screenshot" | grep -v grep | grep -v "/bin/sh" | awk \'{ print $2 }\'';
+        $output = [];
+        exec($cmd, $output);
+        return $output;
+    }
+
+    private function killChrome()
+    {
+        exec('kill $(pgrep chrome)');
+    }
+
+    private function killZombies()
+    {
+        exec('ps -ef | grep defunct | grep -v grep | cut -b8-20 | xargs kill -9');
+    }
+
     public function screenshot()
     {
+        $this->killZombies();
+
+        if (count($this->getPids()) > 1) {
+            exit(1);
+        }
+
+        $this->killChrome();
+        sleep(3);
+
         $queueOriginal = (new QueueModel());
 
         require(ROOT . '/composer/vendor/autoload.php');
 
-        echo 'Start chrome', PHP_EOL;
         $factory = new \HeadlessChromium\BrowserFactory('google-chrome');
         $browser = $factory->createBrowser([
             'headless' => true,
@@ -31,7 +57,6 @@ class Queue
             'windowSize' => [1280, 960],
             'sendSyncDefaultTimeout' => 45000
         ]);
-        echo 'Started chrome', PHP_EOL;
 
         while (1) {
             $queue = clone $queueOriginal;
@@ -43,6 +68,11 @@ class Queue
             if (!$queue->id) {
                 sleep(1);
                 continue;
+            }
+
+            exec('pgrep chrome', $chromePids);
+            if (!count($chromePids)) {
+                exit(1);
             }
 
             $queue->status_id = QueueModel::STATUS_STARTED;

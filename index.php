@@ -23,7 +23,7 @@ ini_set('display_startup_errors', 1);
 
 spl_autoload_extensions('.php');
 function real_path(string $path): string {
-    return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+    return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, CLI ? DIR . '/' . $path : $path);
 }
 function load(string $className) {
     require_once(real_path($className) . '.php');
@@ -32,7 +32,7 @@ spl_autoload_register('load');
 
 define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI);
 
-require_once './Helpers/Debug.php';
+require_once real_path('Helpers/Debug.php');
 
 register_shutdown_function('shutdown');
 
@@ -66,8 +66,6 @@ else {
     } catch (\Exception $exception) {
         Db()->rollBackTransaction();
         dd($exception);
-    } finally {
-        //
     }
 }
 

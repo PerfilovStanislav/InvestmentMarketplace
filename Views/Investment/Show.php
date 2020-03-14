@@ -62,7 +62,6 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                 <div class="mbn flex inforow">
                     <div class="mnw270">
                         <div class="thumbnail" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
-                            <meta itemprop="contentUrl" content="<?=SITE.'/'.Screens::getOriginalJpgScreen($project->id)?>">
                             <meta itemprop="description" content="<?=$project->name?>">
                             <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
                                 <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"

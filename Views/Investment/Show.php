@@ -95,7 +95,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                         <td><?=$project->plan_percents[$key]?>%</td>
                                         <td><?=$project->plan_period[$key] . ' ' . Translate()->getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
                                         <td><span itemprop="price"><?=$project->plan_start_deposit[$key]?></span>
-                                            <meta itemprop="priceCurrency" content="<?=CurrencyType::getConstName($project->plan_currency_type[$key])?>" >
+                                            <meta itemprop="priceCurrency" content="<?=strtoupper(CurrencyType::getConstName($project->plan_currency_type[$key]))?>" >
                                             <link itemprop="availability" href="http://schema.org/InStock">
                                             <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                         </td>

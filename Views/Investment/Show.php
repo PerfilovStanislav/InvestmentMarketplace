@@ -31,7 +31,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
 <div class="investment" itemscope itemtype="http://schema.org/OfferCatalog">
     <?php $isFirstRow = true; foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?=$project->id?>" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
-            <? /** @var ProjectLang $projectLang */ $projectLang = $this->projectLangs->getByKeyAndValue('project_id', $project->id);?>
+            <?php /** @var ProjectLang $projectLang */ $projectLang = $this->projectLangs->getByKeyAndValue('project_id', $project->id);?>
             <meta itemprop="description" content="<?=$projectLang->description?>">
             <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
                 <?php if ($this->isAdmin): ?>

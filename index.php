@@ -8,6 +8,7 @@ use Helpers\Locales\AbstractLanguage;
 use Helpers\Output;
 use Models\CurrentUser;
 use Requests\Telegram\SendMessageRequest;
+use Exceptions\ErrorException;
 
 define('DIR', dirname($_SERVER['SCRIPT_NAME']));
 define('ROOT', __DIR__);
@@ -63,24 +64,23 @@ if (CLI) {
 else {
     try {
         App()->start();
+    } catch (ErrorException $exception) {
+        Db()->rollBackTransaction();
     } catch (\Exception $exception) {
         Db()->rollBackTransaction();
-        dd($exception);
+        sendToTelegram(['errorMessage' => $exception->getMessage()]);
     }
 }
 
 function shutdown() {
-    if ($error = error_get_last()) {
-//        E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
-
-        if (CLI) {
-            $message = new SendMessageRequest([
-                'chat_id' => \Config::TELEGRAM_MY_ID,
-                'text' => '```' . json_encode(['error' => $error, 'debug' => debug_backtrace()]) . '```',
-            ]);
-            App()->telegram()->sendMessage($message);
-        }
-
-        dd(__METHOD__, $error);
+    if ($error = error_get_last()) { // E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
+        sendToTelegram(['error' => $error]);
     }
+}
+
+function sendToTelegram(array $data = []) {
+    App()->telegram()->sendMessage(new SendMessageRequest([
+        'chat_id' => \Config::TELEGRAM_MY_ID,
+        'text' => '```' . json_encode(['data' => $data, 'debug' => debug_backtrace()]) . '```',
+    ]));
 }

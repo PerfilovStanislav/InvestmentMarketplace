@@ -67,7 +67,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                 <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
                                      alt="<?=$project->name?>"
                                      itemprop="image"
-                                     class="media-object" href="/<?=SITE.'/'.Screens::getOriginalJpgScreen($project->id)?>"
+                                     class="media-object" href="<?=SITE.'/'.Screens::getOriginalJpgScreen($project->id)?>"
                                      <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
                                 >
                             </span>

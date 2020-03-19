@@ -3,14 +3,6 @@
 namespace Helpers;
 
 class Arrays {
-    public static function toArrayForInsert(array $arr): string {
-        if (empty($arr) || count($arr) < 1) return null;
-
-        $str = implode(',', $arr);
-        if ($str === '') return null;
-        return '{'.$str.'}';
-    }
-
     public static function groupBy(array $array, array $cols): array {
         $newArray = [];
         foreach ($array as $a) {

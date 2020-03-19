@@ -9,7 +9,7 @@ class Screens {
     }
 
     private static function getFolderPath(int $id) : string  {
-        return 'screens/'.(self::getFolderName($id)).'/';
+        return (CLI ? ROOT . '/' : '') . 'screens/'.(self::getFolderName($id)).'/';
     }
 
     public static function getFilePath(int $id) : string  {

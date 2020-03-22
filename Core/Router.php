@@ -59,7 +59,9 @@ class Router {
                 array_shift($uriParams),
                 $this->prepareParams($uriParams ?? [])
             );
-        } elseif ($count === 0) {
+        }
+
+        if ($count === 0) {
             return new DefaultRoute(); /** @see Investment::show() */ /** @see Show */
         }
 
@@ -91,20 +93,24 @@ class Router {
 
         $reflectionParameters = (new \ReflectionMethod($controller, $route->getAction()))->getParameters();
         if ($reflectionParameters) {
-            $params = array_map(function (\ReflectionParameter $reflectionParameter) use (/*&*/$params) {
+            $params = array_map(static function (\ReflectionParameter $reflectionParameter) use (/*&*/$params) {
                 if ($reflectionClass = $reflectionParameter->getClass()) {
                     $class = $reflectionClass->getName();
                     return new $class($params);
                 }
-                elseif ($param = ($params[/*$paramName = */$reflectionParameter->getName()] ?? null)) {
+
+                if ($param = ($params[/*$paramName = */$reflectionParameter->getName()] ?? null)) {
                     return $param;
                 }
-                elseif ($reflectionParameter->isArray()) {
+
+                if ($reflectionParameter->isArray()) {
                     return $params;
                 }
-                elseif (($default = $reflectionParameter->getDefaultValue()) !== null) {
+
+                if (($default = $reflectionParameter->getDefaultValue()) !== null) {
                     return $default;
                 }
+
                 return null;
             }, $reflectionParameters);
         }

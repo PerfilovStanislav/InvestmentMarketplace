@@ -172,15 +172,13 @@ class Output
                 $this->addContentTypeHeader(self::HTML)->addHeader(self::S200);
             }
             $str = $this->layoutWithViews();
+        } else if ($this->headers) {
+            $this->views();
+            $str = $this->result[self::VIEW][Views::CONTENT];
         } else {
-            if ($this->headers) {
-                $this->views();
-                $str = $this->result[self::VIEW][Views::CONTENT];
-            } else {
-                $this->addContentTypeHeader(self::JSON)->addHeader(self::S200);
-                $this->views();
-                $str = json_encode($this->result);
-            }
+            $this->addContentTypeHeader(self::JSON)->addHeader(self::S200);
+            $this->views();
+            $str = json_encode($this->result);
         }
         if (!DEBUG) {
             $str = str_replace(["\n", "\r"], ' ', $str);
@@ -188,7 +186,7 @@ class Output
             $str = preg_replace('/\s+/', ' ', $str);
         }
 
-        return $str;
+        return $str ?? '';
     }
 
     public function views(): void {

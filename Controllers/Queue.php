@@ -76,7 +76,7 @@ class Queue
             }
 
             $queue->status_id = QueueModel::STATUS_STARTED;
-            $queue->start_time = date("Y-m-d H:i:s");
+            $queue->start_time = date('Y-m-d H:i:s');
             $queue->save();
 
 

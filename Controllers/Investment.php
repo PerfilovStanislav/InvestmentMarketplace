@@ -191,7 +191,7 @@ class Investment extends Controller {
         $project            = new Project($request->toArray());
         $project->admin     = CurrentUser()->getId() ?? self::GUEST_USER_ID;
         $project->url       = $url;
-        $project->ref_url   = $checkSiteRequest->website;
+        $project->ref_url   = (strpos($checkSiteRequest->website, 'http') === false ? 'https://' : '') . $checkSiteRequest->website;
         $project->status_id = ProjectStatus::NOT_PUBLISHED;
         $project->save();
 
@@ -261,10 +261,12 @@ class Investment extends Controller {
             }
             return $urlParsed['host'];
         }
-        elseif (isset($urlParsed['host'])) {
+
+        if (isset($urlParsed['host'])) {
             return $urlParsed['host'];
         }
-        elseif (isset($urlParsed['path'])) {
+
+        if (isset($urlParsed['path'])) {
             return self::getParsedUrl('https://' . $urlParsed['path']);
         }
 
@@ -301,7 +303,6 @@ class Investment extends Controller {
     }
 
     public function redirect(RedirectRequest $request): Output {
-        Output()->addHeader(Output::E404);
         Error()->exitIfExists();
 
         (new Redirect([
@@ -312,6 +313,6 @@ class Investment extends Controller {
 
         $project = (new Project())->getById($request->project);
 
-        return Output()->addRedirectHeader($project->ref_url);
+        return Output()->disableLayout()->addRedirectHeader($project->ref_url);
     }
 }

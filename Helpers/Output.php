@@ -174,7 +174,7 @@ class Output
             $str = $this->layoutWithViews();
         } else if ($this->headers) {
             $this->views();
-            $str = $this->result[self::VIEW][Views::CONTENT];
+            $str = $this->result[self::VIEW][Views::CONTENT] ?? [];
         } else {
             $this->addContentTypeHeader(self::JSON)->addHeader(self::S200);
             $this->views();

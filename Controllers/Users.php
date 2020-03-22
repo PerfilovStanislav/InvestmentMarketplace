@@ -83,7 +83,7 @@ class Users extends Controller {
 
         Output()->addAlertSuccess(Translate()->success, Translate()->userRegistered);
 
-        $this->authorize(new AuthorizeRequest([
+        return $this->authorize(new AuthorizeRequest([
             'login'    => $request->login,
             'password' => $request->password,
         ]));

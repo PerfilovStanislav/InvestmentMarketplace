@@ -98,7 +98,7 @@ class Queue
             Investment::refreshMViews();
 
             $message = new SendPhotoRequest([
-                'chat_id' => \Config::TELEGRAM_MY_ID,
+                'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
                 'caption' => sprintf('New project is added *%s* (%s)', $project->name, $project->url),
                 'photo'   => Screens::getOriginalJpgScreen($project->id),
             ]);

@@ -21,7 +21,5 @@ function dd(...$data)
         print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true),
         '</pre>',
         die;
-    } else {
-        echo 'empty';
     }
 }

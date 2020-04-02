@@ -37,8 +37,7 @@ class Scripts {
         ];
 
     public static function loadJS(int $debug) {
-        $storage = ['js/locales/' => [App()->locale()->getLanguage()]] + self::JS[$debug];
-        foreach ($storage as $dir => $files) {
+        foreach (self::JS[$debug] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.js';
                 $t = filemtime(ROOT.$f);

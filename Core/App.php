@@ -7,7 +7,7 @@ use Helpers\Errors;
 use Helpers\Locale;
 use Helpers\Output;
 use Libraries\Telegram;
-use Models\Collection\MVSiteAvailableLanguages;
+use Models\Collection\SiteLanguages;
 use Models\CurrentUser;
 use Traits\Instance;
 use Views\Errors\ErrorDefault;
@@ -70,8 +70,8 @@ class App
         return CurrentUser::getInstance();
     }
 
-    public function siteLanguages(): MVSiteAvailableLanguages {
-        return MVSiteAvailableLanguages::getInstance();
+    public function siteLanguages(): SiteLanguages {
+        return SiteLanguages::getInstance();
     }
 
     public function auth(): Auth {

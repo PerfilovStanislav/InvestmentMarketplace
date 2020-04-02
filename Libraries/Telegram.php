@@ -31,7 +31,6 @@ class Telegram {
     }
 
     public function sendMessage(SendMessageRequest $request) {
-        Error()->exitIfExists();
         return $this->send('sendMessage', $request);
     }
 

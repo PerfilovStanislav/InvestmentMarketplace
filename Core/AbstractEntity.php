@@ -140,9 +140,6 @@ abstract class AbstractEntity {
                 return $this->data[$key] ??= $entityWithDefaults->data[$key];
             }
         }
-        if (!isset(static::$properties[$key])) {
-            throw new InvalidArgumentException(static::class . '->' . $key);
-        }
         return null;
     }
 

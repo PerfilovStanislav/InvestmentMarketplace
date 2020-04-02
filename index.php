@@ -81,6 +81,12 @@ function shutdown() {
 function sendToTelegram(array $data = []) {
     App()->telegram()->sendMessage(new SendMessageRequest([
         'chat_id' => \Config::TELEGRAM_MY_ID,
-        'text' => '```' . json_encode(['data' => $data, 'debug' => debug_backtrace()]) . '```',
+        'text' => '```' . print_r([
+            'data' => $data,
+            'debug' => debug_backtrace(),
+            'request' => $_REQUEST,
+            'URI' =>  $_SERVER['REQUEST_URI'] ?? '',
+            'referer' =>  $_SERVER['HTTP_REFERER'] ?? '',
+        ], true) . '```',
     ]));
 }

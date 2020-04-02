@@ -32,7 +32,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
     <?php $isFirstRow = true; foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?=$project->id?>" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
             <?php /** @var ProjectLang $projectLang */ $projectLang = $this->projectLangs->getByKeyAndValue('project_id', $project->id);?>
-            <meta itemprop="description" content="<?=$projectLang->description?>">
+            <meta itemprop="description" content="<?=str_replace(['< br>', '<br>', '>'], '', $projectLang->description)?>">
             <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
                 <?php if ($this->isAdmin): ?>
                     <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">

@@ -48,6 +48,7 @@ class Locale {
             if (App()->siteLanguages()->$langName) {
                 return ($this->language = $_SESSION['lang'] = $langName);
             }
+            sendToTelegram(['language' => $langName, 'line' => __LINE__]);
         }
 
         // 4: TabgeoCountry

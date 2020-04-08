@@ -21,7 +21,7 @@ class SiteLanguages extends AbstractEntity implements \Iterator {
         ];
 
     protected function __construct() {
-        $this->fillCollection(Language::getDb()->select(
+        $this->fillCollection(Language::setTable()->select(
             ['shortname' => array_keys(LanguageCollection::LANGUAGES)],
             Language::getPropertyKeys())
         );

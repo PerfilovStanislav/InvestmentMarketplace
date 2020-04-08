@@ -37,7 +37,7 @@ class Auth {
             $userRemember = (new UserRemember())->getRowFromDbAndFill([
                 'user_id'   => $user_id,
                 'hash'      => $hash,
-                'ip'        => self::getIP()
+                'ip'        => $this->getIP()
             ]);
             if ($userRemember->id) {
                 $s['user_id'] = $user_id;
@@ -70,7 +70,7 @@ class Auth {
             return null;
         }
 
-        $session->fromArray(['ip' => self::getIP()]);
+        $session->fromArray(['ip' => $this->getIP()]);
         $session->save();
 
         return $session->id;
@@ -78,7 +78,7 @@ class Auth {
 
     private function startSession():void {
         session_name('uid');
-        session_set_cookie_params(1728000, '/', DOMAIN, false, true);
+        session_set_cookie_params(60 * 60 * 24 * 20, '/', DOMAIN, false, true); // 20 days
         session_start();
     }
 
@@ -89,20 +89,20 @@ class Auth {
         }
 
         if (($user = (new User())->getRowFromDbAndFill(['login' => strtolower($request->login)]))->id) {
-            if (self::confirmPassword($request->password, $user->password)) {
+            if ($this->confirmPassword($request->password, $user->password)) {
                 $this->setUserAuth($user);
-                ProjectChatMessage::getDb()->update(['user_id' => $user->id], ['session_id' => CurrentUser()->session_id]);
+                ProjectChatMessage::setTable()->update(['user_id' => $user->id], ['session_id' => CurrentUser()->session_id]);
                 $s = &$_SESSION;
                 $s['user_id'] = $user->id;
 
                 if ($request->remember === 'on') {
                     $userRemember = (new UserRemember())->getRowFromDbAndFill([
                         'user_id' => $user->id,
-                        'ip' => self::getIP()
+                        'ip' => $this->getIP()
                     ]);
 
                     if (!$userRemember->id) {
-                        $userRemember->fromArray(['hash' => $this->hashPassword(uniqid($user->id.self::getIP(), true))])->save();
+                        $userRemember->fromArray(['hash' => $this->hashPassword(uniqid($user->id. $this->getIP(), true))])->save();
                     }
                     setcookie('user_id', $user->id, null, '/', DOMAIN, null, false);
                     setcookie('hash', $userRemember->hash, null, '/', DOMAIN, null, false);
@@ -122,13 +122,15 @@ class Auth {
             return true;
         }
 
-        UserRemember::getDb()->delete([
+        UserRemember::setTable()->delete([
             'user_id' => CurrentUser()->getId(),
-            'ip' => self::getIP(),
+            'ip' => $this->getIP(),
         ]);
 
         $this->removeCookies(['uid', 'hash', 'user_id']);
         session_destroy();
+        CurrentUser()->is_authorized = false;
+
         return true;
     }
 
@@ -147,7 +149,7 @@ class Auth {
         $authModel->session_id    = $this->getSessionId();
     }
 
-    private static function getIP() : ?string {
+    private function getIP() : ?string {
         return $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '0.0.0.1';
     }
 

@@ -240,7 +240,7 @@ class Investment extends Controller {
     private function getWebsiteUrl(CheckSiteRequest $request): string {
         $url = self::getParsedUrl(str_replace('www.', '', strtolower($request->website)));
 
-        if ((Project::getDb()->selectRow(['url' => $url]))) {
+        if ((Project::setTable()->selectRow(['url' => $url]))) {
             Error()->add('website', Translate()->siteExists, true);
         }
 

@@ -23,6 +23,6 @@ class Users extends AbstractEntity implements ModelInterface, \Iterator {
         ];
 
     public function __construct(array $where, array $fields = []) {
-        $this->fillCollection(self::getDb()->select($where, $fields ?? User::getPropertyKeys()));
+        $this->fillCollection(self::setTable()->select($where, $fields ?? User::getPropertyKeys()));
     }
 }

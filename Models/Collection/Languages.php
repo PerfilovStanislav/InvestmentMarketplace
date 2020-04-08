@@ -23,6 +23,6 @@ class Languages extends AbstractEntity implements ModelInterface, \Iterator, \Co
         ];
 
     public function __construct($where = [], string $order = null) {
-        $this->fillCollection(self::getDb()->select($where, Language::getPropertyKeys(), $order));
+        $this->fillCollection(self::setTable()->select($where, Language::getPropertyKeys(), $order));
     }
 }

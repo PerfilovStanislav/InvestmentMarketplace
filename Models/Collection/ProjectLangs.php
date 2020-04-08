@@ -21,6 +21,6 @@ class ProjectLangs extends AbstractEntity implements ModelInterface {
         ];
 
     public function __construct(array $where = []) {
-        $this->fillCollection(self::getDb()->select($where, ProjectLang::getPropertyKeys()));
+        $this->fillCollection(self::setTable()->select($where, ProjectLang::getPropertyKeys()));
     }
 }

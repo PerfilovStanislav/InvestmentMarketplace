@@ -21,6 +21,6 @@ class Redirects extends AbstractEntity implements ModelInterface {
         ];
 
     public function __construct(array $where) {
-        $this->fillCollection(self::getDb()->select($where, Redirect::getPropertyKeys()));
+        $this->fillCollection(self::setTable()->select($where, Redirect::getPropertyKeys()));
     }
 }

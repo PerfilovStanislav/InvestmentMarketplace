@@ -6,7 +6,7 @@ use Core\Database;
 
 interface ModelInterface
 {
-    public static function getDb(): Database;
+    public static function setTable(): Database;
 
     public function save();
 

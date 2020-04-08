@@ -25,6 +25,7 @@ use Models\Table\User;
                     <li>
                         <a class="ajax <?=$shortname === $this->selectedLanguage ? 'selected' : ''?>"
                            href="/Users/changeLanguage/lang/<?=$shortname?>"
+                           rel="nofollow noopener"
                            data-beforesend='{"f":["allClear"]}'>
                             <span class="flag flag-<?=$language->flag?> mr10"></span> <?php printf('%s (%s)', $language->name, $language->own_name)?>
                         </a>

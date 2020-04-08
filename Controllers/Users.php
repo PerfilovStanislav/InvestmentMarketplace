@@ -34,24 +34,22 @@ class Users extends Controller {
 
     public function logout(): Output {
         App()->auth()->logout();
-        return self::reloadPage();
+        return $this->reloadPage();
     }
 
-    public static function reloadPage(): Output {
+    public function reloadPage(): Output {
         $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
-        return Output()->addFunctions([
-            'allClear',
-            'addToAjaxQueue' => [
-                '/Users/setUserHead',
-                '/Users/setLeftSide',
-                $url['path']
-            ]
-        ], Output::DOCUMENT);
+
+        Output()->addFunction('allClear', [], Output::DOCUMENT);
+        $this->setUserHead();
+        $this->setLeftSide();
+
+        return Router()->go($url['path'] ?? '');
     }
 
     public function authorize(AuthorizeRequest $request): Output {
         if (App()->auth()->authorize($request)) {
-            return self::reloadPage();
+            return $this->reloadPage();
         }
         return Output();
     }
@@ -89,25 +87,7 @@ class Users extends Controller {
         ]));
     }
 
-    /*public function confirm(ConfirmRequest $request) {
-        $userConfirm = new UserConfirm();
-        $userConfirm->getRowFromDbAndFill(['code' => $request->code]);
-
-        if ($userConfirm->id) {
-            $user = (new User())->getById($userConfirm->user_id);
-            $user->status_id = UserStatus::USER;
-            $user->save();
-
-            Output()->addView(Success::class, ['text' => Translate()->success]);
-            Output()->addAlertSuccess(Translate()->success, Translate()->emailConfirmation);
-        }
-        else {
-            Output()->addView(Error::class, ['text' => Translate()->noConfirmCode]);
-            Output()->addAlertDanger(Translate()->error, Translate()->noConfirmCode);
-        }
-    }*/
-
-    public static function setUserHead(): Output {
+    public function setUserHead(): Output {
         Output()->addFunctions([
             'setStorage' => [
                 'webp' => WEBP,
@@ -127,16 +107,15 @@ class Users extends Controller {
                 Views::USER_HEAD
             );
         }
-        else {
-            return Output()->addView(
-                NotAuthorized::class,
-                $params,
-                Views::USER_HEAD
-            )->addFunctions(['UserAuthorization'], Output::DOCUMENT, 1);
-        }
+
+        return Output()->addView(
+            NotAuthorized::class,
+            $params,
+            Views::USER_HEAD
+        )->addFunctions(['UserAuthorization'], Output::DOCUMENT, 1);
     }
 
-    public static function setLeftSide(): Output {
+    public function setLeftSide(): Output {
         return Output()->addView(SideLeft::class, [], Views::SIDEBAR_LEFT);
     }
 
@@ -150,8 +129,8 @@ class Users extends Controller {
             else {
                 $_SESSION['lang'] = $request->lang;
             }
-            self::reloadPage();
         }
-        return Output();
+
+        return $this->reloadPage();
     }
 }

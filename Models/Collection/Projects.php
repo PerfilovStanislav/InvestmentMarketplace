@@ -23,6 +23,6 @@ class Projects extends AbstractEntity implements ModelInterface, \Iterator {
         ];
 
     public function __construct(array $where) {
-        $this->fillCollection(self::getDb()->select($where, Project::getPropertyKeys(), 'id desc'));
+        $this->fillCollection(self::setTable()->select($where, Project::getPropertyKeys(), 'id desc'));
     }
 }

@@ -207,9 +207,10 @@ class Output
     }
 
     private function layoutWithViews() {
-        Users::setUserHead();
-        Users::setLeftSide();
-        self::views();
+        $users = new Users();
+        $users->setUserHead();
+        $users->setLeftSide();
+        $this->views();
 
         foreach ([self::FUNCTION, self::FIELD, self::ALERT] as $type) {
             if ($this->result[$type] ?? null) {

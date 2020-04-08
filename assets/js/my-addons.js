@@ -524,6 +524,10 @@ var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
 };
 
+var showInConsole = function(data) {
+    console.dir(data);
+};
+
 var logoInConsole = function() {
     var common = 'font-family: "Open Sans", Helvetica, Arial, sans-serif; font-weight: bold; padding-right: 1px;';
     var blue = 'font-size: 36px; color: #0af; text-shadow: -1px 1px 1px #00425f';

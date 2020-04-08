@@ -23,6 +23,6 @@ class MVProjectSearchs extends AbstractEntity implements ModelInterface, \Iterat
         ];
 
     public function __construct(array $where, int $limit) {
-        $this->fillCollection(static::getDb()->select($where, MVProjectSearch::getPropertyKeys(), null, $limit));
+        $this->fillCollection(static::setTable()->select($where, MVProjectSearch::getPropertyKeys(), null, $limit));
     }
 }

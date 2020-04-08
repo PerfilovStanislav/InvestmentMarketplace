@@ -23,6 +23,6 @@ class MVProjectFilterAvailableLangs extends AbstractEntity implements ModelInter
         ];
 
     public function __construct(array $where) {
-        $this->fillCollection(static::getDb()->select($where, MVProjectFilterAvailableLang::getPropertyKeys(), 'cnt desc'));
+        $this->fillCollection(static::setTable()->select($where, MVProjectFilterAvailableLang::getPropertyKeys(), 'cnt desc'));
     }
 }

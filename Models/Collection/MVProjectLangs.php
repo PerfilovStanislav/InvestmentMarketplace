@@ -21,6 +21,6 @@ class MVProjectLangs extends AbstractEntity implements ModelInterface {
         ];
 
     public function __construct(array $where) {
-        $this->fillCollection(static::getDb()->select($where, MVProjectLang::getPropertyKeys()));
+        $this->fillCollection(static::setTable()->select($where, MVProjectLang::getPropertyKeys()));
     }
 }

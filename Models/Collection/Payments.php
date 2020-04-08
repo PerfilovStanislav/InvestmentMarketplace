@@ -23,6 +23,6 @@ class Payments extends AbstractEntity implements ModelInterface, \Iterator, \Cou
         ];
 
     public function __construct(array $where = []) {
-        $this->fillCollection(self::getDb()->select($where, Payment::getPropertyKeys(), 'pos asc'));
+        $this->fillCollection(self::setTable()->select($where, Payment::getPropertyKeys(), 'pos asc'));
     }
 }

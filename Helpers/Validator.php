@@ -91,7 +91,7 @@ class Validator
                     self::in($key, $value, $rule); break;
                 case self::MODEL:
                     /** @var ModelInterface $rule */
-                    if ($rule::getDb()->selectById($value, 'id') === null) {
+                    if ($rule::setTable()->selectById($value, 'id') === null) {
                         Error()->add($key, Translate()->wrongValue . ': ' . $value);
                     }
                     break;

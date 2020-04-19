@@ -227,7 +227,18 @@ class Investment extends Controller {
 
         self::refreshMViews();
         Db()->setTable('mv_sitemapxml')->refresh(false);
-        return \Controllers\Users::reloadPage();
+
+        if ($request->status === ProjectStatus::ACTIVE) {
+            (new Queue([
+                'action_id'  => Queue::ACTION_ID_POST_TO_SOCIAL,
+                'status_id'  => Queue::STATUS_CREATED,
+                'payload'    => [
+                    'project_id' => $project->id,
+                ],
+            ]))->save();
+        }
+
+        return (new \Controllers\Users())->reloadPage();
     }
 
     public static function refreshMViews(): void {

@@ -12,7 +12,7 @@ use Exceptions\ErrorException;
 
 define('DIR', dirname($_SERVER['SCRIPT_NAME']));
 define('ROOT', __DIR__);
-define('DOMAIN', 'richinme.com');
+define('DOMAIN', 'richinme.org');
 define('SITE', 'https://' . DOMAIN);
 define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
 define('CLI', php_sapi_name() === 'cli');
@@ -72,9 +72,11 @@ else {
     }
 }
 
+die();
+
 function shutdown() {
     if ($error = error_get_last()) { // E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
-        sendToTelegram(['error' => $error]);
+//        sendToTelegram(['error' => $error]);
     }
 }
 
@@ -83,7 +85,7 @@ function sendToTelegram(array $data = []) {
         'chat_id' => \Config::TELEGRAM_MY_ID,
         'text' => '```' . print_r([
             'data' => $data,
-            'debug' => debug_backtrace(),
+            'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
             'request' => $_REQUEST,
             'URI' =>  $_SERVER['REQUEST_URI'] ?? '',
             'referer' =>  $_SERVER['HTTP_REFERER'] ?? '',

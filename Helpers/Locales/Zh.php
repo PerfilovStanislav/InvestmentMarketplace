@@ -3,6 +3,9 @@
 namespace Helpers\Locales;
 
 class Zh extends AbstractLanguage {
+
+    public static int $id = 356;
+    
     public string
         $active            = '活躍的',
         $addLevel          = '添加等級',

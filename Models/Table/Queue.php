@@ -17,7 +17,10 @@ use Traits\Model;
  */
 class Queue extends AbstractEntity implements ModelInterface {
 
-    public const ACTION_ID_SCREENSHOT = 1;
+    public const
+        ACTION_ID_SCREENSHOT = 1,
+        ACTION_ID_POST_TO_SOCIAL = 2
+    ;
 
     public const
         STATUS_CREATED  = 1,

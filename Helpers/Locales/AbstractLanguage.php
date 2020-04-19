@@ -3,6 +3,9 @@
 namespace Helpers\Locales;
 
 abstract class AbstractLanguage implements LocaleInterface {
+
+    public static int $id;
+
     public string
         $active            = 'Active',
         $addLevel          = 'Add level',

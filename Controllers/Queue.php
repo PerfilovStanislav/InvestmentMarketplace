@@ -2,10 +2,14 @@
 
 namespace Controllers;
 
+use Helpers\Locales\Ru;
 use Libraries\Screens;
+use Models\Collection\ProjectLangs;
 use Models\Table\Project;
+use Models\Table\ProjectLang;
 use Models\Table\Queue as QueueModel;
 use Requests\Telegram\SendPhotoRequest;
+use Services\Vk;
 
 class Queue
 {
@@ -16,9 +20,9 @@ class Queue
         }
     }
 
-    private function getPids(): array
+    private function getPids(string $func): array
     {
-        $cmd = 'ps -aux | grep "php.*/queue/screenshot" | grep -v grep | grep -v "/bin/sh" | awk \'{ print $2 }\'';
+        $cmd = 'ps -aux | grep "php.*/queue/'.$func.'" | grep -v grep | grep -v "/bin/sh" | awk \'{ print $2 }\'';
         $output = [];
         exec($cmd, $output);
         return $output;
@@ -38,7 +42,7 @@ class Queue
     {
         $this->killZombies();
 
-        if (count($this->getPids()) > 1) {
+        if (count($this->getPids('screenshot')) > 1) {
             exit(1);
         }
 
@@ -66,7 +70,7 @@ class Queue
             ]);
 
             if (!$queue->id) {
-                sleep(1);
+                sleep(3);
                 continue;
             }
 
@@ -103,6 +107,50 @@ class Queue
                 'photo'   => Screens::getOriginalJpgScreen($project->id),
             ]);
             App()->telegram()->sendPhoto($message);
+
+            $queue->end_time = date('Y-m-d H:i:s');
+            $queue->status_id = QueueModel::STATUS_FINISHED;
+            $queue->save();
+
+            unset($message, $queue, $project);
+        }
+    }
+
+    public function post()
+    {
+        if (count($this->getPids('post')) > 1) {
+            exit(1);
+        }
+
+        $vkService = new Vk();
+        $queueOriginal = (new QueueModel());
+
+        while (1) {
+            $queue = clone $queueOriginal;
+            $queue->getRowFromDbAndFill([
+                'action_id' => QueueModel::ACTION_ID_POST_TO_SOCIAL,
+                'status_id' => QueueModel::STATUS_CREATED,
+            ]);
+
+            if (!$queue->id) {
+                sleep(3);
+                continue;
+            }
+
+            $queue->status_id = QueueModel::STATUS_STARTED;
+            $queue->start_time = date('Y-m-d H:i:s');
+            $queue->save();
+
+            $project = (new Project())->getById($queue->payload['project_id']);
+
+
+            $projectLangs = new ProjectLangs(['project_id' => $project->id]);
+            /** @var ProjectLang $projectLang */
+            foreach ($projectLangs as $projectLang) {
+                if ($projectLang->lang_id === Ru::$id) {
+                    $vkService->sendToMarket($project->id, $project->name, $projectLang->description);
+                }
+            }
 
             $queue->end_time = date('Y-m-d H:i:s');
             $queue->status_id = QueueModel::STATUS_FINISHED;

@@ -2,6 +2,7 @@
 
 namespace Services;
 
+use Helpers\Locales\Ru;
 use Libraries\Screens;
 use Models\Table\Language;
 use Models\Table\Project;
@@ -42,7 +43,7 @@ class Vk
             'name' => $project->name,
             'description' => str_replace(['<\br>', '< br>', '<br>'], '', $projectLang->description),
             'category_id' => 1208,
-            'price' => 1,
+            'price' => $projectLang->lang_id === Ru::$id ? 99.9 : 0.99,
             'url' => sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, $language->shortname),
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Helpers\Locales\En;
 use Helpers\Locales\Ru;
 use Libraries\Screens;
 use Models\Collection\ProjectLangs;
@@ -148,7 +149,9 @@ class Queue
             /** @var ProjectLang $projectLang */
             foreach ($projectLangs as $projectLang) {
                 if ($projectLang->lang_id === Ru::$id) {
-                    $vkService->sendToMarket($project, $projectLang);
+                    $vkService->sendToMarket($project, $projectLang, \Config::VK_GROUP_RU);
+                } elseif ($projectLang->lang_id === En::$id) {
+                    $vkService->sendToMarket($project, $projectLang, \Config::VK_GROUP_EN);
                 }
             }
 

@@ -10,12 +10,12 @@ use VK\Client\VKApiClient;
 
 class Vk
 {
-    public function sendToMarket(Project $project, ProjectLang $projectLang)
+    public function sendToMarket(Project $project, ProjectLang $projectLang, int $groupID)
     {
         $client = new VKApiClient();
 
         $uploadServer = $client->photos()->getMarketUploadServer(\Config::VK_USER_TOKEN, [
-            'group_id' => \Config::VK_GROUP,
+            'group_id' => $groupID,
             'main_photo' => 1,
         ]);
 
@@ -26,7 +26,7 @@ class Vk
         );
 
         $marketPhoto = $client->photos()->saveMarketPhoto(\Config::VK_USER_TOKEN, [
-            'group_id'  => \Config::VK_GROUP,
+            'group_id'  => $groupID,
             'photo'     => $upload['photo'],
             'server'    => $upload['server'],
             'hash'      => $upload['hash'],
@@ -37,7 +37,7 @@ class Vk
         $language = (new Language())->getById($projectLang->lang_id);
 
         return $client->market()->add(\Config::VK_USER_TOKEN, [
-            'owner_id' => -\Config::VK_GROUP,
+            'owner_id' => -$groupID,
             'main_photo_id' => $marketPhoto[0]['id'],
             'name' => $project->name,
             'description' => str_replace(['<\br>', '< br>', '<br>'], '', $projectLang->description),

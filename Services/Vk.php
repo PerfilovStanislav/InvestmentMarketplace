@@ -40,7 +40,7 @@ class Vk
             'owner_id' => -\Config::VK_GROUP,
             'main_photo_id' => $marketPhoto[0]['id'],
             'name' => $project->name,
-            'description' => $projectLang->description,
+            'description' => str_replace(['<\br>', '< br>', '<br>'], '', $projectLang->description),
             'category_id' => 1208,
             'price' => 1,
             'url' => sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, $language->shortname),

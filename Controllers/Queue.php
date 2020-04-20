@@ -148,7 +148,7 @@ class Queue
             /** @var ProjectLang $projectLang */
             foreach ($projectLangs as $projectLang) {
                 if ($projectLang->lang_id === Ru::$id) {
-                    $vkService->sendToMarket($project->id, $project->name, $projectLang->description);
+                    $vkService->sendToMarket($project, $projectLang);
                 }
             }
 

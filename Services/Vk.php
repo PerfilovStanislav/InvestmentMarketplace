@@ -3,11 +3,14 @@
 namespace Services;
 
 use Libraries\Screens;
+use Models\Table\Language;
+use Models\Table\Project;
+use Models\Table\ProjectLang;
 use VK\Client\VKApiClient;
 
 class Vk
 {
-    public function sendToMarket(int $projectId, string $title, string $description)
+    public function sendToMarket(Project $project, ProjectLang $projectLang)
     {
         $client = new VKApiClient();
 
@@ -19,7 +22,7 @@ class Vk
         $upload = $client->getRequest()->upload(
             $uploadServer['upload_url'],
             'file',
-            Screens::getOriginalJpgScreen($projectId)
+            Screens::getOriginalJpgScreen($project->id)
         );
 
         $marketPhoto = $client->photos()->saveMarketPhoto(\Config::VK_USER_TOKEN, [
@@ -31,13 +34,16 @@ class Vk
             'crop_hash' => $upload['crop_hash']
         ]);
 
+        $language = (new Language())->getById($projectLang->lang_id);
+
         return $client->market()->add(\Config::VK_USER_TOKEN, [
             'owner_id' => -\Config::VK_GROUP,
             'main_photo_id' => $marketPhoto[0]['id'],
-            'name' => $title,
-            'description' => $description,
+            'name' => $project->name,
+            'description' => $projectLang->description,
             'category_id' => 1208,
             'price' => 1,
+            'url' => sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, $language->shortname),
         ]);
     }
 }

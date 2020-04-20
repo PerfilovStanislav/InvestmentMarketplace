@@ -5,13 +5,15 @@ namespace Models\Collection;
 use Core\AbstractEntity;
 use Interfaces\ModelInterface;
 use Models\Table\ProjectLang;
+use Traits\IteratorTrait;
 use Traits\Model;
 
 /**
  * @var ProjectLang[] $this
  */
-class ProjectLangs extends AbstractEntity implements ModelInterface {
+class ProjectLangs extends AbstractEntity implements ModelInterface, \Iterator, \Countable {
     use Model;
+    use IteratorTrait;
 
     private static string $table = 'project_lang';
 

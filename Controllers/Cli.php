@@ -30,7 +30,7 @@ class Cli extends Controller {
         die('OK ' . mt_rand(1, 1000));
     }
 
-    public static function optimize(array $arr, string $type) {
+    public static function optimize(array $arr, string $type): void {
         $buffer = '';
         foreach ($arr as $dir => $files) {
             foreach ($files as $file) {
@@ -41,8 +41,7 @@ class Cli extends Controller {
 
         $buffer = preg_replace('/\/\*.*?\*\//si', '', $buffer);
         if ($type === 'css') {
-            $buffer = str_replace(["\r\n", "\r", "\n", "\t", '  '], '', $buffer);
-            $buffer = str_replace([' {', ': ', ';}', ') ', ' ('], ['{', ':', '}', ')', '('], $buffer);
+            $buffer = str_replace(["\r\n", "\r", "\n", "\t", '  ', ' {', ': ', ';}', ') ', ' ('], ['', '', '', '', '', '{', ':', '}', ')', '('], $buffer);
         }
         else {
             $buffer = str_replace(["\t"], ' ', $buffer);

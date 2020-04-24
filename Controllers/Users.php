@@ -40,7 +40,7 @@ class Users extends Controller {
     public function reloadPage(): Output {
         $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
 
-        Output()->addFunction('allClear', [], Output::DOCUMENT);
+        Output()->addFunction('allClear', [], Output::DOCUMENT, 1);
         $this->setUserHead();
         $this->setLeftSide();
 

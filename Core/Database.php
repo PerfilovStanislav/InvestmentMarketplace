@@ -97,7 +97,7 @@ class Database extends PDO {
     }
 
     public function selectById(int $id, string $fields = '*'): ?array {
-        return $this->selectRow(['id' => $id], $fields) ?? null;
+        return $this->selectRow(['id' => $id], $fields);
     }
 
     public function insert(array $data): int {
@@ -131,10 +131,9 @@ class Database extends PDO {
         if ($stmt->execute() && $stmt->errorCode() === '00000') {
             return $isInsert ? $this->lastInsertId() : $stmt->rowCount();
         }
-        else {
-            $this->outputError($stmt);
-            return 0;
-        }
+
+        $this->outputError($stmt);
+        return 0;
     }
 
     public function deleteById(int $id): int {
@@ -151,7 +150,7 @@ class Database extends PDO {
                 $columns = [];
                 foreach ($attributes as $k => $val) {
                     if (is_array($val)) {
-                        $temp = implode(',', array_map(function($v) use ($k) {
+                        $temp = implode(',', array_map(static function($v) use ($k) {
                             return ':' . PDOHelper::prepareVal($k, $v);
                         } , $val));
                         $columns[] = "$k in ($temp)";
@@ -168,11 +167,8 @@ class Database extends PDO {
 
     private function bindWhere(array $attributes, PDOStatement $stmt): self {
         foreach ($attributes as $k => $val) {
-            $val = (array)$val;
-            if (is_array($val)) {
-                foreach ($val as $v) {
-                    $stmt->bindValue(':' . PDOHelper::prepareVal($k, $v), $v);
-                }
+            foreach ((array)$val as $v) {
+                $stmt->bindValue(':' . PDOHelper::prepareVal($k, $v), $v);
             }
         }
         return $this;
@@ -190,20 +186,19 @@ class Database extends PDO {
     }
 
     private function prepareValues(array $data, bool $isValue = false): string {
-        return implode(',', array_map(function($key) use ($isValue) {
+        return implode(',', array_map(static function($key) use ($isValue) {
             return ($isValue ? ':' : '') . $key;
         }, array_keys($data)));
     }
 
     private function prepareUpdate(array $data): string {
-        return implode(',', array_map(function($key) {
+        return implode(',', array_map(static function($key) {
             return "$key=:$key";
         }, array_keys($data)));
     }
 
     public function rawSelect(string $sql): array {
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
+        $stmt = $this->query($sql);
         return $stmt->fetchAll();
     }
 
@@ -214,8 +209,7 @@ class Database extends PDO {
     }
 
     private function outputError(PDOStatement $stmt): void {
-//            $this->rollBack();
         Output()->addHeader(Output::E500);
-        Output()->addAlertDanger('query error', json_encode($stmt->errorInfo()));
+        Output()->addAlertDanger('query error', json_encode($stmt->errorInfo(), JSON_THROW_ON_ERROR, 512));
     }
 }

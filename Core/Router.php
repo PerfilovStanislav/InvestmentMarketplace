@@ -119,11 +119,10 @@ class Router {
     }
 
     private function prepareParams(array $params): array {
-        return call_user_func_array('array_merge',
-                array_filter(
-                    array_map(fn (array $a):array => (isset($a[1]) ? [$a[0] => $a[1]] : []),
-                        array_chunk($params, 2)
-                    )));
+        return array_merge(...array_filter(
+            array_map(fn(array $a): array => (isset($a[1]) ? [$a[0] => $a[1]] : []),
+                array_chunk($params, 2)
+            )));
     }
 
     public function getRoute(): RouteInterface {

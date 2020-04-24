@@ -1,5 +1,7 @@
 <?php
 
+use Exceptions\ErrorException;
+
 if (DEBUG) {
     define('MEMORY_USAGE', memory_get_usage(false));
     define('START_TIME', microtime(true));
@@ -20,9 +22,10 @@ function dd(...$data) {
         ];
         if (IS_AJAX) {
             Output()->addFunction('showInConsole', $result);
+            throw new ErrorException();
         } else {
-            Output()->addView(\Views\Errors\Debug::class, ['debug' => $result]);
+            echo '<pre>', print_r($result, true), '</pre>';
+            die();
         }
-        throw new ErrorException();
     }
 }

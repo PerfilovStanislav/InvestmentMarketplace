@@ -27,7 +27,10 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
         ][$this->project->status_id] ?? 'default'?>">
             <div class="panel-heading">
                 <span class="panel-title">
-                    <i class="fa fa-newspaper-o"></i><?=$this->project->name?>
+                    <i class="fa fa-newspaper-o"></i>
+                    <a target="_blank" rel="nofollow noopener" itemprop="url" href="/Investment/redirect/project/<?=$this->project->id?>">
+                        <span itemprop="name"><?=$this->project->name?></span>
+                    </a>
                 </span>
             </div>
             <div class="panel-body">

@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use HeadlessChromium\BrowserFactory;
 use Helpers\Locales\En;
 use Helpers\Locales\Ru;
 use Libraries\Screens;
@@ -39,6 +40,36 @@ class Queue
         exec('ps -ef | grep defunct | grep -v grep | cut -b8-20 | xargs kill -9');
     }
 
+    private function queue(int $actionID, callable $functionForCall)
+    {
+        $queueOriginal = (new QueueModel());
+        while (true) {
+            $queue = clone $queueOriginal;
+            $queue->getRowFromDbAndFill([
+                'action_id' => $actionID,
+                'status_id' => QueueModel::STATUS_CREATED,
+            ]);
+
+            if (!$queue->id) {
+                unset($queue);
+                sleep(3);
+                continue;
+            }
+
+            $queue->status_id = QueueModel::STATUS_STARTED;
+            $queue->start_time = date('Y-m-d H:i:s');
+            $queue->save();
+
+            $functionForCall($queue);
+
+            $queue->end_time = date('Y-m-d H:i:s');
+            $queue->status_id = QueueModel::STATUS_FINISHED;
+            $queue->save();
+
+            unset($queue);
+        }
+    }
+
     public function screenshot()
     {
         $this->killZombies();
@@ -50,45 +81,21 @@ class Queue
         $this->killChrome();
         sleep(3);
 
-        $queueOriginal = (new QueueModel());
+        require(ROOT . '/vendor/autoload.php');
 
-        require(ROOT . '/composer/vendor/autoload.php');
-
-        $factory = new \HeadlessChromium\BrowserFactory('google-chrome');
-        $browser = $factory->createBrowser([
-            'headless' => true,
-            'noSandbox' => true,
-            'keepAlive' => false,
-            'windowSize' => [1280, 960],
-            'sendSyncDefaultTimeout' => 45000
-        ]);
-
-        while (1) {
-            $queue = clone $queueOriginal;
-            $queue->getRowFromDbAndFill([
-                'action_id' => QueueModel::ACTION_ID_SCREENSHOT,
-                'status_id' => QueueModel::STATUS_CREATED,
-            ]);
-
-            if (!$queue->id) {
-                sleep(3);
-                continue;
-            }
-
-            exec('pgrep chrome', $chromePids);
-            if (!count($chromePids)) {
-                exit(1);
-            }
-
-            $queue->status_id = QueueModel::STATUS_STARTED;
-            $queue->start_time = date('Y-m-d H:i:s');
-            $queue->save();
-
-
+        $this->queue(QueueModel::ACTION_ID_SCREENSHOT, static function (QueueModel $queue) {
             $project = (new Project())->getById($queue->payload['project_id']);
 
             Screens::createFolder($project->id);
 
+            $factory = new BrowserFactory('google-chrome');
+            $browser = $factory->createBrowser([
+                'headless' => true,
+                'noSandbox' => true,
+                'keepAlive' => false,
+                'windowSize' => [1280, 960],
+                'sendSyncDefaultTimeout' => 45000
+            ]);
             $page = $browser->createPage();
             $page->navigate('https://' . $project->url)->waitForNavigation();
             sleep(7);
@@ -97,6 +104,7 @@ class Queue
                 'quality' => 95,
             ])->saveToFile(Screens::getOriginalJpgScreen($project->id));
             $page->close();
+            $browser->close();
 
             Screens::makeThumbs($project->url, $project->id);
 
@@ -109,12 +117,8 @@ class Queue
             ]);
             App()->telegram()->sendPhoto($message);
 
-            $queue->end_time = date('Y-m-d H:i:s');
-            $queue->status_id = QueueModel::STATUS_FINISHED;
-            $queue->save();
-
-            unset($message, $queue, $project);
-        }
+            unset($message, $project, $browser, $page, $factory);
+        });
     }
 
     public function post()
@@ -124,26 +128,8 @@ class Queue
         }
 
         $vkService = new Vk();
-        $queueOriginal = (new QueueModel());
-
-        while (1) {
-            $queue = clone $queueOriginal;
-            $queue->getRowFromDbAndFill([
-                'action_id' => QueueModel::ACTION_ID_POST_TO_SOCIAL,
-                'status_id' => QueueModel::STATUS_CREATED,
-            ]);
-
-            if (!$queue->id) {
-                sleep(3);
-                continue;
-            }
-
-            $queue->status_id = QueueModel::STATUS_STARTED;
-            $queue->start_time = date('Y-m-d H:i:s');
-            $queue->save();
-
+        $this->queue(QueueModel::ACTION_ID_POST_TO_SOCIAL, static function (QueueModel $queue) use ($vkService) {
             $project = (new Project())->getById($queue->payload['project_id']);
-
 
             $projectLangs = new ProjectLangs(['project_id' => $project->id]);
             /** @var ProjectLang $projectLang */
@@ -155,11 +141,7 @@ class Queue
                 }
             }
 
-            $queue->end_time = date('Y-m-d H:i:s');
-            $queue->status_id = QueueModel::STATUS_FINISHED;
-            $queue->save();
-
-            unset($message, $queue, $project);
-        }
+            unset($projectLangs, $project);
+        });
     }
 }

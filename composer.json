@@ -1,4 +1,5 @@
 {
     "require": {
+        "chrome-php/chrome": "^0.8.1"
     }
 }

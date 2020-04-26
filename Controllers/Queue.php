@@ -10,6 +10,7 @@ use Models\Collection\ProjectLangs;
 use Models\Table\Project;
 use Models\Table\ProjectLang;
 use Models\Table\Queue as QueueModel;
+use Models\Table\User;
 use Requests\Telegram\SendPhotoRequest;
 use Services\Vk;
 
@@ -110,9 +111,10 @@ class Queue
 
             Investment::refreshMViews();
 
+            $user = (new User())->getById($project->admin);
             $message = new SendPhotoRequest([
                 'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
-                'caption' => sprintf('New project is added *%s* (%s)', $project->name, $project->url),
+                'caption' => sprintf('New project %s is added by %s', $project->url, $user->login),
                 'photo'   => Screens::getOriginalJpgScreen($project->id),
             ]);
             App()->telegram()->sendPhoto($message);

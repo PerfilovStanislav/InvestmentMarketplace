@@ -1,5 +1,6 @@
 {
     "require": {
-        "chrome-php/chrome": "^0.8.1"
+        "chrome-php/chrome": "^0.8.1",
+        "imangazaliev/didom": "^1.15"
     }
 }

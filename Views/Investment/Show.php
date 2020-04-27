@@ -35,18 +35,33 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
             <meta itemprop="description" content="<?=str_replace(['< br>', '<br>', '>'], '', $projectLang->description)?>">
             <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
                 <?php if ($this->isAdmin): ?>
-                    <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-                        <span class="fa fa-pencil"></span>
-                    </button>
-                    <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                        <li>
-                            <?php foreach (array_diff(ProjectStatus::getValues(), [$project->status_id]) as $statusId): ?>
-                                <a class="ajax" href="/Investment/changeStatus/status/<?=ProjectStatus::getConstName($statusId)?>/project/<?=$project->id?>">
-                                    <?=ProjectStatus::getConstName($statusId)?>
+                    <span>
+                        <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+                            <span class="fa fa-pencil"></span>
+                        </button>
+                        <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+                            <li>
+                                <?php foreach (array_diff(ProjectStatus::getValues(), [$project->status_id]) as $statusId): ?>
+                                    <a class="ajax" href="/Investment/changeStatus/status/<?=ProjectStatus::getConstName($statusId)?>/project/<?=$project->id?>">
+                                        <?=ProjectStatus::getConstName($statusId)?>
+                                    </a>
+                                <?php endforeach; ?>
+                            </li>
+                        </ul>
+                    </span>
+
+                    <span>
+                        <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle btn-warning">
+                            <span class="fa fa-image"></span>
+                        </button>
+                        <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu2">
+                            <li>
+                                <a class="ajax" href="/Investment/reloadScreen/project/<?=$project->id?>">
+                                    Reload ScreenShot
                                 </a>
-                            <?php endforeach; ?>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </span>
                 <?php endif; ?>
 
                 <a class="btn btn-details ajax page" href="/Investment/details/site/<?=$project->url?>/lang/<?=$this->pageLanguage->shortname?>">
@@ -64,11 +79,13 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         <div class="thumbnail" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
                             <meta itemprop="description" content="<?=$project->name?>">
                             <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                                <img src="/<?=$isFirstRow ? Screens::getJpgThumb($project->id) : Screens::getPreThumb($project->id)?>"
+                                <img src="/<?=$isFirstRow
+                                    ? Screens::withTime(Screens::getJpgThumb($project->id))
+                                    : Screens::withTime(Screens::getPreThumb($project->id))?>"
                                      alt="<?=$project->name?>"
                                      itemprop="image"
-                                     class="media-object" href="<?=SITE.'/'.Screens::getOriginalJpgScreen($project->id)?>"
-                                     <?=!$isFirstRow ? 'realthumb="/'. Screens::getThumb($project->id) .'"' : ''?>
+                                     class="media-object" href="<?=SITE.'/'.Screens::withTime(Screens::getOriginalJpgScreen($project->id))?>"
+                                     <?=!$isFirstRow ? 'realthumb="/'. Screens::withTime(Screens::getThumb($project->id)) .'"' : ''?>
                                 >
                             </span>
                         </div>

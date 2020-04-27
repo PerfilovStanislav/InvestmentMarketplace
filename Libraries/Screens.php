@@ -33,6 +33,13 @@ class Screens {
         return self::getFilePath($id) . '_th.jpg';
     }
 
+    public static function withTime(string $path): string {
+        if (!file_exists($path)) {
+            return $path;
+        }
+        return $path . '?' . filemtime($path);
+    }
+
     public static function getWebpThumb(int $id): string {
         return self::getFilePath($id) . '_th.webp';
     }
@@ -78,6 +85,18 @@ class Screens {
         imagedestroy($imageTo);
     }
 
+    public static function crop(string $from, string $to, int $quality = 100)
+    {
+        $imageFrom = imagecreatefromjpeg($from);
+        $newImage = imagecrop($imageFrom, [
+            'x' => (imagesx($imageFrom) - 1280) / 2,
+            'y' => 0,
+            'width' => 1280,
+            'height' => 960,
+        ]);
+        imagejpeg($newImage, $to, $quality);
+    }
+
     public static function makeWebp(string $from, string $to, int $quality = 100) {
         imagewebp(imagecreatefromjpeg($from), $to, $quality);
     }
@@ -111,13 +130,13 @@ class Screens {
         ];
 
         // Преобразование IPTC тэгов в двоичный код
-        $data = '';
+        $iptcMakeTag = '';
         foreach($iptc as $tag => $string)
         {
-            $data .= self::iptcMakeTag(2, $tag, $string);
+            $iptcMakeTag .= self::iptcMakeTag(2, $tag, $string);
         }
         // Встраивание IPTC данных
-        $content = iptcembed($data, $path);
+        $content = iptcembed($iptcMakeTag, $path);
 
         // запись нового изображения в файл
         $fp = fopen($path, 'wb');

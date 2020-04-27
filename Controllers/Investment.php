@@ -3,7 +3,9 @@
 namespace Controllers;
 
 use Core\{Controller, View};
+use DiDom\Document;
 use Dto\ErrorRoute;
+use Libraries\Screens;
 use Helpers\{
     Output,
     Data\Currency,
@@ -30,6 +32,7 @@ use Requests\Investment\{AddRequest,
     CheckSiteRequest,
     DetailsRequest,
     RedirectRequest,
+    ReloadScreenshotRequest,
     SetChatMessageRequest,
     ShowRequest};
 use Traits\AuthTrait;
@@ -237,6 +240,30 @@ class Investment extends Controller {
                 ],
             ]))->save();
         }
+
+        return (new \Controllers\Users())->reloadPage();
+    }
+
+    public function reloadScreen(ReloadScreenshotRequest $request): Output {
+        static::adminAccess();
+
+        $project = (new Project())->getById($request->project);
+
+        require(ROOT . '/vendor/autoload.php');
+        $url = sprintf('https://hyiplogs.com/project/%s/', $project->url);
+
+        try {
+            $document = new Document($url, true);
+            $url = $document->first('.content div.hyip-img ')->attr('data-src');
+        } catch (\Exception $exception) {
+            die();
+        }
+
+        $path = ROOT . '/temp_' . $project->id . '.jpg';
+        file_put_contents($path, file_get_contents($url));
+        Screens::crop($path, Screens::getOriginalJpgScreen($project->id));
+        Screens::makeThumbs($project->url, $project->id);
+        unlink($path);
 
         return (new \Controllers\Users())->reloadPage();
     }

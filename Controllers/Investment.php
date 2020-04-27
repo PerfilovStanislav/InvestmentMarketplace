@@ -259,7 +259,7 @@ class Investment extends Controller {
             die();
         }
 
-        $path = ROOT . '/temp_' . $project->id . '.jpg';
+        $path = ROOT . '/screens/temp/' . $project->id . '.jpg';
         file_put_contents($path, file_get_contents($url));
         Screens::crop($path, Screens::getOriginalJpgScreen($project->id));
         Screens::makeThumbs($project->url, $project->id);

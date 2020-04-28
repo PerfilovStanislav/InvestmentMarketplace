@@ -3,24 +3,30 @@
 namespace Helpers;
 
 class Scripts {
-    CONST
+    public const
         ASSETS_DIR = '/assets/',
 
         CSS = [
             [
                 'full/' => ['full'],
             ],
-            [ '' => [
-                'default_skin/css/theme.clear',
-//                'default_skin/css/theme',
-                'fullcalendar/fullcalendar.min',
-                'google/fonts',
-                'cropper/cropper',
-                'admin-forms/css/admin-forms.min',
-                'glyphicons-pro/glyphicons-pro',
-                'flags/flags',
-                'payments/payments',
-                'magnific/magnific-popup',
+            [
+                '' => [
+                    'default_skin/css/theme.clear',
+    //                'default_skin/css/theme',
+//                    'fullcalendar/fullcalendar',
+//                    'cropper/cropper',
+                    'admin-forms/css/admin-forms.min',
+                    'flags/flags',
+                    'payments/payments',
+                    'magnific/magnific-popup',
+                ],
+                'fonts/' => [
+                    'google/fonts',
+                    'admindesigns/admindesigns',
+                    'glyphicons-pro/glyphicons-pro',
+                    'glyphicons/glyphicons',
+                    'font-awesome/font-awesome',
                 ]
             ]
         ],
@@ -32,12 +38,12 @@ class Scripts {
             [
                 'jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
                 '' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
-                'js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'chat', 'my-addons']
+                'js/' => ['utility', 'demo', 'main', 'highcharts'/*, 'widgets'*/, 'common', 'chat', 'my-addons']
             ]
         ];
 
-    public static function loadJS(int $debug) {
-        foreach (self::JS[$debug] as $dir => $files) {
+    public static function loadJS(): void {
+        foreach (self::JS[(int)DEBUG] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.js';
                 $t = filemtime(ROOT.$f);
@@ -46,8 +52,8 @@ class Scripts {
         }
     }
 
-    public static function loadCSS(int $debug) {
-        foreach (self::CSS[$debug] as $dir => $files) {
+    public static function loadCSS(): void {
+        foreach (self::CSS[(int)DEBUG] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.css';
                 $t = filemtime(ROOT.$f);

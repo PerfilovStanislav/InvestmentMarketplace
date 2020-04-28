@@ -12,6 +12,7 @@ use Helpers\{
 };
 use Models\Collection\{
     Languages,
+    MVProjectCounts,
     ProjectChatMessages,
     MVProjectLangs,
     Payments,
@@ -273,6 +274,7 @@ class Investment extends Controller {
         MVProjectFilterAvailableLangs::refresh();
         MVProjectLangs::refresh();
         MVProjectSearchs::refresh();
+        MVProjectCounts::refresh();
     }
 
     private function getWebsiteUrl(CheckSiteRequest $request): string {

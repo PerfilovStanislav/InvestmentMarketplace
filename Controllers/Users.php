@@ -8,6 +8,7 @@ use Models\{
     Constant\UserStatus,
     Constant\Views,
     Table\User,
+    Collection\MVProjectCounts,
 };
 use Helpers\Output;
 use Requests\{
@@ -116,7 +117,11 @@ class Users extends Controller {
     }
 
     public function setLeftSide(): Output {
-        return Output()->addView(SideLeft::class, [], Views::SIDEBAR_LEFT);
+        $isAdmin = CurrentUser()->isAdmin();
+        return Output()->addView(SideLeft::class, [
+            'counts' => array_map(fn (array $cnt):string => $isAdmin ? ' ' . $cnt['cnt'] : '', (new MVProjectCounts())->toArray()),
+            'isAdmin' => $isAdmin,
+        ], Views::SIDEBAR_LEFT);
     }
 
     public function changeLanguage(LanguageAvailableRequest $request): Output {

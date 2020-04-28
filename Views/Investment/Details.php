@@ -24,6 +24,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
             ProjectStatus::PAYWAIT       => 'warning',
             ProjectStatus::NOT_PUBLISHED => 'info',
             ProjectStatus::SCAM          => 'danger',
+            ProjectStatus::DELETED       => 'danger',
         ][$this->project->status_id] ?? 'default'?>">
             <div class="panel-heading">
                 <span class="panel-title">

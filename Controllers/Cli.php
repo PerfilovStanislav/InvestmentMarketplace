@@ -3,29 +3,14 @@
 namespace Controllers;
 
 use Core\Controller;
+use Helpers\Scripts;
 
 class Cli extends Controller {
 
     public static function fullOptimize() {
-        self::optimize([
-            '/assets/' => [
-                'default_skin/css/theme.clear',
-                'fullcalendar/fullcalendar.min',
-                'google/fonts',
-                'cropper/cropper',
-                'admin-forms/css/admin-forms.min',
-                'glyphicons-pro/glyphicons-pro',
-                'flags/flags',
-                'payments/payments',
-                'magnific/magnific-popup',
-            ]
-        ], 'css');
+        self::optimize(Scripts::CSS[1], 'css');
 
-        self::optimize([
-            '/assets/jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
-            '/assets/' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
-            '/assets/js/' => ['utility', 'demo', 'main', 'highcharts', 'widgets', 'common', 'chat', 'my-addons']
-        ], 'js');
+        self::optimize(Scripts::JS[1], 'js');
 
         die('OK ' . mt_rand(1, 1000));
     }
@@ -34,7 +19,7 @@ class Cli extends Controller {
         $buffer = '';
         foreach ($arr as $dir => $files) {
             foreach ($files as $file) {
-                $f = $dir.$file.'.'.$type;
+                $f = Scripts::ASSETS_DIR.$dir.$file.'.'.$type;
                 $buffer .= file_get_contents(ROOT.$f) . PHP_EOL;
             }
         }

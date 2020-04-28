@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src:
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.eot'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regulard41d.eot?#iefix') format('embedded-opentype'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff2') format('woff2'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'),
+        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.svg#@glyphicons_halflingsregular') format('svg');
+}
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: Glyphicons Halflings, monospace;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon-remove:before {
+    content: "\e014";
+}
+.glyphicon-play:before {
+    content: "\e072";
+}
+.glyphicon-pause:before {
+    content: "\e073";
+}
+.glyphicon-ok-sign:before {
+    content: "\e084";
+}
+.glyphicon-fire:before {
+    content: "\e104";
+}
+.glyphicon-warning-sign:before {
+    content: "\e107";
+}
+.glyphicon-time:before {
+    content: "\e023";
+}

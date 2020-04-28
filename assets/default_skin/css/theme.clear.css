@@ -41,184 +41,11 @@ html::-webkit-scrollbar-track {
     -webkit-animation-name: flipInX;
     animation-name: flipInX;
 }
-@font-face {
-    font-family: "AdminDesigns";
-    src:
-        /*local('Verdana'),*/
-        url("/assets/fonts/admindesigns/admindesigns.eot"),
-        url("/assets/fonts/admindesigns/admindesignsd41d.eot?#iefix") format("embedded-opentype"),
-        url("/assets/fonts/admindesigns/admindesigns.woff") format("woff"),
-        url("/assets/fonts/admindesigns/admindesigns.ttf") format("truetype"),
-        url("/assets/fonts/admindesigns/admindesigns.svg#admindesigns") format("svg");
-    /*font-display: swap;*/
-    font-weight: normal;
-    font-style: normal;
-}
-.ad {
-    position: relative;
-    display: inline-block;
-    font: normal normal normal 16px/1 AdminDesigns;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transform: translate(0, 0);
-}
-.ad-lines:before {
-    content: "\e600";
-}
-@font-face {
-    font-family: 'Glyphicons Halflings';
-    src:
-        /*local('Verdana'),*/
-        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.eot'),
-        url('/assets/fonts/glyphicons/glyphicons-halflings-regulard41d.eot?#iefix') format('embedded-opentype'),
-        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff2') format('woff2'),
-        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.woff') format('woff'),
-        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.ttf') format('truetype'),
-        url('/assets/fonts/glyphicons/glyphicons-halflings-regular.svg#@glyphicons_halflingsregular') format('svg');
-    /*font-display: swap;*/
-}
-.glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-.glyphicon-remove:before {
-    content: "\e014";
-}
-.glyphicon-play:before {
-    content: "\e072";
-}
-.glyphicon-pause:before {
-    content: "\e073";
-}
-.glyphicon-ok-sign:before {
-    content: "\e084";
-}
-.glyphicon-fire:before {
-    content: "\e104";
-}
-.glyphicon-warning-sign:before {
-    content: "\e107";
-}
-@font-face {
-    font-family: 'FontAwesome';
-    src:
-        /*local('Verdana'),*/
-        url('/assets/fonts/font-awesome/fontawesome-webfontd41d.eot?#iefix&v=4.3.0') format('embedded-opentype'),
-        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff2?v=4.3.0') format('woff2'),
-        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.woff?v=4.3.0') format('woff'),
-        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.ttf?v=4.3.0') format('truetype'),
-        url('/assets/fonts/font-awesome/fontawesome-webfonte0a5.svg?v=4.3.0#fontawesomeregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    /*font-display: swap;*/
-}
-.fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transform: translate(0, 0);
-}
-.fa-lg {
-    font-size: 1.33333333em;
-    line-height: 0.75em;
-    vertical-align: -15%;
-}
-.fa-comments:before {
-    content: "\f086";
-}
-.fa-newspaper-o:before {
-    content: "\f1ea";
-}
-.fa-gear:before{
-    content: "\f013";
-}
-.fa-signal:before {
-    content: "\f012";
-}
 .pull-right {
     float: right;
 }
 .pull-left {
     float: left;
-}
-.fa-power-off:before {
-    content: "\f011";
-}
-.fa-lock:before {
-    content: "\f023";
-}
-.fa-photo:before,
-.fa-image:before,
-.fa-picture-o:before {
-    content: "\f03e";
-}
-.fa-pencil:before {
-    content: "\f040";
-}
-.fa-pause:before {
-    content: "\f04c";
-}
-.fa-chevron-left:before {
-    content: "\f053";
-}
-.fa-chevron-right:before {
-    content: "\f054";
-}
-.fa-plus:before {
-    content: "\f067";
-}
-.fa-minus:before {
-    content: "\f068";
-}
-.fa-warning:before,
-.fa-exclamation-triangle:before {
-    content: "\f071";
-}
-.fa-calendar:before {
-    content: "\f073";
-}
-.fa-upload:before {
-    content: "\f093";
-}
-.fa-globe:before {
-    content: "\f0ac";
-}
-.fa-money:before {
-    content: "\f0d6";
-}
-.fa-circle:before {
-    content: "\f111";
-}
-.fa-pencil-square:before {
-    content: "\f14b";
-}
-.fa-street-view:before {
-    content: "\f21d";
-}
-.fa-percent:before {
-    content: "%";
-}
-.fa-envelope-o:before {
-    content: "\f003";
-}
-.fa-user:before {
-    content: "\f007";
-}
-.fa-group:before,
-.fa-users:before {
-    content: "\f0c0";
 }
 .nano {
     position: relative;
@@ -624,7 +451,7 @@ a {
 a:hover,
 a:focus {
     color: #1d6fa5;
-    text-decoration: underline;
+    /*text-decoration: underline;*/
 }
 a:focus {
     outline: 0;
@@ -2328,11 +2155,11 @@ body.sb-l-m .navbar-brand {
 .sidebar-menu > li > a:focus,
 .sidebar-menu > li > a:active {
     color: inherit;
-    background-color: transparent;
+    background-color: #3e3d3c;
 }
 .sidebar-menu > li:hover > a:after,
 .sidebar-menu > li:focus > a:after {
-    background: transparent;
+    background-color: #39d;
 }
 body.sb-l-m .sidebar-menu > li > a > .sidebar-title {
     background-color: #454241;
@@ -2682,9 +2509,54 @@ fieldset[disabled] .btn-primary.active {
 .text-danger {
     color: #df5640;
 }
+.text-danger-dark {
+    color: #dc4831;
+}
+.text-success-dark {
+    color: #64c556;
+}
 .lead {
     margin-bottom: 19px;
     font-size: 24px;
     font-weight: 400;
     line-height: 1.4;
+}
+li.divider {
+    height: 2px;
+    margin: 10px 5px;
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.btn-type1 {
+    margin: 5px;
+    background: #FFF;
+    position: relative;
+    cursor: pointer;
+    padding: 8px;
+    color: #777;
+    font-size: 12px;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    border-left: 4px solid #2a5;
+    vertical-align: middle;
+}
+.btn-type1-success:hover,
+.btn-type1-success:focus {
+    border-left-color: #70ca63;
+}
+.btn-type1-success > .btn-type1-icon {
+    color: #70ca63;
+}
+.btn-type1-icon {
+    display: inline-block;
+    width: 20px;
+    font-size: 16px;
+    text-align: center;
+}
+.btn-type1-text {
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    display: inline-block;
+    padding-left: 5px;
+    font-size: 14px;
 }

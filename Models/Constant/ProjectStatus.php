@@ -12,5 +12,6 @@ class ProjectStatus implements ConstantInterface {
         ACTIVE        = 1,
         PAYWAIT       = 2,
         NOT_PUBLISHED = 3,
-        SCAM          = 4;
+        SCAM          = 4,
+        DELETED       = 5;
 }

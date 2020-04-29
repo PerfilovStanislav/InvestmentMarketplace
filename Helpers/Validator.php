@@ -22,11 +22,11 @@ class Validator
         LOGIN          = self::EN . self::NUM,
         FLOAT          = self::NUM . '.',
         NUMS           = self::NUM .'\,',
-        SITE_URI       = self::EN . self::NUMS . '\/_\.\-',
+        SITE_URI       = self::EN . self::NUMS . ':\/_\.\-',
         PROJECT_NAME   = self::EN . self::NUM . ' \.\-',
         EMAIL          = self::EN . self::NUM . '\-_.@',
         HASH           = self::EN . self::NUM . '\/\.',
-        REF_SITE_URL   = self::SITE_URI . ':?№=',
+        REF_SITE_URL   = self::SITE_URI . '?№=',
         IP             = self::NUM . '\.:',
         DATE           = self::NUM . '\-';
 

@@ -6,7 +6,6 @@ var initChat = function() {
 
     $("form[chat_id]").submit(function(e){
         var message = $(this).find('[name=message]').val();
-        console.log(STORAGE.status);
         if (!message.length || STORAGE.status === 5) return false;
 
         STORAGE.status = 5; /* Отправляем сообщение */

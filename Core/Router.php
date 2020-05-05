@@ -6,6 +6,7 @@ use Dto\CustomRoute;
 use Dto\DefaultRoute;
 use Dto\ErrorRoute;
 use Dto\RouteInterface;
+use Helpers\Output;
 use Helpers\Validator;
 use Mapping\StaticRouteMapping;
 use ReflectionException;
@@ -89,7 +90,10 @@ class Router {
             throw new \BadMethodCallException(sprintf('Method %s in the class %s is not callable', $route->getAction(), $controllerClass));
         }
 
-        $params = $route->getParams() + $_POST;
+        if (($_SERVER['CONTENT_TYPE'] ?? '') === Output::JSON) {
+            $input = json_decode(file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR);
+        }
+        $params = array_merge($_POST, $input ?? [], $route->getParams());
 
         $reflectionParameters = (new \ReflectionMethod($controller, $route->getAction()))->getParameters();
         if ($reflectionParameters) {

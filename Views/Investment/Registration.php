@@ -20,9 +20,6 @@ use Models\Table\Payment;
 <div class="tray tray-center">
     <div class="content-header">
         <h2> <?=Translate()->freeForAddProject?> <b class="text-primary"><?=Translate()->free?></b></h2>
-        <?php /*if (!($this->authModel->is_authorized)):*/?><!--
-            <p class="lead text-danger"><?/*=Translate()->auth_4_addProject*/?></p>
-        --><?php /*endif;*/?>
     </div>
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
         <div class="panel heading-border panel-<?=$this->authModel->is_authorized ? 'primary' : 'danger'?>">

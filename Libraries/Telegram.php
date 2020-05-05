@@ -3,7 +3,7 @@
 namespace Libraries;
 
 use Core\AbstractEntity;
-use Requests\Telegram\{SendMessageRequest, SendPhotoRequest, SetWebhookRequest};
+use Requests\Telegram\{EditMessageReplyMarkup, SendMessageRequest, SendPhotoRequest, SetWebhookRequest};
 use Traits\Instance;
 
 class Telegram {
@@ -11,7 +11,7 @@ class Telegram {
 
     private CONST TELEGRAM_API = 'https://api.telegram.org/bot' . \Config::TELEGRAM_BOT_TOKEN;
 
-    private function send(string $method, AbstractEntity $params) {
+    private function send(string $method, AbstractEntity $params):array {
         $ch = curl_init(self::TELEGRAM_API . '/' . $method);
 
         curl_setopt_array($ch, [
@@ -24,10 +24,15 @@ class Telegram {
             CURLOPT_HTTPHEADER     => ['Content-Type:multipart/form-data'],
         ]);
         $result = curl_exec($ch);
-//        $error = curl_error($ch);
+        $error = curl_error($ch);
+
         curl_close($ch);
 
-        return $result;
+        if ($error) {
+            dd($error);
+        }
+
+        return json_decode($result, true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function sendMessage(SendMessageRequest $request) {
@@ -37,6 +42,11 @@ class Telegram {
     public function sendPhoto(SendPhotoRequest $request) {
         Error()->exitIfExists();
         return $this->send('sendPhoto', $request);
+    }
+
+    public function editMessageReplyMarkup(EditMessageReplyMarkup $request) {
+        Error()->exitIfExists();
+        return $this->send('editMessageReplyMarkup', $request);
     }
 
     public function setWebhook(SetWebhookRequest $request) {

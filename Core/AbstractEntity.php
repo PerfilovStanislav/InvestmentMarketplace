@@ -117,7 +117,7 @@ abstract class AbstractEntity {
                     break;
                 case self::TYPE_JSON:
                     if (is_string($value)) {
-                        $this->data[$key] = json_decode($value, true);
+                        $this->data[$key] = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
                     }
                     else {
                         $this->data[$key] = $value;
@@ -215,6 +215,9 @@ abstract class AbstractEntity {
                 $class = static::$properties[$key][1];
                 $data[$key] = $class::getConstName($entity);
             }
+            elseif ($type === self::TYPE_JSON) {
+                $data[$key] = json_encode($entity, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+            }
             else {
                 $data[$key] = $entity;
             }
@@ -246,7 +249,7 @@ abstract class AbstractEntity {
                     $data[$key] = $value->format(self::getDateFormatByType($type));
                     break;
                 case self::TYPE_JSON:
-                    $data[$key] = json_encode($value);
+                    $data[$key] = json_encode($value, JSON_THROW_ON_ERROR);
                     break;
                 default:
                     $data[$key] = $value;

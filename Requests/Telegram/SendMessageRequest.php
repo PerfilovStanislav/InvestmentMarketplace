@@ -15,9 +15,10 @@ class SendMessageRequest extends AbstractEntity {
 
     protected static array
         $properties = [
-            'chat_id'     => [self::TYPE_INT,        []],
-            'text'        => [self::TYPE_STRING,     [Validator::MIN => 1]],
-            'parse_mode'  => [self::TYPE_CONSTANTS,  TelegramParseMode::class],
+            'chat_id'      => [self::TYPE_INT,        []],
+            'text'         => [self::TYPE_STRING,     [Validator::MIN => 1]],
+            'reply_markup' => [self::TYPE_STRING,     [Validator::MIN => 1]],
+            'parse_mode'   => [self::TYPE_CONSTANTS,  TelegramParseMode::class],
         ];
 
     public static function getDefaults(): array {

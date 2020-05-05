@@ -116,6 +116,20 @@ class Queue
                 'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
                 'caption' => sprintf('New project %s is added by %s', $project->url, $user->login),
                 'photo'   => Screens::getOriginalJpgScreen($project->id),
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '👍 public', 'callback_data' => json_encode([
+                                'action' => Telegram::ACTIVATE,
+                                'project_id' => $project->id
+                            ])],
+                            ['text' => '⚒ reload screen', 'callback_data' => json_encode([
+                                'action' => Telegram::RELOAD_SCREEN,
+                                'project_id' => $project->id
+                            ])],
+                        ]
+                    ]
+                ],
             ]);
             App()->telegram()->sendPhoto($message);
 

@@ -8,7 +8,7 @@ use Traits\Collection;
 class ProjectStatus implements ConstantInterface {
     use Collection;
 
-    public CONST
+    public const
         ACTIVE        = 1,
         PAYWAIT       = 2,
         NOT_PUBLISHED = 3,

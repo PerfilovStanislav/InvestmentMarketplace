@@ -2,27 +2,74 @@
 
 namespace Controllers;
 
-use Requests\Telegram\SendMessageRequest;
+use Libraries\Screens;
+use Models\Constant\ProjectStatus;
+use Requests\Investment\ChangeStatusRequest;
+use Requests\Investment\ReloadScreenshotRequest;
+use Requests\Telegram\EditMessageReplyMarkup;
+use Requests\Telegram\SendPhotoRequest;
 use Requests\Telegram\SetWebhookRequest;
+use Requests\Telegram\WebhookRequest;
+use Services\InvestmentService;
 
 class Telegram {
+    private const
+        ACTIVATE      = 'activate',
+        RELOAD_SCREEN = 'reloadScreen';
+
+    public function __construct()
+    {
+        Output()->disableLayout();
+    }
 
     public function setWebhook() {
         $request = new SetWebhookRequest([
-            'url'             => 'https://richinme.com/Telegram/getWebhook/token/' . \Config::TELEGRAM_GET_WEBHOOK_KEY,
-            'certificate'     => '/etc/ssl/richinme_com.pem',
+            'url'             => SITE . '/Telegram/getwebhook/token/' . \Config::TELEGRAM_GET_WEBHOOK_KEY . '/',
+            'certificate'     => '/etc/nginx/ssl/ssl.ca-bundle',
             'max_connections' => 20,
         ]);
         $result = App()->telegram()->setWebhook($request);
-
-        $this->getWebhook('xxx', $result);
     }
 
-    public function getWebhook(string $token, $params = []) {
-        $request = new SendMessageRequest([
-            'chat_id'     => \Config::TELEGRAM_MY_ID,
-            'text'        => is_string($params) ? $params : json_encode($params, JSON_PRETTY_PRINT),
-        ]);
-        App()->telegram()->sendMessage($request);
+    public function getwebhook(string $token, WebhookRequest $request) {
+        if ($token !== \Config::TELEGRAM_GET_WEBHOOK_KEY) {
+            die('=(');
+        }
+
+        // Remove keyboard
+        App()->telegram()->editMessageReplyMarkup(new EditMessageReplyMarkup([
+            'chat_id'     => $request->callback_query->message->chat->id,
+            'message_id'  => $request->callback_query->message->message_id,
+            'reply_markup' => [
+                'inline_keyboard' => []
+            ],
+        ]));
+
+        switch ($request->callback_query->data['action']) {
+            case self::ACTIVATE:
+                (new InvestmentService())->changeStatus(new ChangeStatusRequest([
+                    'status'  => ProjectStatus::getConstName(ProjectStatus::ACTIVE),
+                    'project' => $request->callback_query->data['project_id'],
+                ]));
+                break;
+            case self::RELOAD_SCREEN:
+                $projectId = $request->callback_query->data['project_id'];
+                (new InvestmentService())->reloadScreen(new ReloadScreenshotRequest(['project' => $projectId]));
+
+                App()->telegram()->sendPhoto(new SendPhotoRequest([
+                    'chat_id'             => $request->callback_query->message->chat->id,
+                    'photo'               => Screens::getOriginalJpgScreen($projectId),
+                    'reply_to_message_id' => $request->callback_query->message->message_id,
+                    'reply_markup' => [
+                        'inline_keyboard' => [[[
+                            'text' => '👍 public',
+                            'callback_data' => json_encode([
+                                    'action' => self::ACTIVATE,
+                                    'project_id' => $projectId
+                                ])],
+                            ]]],
+                    ]));
+                break;
+        }
     }
 }

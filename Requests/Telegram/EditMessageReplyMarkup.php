@@ -6,10 +6,10 @@ use Core\AbstractEntity;
 use Models\Constant\TelegramParseMode;
 
 /**
- * @property int       $chat_id
- * @property int       $message_id
- * @property string    $inline_message_id
- * @property string    $reply_markup
+ * @property int    $chat_id
+ * @property int    $message_id
+ * @property string $inline_message_id
+ * @property array  $reply_markup
  */
 class EditMessageReplyMarkup extends AbstractEntity {
 

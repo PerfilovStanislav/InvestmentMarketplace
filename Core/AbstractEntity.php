@@ -205,7 +205,7 @@ abstract class AbstractEntity {
             $type = self::getType($key);
             if ($type === self::TYPE_DTO || $type === self::TYPE_DTO_ARRAY) {
                 /** @var AbstractEntity $entity */
-                $data[$key] = $entity->toArray();
+                $data[$key] = is_array($entity) ? $entity : $entity->toArray();
             }
             elseif ($entity instanceof DateTime) {
                 $data[$key] = $entity->format(self::getDateFormatByType($type));

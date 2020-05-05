@@ -36,6 +36,7 @@ use Requests\Investment\{AddRequest,
     ReloadScreenshotRequest,
     SetChatMessageRequest,
     ShowRequest};
+use Services\InvestmentService;
 use Traits\AuthTrait;
 use Views\Investment\{Added, Details, DetailsMeta, ProjectFilter, Registration, Show, NoShow};
 
@@ -225,22 +226,7 @@ class Investment extends Controller {
     public function changeStatus(ChangeStatusRequest $request): Output {
         static::adminAccess();
 
-        $project = (new Project())->getById($request->project);
-        $project->status_id = $request->status;
-        $project->save();
-
-        self::refreshMViews();
-        Db()->setTable('mv_sitemapxml')->refresh(false);
-
-        if ($request->status === ProjectStatus::ACTIVE) {
-            (new Queue([
-                'action_id'  => Queue::ACTION_ID_POST_TO_SOCIAL,
-                'status_id'  => Queue::STATUS_CREATED,
-                'payload'    => [
-                    'project_id' => $project->id,
-                ],
-            ]))->save();
-        }
+        (new InvestmentService())->changeStatus($request);
 
         return (new \Controllers\Users())->reloadPage();
     }
@@ -248,23 +234,7 @@ class Investment extends Controller {
     public function reloadScreen(ReloadScreenshotRequest $request): Output {
         static::adminAccess();
 
-        $project = (new Project())->getById($request->project);
-
-        require(ROOT . '/vendor/autoload.php');
-        $url = sprintf('https://hyiplogs.com/project/%s/', $project->url);
-
-        try {
-            $document = new Document($url, true);
-            $url = $document->first('.content div.hyip-img ')->attr('data-src');
-        } catch (\Exception $exception) {
-            die();
-        }
-
-        $path = ROOT . '/screens/temp/' . $project->id . '.jpg';
-        file_put_contents($path, file_get_contents($url));
-        Screens::crop($path, Screens::getOriginalJpgScreen($project->id));
-        Screens::makeThumbs($project->url, $project->id);
-        unlink($path);
+        (new InvestmentService())->reloadScreen($request);
 
         return (new \Controllers\Users())->reloadPage();
     }

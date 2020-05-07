@@ -13,6 +13,7 @@ namespace Views\Contact; {
 Class Show {} }
 
 use Helpers\Locales\AbstractLanguage;
+use Models\Constant\Views;
 use Models\CurrentUser;
 use Models\Table\Language;
 use Models\Table\Payment;
@@ -75,11 +76,11 @@ use Models\Table\Payment;
                     <i class="glyphicons glyphicons-message_out"></i><?=Translate()->writeMessage?>
                 </span>
             </div>
-            <div class="panel-body bg-light">
+            <div class="panel-body bg-light" id="<?=Views::FORM_SENT?>">
                 <form method="post" action="/Contact/send">
                     <div class="section">
                         <label class="field prepend-icon">
-                            <input name="name" class="gui-input" autocomplete="off" placeholder="<?=Translate()->name?>">
+                            <input name="name" class="gui-input onlyEn" autocomplete="off" placeholder="<?=Translate()->name?> (English only)">
                             <label class="field-icon">
                                 <i class="fa fa-user"></i>
                             </label>

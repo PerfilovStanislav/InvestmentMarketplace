@@ -28,7 +28,8 @@ class Validator
         HASH           = self::EN . self::NUM . '\/\.',
         REF_SITE_URL   = self::SITE_URI . '?№=',
         IP             = self::NUM . '\.:',
-        DATE           = self::NUM . '\-';
+        DATE           = self::NUM . '\-',
+        EN_FULL_NAME   = self::EN . ' ';
 
     public static function validate($key, $value, int $type, array $rules = []) {
         if ($type === AbstractEntity::TYPE_INT || $type === AbstractEntity::TYPE_FLOAT) {

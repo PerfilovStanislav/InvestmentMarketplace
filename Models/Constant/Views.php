@@ -14,5 +14,6 @@ class Views implements ConstantInterface {
         PROJECT_FILTER  = 'projectFilter',
         CHAT_MESSAGE    = 'chatMessage',
         META            = 'meta',
-        SIDEBAR_LEFT    = 'sidebar_left';
+        SIDEBAR_LEFT    = 'sidebar_left',
+        FORM_SENT       = 'formSent';
 }

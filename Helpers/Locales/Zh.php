@@ -42,6 +42,7 @@ class Zh extends AbstractLanguage {
         $maxLength         = '最大字符數:',
         $maxValue          = '最大值:',
         $message           = '信息',
+        $messageIsSent     = '訊息已發送',
         $minLength         = '最少字符數:',
         $minValue          = '最小值:',
         $menu              = '菜單',

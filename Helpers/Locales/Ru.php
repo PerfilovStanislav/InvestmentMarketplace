@@ -42,6 +42,7 @@ class Ru extends AbstractLanguage {
         $maxLength         = 'Максимальное количество знаков:',
         $maxValue          = 'Максимальное значение:',
         $message           = 'Сообщение',
+        $messageIsSent     = 'Сообщение отправлено',
         $minLength         = 'Минимальное количество знаков:',
         $minValue          = 'Минимальное значение:',
         $menu              = 'Меню',

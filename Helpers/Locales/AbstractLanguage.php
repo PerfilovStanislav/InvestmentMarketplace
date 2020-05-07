@@ -42,6 +42,7 @@ abstract class AbstractLanguage implements LocaleInterface {
         $maxLength         = 'Maximum number of characters:',
         $maxValue          = 'Maximum value:',
         $message           = 'Message',
+        $messageIsSent     = 'Message is sent',
         $minLength         = 'Minimum number of characters:',
         $minValue          = 'Minimum value:',
         $menu              = 'Menu',

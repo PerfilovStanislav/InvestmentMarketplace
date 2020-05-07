@@ -4,8 +4,10 @@ namespace Controllers;
 
 use Core\{Controller};
 use Helpers\Output;
+use Models\Constant\Views;
 use Requests\Contact\SendMessageRequest as ContactSendMessage;
 use Requests\Telegram\SendMessageRequest;
+use Views\Contact\FormSent;
 use Views\Contact\Show;
 
 class Contact extends Controller {
@@ -31,5 +33,9 @@ class Contact extends Controller {
                 $request->message
             ),
         ]));
+
+        return Output()
+            ->addView(FormSent::class, [], Views::FORM_SENT)
+            ->addAlertSuccess(Translate()->success, Translate()->messageIsSent);
     }
 }

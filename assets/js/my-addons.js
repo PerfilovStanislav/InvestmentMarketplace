@@ -399,12 +399,16 @@ var ProjectRegistration = function(a) {
 };
 
 var initForms = function(a) {
-    $('form').each(function(i, form) {
+    $('form', this).each(function(i, form) {
         $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).on('focusin', function(e) {
             $(this).parent().removeClass('state-error');
         });
 
         $(form).submit(function(event) {
+            $('input:visible,textarea:visible', event.currentTarget).each(function(i, input) {
+                input.value = input.value.trim()
+            });
+
             var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', event.currentTarget).filter(function(i) {return $(this).val() === "";})
                 .add('div.payments:not(:has(:checked)) label,div.langs:not(:has(:checked)) label', form)
                 .parent();

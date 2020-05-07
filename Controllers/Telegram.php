@@ -13,7 +13,7 @@ use Requests\Telegram\WebhookRequest;
 use Services\InvestmentService;
 
 class Telegram {
-    private const
+    public const
         ACTIVATE      = 'activate',
         RELOAD_SCREEN = 'reloadScreen';
 
@@ -64,11 +64,11 @@ class Telegram {
                         'inline_keyboard' => [[[
                             'text' => '👍 public',
                             'callback_data' => json_encode([
-                                    'action' => self::ACTIVATE,
-                                    'project_id' => $projectId
-                                ])],
-                            ]]],
-                    ]));
+                                'action' => self::ACTIVATE,
+                                'project_id' => $projectId
+                            ], JSON_THROW_ON_ERROR)],
+                        ]]],
+                ]));
                 break;
         }
     }

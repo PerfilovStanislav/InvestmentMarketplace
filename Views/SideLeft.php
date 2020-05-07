@@ -52,6 +52,15 @@ use Models\Constant\ProjectStatus;
             </li>
         <?php endif; ?>
         <li class="divider"></li>
+        <li class="sidebar-label"><?=Translate()->contact?></li>
+        <li>
+            <a href="/Contact/show" class="ajax page">
+                <span class="glyphicon glyphicon-book text-info-darker"></span>
+                <span class="sidebar-title"><?=Translate()->contact?></span>
+                <span class="sidebar-title-tray"></span>
+            </a>
+        </li>
+        <li class="divider"></li>
         <span>
             <a href="/Investment/registration" class="ajax page">
                 <div class="btn-type1 btn-type1-success" data-event="success">

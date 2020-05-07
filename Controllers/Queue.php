@@ -122,11 +122,11 @@ class Queue
                             ['text' => '👍 public', 'callback_data' => json_encode([
                                 'action' => Telegram::ACTIVATE,
                                 'project_id' => $project->id
-                            ])],
+                            ], JSON_THROW_ON_ERROR)],
                             ['text' => '⚒ reload screen', 'callback_data' => json_encode([
                                 'action' => Telegram::RELOAD_SCREEN,
                                 'project_id' => $project->id
-                            ])],
+                            ], JSON_THROW_ON_ERROR)],
                         ]
                     ]
                 ],

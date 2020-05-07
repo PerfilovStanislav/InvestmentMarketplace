@@ -1,0 +1,19 @@
+<svg version="1.1" id="Layer_1"
+	 xmlns="http://www.w3.org/2000/svg"
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 width="1200px" height="1200px" viewBox="0 0 1200 1200" enable-background="new 0 0 1200 1200" xml:space="preserve">
+		<g transform="translate(0,0) scale(5.5, 5.5)" id="square">
+			<g transform="" style="fill: rgb(99, 99, 99);">
+				<g>
+					<path d="M85,0H15H0v15v70v15h15h70h15V85V15V0H85z M85,85H15V15h70V85z"/>
+				</g>
+			</g>
+			<g transform="translate(30,30) scale(0.4, 0.4)">
+				<g transform="" style="fill: rgb(0, 0, 0);">
+					<rect width="100" height="100"/>
+				</g>
+			</g>
+		</g>
+		<use xlink:href="#square" transform="translate(650,0)"/>
+		<use xlink:href="#square" transform="translate(0,650)"/>
+</svg>

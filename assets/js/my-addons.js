@@ -398,6 +398,31 @@ var ProjectRegistration = function(a) {
 
 };
 
+var initForms = function(a) {
+    $('form').each(function(i, form) {
+        $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).on('focusin', function(e) {
+            $(this).parent().removeClass('state-error');
+        });
+
+        $(form).submit(function(event) {
+            var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', event.currentTarget).filter(function(i) {return $(this).val() === "";})
+                .add('div.payments:not(:has(:checked)) label,div.langs:not(:has(:checked)) label', form)
+                .parent();
+            if (a.length) {
+                a.addClass('state-error');
+                var v = a.eq(0).offset().top;
+                $('html,body').animate({ scrollTop: v - 75}, 250+Math.abs($(document).scrollTop()-v)*0.5, 'easeOutQuad');
+                return !1;
+            }
+            $.ajax({
+                url: event.currentTarget.action,
+                data: $(event.currentTarget).serialize(),
+            });
+            return false;
+        });
+    });
+};
+
 function remove() {
 	var p = $(this).closest('div[role=row]');
 	var g = p.closest('div[role=group]');

@@ -40,3 +40,9 @@
 .glyphicon-time:before {
     content: "\e023";
 }
+.glyphicon-book:before {
+    content: "\e043";
+}
+.glyphicon-map-marker:before {
+    content: "\e062";
+}

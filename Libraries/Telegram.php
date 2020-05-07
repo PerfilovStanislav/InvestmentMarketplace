@@ -20,7 +20,7 @@ class Telegram {
             CURLOPT_POST           => 1,
             CURLOPT_POSTFIELDS     => $params->toArray(),
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_CAINFO         => '/etc/ssl/richinme_com.pem',
+            CURLOPT_CAINFO         => '/etc/nginx/ssl/ssl.ca-bundle',
             CURLOPT_HTTPHEADER     => ['Content-Type:multipart/form-data'],
         ]);
         $result = curl_exec($ch);

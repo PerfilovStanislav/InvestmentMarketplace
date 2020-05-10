@@ -24,6 +24,10 @@ use Models\Constant\Views;
 use Models\MView\MVProjectLang;
 use Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
+<a class="ajax page svg" href="/Contact/show">
+    <object data="/assets/bnrs/bnr1.svg?<?=vsprintf('row1=%s&row2=%s', explode('|', sprintf(Translate()->placeBanner, 1)))?>" type="image/svg+xml" id="bnr1" ></object>
+</a>
+
 <div class="filters" id="<?=Views::PROJECT_FILTER?>">
     <?=$this->{Views::PROJECT_FILTER}?>
 </div>

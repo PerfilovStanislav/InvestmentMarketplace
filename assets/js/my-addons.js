@@ -32,6 +32,7 @@ var abortAllAjax = function() {
     });
 };
 
+/* data-beforesend='{"f":["allClear"]}' */
 var allClear = function() {
     abortAllAjax();
     stopTimers();
@@ -156,9 +157,11 @@ function onlyUrl    (e) {replace(e);}
 function onlyNumber (e) {replace(e);}
 function onlyEmail  (e) {replace(e);}
 function onlyEn     (e) {replace(e);}
+function onlyLogin  (e) {replace(e);}
 
 var initTypes = function(el) {
 	$('.onlyEn'     , el).on('input', onlyEn);
+	$('.onlyLogin'  , el).on('input', onlyLogin);
 	$('.onlyEmail'  , el).on('input', onlyEmail);
 	$('.onlyNumber' , el).on('input', onlyNumber).on('change', toFloat);
 	$('.onlyUrl'    , el).on('input', onlyUrl);
@@ -185,34 +188,6 @@ var UserAuthorization = function() {
 
 var removeAlerts = function(scope) {
     $('.alert', scope).slideToggle('fast', 'swing', function(){this.remove()});
-};
-
-var UserRegistration = function() {
-    initTypes(this);
-
-    var form = $("#add_user_form");
-    $('input,textarea', form).on('focusin', function(e) {
-        $(this).parent().removeClass('state-error').prev('.alert').slideToggle('fast', 'swing', function(){this.remove()});
-    });
-    form.submit(function(){
-        removeAlerts(form);
-        var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
-        if ($('#confirm_pass').val() != $('input[name=password]', form).val()) a = a.add($('#confirm_pass').parent());
-
-        if (a.length) {
-            a.addClass('state-error');
-            var v = a.eq(0).offset().top;
-            $('html,body').animate({ scrollTop: v - 75}, 250+Math.abs($(document).scrollTop()-v)*0.5, 'easeOutQuad');
-            return !1;
-        }
-
-        $.ajax({
-            url: '/Users/add',
-            data: form.serialize()
-        });
-
-        return false;
-    });
 };
 
 var ProjectRegistration = function(a) {
@@ -400,18 +375,27 @@ var ProjectRegistration = function(a) {
 
 var initForms = function(a) {
     $('form', this).each(function(i, form) {
-        $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', form).on('focusin', function(e) {
+        $('[name]:not([type="checkbox"],[name="ref_percent[]"])', form).on('focusin', function(e) {
             $(this).parent().removeClass('state-error');
         });
 
+        initTypes(form);
         $(form).submit(function(event) {
-            $('input:visible,textarea:visible', event.currentTarget).each(function(i, input) {
+            var _form = event.currentTarget;
+            removeAlerts(_form);
+
+            $('input:visible,textarea:visible', _form).each(function(i, input) {
                 input.value = input.value.trim()
             });
 
-            var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', event.currentTarget).filter(function(i) {return $(this).val() === "";})
+            var a = $('[name]:not([type="checkbox"],[name="ref_percent[]"]):visible', _form).filter(function(i) {return $(this).val() === "";})
                 .add('div.payments:not(:has(:checked)) label,div.langs:not(:has(:checked)) label', form)
                 .parent();
+
+            if ($('#confirm_pass').val() !== $('input[name=password]', form).val()) {
+                a = a.add($('#confirm_pass').parent());
+            }
+
             if (a.length) {
                 a.addClass('state-error');
                 var v = a.eq(0).offset().top;
@@ -419,8 +403,8 @@ var initForms = function(a) {
                 return !1;
             }
             $.ajax({
-                url: event.currentTarget.action,
-                data: $(event.currentTarget).serialize(),
+                url: _form.action,
+                data: $(_form).serialize(),
             });
             return false;
         });
@@ -475,7 +459,7 @@ var imgClickInit = function() {
              });
          });
     }
-}
+};
 
 /* ------------------------------------------------------------ SCROLL CHANGE --------------------------------------- */
 var changeScrollContentHeight = function() {
@@ -505,12 +489,12 @@ var datePickerInit = function(el) {
         }
       }
     });
-}
+};
 
 /* ------------------------------------------------------------ FULLSCREEN BUTTONS ---------------------------------- */
 var adminPanelInit = function() {
 	$('.admin-panels',this).adminpanel();
-}
+};
 
 var linkClick = function() {
     $(document).on('click', 'a.ajax', function(e) {
@@ -530,7 +514,7 @@ var loadRealThumbs = function () {
         var realThumb = img.getAttribute('realthumb');
         if (realThumb) img.setAttribute('src', realThumb);
     });
-}
+};
 
 var ajax = function(url, data, isNewPage) {
     var tmp = {url: url};

@@ -41,7 +41,6 @@ class Users extends Controller {
     public function reloadPage(): Output {
         $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
 
-        Output()->addFunction('allClear', [], Output::DOCUMENT, 1);
         $this->setUserHead();
         $this->setLeftSide();
 
@@ -61,7 +60,7 @@ class Users extends Controller {
             CurrentUser()->is_authorized
                 ? Registered::class
                 : Registration::class
-            )->addFunction('UserRegistration');
+            )->addFunction('initForms');
     }
 
     public function add(RegistrationRequest $request): Output {
@@ -91,10 +90,12 @@ class Users extends Controller {
     public function setUserHead(): Output {
         Output()->addFunctions([
             'setStorage' => [
+                'allClear' => [],
                 'webp' => WEBP,
                 'auth' => CurrentUser()->toArray()
             ],
-        ], Output::DOCUMENT, 1);
+        ], Output::DOCUMENT, 1)
+            ->addFunction('imgClickInit', [], Views::USER_HEAD);
         $params = [
             'siteLanguages'     => App()->siteLanguages(),
             'selectedLanguage'  => App()->locale()->getLanguage(),
@@ -113,7 +114,7 @@ class Users extends Controller {
             NotAuthorized::class,
             $params,
             Views::USER_HEAD
-        )->addFunctions(['UserAuthorization'], Output::DOCUMENT, 1);
+        )->addFunction('initForms', [], Views::USER_HEAD, 1);
     }
 
     public function setLeftSide(): Output {

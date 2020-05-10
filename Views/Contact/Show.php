@@ -19,8 +19,8 @@ use Models\Table\Language;
 use Models\Table\Payment;
 ?>
 <?php function qr(string $str) {
-    return sprintf('<img src="/assets/social/empty.svg" class="mr10" width="16" height="16" href="/assets/social/%s-qr.svg" alt="QR code %s" title="QR code %s">
-            <img src="/assets/social/%s.svg" width="24" height="24">', $str, $str, $str, $str);
+    return sprintf('<img src="/assets/social/empty.svg" class="mr10 w16 h16" href="/assets/social/%s-qr.svg" alt="QR code %s" title="QR code %s">
+            <img src="/assets/social/%s.svg" class="w24 h24">', $str, $str, $str, $str);
 }?>
 <div class="tray tray-center">
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
@@ -78,6 +78,7 @@ use Models\Table\Payment;
             </div>
             <div class="panel-body bg-light" id="<?=Views::FORM_SENT?>">
                 <form method="post" action="/Contact/send">
+                    <?php if (!CurrentUser()->is_authorized): ?>
                     <div class="section">
                         <label class="field prepend-icon">
                             <input name="name" class="gui-input onlyEn" autocomplete="off" placeholder="<?=Translate()->name?> (English only)">
@@ -86,6 +87,7 @@ use Models\Table\Payment;
                             </label>
                         </label>
                     </div>
+                    <?php endif; ?>
                     <div class="section description">
                         <label class="field prepend-icon">
                             <textarea class="gui-textarea" autocomplete="off" name="message" placeholder="<?=Translate()->message?>"></textarea>

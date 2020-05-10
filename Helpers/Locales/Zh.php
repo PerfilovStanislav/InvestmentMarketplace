@@ -60,6 +60,7 @@ class Zh extends AbstractLanguage {
         $paymentSystem     = '付款系統',
         $paywait           = '等待付款',
         $period            = '期間',
+        $placeBanner       = '放橫幅|每週$%d',
         $plans             = '關稅計劃',
         $profit            = '獲利',
         $projectName       = '項目名稱',

@@ -85,6 +85,7 @@ function sendToTelegram(array $data = []) {
             'data' => $data,
             'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
             'request' => $_REQUEST,
+            'ip' => $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '0.0.0.1',
             'URI' =>  $_SERVER['REQUEST_URI'] ?? '',
             'referer' =>  $_SERVER['HTTP_REFERER'] ?? '',
         ], true) . '```',

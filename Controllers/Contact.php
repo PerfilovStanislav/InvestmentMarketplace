@@ -26,10 +26,10 @@ class Contact extends Controller {
 
         App()->telegram()->sendMessage(new SendMessageRequest([
             'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
-            'text' => sprintf( implode(PHP_EOL, ['Username: `%s`', 'SessionId: %d', 'Name: %s', 'Message: %s']),
-                CurrentUser()->user->name ?? 'Guest',
+            'text' => sprintf( implode(PHP_EOL, ['Login: `%s`', 'SessionId: %d', 'Name: %s', 'Message: %s']),
+                CurrentUser()->user->login ?? 'Guest',
                 CurrentUser()->session_id,
-                $request->name,
+                CurrentUser()->user->name ?? $request->name,
                 $request->message
             ),
         ]));

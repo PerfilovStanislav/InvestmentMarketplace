@@ -60,6 +60,7 @@ abstract class AbstractLanguage implements LocaleInterface {
         $paymentSystem     = 'Payment systems',
         $paywait           = 'Paywait',
         $period            = 'Period',
+        $placeBanner       = 'Place a banner|for $%d per week',
         $plans             = 'Investment plans',
         $profit            = 'Profit',
         $projectName       = 'Project name',

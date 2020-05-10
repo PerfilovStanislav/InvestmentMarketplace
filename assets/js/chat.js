@@ -1,4 +1,7 @@
 var initChat = function() {
+    abortAllAjax();
+    stopTimers();
+
     $('.icon_send', this).on('click', function(e) {
         $(this).parent().parent().submit();
     });
@@ -56,7 +59,7 @@ var setNewChatMessages = function(data) {
                     ? data['users'][message.user_id]['name']
                     : getRandomNameBySessionId(message.session_id)
             );
-            $scroller_content.append($chat_block)
+            $scroller_content.append($chat_block);
             $scroller_content.css('scroll-behavior', 'smooth');
             $panel_scroller.scroller('reset').scroller('scroll', 999999);
             $scroller_content.css('scroll-behavior', '');

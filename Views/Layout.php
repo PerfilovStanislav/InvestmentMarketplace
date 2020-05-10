@@ -38,6 +38,7 @@ use Models\Constant\Views;
 <div id="main">
     <header class="navbar navbar-fixed-top navbar-shadow">
         <div class="navbar-branding">
+            <img src="/assets/icons/qr-code.svg" class="logo-qr" href="/assets/icons/qr-code.svg" title="QR code site">
             <a class="navbar-brand" href="/">
                 <b class="first">Rich</b><b class="second">inMe</b>
             </a>

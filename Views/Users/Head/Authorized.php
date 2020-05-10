@@ -25,8 +25,7 @@ use Models\Table\User;
                     <li>
                         <a class="ajax <?=$shortname === $this->selectedLanguage ? 'selected' : ''?>"
                            href="/Users/changeLanguage/lang/<?=$shortname?>"
-                           rel="nofollow noopener"
-                           data-beforesend='{"f":["allClear"]}'>
+                           rel="nofollow noopener">
                             <span class="flag flag-<?=$language->flag?> mr10"></span> <?php printf('%s (%s)', $language->name, $language->own_name)?>
                         </a>
                     </li>
@@ -45,7 +44,7 @@ use Models\Table\User;
         </a>
         <ul class="dropdown-menu list-group dropdown-persist w150" role="menu">
             <li class="dropdown-footer">
-                <a href="/users/logout" class="ajax btn" data-beforesend='{"f":["allClear"]}'>
+                <a href="/users/logout" class="ajax btn">
                     <span class="fa fa-power-off pr5"></span> <?=Translate()->exit?>
                 </a>
             </li>

@@ -60,6 +60,7 @@ class Ru extends AbstractLanguage {
         $paymentSystem     = 'Платёжные системы',
         $paywait           = 'Ожидание оплаты',
         $period            = 'Период',
+        $placeBanner       = 'Разместите баннер|за $%d в неделю',
         $plans             = 'Тарифные планы',
         $profit            = 'Прибыль',
         $projectName       = 'Название проекта',

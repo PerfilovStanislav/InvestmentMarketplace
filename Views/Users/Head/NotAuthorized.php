@@ -4,7 +4,6 @@ namespace Views\Users\Head; {
      * @var NotAuthorized $this
      * @property Language[] $siteLanguages
      * @property string[] $selectedLanguage
-     * @property LocaleInterface $locale
      * @property string $avatar
      */
 Class NotAuthorized {} }
@@ -24,8 +23,7 @@ use Models\Table\Language;
                     <li>
                         <a class="ajax <?=$shortname === $this->selectedLanguage ? 'selected' : ''?>"
                            href="/Users/changeLanguage/lang/<?=$shortname?>"
-                           rel="nofollow noopener"
-                           data-beforesend='{"f":["allClear"]}'>
+                           rel="nofollow noopener" >
                             <span class="flag flag-<?=$language->flag?> mr10"></span> <?php printf('%s (%s)', $language->name, $language->own_name)?>
                         </a>
                     </li>
@@ -45,7 +43,7 @@ use Models\Table\Language;
         <ul class="dropdown-menu list-group dropdown-persist w350" role="menu">
             <li class="dropdown-header clearfix">
                 <div class="admin-form theme-primary w300 center-block">
-                    <form method="post" action="/" id="<?=DomElements::AUTHORIZATION_USER_FORM?>">
+                    <form method="post" action="/Users/authorize" id="<?=DomElements::AUTHORIZATION_USER_FORM?>">
                         <div class="section row mb5">
                             <label class="field prepend-icon">
                                 <input placeholder="<?=Translate()->login?>"

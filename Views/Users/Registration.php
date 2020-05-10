@@ -11,7 +11,7 @@ use Models\Constant\DomElements;
                       <i class="fa fa-pencil-square"></i><?=Translate()->userRegistration?>
                     </span>
             </div>
-            <form method="post" action="/" id="<?=DomElements::ADD_USER_FORM?>">
+            <form method="post" action="/Users/add" id="<?=DomElements::ADD_USER_FORM?>">
                 <div class="panel-body bg-light">
                     <div class="section row" >
                         <div class="section">

@@ -3,6 +3,7 @@
 namespace Dto;
 
 use Controllers\Errors;
+use Helpers\Output;
 
 class ErrorRoute extends AbstractRoute
 {
@@ -11,6 +12,7 @@ class ErrorRoute extends AbstractRoute
     protected array  $params = [];
 
     public function __construct(string $title, string $description = '', int $code = 404) {
+        Output()->addHeader(Output::E404);
         $this->params = [
             'title'       => $title,
             'description' => $description,

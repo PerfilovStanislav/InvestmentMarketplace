@@ -29,7 +29,7 @@ use Models\Constant\ProjectStatus;
         <li>
             <a href="/Investment/show/status/scam" class="ajax page">
                 <span class="glyphicons glyphicons-skull text-danger-dark"></span>
-                <span class="sidebar-title"><?=Translate()->scam . ($this->counts[ProjectStatus::DELETED] ?? '')?></span>
+                <span class="sidebar-title"><?=Translate()->scam . ($this->counts[ProjectStatus::SCAM] ?? '')?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
         </li>

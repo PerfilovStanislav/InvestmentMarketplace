@@ -7,11 +7,14 @@ use Helpers\Locales\En;
 use Helpers\Locales\Ru;
 use Libraries\Screens;
 use Models\Collection\ProjectLangs;
+use Models\Constant\ProjectStatus;
 use Models\Table\Project;
 use Models\Table\ProjectLang;
 use Models\Table\Queue as QueueModel;
 use Models\Table\User;
 use Requests\Telegram\SendPhotoRequest;
+use Services\HyipboxService;
+use Services\InvestmentService;
 use Services\Vk;
 
 class Queue
@@ -157,5 +160,32 @@ class Queue
 
             unset($projectLangs, $project);
         });
+    }
+
+    public function checkScam(int $projectId = 0): void
+    {
+        if (count($this->getPids('checkScam')) > 1) {
+            exit(1);
+        }
+
+        $investmentService = new InvestmentService();
+        while (($project = $investmentService->getNextProject($projectId, ProjectStatus::ACTIVE))->id) {
+            if ((new HyipboxService($project->url))->isScam()) {
+                $project->status_id = ProjectStatus::SCAM;
+                $project->save();
+
+                App()->telegram()->sendPhoto(new SendPhotoRequest([
+                    'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
+                    'caption' => sprintf('%s is scam', $project->url),
+                    'photo'   => Screens::getJpgThumb($project->id),
+                ]));
+            }
+
+            $projectId = $project->id;
+            unset($project);
+            sleep(5);
+        }
+
+        Investment::refreshMViews();
     }
 }

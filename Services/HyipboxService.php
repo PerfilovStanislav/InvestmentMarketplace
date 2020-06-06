@@ -51,10 +51,11 @@ class HyipboxService
     }
 
     public function getPlans(array $currency): array {
-        $strPlans = explode(', ', strtolower(trim($this->getDocument()->find('div.feat_elm')[8]->first('div.body_feat_elem')->text())) ?? '');
+        $strPlans = strtolower($this->getDocument()->find('div.feat_elm')[8]->first('div.body_feat_elem')->text()) ?? '';
+        $strPlans = preg_split('/([,|])/', $strPlans);
         $plans = [];
         foreach ($strPlans as $key => $strPlan) {
-            preg_match('/([0-9.]+)%.*?(\d+) (\w+)/', $strPlan, $matches);
+            preg_match('/([0-9.]+)%.*?(\d+) (\w+)/', trim($strPlan), $matches);
             if ($matches) {
                 $plans[$key][] = $matches[1];
                 $plans[$key][] = $matches[2];

@@ -154,4 +154,12 @@ class InvestmentService
 
         return $result;
     }
+
+    public function getNextProject(int $projectId, int $projectStatus): Project {
+        return (new Project())->fromArray(Db()->rawSelect(sprintf(
+            'select id, url from project where id > %d and status_id = %d order by id asc limit 1',
+            $projectId,
+            $projectStatus
+        ))[0] ?? []);
+    }
 }

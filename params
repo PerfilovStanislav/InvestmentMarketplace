@@ -1,0 +1,6 @@
+
+            $db_name = 'richinme',
+            $db_host = '127.0.0.1',
+            $db_port = '5430',
+            $db_user = 'localpguser',
+            $db_pass = 'Q!2wE#4rT%6yU&8i';

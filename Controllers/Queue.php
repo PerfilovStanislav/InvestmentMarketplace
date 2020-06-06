@@ -176,7 +176,7 @@ class Queue
 
                 App()->telegram()->sendPhoto(new SendPhotoRequest([
                     'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
-                    'caption' => sprintf('%s is scam', $project->url),
+                    'caption' => sprintf('☠️ %s is scam', $project->url),
                     'photo'   => Screens::getJpgThumb($project->id),
                 ]));
             }

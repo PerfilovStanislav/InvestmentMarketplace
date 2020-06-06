@@ -137,7 +137,7 @@ class InvestmentService
     }
 
     public function multiTranslate(string $fromLang, string $description): array {
-        $languages = new Languages(['pos' => range(1, 3)], 'pos');
+        $languages = new Languages(['pos' => range(1, 19)], 'pos');
         /** @var Language $lang */
         $result = [];
         foreach ($languages as $lang) {

@@ -3,14 +3,18 @@
 namespace Services;
 
 use Controllers\Investment;
+use Dejurin\GoogleTranslateForFree;
 use DiDom\Document;
 use Exceptions\ErrorException;
 use Libraries\Screens;
+use Models\Collection\Languages;
 use Models\Constant\ProjectStatus;
+use Models\Table\Language;
 use Models\Table\Project;
 use Models\Table\Queue;
 use Requests\Investment\ChangeStatusRequest;
 use Requests\Investment\ReloadScreenshotRequest;
+use Mappers\HyiplogsMapper;
 
 class InvestmentService
 {
@@ -38,7 +42,6 @@ class InvestmentService
     public function reloadScreen(ReloadScreenshotRequest $request): Project {
         $project = (new Project())->getById($request->project);
 
-        require(ROOT . '/vendor/autoload.php');
         $url = sprintf('https://hyiplogs.com/project/%s/', $project->url);
 
         try {
@@ -55,5 +58,100 @@ class InvestmentService
         unlink($temp);
 
         return $project;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function parseInfo2(string $url) {
+        $url = sprintf('https://hyiplogs.com/project/%s/', $url);
+
+        try {
+            $document = new Document($url, true);
+            $mapper = (new HyiplogsMapper());
+
+            $title = trim($document->first('.content div.name-box div')->text());
+            Output()->addFunction('setProjectTitle', ['title' => $title]);
+
+            $paymentTypeId = $mapper->getPaymentTypeId(
+                $document->first('.content div.info-box div.item:nth-child(4) div.txt')->text()
+            );
+            Output()->addFunction('setPaymentType', ['paymentType' => $paymentTypeId]);
+
+            $paymentsText = $document->first('.content div.info-box div.item:nth-child(6) div.txt')->text();
+            $payments = $mapper->payments(
+                array_map(fn(string $str):string => str_replace(' ', '', trim($str)), explode(',', $paymentsText))
+            );
+            Output()->addFunction('selectPayments', ['payments' => array_values($payments)]);
+        } catch (\Exception $exception) {
+            throw new ErrorException('Parse error', 'project was n\'t found');
+        }
+    }
+
+    public function parseInfo(string $url) {
+        $hyipboxService = new HyipboxService($url);
+
+        try {
+            if ($hyipboxService->isScam()) {
+                Output()->addAlertDanger(Translate()->scam, Translate()->scam);
+                return;
+            }
+
+            if ($title = $hyipboxService->getTitle()) {
+                Output()->addFunction('setProjectTitle', ['title' => ucfirst($title)]);
+            }
+
+            if (($timestamp = $hyipboxService->getStartDate()) > 0) {
+                Output()->addFunction('setDatepicker', ['date' => $timestamp]);
+            }
+
+            if (($paymentTypeId = $hyipboxService->getPaymentTypeId()) > 0) {
+                Output()->addFunction('setPaymentType', ['paymentType' => $paymentTypeId]);
+            }
+
+            if ($plans = $hyipboxService->getPlans($hyipboxService->getMinDeposit())) {
+                Output()->addFunction('setPlans', ['plans' => $plans]);
+            }
+
+            if ($referralPlans = $hyipboxService->getReferralPlans()) {
+                Output()->addFunction('setReferralPlans', ['plans' => $referralPlans]);
+            }
+
+            if ($payments = $hyipboxService->getPayments()) {
+                Output()->addFunction('setPayments', ['payments' => $payments]);
+            }
+
+            if (($description = $hyipboxService->getDescription()) && $description) {
+                Output()->addFunction('setDescriptions', [
+                    'descriptions' => $this->multiTranslate($this->detectLanguage($description), $description)
+                ]);
+            }
+        } catch (\Exception $exception) {
+            throw new ErrorException('Parse error', 'project was n\'t found');
+        }
+    }
+
+    public function detectLanguage(string $text): string {
+        $ld = new \LanguageDetection\Language(['en', 'zh', 'ru']);
+        return array_keys($ld->detect($text)->bestResults()->close())[0];
+    }
+
+    public function multiTranslate(string $fromLang, string $description): array {
+        $languages = new Languages(['pos' => range(1, 3)], 'pos');
+        /** @var Language $lang */
+        $result = [];
+        foreach ($languages as $lang) {
+            try {
+                $result[$lang->id] =
+                    $fromLang === $lang->shortname
+                    ? $description
+                    : GoogleTranslateForFree::translate($fromLang, $lang->shortname, $description);
+            } catch (\Exception $e) {
+                continue;
+            }
+            usleep(0_100000); // 0.10 sec
+        }
+
+        return $result;
     }
 }

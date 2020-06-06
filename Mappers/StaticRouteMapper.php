@@ -1,13 +1,13 @@
 <?php
 
-namespace Mapping;
+namespace Mappers;
 
 use Controllers\Staticfiles;
 use Dto\CustomRoute;
 use Dto\RouteInterface;
 use Views\StaticFiles\SiteManifest;
 
-class StaticRouteMapping
+class StaticRouteMapper
 {
     public static function get(string $uri) : ?RouteInterface {
         switch ($uri) {

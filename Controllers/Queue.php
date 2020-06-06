@@ -82,8 +82,6 @@ class Queue
         $this->killChrome();
         sleep(3);
 
-        require(ROOT . '/vendor/autoload.php');
-
         $this->queue(QueueModel::ACTION_ID_SCREENSHOT, static function (QueueModel $queue) {
             $project = (new Project())->getById($queue->payload['project_id']);
 

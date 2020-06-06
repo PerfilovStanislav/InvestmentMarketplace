@@ -3,7 +3,7 @@
 namespace Core;
 
 use Helpers\Validator;
-use Mapping\StaticRouteMapping;
+use Mappers\StaticRouteMapper;
 use Models\Constant\DomElements;
 use Models\Table\ProjectChatMessage;
 use Models\Table\Session;
@@ -66,7 +66,7 @@ class Auth {
             return $session->id;
         }
 
-        if (StaticRouteMapping::get($_SERVER['REQUEST_URI'])) {
+        if (StaticRouteMapper::get($_SERVER['REQUEST_URI'])) {
             return null;
         }
 

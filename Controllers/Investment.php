@@ -3,9 +3,7 @@
 namespace Controllers;
 
 use Core\{Controller, View};
-use DiDom\Document;
 use Dto\ErrorRoute;
-use Libraries\Screens;
 use Helpers\{
     Output,
     Data\Currency,
@@ -52,7 +50,6 @@ class Investment extends Controller {
             'mainProjectLanguages'      => new Languages('pos is not null', 'pos asc'),
             'secondaryProjectLanguages' => new Languages('pos is null'),
             'currency'                  => Currency::getCurrency(),
-            'authModel'                 => CurrentUser(),
         ];
 
         Output()->addView(Registration::class, $params);
@@ -249,6 +246,7 @@ class Investment extends Controller {
 
     private function getWebsiteUrl(CheckSiteRequest $request): string {
         $url = self::getParsedUrl(str_replace('www.', '', strtolower($request->website)));
+        Error()->exitIfExists();
 
         if ((Project::setTable()->selectRow(['url' => $url]))) {
             Error()->add('website', Translate()->siteExists, true);
@@ -258,7 +256,10 @@ class Investment extends Controller {
     }
 
     public function checkWebsite(CheckSiteRequest $request, bool $getUrl = false): Output {
-        $this->getWebsiteUrl($request);
+        $url = $this->getWebsiteUrl($request);
+        if (CurrentUser()->isAdmin()) {
+            (new InvestmentService())->parseInfo($url);
+        }
         return Output()->addFieldSuccess('website', Translate()->siteIsFree);
     }
 

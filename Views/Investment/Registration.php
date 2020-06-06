@@ -6,7 +6,6 @@ namespace Views\Investment; {
  * @property Payment[] $payments
  * @property Language[] $mainProjectLanguages
  * @property Language[] $secondaryProjectLanguages
- * @property CurrentUser $authModel
  * @property array currency
  * @property AbstractLanguage $locale
  */
@@ -22,7 +21,7 @@ use Models\Table\Payment;
         <h2> <?=Translate()->freeForAddProject?> <b class="text-primary"><?=Translate()->free?></b></h2>
     </div>
     <div class="admin-form theme-primary mw1000 center-block" style="padding-bottom: 175px;">
-        <div class="panel heading-border panel-<?=$this->authModel->is_authorized ? 'primary' : 'danger'?>">
+        <div class="panel heading-border panel-primary">
             <div class="panel-heading">
                 <span class="panel-title">
                     <i class="fa fa-pencil-square"></i><?=Translate()->addProject?>
@@ -142,7 +141,7 @@ use Models\Table\Payment;
                             </div>
                         </div>
                         <div class="section">
-                            <button type="button"
+                            <button type="button" id="add_plan"
                                     class="button btn-primary copy"> <?=Translate()->addPlan?> </button>
                         </div>
                         <div class="section-divider mt40 mb25">
@@ -173,7 +172,7 @@ use Models\Table\Payment;
                         </div>
 
                         <div class="section">
-                            <button type="button"
+                            <button type="button" id="add_ref_plan"
                                     class="button btn-primary copy"> <?=Translate()->addLevel?> </button>
                         </div>
                         <!-- end section -->

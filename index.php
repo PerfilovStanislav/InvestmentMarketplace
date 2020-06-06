@@ -36,6 +36,7 @@ define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI)
 require_once real_path('Helpers/Debug.php');
 
 register_shutdown_function('shutdown');
+require(ROOT . '/vendor/autoload.php');
 
 function App(): App {
     return App::getInstance();

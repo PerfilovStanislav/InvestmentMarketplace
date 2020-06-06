@@ -8,7 +8,7 @@ use Dto\ErrorRoute;
 use Dto\RouteInterface;
 use Helpers\Output;
 use Helpers\Validator;
-use Mapping\StaticRouteMapping;
+use Mappers\StaticRouteMapper;
 use ReflectionException;
 use Traits\Instance;
 use Views\Errors\ErrorDefault;
@@ -37,7 +37,7 @@ class Router {
     private function getRouteFromUri(string $uri): RouteInterface {
         $uri = Validator::regex('uri', $uri, Validator::SITE_URI);
 
-        $route = StaticRouteMapping::get($uri);
+        $route = StaticRouteMapper::get($uri);
         if ($route) {
             return $route;
         }

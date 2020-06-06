@@ -548,6 +548,60 @@ var logoInConsole = function() {
     console.log('%c Rich%cinMe', common+blue, common+red);
 };
 
+var setProjectTitle = function(data) {
+    $('input[name="name"]', this).val(data['title']);
+};
+
+var setPaymentType = function(data) {
+    $('select[name="paymenttype"]', this).val(data['paymentType'])
+};
+
+var setPayments = function(data) {
+    data['payments'].forEach(function(e) {
+        var el = $('.payments input[name="id_payments[]"][value='+e+']');
+        if (!el.is(":checked")) {
+            el.trigger('click')
+        }
+    });
+};
+
+var setDescriptions = function(data) {
+    var descriptions = data['descriptions'];
+    for (var i in descriptions) {
+        var el = $('.langs input[name="lang[]"][value='+i+']');
+        if (!el.is(":checked")) {
+            el.trigger('click')
+        }
+        $('textarea[name="description['+i+']"]').val(descriptions[i])
+    }
+};
+
+var setPlans = function(data) {
+    data['plans'].forEach(function callback(values, i, plans) {
+        if (i < plans.length-1) {
+            $('#add_plan').trigger('click')
+        }
+        $('input[name="plan_percents[]"]').eq(i).val(values[0])
+        $('input[name="plan_period[]"]').eq(i).val(values[1])
+        $('select[name="plan_period_type[]"]').eq(i).val(values[2]);
+        $('input[name="plan_start_deposit[]"]').eq(i).val(values[3]);
+        $('select[name="plan_currency_type[]"]').eq(i).val(values[4]);
+    });
+};
+
+var setReferralPlans = function(data) {
+    data['plans'].forEach(function callback(value, i, plans) {
+        if (i < plans.length-1) {
+            $('#add_ref_plan').trigger('click')
+        }
+        $('input[name="ref_percent[]"]').eq(i).val(value)
+    });
+};
+
+var setDatepicker = function(data) {
+    $('input[name=start_date]').datepicker("setDate", new Date(data['date']*1000) );
+};
+
 jQuery(document).ready(function() {
     Core.init();
     Demo.init();

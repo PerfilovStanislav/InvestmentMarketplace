@@ -25,7 +25,7 @@ class ShowRequest extends AbstractEntity {
         return [
             'lang'   => App()->locale()->getLanguage(),
             'page'   => 1,
-            'status' => ProjectStatus::getConstName(ProjectStatus::ACTIVE),
+            'status' => ProjectStatus::getConstNameLower(ProjectStatus::ACTIVE),
         ];
     }
 

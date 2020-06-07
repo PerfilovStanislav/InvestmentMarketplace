@@ -46,8 +46,8 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
                             <li>
                                 <?php foreach (array_diff(ProjectStatus::getValues(), [$project->status_id]) as $statusId): ?>
-                                    <a class="ajax" href="/Investment/changeStatus/status/<?=ProjectStatus::getConstName($statusId)?>/project/<?=$project->id?>">
-                                        <?=ProjectStatus::getConstName($statusId)?>
+                                    <a class="ajax" href="/Investment/changeStatus/status/<?=ProjectStatus::getConstNameLower($statusId)?>/project/<?=$project->id?>">
+                                        <?=ProjectStatus::getConstNameLower($statusId)?>
                                     </a>
                                 <?php endforeach; ?>
                             </li>
@@ -116,7 +116,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                         <td><?=$project->plan_percents[$key]?>%</td>
                                         <td><?=$project->plan_period[$key] . ' ' . Translate()->getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
                                         <td><span itemprop="price"><?=$project->plan_start_deposit[$key]?></span>
-                                            <meta itemprop="priceCurrency" content="<?=strtoupper(CurrencyType::getConstName($project->plan_currency_type[$key]))?>" >
+                                            <meta itemprop="priceCurrency" content="<?=strtoupper(CurrencyType::getConstNameLower($project->plan_currency_type[$key]))?>" >
                                             <link itemprop="availability" href="http://schema.org/InStock">
                                             <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
                                         </td>

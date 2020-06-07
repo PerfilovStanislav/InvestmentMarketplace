@@ -6,7 +6,6 @@ use DateTime;
 use Helpers\Validator;
 use Interfaces\ConstantInterface;
 use Interfaces\EntityInterface;
-use InvalidArgumentException;
 use LogicException;
 use Traits\Collection;
 
@@ -213,7 +212,7 @@ abstract class AbstractEntity {
             elseif ($type === self::TYPE_CONSTANTS) {
                 /** @var ConstantInterface $class */
                 $class = static::$properties[$key][1];
-                $data[$key] = $class::getConstName($entity);
+                $data[$key] = $class::getConstNameLower($entity);
             }
             elseif ($type === self::TYPE_JSON) {
                 $data[$key] = json_encode($entity, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);

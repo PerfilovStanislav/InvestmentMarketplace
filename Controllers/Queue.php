@@ -3,10 +3,10 @@
 namespace Controllers;
 
 use HeadlessChromium\BrowserFactory;
-use Helpers\Locales\En;
-use Helpers\Locales\Ru;
 use Libraries\Screens;
+use Mappers\FacebookMapper;
 use Models\Collection\ProjectLangs;
+use Models\Constant\Language;
 use Models\Constant\ProjectStatus;
 use Models\Table\Project;
 use Models\Table\ProjectLang;
@@ -15,7 +15,7 @@ use Models\Table\User;
 use Requests\Telegram\SendPhotoRequest;
 use Services\HyipboxService;
 use Services\InvestmentService;
-use Services\Vk;
+use Services\VKService;
 
 class Queue
 {
@@ -138,23 +138,40 @@ class Queue
         });
     }
 
-    public function post()
+    public function post(): void
     {
         if (count($this->getPids('post')) > 1) {
             exit(1);
         }
 
-        $vkService = new Vk();
+        $vkService = new VKService();
         $this->queue(QueueModel::ACTION_ID_POST_TO_SOCIAL, static function (QueueModel $queue) use ($vkService) {
             $project = (new Project())->getById($queue->payload['project_id']);
 
             $projectLangs = new ProjectLangs(['project_id' => $project->id]);
+
+            $facebookPageLanguages = array_keys(FacebookMapper::getCollection());
             /** @var ProjectLang $projectLang */
             foreach ($projectLangs as $projectLang) {
-                if ($projectLang->lang_id === Ru::$id) {
-                    $vkService->sendToMarket($project, $projectLang, \Config::VK_GROUP_RU);
-                } elseif ($projectLang->lang_id === En::$id) {
-                    $vkService->sendToMarket($project, $projectLang, \Config::VK_GROUP_EN);
+                if (in_array($projectLang->lang_id, $facebookPageLanguages, true)) {
+                    $url = sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
+                    $description = str_replace('</br>', '', $projectLang->description);
+                    App()->facebook()->sendPhoto(
+                        $projectLang->lang_id,
+                        Screens::getOriginalJpgScreen($project->id),
+                        sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
+                    );
+                }
+                if (in_array($projectLang->lang_id, $facebookPageLanguages, true)) {
+                    $url = sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
+                    $description = str_replace('</br>', '', $projectLang->description);
+                    $vkService->sendToMarket(
+                        $projectLang->lang_id,
+                        Screens::getOriginalJpgScreen($project->id),
+                        $url,
+                        sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
+                        $project->name,
+                    );
                 }
             }
 

@@ -13,6 +13,7 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'LanguageDetection\\' => array($vendorDir . '/patrickschur/language-detection/src/LanguageDetection'),
     'HeadlessChromium\\' => array($vendorDir . '/chrome-php/chrome/src'),
+    'Facebook\\' => array($vendorDir . '/facebook/graph-sdk/src/Facebook'),
     'DiDom\\' => array($vendorDir . '/imangazaliev/didom/src/DiDom'),
     'Dejurin\\' => array($vendorDir . '/dejurin/php-google-translate-for-free/src'),
     'Apix\\Log\\' => array($vendorDir . '/apix/log/src'),

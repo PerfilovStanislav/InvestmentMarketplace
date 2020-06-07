@@ -2,32 +2,28 @@
 
 namespace Services;
 
-use Helpers\Locales\Ru;
-use Libraries\Screens;
-use Models\Table\Language;
-use Models\Table\Project;
-use Models\Table\ProjectLang;
+use Mappers\VKMapper;
 use VK\Client\VKApiClient;
 
-class Vk
+class VKService
 {
-    public function sendToMarket(Project $project, ProjectLang $projectLang, int $groupID)
+    public function sendToMarket(int $langId, string $pathToFile, string $url, string $description, string $projectName)
     {
         $client = new VKApiClient();
 
         $uploadServer = $client->photos()->getMarketUploadServer(\Config::VK_USER_TOKEN, [
-            'group_id' => $groupID,
+            'group_id' => VKMapper::getGroupId($langId),
             'main_photo' => 1,
         ]);
 
         $upload = $client->getRequest()->upload(
             $uploadServer['upload_url'],
             'file',
-            Screens::getOriginalJpgScreen($project->id)
+            $pathToFile
         );
 
         $marketPhoto = $client->photos()->saveMarketPhoto(\Config::VK_USER_TOKEN, [
-            'group_id'  => $groupID,
+            'group_id'  => VKMapper::getGroupId($langId),
             'photo'     => $upload['photo'],
             'server'    => $upload['server'],
             'hash'      => $upload['hash'],
@@ -35,16 +31,14 @@ class Vk
             'crop_hash' => $upload['crop_hash']
         ]);
 
-        $language = (new Language())->getById($projectLang->lang_id);
-
         return $client->market()->add(\Config::VK_USER_TOKEN, [
-            'owner_id' => -$groupID,
+            'owner_id' => -VKMapper::getGroupId($langId),
             'main_photo_id' => $marketPhoto[0]['id'],
-            'name' => $project->name,
-            'description' => str_replace(['<\br>', '< br>', '<br>'], '', $projectLang->description),
+            'name' => $projectName,
+            'description' => $description,
             'category_id' => 1208,
-            'price' => $projectLang->lang_id === Ru::$id ? 99.9 : 0.99,
-            'url' => sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, $language->shortname),
+            'price' => 10,
+            'url' => $url,
         ]);
     }
 }

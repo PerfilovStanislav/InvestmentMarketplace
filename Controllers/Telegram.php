@@ -36,6 +36,10 @@ class Telegram {
             die('=(');
         }
 
+        if (!isset($request->callback_query->message->chat->id)) {
+            die();
+        }
+
         // Remove keyboard
         App()->telegram()->editMessageReplyMarkup(new EditMessageReplyMarkup([
             'chat_id'     => $request->callback_query->message->chat->id,
@@ -48,7 +52,7 @@ class Telegram {
         switch ($request->callback_query->data['action']) {
             case self::ACTIVATE:
                 (new InvestmentService())->changeStatus(new ChangeStatusRequest([
-                    'status'  => ProjectStatus::getConstName(ProjectStatus::ACTIVE),
+                    'status'  => ProjectStatus::getConstNameLower(ProjectStatus::ACTIVE),
                     'project' => $request->callback_query->data['project_id'],
                 ]));
                 break;

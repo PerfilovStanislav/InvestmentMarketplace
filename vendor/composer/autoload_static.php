@@ -9,6 +9,7 @@ class ComposerStaticInitd1b1f5fe4bc557dac0d5803c496b6fac
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -30,6 +31,10 @@ class ComposerStaticInitd1b1f5fe4bc557dac0d5803c496b6fac
         'H' => 
         array (
             'HeadlessChromium\\' => 17,
+        ),
+        'F' => 
+        array (
+            'Facebook\\' => 9,
         ),
         'D' => 
         array (
@@ -70,6 +75,10 @@ class ComposerStaticInitd1b1f5fe4bc557dac0d5803c496b6fac
         'HeadlessChromium\\' => 
         array (
             0 => __DIR__ . '/..' . '/chrome-php/chrome/src',
+        ),
+        'Facebook\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
         ),
         'DiDom\\' => 
         array (

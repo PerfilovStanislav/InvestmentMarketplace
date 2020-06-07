@@ -4,13 +4,13 @@ namespace Interfaces;
 
 interface ConstantInterface
 {
-    static function getCollection(): array;
+    public static function getCollection(): array;
 
-    static function getConstNames(): array;
+    public static function getConstNames(): array;
 
-    static function getValues(): array;
+    public static function getValues(): array;
 
-    static function getValue(string $key);
+    public static function getValue(string $key);
 
-    static function getConstName($key): string ;
+    public static function getConstNameLower($val): string ;
 }

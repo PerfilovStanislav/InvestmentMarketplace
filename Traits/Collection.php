@@ -22,16 +22,15 @@ trait Collection
         return array_values(self::getCollection());
     }
 
-    public static function getConstName($key): string {
+    public static function getConstNameLower($val): string {
         foreach (self::getCollection() as $name => $value) {
-            if ($value == $key) return mb_strtolower($name);
+            if ($value == $val) return mb_strtolower($name);
         }
     }
 
     private static function getReflectionClass() : \ReflectionClass {
         static $cache;
-        if ($cache) return $cache;
-        return ($cache = new \ReflectionClass(__CLASS__));
+        return $cache ??= new \ReflectionClass(__CLASS__);
 
     }
 }

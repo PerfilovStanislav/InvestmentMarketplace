@@ -9,6 +9,7 @@ use Helpers\Output;
 use Libraries\Telegram;
 use Models\Collection\SiteLanguages;
 use Models\CurrentUser;
+use Services\FacebookService;
 use Traits\Instance;
 use Views\Errors\ErrorDefault;
 
@@ -80,5 +81,9 @@ class App
 
     public function telegram(): Telegram {
         return Telegram::getInstance();
+    }
+
+    public function facebook(): FacebookService {
+        return FacebookService::getInstance();
     }
 }

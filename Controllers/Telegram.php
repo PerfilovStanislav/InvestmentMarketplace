@@ -36,7 +36,7 @@ class Telegram {
             die('=(');
         }
 
-        if (!isset($request->callback_query->message->chat->id)) {
+        if (!$request->callback_query->message) {
             die();
         }
 

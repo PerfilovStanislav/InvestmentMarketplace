@@ -5,6 +5,7 @@ namespace Controllers;
 use HeadlessChromium\BrowserFactory;
 use Libraries\Screens;
 use Mappers\FacebookMapper;
+use Mappers\VKMapper;
 use Models\Collection\ProjectLangs;
 use Models\Constant\Language;
 use Models\Constant\ProjectStatus;
@@ -151,6 +152,7 @@ class Queue
             $projectLangs = new ProjectLangs(['project_id' => $project->id]);
 
             $facebookPageLanguages = array_keys(FacebookMapper::getCollection());
+            $vkPageLanguages = array_keys(VKMapper::getCollection());
             /** @var ProjectLang $projectLang */
             foreach ($projectLangs as $projectLang) {
                 if (in_array($projectLang->lang_id, $facebookPageLanguages, true)) {
@@ -162,7 +164,7 @@ class Queue
                         sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
                     );
                 }
-                if (in_array($projectLang->lang_id, $facebookPageLanguages, true)) {
+                if (in_array($projectLang->lang_id, $vkPageLanguages, true)) {
                     $url = sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
                     $description = str_replace('</br>', '', $projectLang->description);
                     $vkService->sendToMarket(

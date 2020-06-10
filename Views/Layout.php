@@ -30,6 +30,7 @@ use Models\Constant\Views;
     <meta name="application-name" content="RiM">
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
+    <meta name="yandex-verification" content="0cb92639e17a4017" />
 
     <?php \Helpers\Scripts::loadCSS() ?>
 </head>

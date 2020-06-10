@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://richinme.org/sitemap.xml
+Sitemap: https://richinme.com/sitemap.xml

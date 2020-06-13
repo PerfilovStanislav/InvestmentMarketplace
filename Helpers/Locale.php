@@ -3,7 +3,7 @@
 namespace Helpers;
 
 use Helpers\Locales\AbstractLanguage;
-use Helpers\Locales\LanguageCollection;
+use Helpers\Locales\SiteLanguageCollection;
 use Libraries\TabgeoCountry;
 use Models\Table\Language;
 use Traits\Instance;
@@ -11,7 +11,7 @@ use Traits\Instance;
 class Locale {
     use Instance;
 
-    private string  $defaultLanguage = LanguageCollection::EN;
+    private string  $defaultLanguage = 'en';
     private ?string $language        = null;
     private AbstractLanguage $locale;
 
@@ -64,6 +64,6 @@ class Locale {
     }
 
     public function translate(): AbstractLanguage {
-        return $this->locale ??= LanguageCollection::get($this->getLanguage());
+        return $this->locale ??= SiteLanguageCollection::getByShortname($this->getLanguage());
     }
 }

@@ -3,7 +3,7 @@
 namespace Models\Collection;
 
 use Core\AbstractEntity;
-use Helpers\Locales\LanguageCollection;
+use Helpers\Locales\SiteLanguageCollection;
 use Models\Table\Language;
 use Traits\Instance;
 use Traits\IteratorTrait;
@@ -22,7 +22,7 @@ class SiteLanguages extends AbstractEntity implements \Iterator {
 
     protected function __construct() {
         $this->fillCollection(Language::setTable()->select(
-            ['shortname' => array_keys(LanguageCollection::LANGUAGES)],
+            ['id' => array_keys(SiteLanguageCollection::LANGUAGES)],
             Language::getPropertyKeys())
         );
     }

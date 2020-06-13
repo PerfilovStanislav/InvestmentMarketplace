@@ -73,11 +73,6 @@ class Router {
         return substr($_SERVER['REQUEST_URI'] ?? '', strlen(DIR));
     }
 
-    /**
-     * @param RouteInterface $route
-     * @return mixed
-     * @throws ReflectionException
-     */
     public function route(RouteInterface $route) {
         $controllerClass = $route->getControllerClass();
 

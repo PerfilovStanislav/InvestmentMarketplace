@@ -7,6 +7,7 @@ use Models\{
     Constant\DomElements,
     Constant\UserStatus,
     Constant\Views,
+    Constant\Language,
     Table\User,
     Collection\MVProjectCounts,
 };
@@ -75,7 +76,7 @@ class Users extends Controller {
             'name'      => $request->name,
             'password'  => App()->auth()->hashPassword($request->password),
             'status_id' => UserStatus::NEED_CONFIRM,
-            'lang_id'   => App()->siteLanguages()->{App()->locale()->getLanguage()}->id,
+            'lang_id'   => Language::getValue(App()->locale()->getLanguage()),
             'has_photo' => false,
         ])->save();
 
@@ -129,7 +130,7 @@ class Users extends Controller {
         if ($request->lang) {
             if (CurrentUser()->is_authorized) {
                 $user = CurrentUser()->user;
-                $user->lang_id = App()->siteLanguages()->{$request->lang}->id;
+                $user->lang_id = Language::getValue($request->lang);
                 $user->save();
             }
             else {

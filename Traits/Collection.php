@@ -6,8 +6,7 @@ trait Collection
 {
     public static function getCollection(): array {
         static $cache;
-        if ($cache) return $cache;
-        return ($cache = self::getReflectionClass()->getConstants());
+        return $cache ??= self::getReflectionClass()->getConstants();
     }
 
     public static function getConstNames(): array {
@@ -15,7 +14,7 @@ trait Collection
     }
 
     public static function getValue(string $key) {
-        return self::getReflectionClass()->getConstant(mb_strtoupper($key)) ?? null;
+        return self::getReflectionClass()->getConstant(mb_strtoupper($key));
     }
 
     public static function getValues(): array {

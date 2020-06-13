@@ -4,8 +4,6 @@ namespace Helpers\Locales;
 
 class Ru extends AbstractLanguage {
 
-    public static int $id = 317;
-
     public string
         $active            = 'Активные',
         $addLevel          = 'Добавить уровень',

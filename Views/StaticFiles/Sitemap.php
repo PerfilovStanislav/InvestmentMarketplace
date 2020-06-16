@@ -29,7 +29,7 @@ use Libraries\Screens; ?>
                 <image:title><?=$info['name']?></image:title>
             </image:image>
             <news:news>
-                <news:title><?=mb_substr(str_replace(['<\br>', '<', '>', '/', '\\'], '', $info['description'] ?? ''), 0, 95)?></news:title>
+                <news:title><?=mb_substr(str_replace(['<\br>', '<', '>', '/', '\\'], '', $info['description'] ?? ''), 0, 50)?></news:title>
                 <news:publication>
                     <news:name><?=$info['name']?></news:name>
                     <news:language><?=$info['shortname']?></news:language>

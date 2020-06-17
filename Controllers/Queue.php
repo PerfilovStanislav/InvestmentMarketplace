@@ -86,28 +86,30 @@ class Queue
         $this->killChrome();
         sleep(3);
 
-        $this->queue(QueueModel::ACTION_ID_SCREENSHOT, static function (QueueModel $queue) {
+        $this->queue(QueueModel::ACTION_ID_SCREENSHOT, function (QueueModel $queue) {
             $project = (new Project())->getById($queue->payload['project_id']);
 
             Screens::createFolder($project->id);
 
-            $factory = new BrowserFactory('google-chrome');
-            $browser = $factory->createBrowser([
-                'headless' => true,
-                'noSandbox' => true,
-                'keepAlive' => false,
-                'windowSize' => [1280, 960],
-                'sendSyncDefaultTimeout' => 45000
-            ]);
-            $page = $browser->createPage();
-            $page->navigate('https://' . $project->url)->waitForNavigation();
-            sleep(7);
-            $page->screenshot([
-                'format'  => 'jpeg',
-                'quality' => 95,
-            ])->saveToFile(Screens::getOriginalJpgScreen($project->id));
-            $page->close();
-            $browser->close();
+            $this->reTry(static function () use ($project) {
+                $factory = new BrowserFactory('google-chrome');
+                $browser = $factory->createBrowser([
+                    'headless' => true,
+                    'noSandbox' => true,
+                    'keepAlive' => false,
+                    'windowSize' => [1280, 960],
+                    'sendSyncDefaultTimeout' => 45000
+                ]);
+                $page = $browser->createPage();
+                $page->navigate('https://' . $project->url)->waitForNavigation();
+                sleep(7);
+                $page->screenshot([
+                    'format'  => 'jpeg',
+                    'quality' => 95,
+                ])->saveToFile(Screens::getOriginalJpgScreen($project->id));
+                $page->close();
+                $browser->close();
+            });
 
             Screens::makeThumbs($project->url, $project->id);
 
@@ -137,6 +139,19 @@ class Queue
 
             unset($message, $project, $browser, $page, $factory);
         });
+    }
+
+    private function reTry(callable $functionForCall, int $try = 1)
+    {
+        try {
+            return $functionForCall();
+        } catch (\Throwable $e) {
+            if ($try === 3) {
+                throw $e;
+            }
+            sleep($try * 10);
+            return $this->reTry($functionForCall, ++$try);
+        }
     }
 
     public function post(): void

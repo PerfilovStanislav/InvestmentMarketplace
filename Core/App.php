@@ -25,6 +25,9 @@ class App
         if (IS_AJAX) {
             $this->output()->disableLayout();
         }
+        if (DEBUG) {
+            $this->output()->disableMinifying();
+        }
 
         try {
             $this->router()->go();

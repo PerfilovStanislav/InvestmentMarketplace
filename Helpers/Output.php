@@ -54,6 +54,7 @@ class Output
     private bool
         $inProcess = false,
         $isLayoutEnabled = true,
+        $minify = true,
         $contentIsLoaded = false;
 
     public function addHeader(string $head): self {
@@ -180,13 +181,18 @@ class Output
             $this->views();
             $str = json_encode($this->result);
         }
-        if (!DEBUG) {
+        if ($this->minify) {
             $str = str_replace(["\n", "\r"], ' ', $str);
-            $str = preg_replace('/\<!--.*?--\>/', '', $str);
+            $str = preg_replace('/<!--.*?-->/', '', $str);
             $str = preg_replace('/\s+/', ' ', $str);
         }
 
         return $str ?? '';
+    }
+
+    public function disableMinifying(): void
+    {
+        $this->minify = false;
     }
 
     public function views(): void {

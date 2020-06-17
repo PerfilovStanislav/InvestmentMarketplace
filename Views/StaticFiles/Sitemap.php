@@ -29,12 +29,12 @@ use Libraries\Screens; ?>
                 <image:title><?=$info['name']?></image:title>
             </image:image>
             <news:news>
+                <news:title><?=mb_substr(str_replace(['<\br>', '<', '>', '/', '\\'], '', $info['description'] ?? ''), 0, 50)?></news:title>
                 <news:publication>
                     <news:name><?=$info['name']?></news:name>
                     <news:language><?=$info['shortname']?></news:language>
                 </news:publication>
                 <news:publication_date><?=$info['add_date']?></news:publication_date>
-                <news:title><?=mb_substr(str_replace(['<\br>', '<', '>', '/', '\\'], '', $info['description'] ?? ''), 0, 95)?></news:title>
                 <news:genres>UserGenerated</news:genres>
                 <news:keywords>business, investment</news:keywords>
             </news:news>

@@ -2149,7 +2149,8 @@ var imgClickInit = function() {$('img[href]',this).magnificPopup({type: 'image',
  }
  $('input[name="plan_percents[]"]').eq(i).val(values[0])
  $('input[name="plan_period[]"]').eq(i).val(values[1])
- $('select[name="plan_period_type[]"]').eq(i).val(values[2]);$('input[name="plan_start_deposit[]"]').eq(i).val(values[3]);$('select[name="plan_currency_type[]"]').eq(i).val(values[4]);});};var setReferralPlans = function(data) {data['plans'].forEach(function callback(value,i,plans) {if (i < plans.length-1) {$('#add_ref_plan').trigger('click')
+ $('select[name="plan_period_type[]"]').eq(i).val(values[2]);});};var setMinDeposit = function (data) {$('input[name="min_deposit"]').val(data['deposit']);$('select[name="currency"]').val(data['currency']);}
+var setReferralPlans = function(data) {data['plans'].forEach(function callback(value,i,plans) {if (i < plans.length-1) {$('#add_ref_plan').trigger('click')
  }
  $('input[name="ref_percent[]"]').eq(i).val(value)
  });};var setDatepicker = function(data) {$('input[name=start_date]').datepicker("setDate",new Date(data['date']*1000) );};jQuery(document).ready(function() {Core.init();Demo.init();$(window).bind('popstate',function(e) {ajax(location.pathname);});linkClick();logoInConsole();});

@@ -17,4 +17,15 @@ class CurrencyType implements ConstantInterface {
         JPY = 6,
         WON = 7,
         INR = 8;
+
+    public static array $symbols = [
+        self::USD => '$',
+        self::EUR => '€',
+        self::BTC => '₿',
+        self::RUB => '₽',
+        self::GBP => '£',
+        self::JPY => '¥',
+        self::WON => '￦',
+        self::INR => '₹',
+    ];
 }

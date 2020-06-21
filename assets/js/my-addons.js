@@ -584,10 +584,13 @@ var setPlans = function(data) {
         $('input[name="plan_percents[]"]').eq(i).val(values[0])
         $('input[name="plan_period[]"]').eq(i).val(values[1])
         $('select[name="plan_period_type[]"]').eq(i).val(values[2]);
-        $('input[name="plan_start_deposit[]"]').eq(i).val(values[3]);
-        $('select[name="plan_currency_type[]"]').eq(i).val(values[4]);
     });
 };
+
+var setMinDeposit = function (data) {
+    $('input[name="min_deposit"]').val(data['deposit']);
+    $('select[name="currency"]').val(data['currency']);
+}
 
 var setReferralPlans = function(data) {
     data['plans'].forEach(function callback(value, i, plans) {

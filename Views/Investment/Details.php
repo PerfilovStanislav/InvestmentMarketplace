@@ -14,6 +14,7 @@ use Helpers\Data\Currency;
 use Helpers\Locales\AbstractLanguage;
 use Libraries\Screens;
 use Models\Collection\Languages;
+use Models\Constant\PlanPeriodType;
 use Models\Constant\ProjectStatus;
 use Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
@@ -67,7 +68,6 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             <tr class="">
                                 <th><?=Translate()->profit?></th>
                                 <th><?=Translate()->period?></th>
-                                <th><?=Translate()->deposit?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -75,9 +75,6 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                 <tr>
                                     <td><?=$this->project->plan_percents[$key]?>%</td>
                                     <td><?=$this->project->plan_period[$key] . ' ' . Translate()->getPeriodName($this->project->plan_period_type[$key], $this->project->plan_period[$key])?></td>
-                                    <td><?=$this->project->plan_start_deposit[$key]?>
-                                        <span class="fa"><?=Currency::getCurrency()[$this->project->plan_currency_type[$key]]['i']?></span>
-                                    </td>
                                 </tr>
                             <?php }?>
                             </tbody>
@@ -97,8 +94,32 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         <table class="table mbn tc-bold-last table-hover justify">
                             <tbody>
                             <tr>
+                                <td><?=Translate()->rating?></td>
+                                <td itemprop="productionDate" class="fw600">
+                                    <?=$this->project->rating?>
+                                    <div class="progress progress-bar-xs">
+                                        <div class="progress-bar progress-bar-<?=[
+                                            'danger', 'warning-dark', 'warning', 'success-light', 'success'
+                                        ][(int)($this->project->rating/2)]?>" style="width: <?=$this->project->rating*10.0?>%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?=Translate()->dateStart?></td>
+                                <td itemprop="productionDate">
+                                    <span class="fw600"><?=$this->project->start_date->format('Y-m-d')?></span>
+                                    <span class="nowrap">
+                                            (<?=$days = $this->project->start_date->diff(new \DateTime())->days?> <?=Translate()->getPeriodName(PlanPeriodType::DAY,$days)?>)
+                                        </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?=Translate()->minDeposit?></td>
+                                <td itemprop="productionDate" class="fw600"><?=$this->project->min_deposit?> <span class="fa"><?=Currency::getCurrency()[$this->project->currency]['i']?></span></td>
+                            </tr>
+                            <tr>
                                 <td><?=Translate()->refProgram?></td>
-                                <td><?= implode('%, ', $this->project->ref_percent) . '%'?></td>
+                                <td class="fw600"><?= implode('%, ', $this->project->ref_percent) . '%'?></td>
                             </tr>
                             <tr>
                                 <td><?=Translate()->languages?></td>

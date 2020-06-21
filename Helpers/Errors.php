@@ -11,7 +11,7 @@ class Errors
 
     private bool $hasError = false;
 
-    public function add($key, string $description, bool $exit = false) {
+    public function add($key, string $description, bool $exit = false): void {
         $this->hasError = true;
         Output()->addFieldDanger($key, $description);
         if ($exit) {
@@ -23,7 +23,7 @@ class Errors
         return $this->hasError;
     }
 
-    public function exitIfExists() {
+    public function exitIfExists(): void {
         if ($this->hasError()) {
             throw new ErrorException(Translate()->error, '', 412);
         }

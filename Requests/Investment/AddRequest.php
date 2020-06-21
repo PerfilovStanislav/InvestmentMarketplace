@@ -5,6 +5,7 @@ namespace Requests\Investment;
 use Core\AbstractEntity;
 use Helpers\Validator;
 use Models\Table\Language;
+use Models\Table\Project;
 
 /**
  * @property string     $name
@@ -14,27 +15,26 @@ use Models\Table\Language;
  * @property float[]    $plan_percents
  * @property integer[]  $plan_period
  * @property integer[]  $plan_period_type
- * @property float[]    $plan_start_deposit
- * @property integer[]  $plan_currency_type
+ * @property float      $min_deposit
+ * @property integer    $currency
  * @property integer[]  $id_payments
  * @property string[]   $description
- * @property integer[]  $lang_id
  */
 class AddRequest extends AbstractEntity {
 
     protected static array
         $properties = [
-            'name'               => [self::TYPE_STRING,       [Validator::MIN => 1, Validator::MAX => 50, Validator::REGEX => Validator::PROJECT_NAME]],
-            'paymenttype'        => [self::TYPE_INT,          [Validator::MIN => 1, Validator::MAX => 3]],
-            'start_date'         => [self::TYPE_DATE,         []],
-            'ref_percent'        => [self::TYPE_FLOAT_ARRAY,  [Validator::MIN  => 0.01]],
-            'plan_percents'      => [self::TYPE_FLOAT_ARRAY,  [Validator::MIN  => 0.01]],
-            'plan_period'        => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1]],
-            'plan_period_type'   => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1, Validator::MAX => 6]],
-            'plan_start_deposit' => [self::TYPE_FLOAT_ARRAY,  [Validator::MIN  => 0.00001]],
-            'plan_currency_type' => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1, Validator::MAX => 8]],
-            'id_payments'        => [self::TYPE_INT_ARRAY,    [Validator::MIN  => 1, Validator::MAX => 30]],
-            'description'        => [self::TYPE_STRING_ARRAY, [Validator::MIN  => 1, Validator::MAX => 5000]],
-            'lang_id'            => [self::TYPE_INT_ARRAY,    [Validator::MODEL => Language::class]],
+            'description' => [self::TYPE_STRING_ARRAY, [Validator::MIN  => 1, Validator::MAX => 5000]],
         ];
+
+    public function __construct(array $data = [])
+    {
+        static::$properties = array_replace(
+            static::$properties,
+            Project::getPropertiesByKeys(['name', 'paymenttype', 'start_date', 'ref_percent', 'plan_percents',
+                'plan_period', 'plan_period_type', 'min_deposit', 'currency', 'id_payments', ])
+        );
+        parent::__construct($data);
+
+    }
 }

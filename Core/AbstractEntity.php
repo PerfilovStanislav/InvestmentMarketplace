@@ -158,6 +158,10 @@ abstract class AbstractEntity {
         return array_keys(static::$properties);
     }
 
+    public static function getPropertiesByKeys(array $keys): array {
+        return array_filter(static::$properties, fn($key) => in_array($key, $keys, true), ARRAY_FILTER_USE_KEY);
+    }
+
     public static function getPropertyByKey(string $key): array {
         return [$key => static::$properties[$key]];
     }

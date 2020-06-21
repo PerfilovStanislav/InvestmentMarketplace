@@ -6,11 +6,14 @@ use Controllers\Investment;
 use Dejurin\GoogleTranslateForFree;
 use DiDom\Document;
 use Exceptions\ErrorException;
+use Helpers\Output;
 use Libraries\Screens;
 use Models\Collection\Languages;
 use Models\Constant\ProjectStatus;
+use Models\Constant\User;
 use Models\Table\Language;
 use Models\Table\Project;
+use Models\Table\ProjectLang;
 use Models\Table\Queue;
 use Requests\Investment\ChangeStatusRequest;
 use Requests\Investment\ReloadScreenshotRequest;
@@ -60,36 +63,9 @@ class InvestmentService
         return $project;
     }
 
-    /**
-     * @deprecated
-     */
-    public function parseInfo2(string $url) {
-        $url = sprintf('https://hyiplogs.com/project/%s/', $url);
-
-        try {
-            $document = new Document($url, true);
-            $mapper = (new HyiplogsMapper());
-
-            $title = trim($document->first('.content div.name-box div')->text());
-            Output()->addFunction('setProjectTitle', ['title' => $title]);
-
-            $paymentTypeId = $mapper->getPaymentTypeId(
-                $document->first('.content div.info-box div.item:nth-child(4) div.txt')->text()
-            );
-            Output()->addFunction('setPaymentType', ['paymentType' => $paymentTypeId]);
-
-            $paymentsText = $document->first('.content div.info-box div.item:nth-child(6) div.txt')->text();
-            $payments = $mapper->payments(
-                array_map(fn(string $str):string => str_replace(' ', '', trim($str)), explode(',', $paymentsText))
-            );
-            Output()->addFunction('selectPayments', ['payments' => array_values($payments)]);
-        } catch (\Exception $exception) {
-            throw new ErrorException('Parse error', 'project was n\'t found');
-        }
-    }
-
     public function parseInfo(string $url) {
-        $hyipboxService = new HyipboxService($url);
+        $hyiplogsService = HyiplogsService::getInstance()->setUrl($url);
+        $hyipboxService = HyipboxService::getInstance()->setUrl($url);
 
         try {
             if ($hyipboxService->isScam()) {
@@ -98,7 +74,7 @@ class InvestmentService
             }
 
             if ($title = $hyipboxService->getTitle()) {
-                Output()->addFunction('setProjectTitle', ['title' => ucfirst($title)]);
+                Output()->addFunction('setProjectTitle', ['title' => $title]);
             }
 
             if (($timestamp = $hyipboxService->getStartDate()) > 0) {
@@ -109,7 +85,11 @@ class InvestmentService
                 Output()->addFunction('setPaymentType', ['paymentType' => $paymentTypeId]);
             }
 
-            if ($plans = $hyipboxService->getPlans($hyipboxService->getMinDeposit())) {
+            if ($minDeposit = $hyipboxService->getMinDeposit()) {
+                Output()->addFunction('setMinDeposit', $minDeposit);
+            }
+
+            if ($plans = $hyiplogsService->getPlans()) {
                 Output()->addFunction('setPlans', ['plans' => $plans]);
             }
 
@@ -149,7 +129,7 @@ class InvestmentService
             } catch (\Exception $e) {
                 continue;
             }
-            usleep(0_100000); // 0.10 sec
+            usleep(0_050000); // 0.05 sec
         }
 
         return $result;
@@ -161,5 +141,62 @@ class InvestmentService
             $projectId,
             $projectStatus
         ))[0] ?? []);
+    }
+
+    public function parseProject(Project $project): void {
+        Output::getInstance()->disableLayout();
+
+        $hyiplogsService = HyiplogsService::getInstance()->setUrl($project->url);
+        $hyipboxService = HyipboxService::getInstance()->setUrl($project->url);
+
+        try {
+            if ($hyipboxService->isScam()) {
+                return;
+            }
+
+            $plans = $hyiplogsService->getPlans();
+            $minDeposit = $hyipboxService->getMinDeposit();
+
+            $project->fromArray([
+                'name'             => $hyipboxService->getTitle(),
+                'admin'            => User::ME,
+                'start_date'       => date(\DATE_ATOM, $hyipboxService->getStartDate()),
+                'paymenttype'      => $hyipboxService->getPaymentTypeId(),
+                'ref_percent'      => $hyipboxService->getReferralPlans(),
+                'plan_percents'    => array_column($plans, 0),
+                'plan_period'      => array_column($plans, 1),
+                'plan_period_type' => array_column($plans, 2),
+                'currency'         => $minDeposit['currency'],
+                'min_deposit'      => $minDeposit['deposit'],
+                'id_payments'      => $hyipboxService->getPayments(),
+                'ref_url'          => 'https://' . $project->url,
+                'status_id'        => ProjectStatus::NOT_PUBLISHED,
+                'rating'           => $hyiplogsService->getRating(),
+            ])->save();
+
+            if (($description = $hyipboxService->getDescription()) && $description) {
+                $descriptions = $this->multiTranslate($this->detectLanguage($description), $description);
+                // Сохраняем описания
+                foreach ($descriptions as $langId => $description) {
+                    $projectLang              = new ProjectLang();
+                    $projectLang->project_id  = $project->id;
+                    $projectLang->lang_id     = $langId;
+                    $projectLang->description = str_replace("\n", '</br>', $description);
+                    $projectLang->save();
+                    unset($projectLang);
+                }
+            }
+
+            (new Queue([
+                'action_id'  => Queue::ACTION_ID_SCREENSHOT,
+                'status_id'  => Queue::STATUS_CREATED,
+                'payload'    => [
+                    'project_id' => $project->id,
+                ],
+            ]))->save();
+        } catch (\Exception $exception) {
+            throw new ErrorException('Parse error', 'project was n\'t found');
+        }
+
     }
 }

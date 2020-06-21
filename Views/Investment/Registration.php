@@ -71,6 +71,27 @@ use Models\Table\Payment;
                                 <i class="arrow double"></i>
                             </label>
                         </div>
+                        <div class="section mb10 flex">
+                            <div class="w300">
+                                <label class="field append-icon">
+                                    <input class="gui-input onlyNumber" name="min_deposit" autocomplete="off" placeholder="<?=Translate()->minDeposit?>">
+                                    <label class="field-icon">
+                                        <i class="fa fa-money"></i>
+                                    </label>
+                                </label>
+                            </div>
+                            <div class="mln1 pln fa w50"> <!--style="top: 0px"-->
+                                <label class="field select">
+                                    <select name="currency">
+                                        <?php foreach ($this->currency as $k => $c) {
+                                            if ($k === 0) continue;
+                                            printf('<option value="%d" %s title="%s">%s</option>', $k, $k === 1 ? 'selected' : '', $c['t'], $c['i']);
+                                        }?>
+                                    </select>
+                                    <i class="arrow double"></i>
+                                </label>
+                            </div>
+                        </div>
                         <div class="section-divider mt40 mb25">
                             <span> <?=Translate()->plans?> </span>
                         </div>
@@ -112,28 +133,6 @@ use Models\Table\Payment;
                                             <option value="4">          <?=Translate()->periodName[4]?></option>
                                             <option value="5">          <?=Translate()->periodName[5]?></option>
                                             <option value="6">          <?=Translate()->periodName[6]?></option>
-                                        </select>
-                                        <i class="arrow double"></i>
-                                    </label>
-                                </div>
-                                <div class="col-md-3 prn">
-                                    <div class="smart-widget sm-left sml-50">
-                                        <label class="field append-icon">
-                                            <input class="gui-input onlyNumber" name="plan_start_deposit[]" autocomplete="off">
-                                            <label class="field-icon">
-                                                <i class="fa fa-money"></i>
-                                            </label>
-                                        </label>
-                                        <label class="button prn pln"><?=Translate()->from?></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 mln1 pln fa" style="top: 0px">
-                                    <label class="field select">
-                                        <select name="plan_currency_type[]">
-                                            <?php foreach ($this->currency as $k => $c) {
-                                                if ($k == 0) continue;
-                                                printf('<option value="%d" %s title="%s">%s</option>', $k, $k == 1 ? 'selected' : '', $c['t'], $c['i']);
-                                            }?>
                                         </select>
                                         <i class="arrow double"></i>
                                     </label>

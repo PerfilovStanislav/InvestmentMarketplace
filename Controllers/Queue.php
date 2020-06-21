@@ -2,6 +2,8 @@
 
 namespace Controllers;
 
+use DiDom\Document;
+use DiDom\Element;
 use HeadlessChromium\BrowserFactory;
 use Libraries\Screens;
 use Mappers\FacebookMapper;
@@ -9,6 +11,7 @@ use Mappers\VKMapper;
 use Models\Collection\ProjectLangs;
 use Models\Constant\Language;
 use Models\Constant\ProjectStatus;
+use Models\Table\Hyiplog;
 use Models\Table\Project;
 use Models\Table\ProjectLang;
 use Models\Table\Queue as QueueModel;
@@ -25,6 +28,7 @@ class Queue
         if (!CLI) {
             throw new \Exception('Only cli available');
         }
+        Output()->disableLayout();
     }
 
     private function getPids(string $func): array
@@ -35,17 +39,17 @@ class Queue
         return $output;
     }
 
-    private function killChrome()
+    private function killChrome(): void
     {
         exec('kill $(pgrep chrome)');
     }
 
-    private function killZombies()
+    private function killZombies(): void
     {
         exec('ps -ef | grep defunct | grep -v grep | cut -b8-20 | xargs kill -9');
     }
 
-    private function queue(int $actionID, callable $functionForCall)
+    private function queue(int $actionID, callable $functionForCall): void
     {
         $queueOriginal = (new QueueModel());
         while (true) {
@@ -75,11 +79,11 @@ class Queue
         }
     }
 
-    public function screenshot()
+    public function screenshot(): void
     {
         $this->killZombies();
 
-        if (count($this->getPids('screenshot')) > 1) {
+        if (count($this->getPids(__FUNCTION__)) > 1) {
             exit(1);
         }
 
@@ -154,9 +158,10 @@ class Queue
         }
     }
 
+    // Post to social nets
     public function post(): void
     {
-        if (count($this->getPids('post')) > 1) {
+        if (count($this->getPids(__FUNCTION__)) > 1) {
             exit(1);
         }
 
@@ -198,13 +203,13 @@ class Queue
 
     public function checkScam(int $projectId = 0): void
     {
-        if (count($this->getPids('checkScam')) > 1) {
+        if (count($this->getPids(__FUNCTION__)) > 1) {
             exit(1);
         }
 
         $investmentService = new InvestmentService();
         while (($project = $investmentService->getNextProject($projectId, ProjectStatus::ACTIVE))->id) {
-            if ((new HyipboxService($project->url))->isScam()) {
+            if ((HyipboxService::getInstance()->setUrl($project->url))->isScam()) {
                 $project->status_id = ProjectStatus::SCAM;
                 $project->save();
 
@@ -221,5 +226,49 @@ class Queue
         }
 
         Investment::refreshMViews();
+    }
+
+    public function parseNewProjects()
+    {
+        if (count($this->getPids(__FUNCTION__)) > 1) {
+            exit(1);
+        }
+
+        $url = 'https://hyiplogs.com/hyips/?' . http_build_query([
+                'hlindex[from]' => 4,
+                'hlindex[to]'   => 10,
+                'status[1]'     => 1,
+                'design'        => 1,
+                'license'       => 1,
+                'monitors'      => 1,
+                'deposits'      => 1,
+            ]);
+        try {
+            $document = new Document($url, true);
+            /** @var Element $row */
+            foreach ($document->find('div.all-hyips-list div.item.ovh') as $row) {
+                $rating = $row->first('div.hl-index-box span')->text();
+                $projectUrl = $row->first('div.info-content div.name-box a.grey-link')->text();
+                (new Hyiplog())->getRowFromDbAndFill(['url' => $projectUrl])->fromArray([
+                    'rating' => $rating,
+                ])->save();
+            }
+        } catch (\Throwable $e) {
+        }
+    }
+
+    public function fillProject(): void {
+        if (count($this->getPids(__FUNCTION__)) > 1) {
+            exit(1);
+        }
+
+        $list = Hyiplog::setTable()->select(null, '*', 'id desc, rating desc', 30);
+        foreach ($list as $item) {
+            if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
+                continue;
+            }
+            (new InvestmentService())->parseProject($project);
+            sleep(60*5);
+        }
     }
 }

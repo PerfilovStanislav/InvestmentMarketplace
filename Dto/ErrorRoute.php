@@ -9,7 +9,7 @@ class ErrorRoute extends AbstractRoute
 {
     protected string $controllerClass = Errors::class;
     protected string $action = 'show';
-    protected array  $params = [];
+    protected array  $params;
 
     public function __construct(string $title, string $description = '', int $code = 404) {
         Output()->addHeader(Output::E404);

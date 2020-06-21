@@ -32,13 +32,22 @@ class App
         try {
             $this->router()->go();
             Db()->endTransaction();
-        } catch (ErrorException $e) {
+        } catch (\Throwable $e) {
             if (!$this->output()->isContentLoaded() && $this->output()->isLayoutEnabled()) {
-                $this->output()->addView(ErrorDefault::class, [
-                    'description' => $e->getMessage(),
-                    'title' => $e->getKey(),
-                    'code' => $e->getCode(),
-                ]);
+                if ($e instanceof ErrorException) {
+                    $this->output()->addView(ErrorDefault::class, [
+                        'description' => $e->getMessage(),
+                        'title'       => $e->getKey(),
+                        'code'        => $e->getCode(),
+                    ]);
+                } else {
+                    Output()->addHeader(Output::E404);
+                    $this->output()->addView(ErrorDefault::class, [
+                        'description' => Translate()->error,
+                        'title'       => Translate()->error,
+                        'code'        => 404,
+                    ]);
+                }
             }
             Db()->rollBackTransaction();
         } finally {

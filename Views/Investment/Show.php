@@ -19,6 +19,7 @@ use Libraries\Screens;
 use Models\Collection\Languages;
 use Models\Collection\ProjectLangs;
 use Models\Constant\CurrencyType;
+use Models\Constant\PlanPeriodType;
 use Models\Constant\ProjectStatus;
 use Models\Constant\Views;
 use Models\MView\MVProjectLang;
@@ -94,7 +95,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             </span>
                         </div>
                     </div>
-                    <div class="mnw270" style="flex: 22 0">
+                    <div class="mnw200" style="flex: 16 0">
                         <div class="panel-heading lh30 h-30">
                             <span class="panel-icon">
                                 <i class="fa fa-signal"></i>
@@ -104,22 +105,16 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         <div class="panel-body panel-scroller scroller-xs scroller-pn pn scroller-active scroller-success mih-220">
                             <table class="table mbn justify">
                                 <thead>
-                                <tr class="">
+                                <tr>
                                     <th><?=Translate()->profit?></th>
                                     <th><?=Translate()->period?></th>
-                                    <th><?=Translate()->deposit?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php foreach ($project->plan_percents as $key => $plan) {?>
-                                    <tr itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                    <tr>
                                         <td><?=$project->plan_percents[$key]?>%</td>
                                         <td><?=$project->plan_period[$key] . ' ' . Translate()->getPeriodName($project->plan_period_type[$key], $project->plan_period[$key])?></td>
-                                        <td><span itemprop="price"><?=$project->plan_start_deposit[$key]?></span>
-                                            <meta itemprop="priceCurrency" content="<?=strtoupper(CurrencyType::getConstNameLower($project->plan_currency_type[$key]))?>" >
-                                            <link itemprop="availability" href="http://schema.org/InStock">
-                                            <span class="fa"><?=Currency::getCurrency()[$project->plan_currency_type[$key]]['i']?></span>
-                                        </td>
                                     </tr>
                                 <?php }?>
                                 </tbody>
@@ -137,12 +132,32 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             <table class="table mbn tc-bold-last table-hover justify">
                                 <tbody>
                                 <tr>
+                                    <td><?=Translate()->rating?></td>
+                                    <td itemprop="productionDate" class="fw600">
+                                        <?=$project->rating?>
+                                        <div class="progress progress-bar-xs">
+                                            <div class="progress-bar progress-bar-<?=[
+                                                'danger', 'warning-dark', 'warning', 'success-light', 'success'
+                                            ][(int)($project->rating/2)]?>" style="width: <?=$project->rating*10.0?>%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td><?=Translate()->dateStart?></td>
-                                    <td itemprop="productionDate"><?=$project->start_date->format('Y-m-d')?></td>
+                                    <td itemprop="productionDate">
+                                        <span class="fw600"><?=$project->start_date->format('Y-m-d')?></span>
+                                        <span class="nowrap">
+                                            (<?=$days = $project->start_date->diff(new \DateTime())->days?> <?=Translate()->getPeriodName(PlanPeriodType::DAY,$days)?>)
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?=Translate()->minDeposit?></td>
+                                    <td itemprop="productionDate" class="fw600"><?=$project->min_deposit?> <span class="fa"><?=Currency::getCurrency()[$project->currency]['i']?></span></td>
                                 </tr>
                                 <tr>
                                     <td><?=Translate()->refProgram?></td>
-                                    <td><?= implode('%, ', $project->ref_percent) . '%'?></td>
+                                    <td class="fw600"><?= implode('%, ', $project->ref_percent) . '%'?></td>
                                 </tr>
                                 <tr>
                                     <td><?=Translate()->languages?></td>

@@ -21,10 +21,7 @@ use Models\Collection\{
     Users};
 use Models\Table\{Language, Project, ProjectChatMessage, ProjectLang, Queue, Redirect};
 use Models\MView\MVProjectLang;
-use Models\Constant\{
-    ProjectStatus,
-    Views,
-};
+use Models\Constant\{ProjectStatus, User, Views};
 use Requests\Investment\{AddRequest,
     ChangeStatusRequest,
     ChatMessagesRequest,
@@ -41,8 +38,7 @@ use Views\Investment\{Added, Details, DetailsMeta, ProjectFilter, Registration, 
 class Investment extends Controller {
     use AuthTrait;
     private CONST
-        LIMIT = 20,
-        GUEST_USER_ID = 2;
+        LIMIT = 20;
 
     public function registration(): Output {
         $params = [
@@ -181,8 +177,6 @@ class Investment extends Controller {
             count($request->plan_percents),
             count($request->plan_period),
             count($request->plan_period_type),
-            count($request->plan_start_deposit),
-            count($request->plan_currency_type)
             ])) !== 1)
         {
             // Кол-во элементов отличается
@@ -191,7 +185,7 @@ class Investment extends Controller {
 
         // Сохраняем проект
         $project            = new Project($request->toArray());
-        $project->admin     = CurrentUser()->getId() ?? self::GUEST_USER_ID;
+        $project->admin     = CurrentUser()->getId() ?? User::GUEST;
         $project->url       = $url;
         $project->ref_url   = (strpos($checkSiteRequest->website, 'http') === false ? 'https://' : '') . $checkSiteRequest->website;
         $project->status_id = ProjectStatus::NOT_PUBLISHED;
@@ -237,7 +231,6 @@ class Investment extends Controller {
     }
 
     public static function refreshMViews(): void {
-        // Обновляем вьюшки @TODO перенести в rabbit
         MVProjectFilterAvailableLangs::refresh();
         MVProjectLangs::refresh();
         MVProjectSearchs::refresh();

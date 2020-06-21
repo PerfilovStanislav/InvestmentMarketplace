@@ -18,17 +18,19 @@ class SendPhotoRequest extends AbstractEntity {
 
     protected static array
         $properties = [
-            'chat_id'             => [self::TYPE_INT,       []],
-            'photo'               => [self::TYPE_CURL_FILE, [Validator::MIN => 1]],
-            'parse_mode'          => [self::TYPE_CONSTANTS, TelegramParseMode::class],
-            'caption'             => [self::TYPE_STRING,    [Validator::MIN => 0]],
-            'reply_markup'        => [self::TYPE_JSON,      []],
-            'reply_to_message_id' => [self::TYPE_INT,       []],
+            'chat_id'              => [self::TYPE_INT,       []],
+            'photo'                => [self::TYPE_CURL_FILE, [Validator::MIN => 1]],
+            'parse_mode'           => [self::TYPE_CONSTANTS, TelegramParseMode::class],
+            'caption'              => [self::TYPE_STRING,    [Validator::MIN => 0]],
+            'reply_markup'         => [self::TYPE_JSON,      []],
+            'reply_to_message_id'  => [self::TYPE_INT,       []],
+            'disable_notification' => [self::TYPE_BOOL,      []],
         ];
 
     public static function getDefaults(): array {
         return [
-            'parse_mode' => TelegramParseMode::MARKDOWN,
+            'parse_mode'           => TelegramParseMode::MARKDOWN,
+            'disable_notification' => date('H') < 5 || date('H') > 18,
         ];
     }
 }

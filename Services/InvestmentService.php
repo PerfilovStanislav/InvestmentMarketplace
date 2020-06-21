@@ -9,6 +9,10 @@ use Exceptions\ErrorException;
 use Helpers\Output;
 use Libraries\Screens;
 use Models\Collection\Languages;
+use Models\Collection\MVProjectCounts;
+use Models\Collection\MVProjectFilterAvailableLangs;
+use Models\Collection\MVProjectLangs;
+use Models\Collection\MVProjectSearchs;
 use Models\Constant\ProjectStatus;
 use Models\Constant\User;
 use Models\Table\Language;
@@ -26,7 +30,7 @@ class InvestmentService
         $project->status_id = $request->status;
         $project->save();
 
-        Investment::refreshMViews();
+        self::refreshMViews();
         Db()->setTable('mv_sitemapxml')->refresh(false);
 
         if ($request->status === ProjectStatus::ACTIVE) {
@@ -194,9 +198,18 @@ class InvestmentService
                     'project_id' => $project->id,
                 ],
             ]))->save();
+
+            self::refreshMViews();
         } catch (\Exception $exception) {
             throw new ErrorException('Parse error', 'project was n\'t found');
         }
 
+    }
+
+    public static function refreshMViews(): void {
+        MVProjectFilterAvailableLangs::refresh();
+        MVProjectLangs::refresh();
+        MVProjectSearchs::refresh();
+        MVProjectCounts::refresh();
     }
 }

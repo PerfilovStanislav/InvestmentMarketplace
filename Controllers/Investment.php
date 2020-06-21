@@ -230,13 +230,6 @@ class Investment extends Controller {
         return (new \Controllers\Users())->reloadPage();
     }
 
-    public static function refreshMViews(): void {
-        MVProjectFilterAvailableLangs::refresh();
-        MVProjectLangs::refresh();
-        MVProjectSearchs::refresh();
-        MVProjectCounts::refresh();
-    }
-
     private function getWebsiteUrl(CheckSiteRequest $request): string {
         $url = self::getParsedUrl(str_replace('www.', '', strtolower($request->website)));
         Error()->exitIfExists();

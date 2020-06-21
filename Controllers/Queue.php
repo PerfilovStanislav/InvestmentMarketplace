@@ -117,7 +117,7 @@ class Queue
 
             Screens::makeThumbs($project->url, $project->id);
 
-            Investment::refreshMViews();
+            InvestmentService::refreshMViews();
 
             $user = (new User())->getById($project->admin);
             $message = new SendPhotoRequest([
@@ -225,7 +225,7 @@ class Queue
             sleep(5);
         }
 
-        Investment::refreshMViews();
+        InvestmentService::refreshMViews();
     }
 
     public function parseNewProjects()

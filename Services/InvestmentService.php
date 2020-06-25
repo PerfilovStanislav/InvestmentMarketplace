@@ -208,8 +208,8 @@ class InvestmentService
             ]))->save();
 
             self::refreshMViews();
-        } catch (\Exception $exception) {
-            throw new ErrorException('Parse error', 'project was n\'t found');
+        } catch (\Exception $e) {
+            throw new ErrorException('Parse error: ' . $project->url, $e->getMessage());
         }
 
     }

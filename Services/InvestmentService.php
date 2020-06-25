@@ -172,11 +172,19 @@ class InvestmentService
                 'plan_period_type' => array_column($plans, 2),
                 'currency'         => $minDeposit['currency'],
                 'min_deposit'      => $minDeposit['deposit'],
-                'id_payments'      => $hyipboxService->getPayments(),
+                'id_payments'      => array_values(array_unique(array_merge(
+                    $hyipboxService->getPayments(),
+                    $hyiplogsService->getPayments()
+                ))),
                 'ref_url'          => 'https://' . $project->url,
                 'status_id'        => ProjectStatus::NOT_PUBLISHED,
                 'rating'           => $hyiplogsService->getRating(),
-            ])->save();
+            ]);
+
+            if (count(array_filter($project->toArray())) !== 15) {
+                return;
+            }
+            $project->save();
 
             if (($description = $hyipboxService->getDescription()) && $description) {
                 $descriptions = $this->multiTranslate($this->detectLanguage($description), $description);

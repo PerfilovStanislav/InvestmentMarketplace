@@ -3,6 +3,7 @@
 namespace Services;
 
 use DiDom\Document;
+use Mappers\HyiplogsMapper;
 use Models\Constant\PlanPeriodType;
 use Traits\Instance;
 
@@ -15,6 +16,12 @@ class HyiplogsService
     public function setUrl(string $url): self {
         $this->document = new Document(sprintf('https://hyiplogs.com/project/%s', $url), true);
         return $this;
+    }
+
+    public function getPayments(): array {
+        $str = $this->document->first('div.container-fluid div.info-box div.item:nth-child(6) div.txt')->text();
+        $str = explode(',', trim($str));
+        return (new HyiplogsMapper())->payments($str);
     }
 
     public function getRating() {

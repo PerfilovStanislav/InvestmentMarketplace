@@ -23,11 +23,14 @@ use Services\VKService;
 
 class Queue
 {
+    private int $fileTime;
+
     public function __construct()
     {
         if (!CLI) {
             throw new \Exception('Only cli available');
         }
+        $this->fileTime = filemtime(__FILE__);
         Output()->disableLayout();
     }
 
@@ -53,6 +56,11 @@ class Queue
     {
         $queueOriginal = (new QueueModel());
         while (true) {
+            clearstatcache(true, __FILE__);
+            if ($this->fileTime !== filemtime(__FILE__)) {
+                exit();
+            }
+
             $queue = clone $queueOriginal;
             $queue->getRowFromDbAndFill([
                 'action_id' => $actionID,
@@ -177,7 +185,8 @@ class Queue
             foreach ($projectLangs as $projectLang) {
                 if (in_array($projectLang->lang_id, $facebookPageLanguages, true)) {
                     $url = sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
-                    $description = str_replace('</br>', '', $projectLang->description);
+                    $description = str_replace(['</br>', $project->url], ['', $project->name], $projectLang->description);
+
                     App()->facebook()->sendPhoto(
                         $projectLang->lang_id,
                         Screens::getOriginalJpgScreen($project->id),
@@ -235,7 +244,7 @@ class Queue
         }
 
         $url = 'https://hyiplogs.com/hyips/?' . http_build_query([
-                'hlindex[from]' => 4,
+                'hlindex[from]' => 2,
                 'hlindex[to]'   => 10,
                 'status[1]'     => 1,
                 'design'        => 1,

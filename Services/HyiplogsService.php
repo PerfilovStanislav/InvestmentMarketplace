@@ -41,7 +41,7 @@ class HyiplogsService
             $strPlan = preg_replace('/\(.*?\)/', '', $strPlan); // убираем скобки
             $strPlan = str_replace('up to ', '', $strPlan);
             $strPlan = trim($strPlan);
-            $strPlan = str_replace(['forever', 'for lifetime'], ' for 1 day', $strPlan);
+            $strPlan = str_replace(['forever', 'for lifetime'], ' for 1 ___', $strPlan);
 
             if (strpos($strPlan, 'roi') !== false) {
                 continue;
@@ -50,6 +50,9 @@ class HyiplogsService
             // 1.25% - 2.1% daily for 20 - 60 days
             // 1.2% - 10.3% daily for 15 - 30 business days
             if (preg_match('/^([0-9.]+)% ?- ?([0-9.]+)% ?(\w+) ?for ?(\d+) ?- ?(\d+) ?(\w+ )?(\w+)$/', $strPlan, $v)) {
+                if ($v[7] === '___') {
+                    $v[7] = PlanPeriodType::getConstNameLower($this->getPlanPeriodType($v[3]));
+                }
                 $coefficient = $this->calculateCoefficientForPeriodTypes(
                         $this->getPlanPeriodType($v[3]),
                         $this->getPlanPeriodType($v[7]),
@@ -106,6 +109,9 @@ class HyiplogsService
             // 2% - 3% hourly for 3 days
             // 2.5% - 3.1% hourly for 3 business days
             if (preg_match('/^([0-9.]+)% ?- ?([0-9.]+)% ?(\w+) *(\w+) ?(\d+) ?(\w+ )?(\w+)$/', $strPlan, $v)) {
+                if ($v[7] === '___') {
+                    $v[7] = PlanPeriodType::getConstNameLower($this->getPlanPeriodType($v[3]));
+                }
                 $coefficient = $this->calculateCoefficientForPeriodTypes(
                         $this->getPlanPeriodType($v[3]),
                         $this->getPlanPeriodType($v[7]),

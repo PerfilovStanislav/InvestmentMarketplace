@@ -69,6 +69,7 @@ class Queue
 
             if (!$queue->id) {
                 unset($queue);
+                gc_collect_cycles();
                 sleep(3);
                 continue;
             }

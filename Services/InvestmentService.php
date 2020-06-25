@@ -163,7 +163,7 @@ class InvestmentService
 
             $project->fromArray([
                 'name'             => $hyipboxService->getTitle(),
-                'admin'            => User::ME,
+                'admin'            => User::SYSTEM,
                 'start_date'       => date(\DATE_ATOM, $hyipboxService->getStartDate()),
                 'paymenttype'      => $hyipboxService->getPaymentTypeId(),
                 'ref_percent'      => $hyipboxService->getReferralPlans(),

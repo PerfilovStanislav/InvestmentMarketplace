@@ -272,7 +272,7 @@ class Queue
             exit(1);
         }
 
-        $list = Hyiplog::setTable()->select(null, '*', 'id desc, rating desc', 30);
+        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 30);
         foreach ($list as $item) {
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;

@@ -30,13 +30,20 @@ use Models\Constant\Views;
     <meta name="application-name" content="RiM">
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
-    <meta name="yandex-verification" content="0cb92639e17a4017" />
-    <meta name="yandex-verification" content="aa4cd0cbe00f029b" />
+<!--    <meta name="yandex-verification" content="0cb92639e17a4017" />-->
+<!--    <meta name="yandex-verification" content="aa4cd0cbe00f029b" />-->
 
     <?php \Helpers\Scripts::loadCSS() ?>
+    <?=$this->{Views::GOOGLE_TAG_MANAGER}?>
+<!--    --><?//=$this->{Views::YANDEX_METRICA}?>
+<!--    --><?//=$this->{Views::GOOGLE_ANALITIC}?>
 </head>
 
 <body class="dashboard-page">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CQ84BP"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div id="main">
     <header class="navbar navbar-fixed-top navbar-shadow">
         <div class="navbar-branding">
@@ -54,7 +61,7 @@ use Models\Constant\Views;
         <?=$this->{Views::SIDEBAR_LEFT}?>
     </aside>
     <section id="content_wrapper">
-        <div id="<?=Views::CONTENT;?>" class="animated fadeIn">
+        <div id="<?=Views::CONTENT?>" class="animated fadeIn">
             <?=$this->{Views::CONTENT}?>
         </div>
     </section>

@@ -7,7 +7,10 @@ use Core\View;
 use Models\Constant\Views;
 use Traits\Instance;
 use Views\Investment\ChatMessage;
+use Views\Investment\GoogleAnalitic;
+use Views\Investment\GoogleTagManager;
 use Views\Investment\ShowMeta;
+use Views\Investment\YandexMetrika;
 use Views\Layout;
 
 class Output
@@ -46,8 +49,11 @@ class Output
         $template = [
             self::LAYOUT => Layout::class,
             self::ADDITIONAL_VIEWS => [
-                Views::CHAT_MESSAGE => [ChatMessage::class, []],
-                Views::META         => [ShowMeta::class, []],
+                Views::CHAT_MESSAGE         => [ChatMessage::class, []],
+                Views::META                 => [ShowMeta::class, []],
+                Views::GOOGLE_TAG_MANAGER   => [GoogleTagManager::class, []],
+//                Views::YANDEX_METRICA       => [YandexMetrika::class, []],
+//                Views::GOOGLE_ANALITIC      => [GoogleAnalitic::class, []],
             ],
         ];
 

@@ -15,6 +15,10 @@ class Locale {
     private ?string $language        = null;
     private AbstractLanguage $locale;
 
+    public function setLanguage(string $lang): void {
+        $this->language = $lang;
+    }
+
     public function getLanguage(): string {
         if ($this->language !== null) {
             return $this->language;

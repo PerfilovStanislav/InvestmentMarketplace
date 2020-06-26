@@ -50,9 +50,9 @@ use Libraries\Screens; ?>
                         <a href="<?=SITE?>/Contact/show"><?=Translate()->contact?></a>
                         <a href="<?=SITE?>/Investment/registration"><?=Translate()->addProject?></a>
                     </menu>
-                    <p><?=str_replace(['<\br>', "\n"], '</p><p>', $info['description'] ?? '')?>
-                    </p>
                 </header>
+                <p><?=str_replace(['<\br>', "\n"], '</p><p>', $info['description'] ?? '')?>
+                </p>
                 ]]>
             </turbo:content>
         </item>

@@ -27,6 +27,7 @@ class Staticfiles extends Controller {
     }
 
     public function rss(): Output {
+        Output()->disableMinifying();
         $data = Db()->setTable('mv_sitemapxml')->select(['shortname' => App()->locale()->getLanguage()]);
 
         return Output()

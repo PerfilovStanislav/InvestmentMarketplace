@@ -38,7 +38,7 @@ use Libraries\Screens; ?>
                     </breadcrumblist>
                 </yandex>
             </metrics>
-            <yandex:related></yandex:related>
+<!--            <yandex:related></yandex:related>-->
             <turbo:content>
                 <![CDATA[
                 <header>

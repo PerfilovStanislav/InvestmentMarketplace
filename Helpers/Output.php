@@ -52,8 +52,6 @@ class Output
                 Views::CHAT_MESSAGE         => [ChatMessage::class, []],
                 Views::META                 => [ShowMeta::class, []],
                 Views::GOOGLE_TAG_MANAGER   => [GoogleTagManager::class, []],
-//                Views::YANDEX_METRICA       => [YandexMetrika::class, []],
-//                Views::GOOGLE_ANALITIC      => [GoogleAnalitic::class, []],
             ],
         ];
 

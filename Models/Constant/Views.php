@@ -15,8 +15,6 @@ class Views implements ConstantInterface {
         CHAT_MESSAGE        = 'chatMessage',
         META                = 'meta',
         GOOGLE_TAG_MANAGER  = 'googleTagManager',
-//        YANDEX_METRICA      = 'yandexMetrica',
-//        GOOGLE_ANALITIC     = 'googleAnalitic',
         SIDEBAR_LEFT        = 'sidebar_left',
         FORM_SENT           = 'formSent';
 }

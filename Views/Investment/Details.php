@@ -44,7 +44,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                         >
                     </div>
                     <div class="section-divider mt40" id="spy7">
-                        <span> <?=Translate()->description?> </span>
+                        <span class="hide_for_iv"> <?=Translate()->description?> </span>
                     </div>
                     <div class="section">
                         <?=$this->projectLang->description?>
@@ -61,7 +61,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                 <span class="panel-icon">
                                     <i class="fa fa-signal"></i>
                                 </span>
-                        <span class="panel-title"><?=Translate()->plans?></span>
+                        <span class="panel-title hide_for_iv"><?=Translate()->plans?></span>
                     </div>
                     <div class="panel-body panel-scroller scroller-xs scroller-pn pn scroller-active scroller-success mih-220">
                         <table class="table mbn justify">
@@ -89,7 +89,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             <span class="panel-icon">
                                 <i class="fa fa-gear"></i>
                             </span>
-                        <span class="panel-title"><?=Translate()->options?></span>
+                        <span class="panel-title hide_for_iv"><?=Translate()->options?></span>
                     </div>
                     <div class="panel-body panel-scroller scroller-xs scroller-pn pn scroller-active scroller-success mih-220">
                         <table class="table mbn tc-bold-last table-hover justify">

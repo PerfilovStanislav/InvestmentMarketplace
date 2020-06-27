@@ -42,3 +42,4 @@ use Models\Table\ProjectLang; ?>
 <meta name="twitter:description" content="<?=$description?>" data-meta-dynamic="true">
 <meta name="twitter:image" content="<?=SITE?>/<?=Screens::getOriginalJpgScreen($this->project->id)?>">
 <meta name="twitter:card" content="summary_large_image">
+<meta data-rh="true" property="article:published_time" content="<?=$this->project->add_date->format(\DATE_ATOM)?>">

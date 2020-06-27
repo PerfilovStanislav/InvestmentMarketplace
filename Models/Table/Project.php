@@ -13,7 +13,7 @@ use Traits\Model;
  * @property int        $admin
  * @property string     $url
  * @property \DateTime  $start_date
- * @property string     $add_date
+ * @property \DateTime  $add_date
  * @property int        $paymenttype
  * @property float[]    $ref_percent
  * @property float[]    $plan_percents

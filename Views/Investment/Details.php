@@ -18,6 +18,7 @@ use Models\Constant\PlanPeriodType;
 use Models\Constant\ProjectStatus;
 use Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
+<article>
 <div class="tray tray-center" project_id="<?=$this->project->id?>">
     <div class="panel admin-form theme-primary mw1000 center-block">
         <div class="heading-border panel-<?=[
@@ -176,3 +177,4 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
         </div>
     </div>
 </div>
+</article>

@@ -122,7 +122,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                 <td><?=Translate()->refProgram?></td>
                                 <td class="fw600"><?= implode('%, ', $this->project->ref_percent) . '%'?></td>
                             </tr>
-                            <tr>
+                            <tr class="hide_for_iv">
                                 <td><?=Translate()->languages?></td>
                                 <td><?php foreach ($this->languages as $langId => $language):
                                         /** @var Language $language */ ?>
@@ -131,7 +131,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                                     <?php endforeach;?>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="hide_for_iv">
                                 <td>
                                     <?=Translate()->paymentSystem?>
                                 </td>

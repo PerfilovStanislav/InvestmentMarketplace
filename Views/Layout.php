@@ -30,13 +30,9 @@ use Models\Constant\Views;
     <meta name="application-name" content="RiM">
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
-<!--    <meta name="yandex-verification" content="0cb92639e17a4017" />-->
-<!--    <meta name="yandex-verification" content="aa4cd0cbe00f029b" />-->
 
     <?php \Helpers\Scripts::loadCSS() ?>
     <?=$this->{Views::GOOGLE_TAG_MANAGER}?>
-<!--    --><?//=$this->{Views::YANDEX_METRICA}?>
-<!--    --><?//=$this->{Views::GOOGLE_ANALITIC}?>
 </head>
 
 <body class="dashboard-page">

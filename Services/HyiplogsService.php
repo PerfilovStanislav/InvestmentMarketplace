@@ -148,6 +148,9 @@ class HyiplogsService
             // 1.8% daily for 100 days
             // 2.5% hourly for 80 business days
             if (preg_match('/^([0-9.]+)% ?(\w+) *(\w+) ?(\d+) ?(\w+ )?(\w+)$/', $strPlan, $v)) {
+                if ($v[6] === '___') {
+                    $v[6] = PlanPeriodType::getConstNameLower($this->getPlanPeriodType($v[2]));
+                }
                 $coefficient = $this->calculateCoefficientForPeriodTypes(
                         $this->getPlanPeriodType($v[2]),
                         $this->getPlanPeriodType($v[6]),

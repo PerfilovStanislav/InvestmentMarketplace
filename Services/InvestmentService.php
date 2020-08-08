@@ -117,7 +117,7 @@ class InvestmentService
 
     public function detectLanguage(string $text): string {
         $ld = new \LanguageDetection\Language(['en', 'zh', 'ru']);
-        return array_keys($ld->detect($text)->bestResults()->close())[0];
+        return array_keys($ld->detect($text)->bestResults()->close())[0] ?? '';
     }
 
     public function multiTranslate(string $fromLang, string $description): array {
@@ -184,19 +184,28 @@ class InvestmentService
             if (count(array_filter($project->toArray())) !== 15) {
                 return;
             }
+
+            $description = $hyipboxService->getDescription();
+            if (mb_strlen($description) < 50) {
+                return;
+            }
+
+            $lang = $this->detectLanguage($description);
+            if ($lang === '') {
+                return;
+            }
+
             $project->save();
 
-            if (($description = $hyipboxService->getDescription()) && $description) {
-                $descriptions = $this->multiTranslate($this->detectLanguage($description), $description);
-                // Сохраняем описания
-                foreach ($descriptions as $langId => $description) {
-                    $projectLang              = new ProjectLang();
-                    $projectLang->project_id  = $project->id;
-                    $projectLang->lang_id     = $langId;
-                    $projectLang->description = str_replace("\n", '</br>', $description);
-                    $projectLang->save();
-                    unset($projectLang);
-                }
+            $descriptions = $this->multiTranslate($lang, $description);
+            // Сохраняем описания
+            foreach ($descriptions as $langId => $description) {
+                $projectLang              = new ProjectLang();
+                $projectLang->project_id  = $project->id;
+                $projectLang->lang_id     = $langId;
+                $projectLang->description = str_replace("\n", '</br>', $description);
+                $projectLang->save();
+                unset($projectLang);
             }
 
             (new Queue([

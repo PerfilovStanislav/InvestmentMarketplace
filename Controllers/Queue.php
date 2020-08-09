@@ -185,7 +185,7 @@ class Queue
             /** @var ProjectLang $projectLang */
             foreach ($projectLangs as $projectLang) {
                 if (in_array($projectLang->lang_id, $facebookPageLanguages, true)) {
-                    $url = sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
+                    $url = sprintf('%s/Investment/details/site/%s/lang/%s/', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
                     $description = str_replace(['</br>', $project->url], ['', $project->name], $projectLang->description);
 
                     App()->facebook()->sendPhoto(

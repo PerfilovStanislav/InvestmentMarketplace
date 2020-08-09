@@ -28,6 +28,9 @@ class InvestmentService
     public function changeStatus(ChangeStatusRequest $request): Project {
         $project = (new Project())->getById($request->project);
         $project->status_id = $request->status;
+        if ($request->status === ProjectStatus::SCAM) {
+            $project->scam_date = date(\DATE_ATOM);
+        }
         $project->save();
 
         self::refreshMViews();

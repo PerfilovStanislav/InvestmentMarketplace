@@ -221,6 +221,7 @@ class Queue
         while (($project = $investmentService->getNextProject($projectId, ProjectStatus::ACTIVE))->id) {
             if ((HyipboxService::getInstance()->setUrl($project->url))->isScam()) {
                 $project->status_id = ProjectStatus::SCAM;
+                $project->scam_date = date(\DATE_ATOM);
                 $project->save();
 
                 App()->telegram()->sendPhoto(new SendPhotoRequest([
@@ -238,7 +239,7 @@ class Queue
         InvestmentService::refreshMViews();
     }
 
-    public function parseNewProjects()
+    public function parseNewProjects(): void
     {
         if (count($this->getPids(__FUNCTION__)) > 1) {
             exit(1);

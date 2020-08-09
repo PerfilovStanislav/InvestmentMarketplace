@@ -70,7 +70,10 @@ class Auth {
             return null;
         }
 
-        $session->fromArray(['ip' => $this->getIP()]);
+        $session->fromArray([
+            'ip' => $this->getIP(),
+            'http_referer' => $_SERVER['HTTP_REFERER'] ?? null,
+        ]);
         $session->save();
 
         return $session->id;

@@ -25,6 +25,7 @@ use Traits\Model;
  * @property string     $ref_url
  * @property int        $status_id
  * @property float      $rating
+ * @property \DateTime  $scam_date
  */
 class Project extends AbstractEntity implements ModelInterface {
     use Model;
@@ -50,5 +51,6 @@ class Project extends AbstractEntity implements ModelInterface {
             'ref_url'            => [self::TYPE_STRING,      [Validator::MIN  => 1, Validator::MAX => 128]],
             'status_id'          => [self::TYPE_INT,         [Validator::MIN  => 1]],
             'rating'             => [self::TYPE_FLOAT,       [Validator::MIN  => 0, Validator::MAX => 10]],
+            'scam_date'          => [self::TYPE_DATE,        [], self::TYPE_NULLABLE],
         ];
 }

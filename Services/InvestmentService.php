@@ -162,7 +162,9 @@ class InvestmentService
             }
 
             $plans = $hyiplogsService->getPlans();
-            $minDeposit = $hyipboxService->getMinDeposit();
+            if (!$minDeposit = $hyipboxService->getMinDeposit()) {
+                return;
+            }
 
             $project->fromArray([
                 'name'             => $hyipboxService->getTitle(),

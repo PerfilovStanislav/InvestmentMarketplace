@@ -63,9 +63,16 @@ class HyipboxService {
     }
 
     public function getMinDeposit(): array {
-        $str = $this->document->find('div.feat_elm')[9]->first('div.body_feat_elem')->text();
-        $value = preg_replace('/[^'.Validator::FLOAT.']/', '', $str);
-        return ['deposit' => $value, 'currency' => $this->getCurrencyType($str)];
+        if ($dom = ($this->document->find('div.feat_elm')[9] ?? null)) {
+            try {
+                $str = $dom->first('div.body_feat_elem')->text();
+                $value = preg_replace('/[^' . Validator::FLOAT . ']/', '', $str);
+                return ['deposit' => $value, 'currency' => $this->getCurrencyType($str)];
+            } catch (\Throwable $e) {
+                return [];
+            }
+        }
+        return [];
     }
 
     public function getReferralPlans(): array {

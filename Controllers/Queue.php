@@ -208,6 +208,7 @@ class Queue
                         sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
                         $project->name,
                     );
+                    sleep(5);
                     $vkService->sendToMarket(
                         $projectLang->lang_id,
                         Screens::getOriginalJpgScreen($project->id),
@@ -216,6 +217,7 @@ class Queue
                         $project->name,
                     );
                 }
+                sleep(10);
             }
 
             unset($projectLangs, $project);

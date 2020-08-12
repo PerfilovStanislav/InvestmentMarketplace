@@ -11,6 +11,9 @@ class VKMapper
         return [
             Language::EN => \Config::VK_GROUP_EN,
             Language::RU => \Config::VK_GROUP_RU,
+            Language::ZH => \Config::VK_GROUP_ZH,
+            Language::BN => \Config::VK_GROUP_BN,
+            Language::ES => \Config::VK_GROUP_ES,
         ];
     }
 

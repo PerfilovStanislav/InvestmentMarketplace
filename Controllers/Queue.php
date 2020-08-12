@@ -78,13 +78,17 @@ class Queue
             $queue->start_time = date('Y-m-d H:i:s');
             $queue->save();
 
-            $functionForCall($queue);
+            try {
+                $functionForCall($queue);
 
-            $queue->end_time = date('Y-m-d H:i:s');
-            $queue->status_id = QueueModel::STATUS_FINISHED;
-            $queue->save();
+                $queue->end_time = date('Y-m-d H:i:s');
+                $queue->status_id = QueueModel::STATUS_FINISHED;
+                $queue->save();
 
-            unset($queue);
+                unset($queue);
+            } catch (\Throwable $e) {
+
+            }
         }
     }
 
@@ -197,7 +201,14 @@ class Queue
                 if (in_array($projectLang->lang_id, $vkPageLanguages, true)) {
                     $url = sprintf('%s/Investment/details/site/%s/lang/%s', SITE, $project->url, Language::getConstNameLower($projectLang->lang_id));
                     $description = str_replace('</br>', '', $projectLang->description);
-                    $vkService->sendToMarket(
+                    $vkService->sendToWall(
+                        $projectLang->lang_id,
+                        Screens::getOriginalJpgScreen($project->id),
+                        $url,
+                        sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
+                        $project->name,
+                    );
+                    $vkService->sendToWall(
                         $projectLang->lang_id,
                         Screens::getOriginalJpgScreen($project->id),
                         $url,

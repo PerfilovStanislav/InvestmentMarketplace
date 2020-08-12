@@ -208,7 +208,7 @@ class Queue
                         sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
                         $project->name,
                     );
-                    $vkService->sendToWall(
+                    $vkService->sendToMarket(
                         $projectLang->lang_id,
                         Screens::getOriginalJpgScreen($project->id),
                         $url,

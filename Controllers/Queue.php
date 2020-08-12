@@ -87,7 +87,7 @@ class Queue
 
                 unset($queue);
             } catch (\Throwable $e) {
-
+                sendToTelegram(['$queue' => $queue->toArray(), 'line' => __LINE__, 'method' => __METHOD__]);
             }
         }
     }

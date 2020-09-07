@@ -21,10 +21,12 @@ use Models\Table\ProjectLang;
 use Models\Table\Queue;
 use Requests\Investment\ChangeStatusRequest;
 use Requests\Investment\ReloadScreenshotRequest;
-use Mappers\HyiplogsMapper;
+use Traits\DecodeErrorException;
 
 class InvestmentService
 {
+    use DecodeErrorException;
+
     public function changeStatus(ChangeStatusRequest $request): Project {
         $project = (new Project())->getById($request->project);
         $project->status_id = $request->status;
@@ -71,8 +73,15 @@ class InvestmentService
     }
 
     public function parseInfo(string $url) {
-        $hyiplogsService = HyiplogsService::getInstance()->setUrl($url);
-        $hyipboxService = HyipboxService::getInstance()->setUrl($url);
+        $hyiplogsService = $this->try(function () use ($url) {
+            return HyiplogsService::getInstance()->setUrl($url);
+        });
+        $hyipboxService = $this->try(function () use ($url) {
+            return HyipboxService::getInstance()->setUrl($url);
+        });
+        if (Error()->hasError()) {
+            return;
+        }
 
         try {
             if ($hyipboxService->isScam()) {
@@ -131,8 +140,8 @@ class InvestmentService
             try {
                 $result[$lang->id] =
                     $fromLang === $lang->shortname
-                    ? $description
-                    : GoogleTranslateForFree::translate($fromLang, $lang->shortname, $description);
+                        ? $description
+                        : GoogleTranslateForFree::translate($fromLang, $lang->shortname, $description);
             } catch (\Exception $e) {
                 continue;
             }
@@ -144,10 +153,10 @@ class InvestmentService
 
     public function getNextProject(int $projectId, int $projectStatus): Project {
         return (new Project())->fromArray(Db()->rawSelect(sprintf(
-            'select id, url from project where id > %d and status_id = %d order by id asc limit 1',
-            $projectId,
-            $projectStatus
-        ))[0] ?? []);
+                'select id, url from project where id > %d and status_id = %d order by id asc limit 1',
+                $projectId,
+                $projectStatus
+            ))[0] ?? []);
     }
 
     public function parseProject(Project $project): void {

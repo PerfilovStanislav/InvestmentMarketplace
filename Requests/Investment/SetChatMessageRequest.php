@@ -2,7 +2,7 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 use Models\Table\Language;
 use Models\Table\Project;
@@ -12,7 +12,7 @@ use Models\Table\Project;
  * @property int    $project
  * @property string $message
  */
-class SetChatMessageRequest extends AbstractEntity {
+class SetChatMessageRequest extends AbstractRequest {
 
     protected static array
         $properties = [

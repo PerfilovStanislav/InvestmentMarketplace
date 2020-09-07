@@ -2,13 +2,13 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 
 /**
  * @property string $website
  */
-class CheckSiteRequest extends AbstractEntity {
+class CheckSiteRequest extends AbstractRequest {
 
     protected static array
         $properties = [

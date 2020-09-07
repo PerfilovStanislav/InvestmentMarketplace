@@ -2,7 +2,7 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 use Interfaces\ModelInterface;
 use Traits\IteratorTrait;
@@ -12,7 +12,7 @@ use Traits\Model;
  * @property ChatMessageRequest[] $messages
  * @property int $lang
  */
-class ChatMessagesRequest extends AbstractEntity implements ModelInterface, \Iterator {
+class ChatMessagesRequest extends AbstractRequest implements ModelInterface, \Iterator {
     use Model;
     use IteratorTrait;
 

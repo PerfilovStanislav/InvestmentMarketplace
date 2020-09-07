@@ -27,7 +27,8 @@ abstract class AbstractEntity {
         TYPE_FLOAT_ARRAY  = 12,
         TYPE_STRING_ARRAY = 13,
         TYPE_CURL_FILE    = 14,
-        TYPE_JSON         = 15;
+        TYPE_JSON         = 15,
+        TYPE_NOT_REQUIRED = 16;
 
     public CONST
         FORMAT_DATE     = 'Y-m-d',

@@ -2,14 +2,14 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 
 /**
  * @property int $id
  * @property int $project_id
  */
-class ChatMessageRequest extends AbstractEntity {
+class ChatMessageRequest extends AbstractRequest {
 
     protected static array
         $properties = [

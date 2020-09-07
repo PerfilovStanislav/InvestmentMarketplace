@@ -40,12 +40,10 @@ class Telegram {
     }
 
     public function sendPhoto(SendPhotoRequest $request) {
-        Error()->exitIfExists();
         return $this->send('sendPhoto', $request);
     }
 
     public function editMessageReplyMarkup(EditMessageReplyMarkup $request) {
-        Error()->exitIfExists();
         return $this->send('editMessageReplyMarkup', $request);
     }
 

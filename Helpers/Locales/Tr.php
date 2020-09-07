@@ -72,6 +72,7 @@ class Tr extends AbstractLanguage {
         $remember          = 'Hatırla',
         $remove            = 'Kaldır',
         $repeatPassword    = 'Şifreyi Tekrarla',
+        $required          = 'Gereklidir',
         $scam              = 'Aldatmaca',
 //        $selectFile      = 'Dosya seçin',
         $sendForm          = 'Formu Gönder',

@@ -72,6 +72,7 @@ class Zh extends AbstractLanguage {
         $refProgram        = '推薦程序',
         $registration      = '報名',
         $remember          = '記住我',
+        $required          = '需要',
         $remove            = '刪掉',
         $repeatPassword    = '重新輸入密碼',
         $scam              = '詐騙',

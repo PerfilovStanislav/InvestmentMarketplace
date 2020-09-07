@@ -48,6 +48,8 @@ class App
                         'code'        => 404,
                     ]);
                 }
+            } elseif (!($e instanceof ErrorException)) {
+                Error()->add('Unknown', $e->getMessage());
             }
             Db()->rollBackTransaction();
         } finally {

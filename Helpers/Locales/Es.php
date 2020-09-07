@@ -72,6 +72,7 @@ class Es extends AbstractLanguage {
         $remember          = 'Recordar',
         $remove            = 'Eliminar',
         $repeatPassword    = 'Repetir contraseña',
+        $required          = 'Necesario',
         $scam              = 'Estafa',
 //        $selectFile      = 'Seleccionar archivo',
         $sendForm          = 'Enviar formulario',

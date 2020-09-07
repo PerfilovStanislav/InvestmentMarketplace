@@ -2,14 +2,14 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 use Models\Table\Project;
 
 /**
  * @property int    $project
  */
-class ReloadScreenshotRequest extends AbstractEntity {
+class ReloadScreenshotRequest extends AbstractRequest {
 
     protected static array
         $properties = [

@@ -28,7 +28,7 @@ class Queue
     public function __construct()
     {
         if (!CLI) {
-            throw new \Exception('Only cli available');
+            throw new \RuntimeException('Only cli available');
         }
         $this->fileTime = filemtime(__FILE__);
         Output()->disableLayout();
@@ -292,6 +292,7 @@ class Queue
                 continue;
             }
             (new InvestmentService())->parseProject($project);
+            gc_collect_cycles();
             sleep(60*5);
         }
     }

@@ -8,14 +8,17 @@ use Models\Constant\CurrencyType;
 use Models\Constant\Payment;
 use Models\Constant\PaymentType;
 use Traits\Instance;
+use Traits\UrlValidate;
 
 class HyipboxService {
-    use Instance;
+    use Instance, UrlValidate;
 
     private Document $document;
 
     public function setUrl(string $url): self {
-        $this->document = new Document(sprintf('https://hyipbox.org/details/%s', $url), true);
+        $url = sprintf('https://hyipbox.org/details/%s', $url);
+        $this->validate($url);
+        $this->document = new Document($url, true);
         return $this;
     }
 

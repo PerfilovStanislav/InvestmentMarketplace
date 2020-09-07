@@ -2,9 +2,8 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
-use Models\Table\Language;
 use Models\Table\Project;
 
 /**
@@ -20,7 +19,7 @@ use Models\Table\Project;
  * @property integer[]  $id_payments
  * @property string[]   $description
  */
-class AddRequest extends AbstractEntity {
+class AddRequest extends AbstractRequest {
 
     protected static array
         $properties = [

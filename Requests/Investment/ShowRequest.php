@@ -2,7 +2,7 @@
 
 namespace Requests\Investment;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Arrays;
 use Helpers\Validator;
 use Models\Constant\ProjectStatus;
@@ -12,7 +12,7 @@ use Models\Constant\ProjectStatus;
  * @property string $lang
  * @property string $status
  */
-class ShowRequest extends AbstractEntity {
+class ShowRequest extends AbstractRequest {
 
     protected static array
         $properties = [

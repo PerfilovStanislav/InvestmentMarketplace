@@ -17,7 +17,11 @@ define('SITE', 'https://' . DOMAIN);
 define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
 define('CLI', php_sapi_name() === 'cli');
 error_reporting(E_ALL | E_STRICT);
-define('IS_AJAX', ($_POST['ajax'] ?? 0) == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']));
+define('IS_AJAX',
+    ($_POST['ajax'] ?? 0) == 1
+    || isset($_SERVER['HTTP_X_REQUESTED_WITH'])
+    || strtolower($_SERVER['REQUEST_METHOD'] ?? '') === 'post'
+);
 define('START_SHUTDOWN', true);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -69,13 +73,13 @@ else {
         Db()->rollBackTransaction();
     } catch (\Exception $exception) {
         Db()->rollBackTransaction();
-        sendToTelegram(['errorMessage' => $exception->getMessage()]);
+//        sendToTelegram(['errorMessage' => $exception->getMessage()]);
     }
 }
 
 function shutdown() {
     if ($error = error_get_last()) { // E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
-        sendToTelegram(['error' => $error]);
+//        sendToTelegram(['error' => $error]);
     }
 }
 

@@ -2,7 +2,7 @@
 
 namespace Requests\User;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 use Models\Table\User;
 
@@ -11,7 +11,7 @@ use Models\Table\User;
  * @property string $name
  * @property string $password
  */
-class RegistrationRequest extends AbstractEntity {
+class RegistrationRequest extends AbstractRequest {
 
     protected static array
         $properties = [

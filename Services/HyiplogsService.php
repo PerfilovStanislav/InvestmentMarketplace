@@ -6,15 +6,18 @@ use DiDom\Document;
 use Mappers\HyiplogsMapper;
 use Models\Constant\PlanPeriodType;
 use Traits\Instance;
+use Traits\UrlValidate;
 
 class HyiplogsService
 {
-    use Instance;
+    use Instance, UrlValidate;
 
     private Document $document;
 
     public function setUrl(string $url): self {
-        $this->document = new Document(sprintf('https://hyiplogs.com/project/%s', $url), true);
+        $url = sprintf('https://hyiplogs.com/project/%s/', $url);
+        $this->validate($url);
+        $this->document = new Document($url, true);
         return $this;
     }
 

@@ -22,14 +22,12 @@ class Contact extends Controller {
     }
 
     public function send(ContactSendMessage $request): Output {
-        Error()->exitIfExists();
-
         App()->telegram()->sendMessage(new SendMessageRequest([
             'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
             'text' => sprintf( implode(PHP_EOL, ['Login: `%s`', 'SessionId: %d', 'Name: %s', 'Message: %s']),
                 CurrentUser()->user->login ?? 'Guest',
                 CurrentUser()->session_id,
-                CurrentUser()->user->name ?? $request->name,
+                $request->name,
                 $request->message
             ),
         ]));

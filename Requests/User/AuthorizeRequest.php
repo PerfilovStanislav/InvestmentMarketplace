@@ -2,7 +2,7 @@
 
 namespace Requests\User;
 
-use Core\AbstractEntity;
+use Requests\AbstractRequest;
 use Helpers\Validator;
 use Models\Table\User;
 
@@ -11,13 +11,12 @@ use Models\Table\User;
  * @property string $password
  * @property string $remember
  */
-class AuthorizeRequest extends AbstractEntity {
+class AuthorizeRequest extends AbstractRequest {
 
     protected static array
         $properties = [
-            'password' => [self::TYPE_STRING, [Validator::MIN => 3, Validator::MAX => 64]],
-            'remember' => [self::TYPE_STRING, [Validator::IN => ['on', 'off']]],
-        ];
+        'remember' => [self::TYPE_STRING, [Validator::IN => ['on', 'off']], self::TYPE_NOT_REQUIRED],
+    ];
 
     public static function getDefaults(): array {
         return [
@@ -27,6 +26,7 @@ class AuthorizeRequest extends AbstractEntity {
 
     public function __construct(array $data = []) {
         static::$properties += User::getPropertyByKey('login');
+        static::$properties += RegistrationRequest::getPropertyByKey('password');
         parent::__construct($data);
     }
 }

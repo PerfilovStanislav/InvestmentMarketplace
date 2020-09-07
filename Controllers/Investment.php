@@ -169,7 +169,6 @@ class Investment extends Controller {
 
     public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest): Output {
         Db()->startTransaction();
-        Error()->exitIfExists();
 
         $url = $this->getWebsiteUrl($checkSiteRequest);
 
@@ -300,8 +299,6 @@ class Investment extends Controller {
     }
 
     public function redirect(RedirectRequest $request): Output {
-        Error()->exitIfExists();
-
         (new Redirect([
             'user_id' => CurrentUser()->getId(),
             'project_id' => $request->project,

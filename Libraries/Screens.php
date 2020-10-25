@@ -101,6 +101,14 @@ class Screens {
         imagewebp(imagecreatefromjpeg($from), $to, $quality);
     }
 
+    public static function toJpg(string $from, string $to, int $quality = 100) {
+        if (getimagesize($from)['mime'] === image_type_to_mime_type(IMAGETYPE_PNG)) {
+            imagejpeg(imagecreatefrompng($from), $to, $quality);
+        } else {
+            imagejpeg(imagecreatefromjpeg($from), $to, $quality);
+        }
+    }
+
     public static function createFolder(int $id) {
         if (!file_exists(self::getFolderPath($id))) {
             mkdir(self::getFolderPath($id), 0755);

@@ -64,11 +64,13 @@ class InvestmentService
             throw new ErrorException('Parse error', 'project was n\'t found');
         }
 
-        $temp = ROOT . '/screens/temp/' . $project->id . '.jpg';
-        file_put_contents($temp, file_get_contents('https://hyipbox.org' . $url));
-        Screens::crop($temp, Screens::getOriginalJpgScreen($project->id));
+        $temp = ROOT . '/screens/temp/' . $project->id;
+        file_put_contents($temp . '.xxx', file_get_contents('https://hyipbox.org' . $url));
+        Screens::toJpg($temp . '.xxx', $temp . '.jpg');
+        Screens::crop($temp . '.jpg', Screens::getOriginalJpgScreen($project->id));
         Screens::makeThumbs($project->url, $project->id);
-        unlink($temp);
+        unlink($temp . '.xxx');
+        unlink($temp . '.jpg');
 
         return $project;
     }

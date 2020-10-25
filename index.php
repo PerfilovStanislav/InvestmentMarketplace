@@ -12,8 +12,8 @@ use Exceptions\ErrorException;
 
 define('DIR', dirname($_SERVER['SCRIPT_NAME']));
 define('ROOT', __DIR__);
-define('DOMAIN', 'richinme.org');
-define('SITE', 'http://' . DOMAIN);
+define('DOMAIN', 'richinme.com');
+define('SITE', 'https://' . DOMAIN);
 define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
 define('CLI', php_sapi_name() === 'cli');
 error_reporting(E_ALL | E_STRICT);

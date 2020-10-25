@@ -56,24 +56,24 @@ class Telegram {
                     'project' => $request->callback_query->data['project_id'],
                 ]));
                 break;
-            case self::RELOAD_SCREEN:
-                $projectId = $request->callback_query->data['project_id'];
-                (new InvestmentService())->reloadScreen(new ReloadScreenshotRequest(['project' => $projectId]));
-
-                App()->telegram()->sendPhoto(new SendPhotoRequest([
-                    'chat_id'             => $request->callback_query->message->chat->id,
-                    'photo'               => Screens::getOriginalJpgScreen($projectId),
-                    'reply_to_message_id' => $request->callback_query->message->message_id,
-                    'reply_markup' => [
-                        'inline_keyboard' => [[[
-                            'text' => '👍 public',
-                            'callback_data' => json_encode([
-                                'action' => self::ACTIVATE,
-                                'project_id' => $projectId
-                            ], JSON_THROW_ON_ERROR)],
-                        ]]],
-                ]));
-                break;
+//            case self::RELOAD_SCREEN:
+//                $projectId = $request->callback_query->data['project_id'];
+//                (new InvestmentService())->reloadScreen(new ReloadScreenshotRequest(['project' => $projectId]));
+//
+//                App()->telegram()->sendPhoto(new SendPhotoRequest([
+//                    'chat_id'             => $request->callback_query->message->chat->id,
+//                    'photo'               => Screens::getOriginalJpgScreen($projectId),
+//                    'reply_to_message_id' => $request->callback_query->message->message_id,
+//                    'reply_markup' => [
+//                        'inline_keyboard' => [[[
+//                            'text' => '👍 public',
+//                            'callback_data' => json_encode([
+//                                'action' => self::ACTIVATE,
+//                                'project_id' => $projectId
+//                            ], JSON_THROW_ON_ERROR)],
+//                        ]]],
+//                ]));
+//                break;
         }
     }
 }

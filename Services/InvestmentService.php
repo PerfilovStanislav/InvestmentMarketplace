@@ -52,6 +52,7 @@ class InvestmentService
     }
 
     public function reloadScreen(ReloadScreenshotRequest $request): Project {
+        /** @var Project $project */
         $project = (new Project())->getById($request->project);
 
         $url = sprintf('https://hyiplogs.com/project/%s/', $project->url);

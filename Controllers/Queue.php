@@ -16,6 +16,7 @@ use Models\Table\Project;
 use Models\Table\ProjectLang;
 use Models\Table\Queue as QueueModel;
 use Models\Table\User;
+use Requests\Investment\ReloadScreenshotRequest;
 use Requests\Telegram\SendPhotoRequest;
 use Services\HyipboxService;
 use Services\InvestmentService;
@@ -94,41 +95,19 @@ class Queue
 
     public function screenshot(): void
     {
-        $this->killZombies();
-
         if (count($this->getPids(__FUNCTION__)) > 1) {
             exit(1);
         }
 
-        $this->killChrome();
-        sleep(3);
-
         $this->queue(QueueModel::ACTION_ID_SCREENSHOT, function (QueueModel $queue) {
+            /** @var Project $project */
             $project = (new Project())->getById($queue->payload['project_id']);
 
             Screens::createFolder($project->id);
 
             $this->reTry(static function () use ($project) {
-                $factory = new BrowserFactory('google-chrome');
-                $browser = $factory->createBrowser([
-                    'headless' => true,
-                    'noSandbox' => true,
-                    'keepAlive' => false,
-                    'windowSize' => [1280, 960],
-                    'sendSyncDefaultTimeout' => 45000
-                ]);
-                $page = $browser->createPage();
-                $page->navigate('https://' . $project->url)->waitForNavigation();
-                sleep(7);
-                $page->screenshot([
-                    'format'  => 'jpeg',
-                    'quality' => 95,
-                ])->saveToFile(Screens::getOriginalJpgScreen($project->id));
-                $page->close();
-                $browser->close();
+                (new InvestmentService())->reloadScreen(new ReloadScreenshotRequest(['project' => $project->id]));
             });
-
-            Screens::makeThumbs($project->url, $project->id);
 
             InvestmentService::refreshMViews();
 
@@ -144,10 +123,10 @@ class Queue
                                 'action' => Telegram::ACTIVATE,
                                 'project_id' => $project->id
                             ], JSON_THROW_ON_ERROR)],
-                            ['text' => '⚒ reload screen', 'callback_data' => json_encode([
-                                'action' => Telegram::RELOAD_SCREEN,
-                                'project_id' => $project->id
-                            ], JSON_THROW_ON_ERROR)],
+//                            ['text' => '⚒ reload screen', 'callback_data' => json_encode([
+//                                'action' => Telegram::RELOAD_SCREEN,
+//                                'project_id' => $project->id
+//                            ], JSON_THROW_ON_ERROR)],
                         ]
                     ]
                 ],

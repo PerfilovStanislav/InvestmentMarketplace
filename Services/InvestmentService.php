@@ -55,17 +55,17 @@ class InvestmentService
         /** @var Project $project */
         $project = (new Project())->getById($request->project);
 
-        $url = sprintf('https://hyiplogs.com/project/%s/', $project->url);
+        $url = sprintf('https://hyipbox.org/details/%s', $project->url);
 
         try {
             $document = new Document($url, true);
-            $url = $document->first('.content div.hyip-img ')->attr('data-src');
+            $url = $document->first('a.zoom')->attr('href');
         } catch (\Exception $exception) {
             throw new ErrorException('Parse error', 'project was n\'t found');
         }
 
         $temp = ROOT . '/screens/temp/' . $project->id . '.jpg';
-        file_put_contents($temp, file_get_contents($url));
+        file_put_contents($temp, file_get_contents('https://hyipbox.org' . $url));
         Screens::crop($temp, Screens::getOriginalJpgScreen($project->id));
         Screens::makeThumbs($project->url, $project->id);
         unlink($temp);

@@ -4,7 +4,6 @@ namespace Controllers;
 
 use DiDom\Document;
 use DiDom\Element;
-use HeadlessChromium\BrowserFactory;
 use Libraries\Screens;
 use Mappers\FacebookMapper;
 use Mappers\VKMapper;

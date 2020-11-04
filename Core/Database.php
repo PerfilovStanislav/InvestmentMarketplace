@@ -202,6 +202,10 @@ class Database extends PDO {
         return $stmt->fetchAll();
     }
 
+    public function rawExecute(string $sql) {
+        return $this->exec($sql);
+    }
+
     public function refresh(bool $concurrently = true): bool {
         $sql = 'REFRESH MATERIALIZED VIEW ' . ($concurrently ? 'CONCURRENTLY ' : '') . $this->table;
         $stmt = $this->prepare($sql);

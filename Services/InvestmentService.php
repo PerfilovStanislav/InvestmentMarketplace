@@ -3,6 +3,7 @@
 namespace Services;
 
 use Controllers\Investment;
+use Core\Database;
 use Dejurin\GoogleTranslateForFree;
 use DiDom\Document;
 use Exceptions\ErrorException;
@@ -216,14 +217,13 @@ class InvestmentService
 
             $descriptions = $this->multiTranslate($lang, $description);
             // Сохраняем описания
+            $sql = "INSERT INTO project_lang(project_id, lang_id, description) VALUES ";
+            $values = [];
             foreach ($descriptions as $langId => $description) {
-                $projectLang              = new ProjectLang();
-                $projectLang->project_id  = $project->id;
-                $projectLang->lang_id     = $langId;
-                $projectLang->description = str_replace("\n", '</br>', $description);
-                $projectLang->save();
-                unset($projectLang);
+                $desctiption = \str_replace(["\n", "'"], ['</br>', "''"], $description);
+                $values[] = "({$project->id}, {$langId}, '$desctiption')";
             }
+            Database::getInstance()->rawExecute($sql . implode(',', $values));
 
             (new Queue([
                 'action_id'  => Queue::ACTION_ID_SCREENSHOT,

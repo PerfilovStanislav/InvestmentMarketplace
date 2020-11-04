@@ -42,6 +42,7 @@ class HyiplogsService
         $strPlans = explode(';', strtolower($str));
         foreach ($strPlans as $strPlan) {
             $strPlan = preg_replace('/\(.*?\)/', '', $strPlan); // убираем скобки
+            $strPlan = preg_replace('/( \+ .*)/', '', $strPlan);
             $strPlan = str_replace('up to ', '', $strPlan);
             $strPlan = trim($strPlan);
             $strPlan = str_replace(['forever', 'for lifetime'], ' for 1 ___', $strPlan);

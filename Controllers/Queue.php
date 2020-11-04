@@ -52,7 +52,7 @@ class Queue
         exec('ps -ef | grep defunct | grep -v grep | cut -b8-20 | xargs kill -9');
     }
 
-    private function queue(int $actionID, callable $functionForCall): void
+    private function queue(int $actionID, callable $functionForCall, string $funcName): void
     {
         $queueOriginal = (new QueueModel());
         while (true) {
@@ -65,7 +65,7 @@ class Queue
             $queue->getRowFromDbAndFill([
                 'action_id' => $actionID,
                 'status_id' => QueueModel::STATUS_CREATED,
-            ]);
+            ], '*', 'id desc');
 
             if (!$queue->id) {
                 unset($queue);
@@ -87,7 +87,12 @@ class Queue
 
                 unset($queue);
             } catch (\Throwable $e) {
-                sendToTelegram(['$queue' => $queue->toArray(), 'exception' => json_encode($e), 'line' => __LINE__, 'method' => __METHOD__]);
+                sendToTelegram([
+                    'method' => __METHOD__ .'->' . $funcName,
+                    'line' => __LINE__,
+                    '$queue' => $queue->toArray(),
+                    'exception' => $e->getMessage(),
+                ]);
             }
         }
     }
@@ -133,7 +138,7 @@ class Queue
             App()->telegram()->sendPhoto($message);
 
             unset($message, $project, $browser, $page, $factory);
-        });
+        }, __FUNCTION__);
     }
 
     private function reTry(callable $functionForCall, int $try = 1)
@@ -199,7 +204,7 @@ class Queue
             }
 
             unset($projectLangs, $project);
-        });
+        }, __FUNCTION__);
     }
 
     public function checkScam(int $projectId = 0): void
@@ -256,6 +261,11 @@ class Queue
                 ])->save();
             }
         } catch (\Throwable $e) {
+            sendToTelegram([
+                'f' => __METHOD__,
+                'line' => __LINE__,
+                '$exceptionMsg' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -264,14 +274,15 @@ class Queue
             exit(1);
         }
 
-        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 30);
+        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 20);
         foreach ($list as $item) {
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;
             }
+            sleep(60*1);
             (new InvestmentService())->parseProject($project);
             gc_collect_cycles();
-            sleep(60*5);
+            sleep(60*1);
         }
     }
 }

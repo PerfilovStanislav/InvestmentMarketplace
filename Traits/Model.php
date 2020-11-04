@@ -20,8 +20,8 @@ trait Model
         return $this;
     }
 
-    public function getRowFromDbAndFill(array $where) : self {
-        $data = self::setTable()->selectRow($where);
+    public function getRowFromDbAndFill(array $where, $fields = '*', $order = null) {
+        $data = self::setTable()->selectRow($where, $fields, $order);
         return $this->fromArray($where + ($data ?? []));
     }
 

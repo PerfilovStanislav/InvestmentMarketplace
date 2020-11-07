@@ -23,11 +23,11 @@ class HyipboxService {
     }
 
     public function isScam(): bool {
-        try {
+//        try {
             return (bool)$this->document->first('div.block_coun_st div.st_scam');
-        } catch (\Throwable $e) {
-            return false;
-        }
+//        } catch (\Throwable $e) {
+//            return false;
+//        }
     }
 
     public function getTitle(): ?string {

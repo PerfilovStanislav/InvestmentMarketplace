@@ -216,6 +216,7 @@ class Queue
 
         $investmentService = new InvestmentService();
         while (($project = $investmentService->getNextProject($projectId, ProjectStatus::ACTIVE))->id) {
+            $projectId = $project->id;
             try {
                 if ((HyipboxService::getInstance()->setUrl($project->url))->isScam()) {
                     $project->status_id = ProjectStatus::SCAM;
@@ -229,7 +230,6 @@ class Queue
                     ]));
                 }
 
-                $projectId = $project->id;
                 unset($project);
                 sleep(5);
             } catch (ErrorException $e) {

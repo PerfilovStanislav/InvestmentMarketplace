@@ -215,21 +215,25 @@ class Queue
 
         $investmentService = new InvestmentService();
         while (($project = $investmentService->getNextProject($projectId, ProjectStatus::ACTIVE))->id) {
-            if ((HyipboxService::getInstance()->setUrl($project->url))->isScam()) {
-                $project->status_id = ProjectStatus::SCAM;
-                $project->scam_date = date(\DATE_ATOM);
-                $project->save();
+            try {
+                if ((HyipboxService::getInstance()->setUrl($project->url))->isScam()) {
+                    $project->status_id = ProjectStatus::SCAM;
+                    $project->scam_date = date(\DATE_ATOM);
+                    $project->save();
 
-                App()->telegram()->sendPhoto(new SendPhotoRequest([
-                    'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
-                    'caption' => sprintf('☠️ %s is scam', $project->url),
-                    'photo'   => Screens::getJpgThumb($project->id),
-                ]));
+                    App()->telegram()->sendPhoto(new SendPhotoRequest([
+                        'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
+                        'caption' => sprintf('☠️ %s is scam', $project->url),
+                        'photo'   => Screens::getJpgThumb($project->id),
+                    ]));
+                }
+
+                $projectId = $project->id;
+                unset($project);
+                sleep(5);
+            } catch (\ErrorException $e) {
+                //
             }
-
-            $projectId = $project->id;
-            unset($project);
-            sleep(5);
         }
 
         InvestmentService::refreshMViews();

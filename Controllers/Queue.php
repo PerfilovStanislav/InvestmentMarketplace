@@ -4,6 +4,7 @@ namespace Controllers;
 
 use DiDom\Document;
 use DiDom\Element;
+use Exceptions\ErrorException;
 use Libraries\Screens;
 use Mappers\FacebookMapper;
 use Mappers\VKMapper;
@@ -231,7 +232,7 @@ class Queue
                 $projectId = $project->id;
                 unset($project);
                 sleep(5);
-            } catch (\ErrorException $e) {
+            } catch (ErrorException $e) {
                 //
             }
         }

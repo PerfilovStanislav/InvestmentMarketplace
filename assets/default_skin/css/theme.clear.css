@@ -2629,3 +2629,6 @@ a.svg:after {
 .progress-bar-danger {
     background-color: #d31;
 }
+span.message > p {
+    margin: 0;
+}

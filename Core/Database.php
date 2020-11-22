@@ -128,8 +128,13 @@ class Database extends PDO {
     }
 
     private function execute(PDOStatement $stmt, bool $isInsert = false): int {
-        if ($stmt->execute() && $stmt->errorCode() === '00000') {
-            return $isInsert ? $this->lastInsertId() : $stmt->rowCount();
+        try {
+            if ($stmt->execute() && $stmt->errorCode() === '00000') {
+                return $isInsert ? $this->lastInsertId() : $stmt->rowCount();
+            }
+        } catch (\Throwable $e) {
+            dd($e);
+            throw $e;
         }
 
         $this->outputError($stmt);

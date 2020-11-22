@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Core\{Controller, View};
+use Core\{Controller, Database, View};
 use Dto\ErrorRoute;
 use Helpers\{
     Output,
@@ -24,6 +24,7 @@ use Models\MView\MVProjectLang;
 use Models\Constant\{ProjectStatus, User, Views};
 use Requests\Investment\{AddRequest,
     ChangeStatusRequest,
+    ChatMessageRequest,
     ChatMessagesRequest,
     CheckSiteRequest,
     DetailsRequest,
@@ -44,7 +45,7 @@ class Investment extends Controller {
         $params = [
             'payments'                  => new Payments(),
             'mainProjectLanguages'      => new Languages('pos is not null', 'pos asc'),
-            'secondaryProjectLanguages' => new Languages('pos is null'),
+            'secondaryProjectLanguages' => new Languages('pos is null and id > 0'),
             'currency'                  => Currency::getCurrency(),
         ];
 
@@ -283,19 +284,51 @@ class Investment extends Controller {
 
     public function getChatMessages(ChatMessagesRequest $request): Output {
         if ($request->messages) {
-            $messages = new ProjectChatMessages($request);
+            $sql = \implode(' UNION ALL ', \array_map(fn(ChatMessageRequest $param) => /** @lang PostgreSQL */
+                "
+                    (SELECT m.id, m.date_create, m.user_id, m.project_id, m.message, m.session_id, u.has_photo, u.name, 
+                            m.lang_id = -1 as html
+                    FROM message m
+                    LEFT JOIN users u ON u.id = m.user_id
+                    WHERE m.project_id = {$param->project_id} and m.id > {$param->id} and m.lang_id = ANY(ARRAY[{$request->lang},-1])
+                    ORDER BY id desc
+                    limit 50)
+                ", $request->messages));
 
-            if ($messages->count()) {
-                $userIds = $messages->getUniqueValuesByKey('user_id');
-                if (!empty($userIds)) {
-                    $users = new Users(['id' => $messages->getUniqueValuesByKey('user_id')], ['id', 'login', 'name', 'status_id']);
-                    Output()->addFunction('setNewChatMessages', ['users' => $users->toArray()]);
-                }
-                Output()->addFunction('setNewChatMessages', ['messages' => $messages->toArray()]);
+            $messages = Database::getInstance()->rawSelect($sql);
+
+            if (\count($messages) === 0) {
+                return Output()->addFunction('sleepAndCheckChats');
             }
-        }
 
+            $path = '/assets/img';
+            $ext = (WEBP ? 'webp' : 'jpg');
+            $data = \array_column($messages, null, 'id');
+            foreach ($data as &$message) {
+                $avatar = &$message['avatar'];
+                if ($message['has_photo'] === true) {
+                    $avatar = "$path/user/{$message['user_id']}.$ext";
+                } else {
+                    $animal = (($message['user_id'] ?? $message['session_id']) - 1) % 30 + 1;
+                    $avatar = "$path/avatars/$animal.$ext";
+                }
+                $message['me'] =
+                    (($userId = $message['user_id']) !== null && CurrentUser()->getId() === $userId)
+                    || $message['session_id'] === CurrentUser()->session_id;
+                $message['name'] ??= $this->getRandomNameBySessionId($message['session_id']);
+            }
+            Output()->addFunction('setNewChatMessages', ['messages' => $data]);
+        }
         return Output()->addFunction('sleepAndCheckChats');
+    }
+
+    private function getRandomNameBySessionId(int $sessionId) {
+        return ['Domestic', 'Wild', 'Furry', 'Herbivorous', 'Dangerous', 'Ferocious', 'Poisonous', 'Agile', 'Clever',
+                'Aggressive', 'Beautiful', 'brave', 'Strong', 'Smart', 'Hungry', 'Angry', 'Fast', 'Strong', 'Gracious'][$sessionId % 19]
+            . ' '
+            . ['Crocodile', 'Bunny', 'Bear', 'Cow', 'Cat', 'Dog', 'Donkey', 'Elephant', 'Frog', 'Giraffe',
+                'Hamster', 'Horse', 'Dragon', 'Octopus', 'Kangaroo', 'Lamb', 'Raccoon', 'Parrot', 'Panda', 'Poulpe',
+                'Ant-eater', 'Mouse', 'Lion', 'Turtle', 'Unicorn', 'Snake', 'Whale', 'Fish', 'Bull', 'Zebra'][($sessionId-1)%30];
     }
 
     public function redirect(RedirectRequest $request): Output {

@@ -2,12 +2,14 @@
 
 namespace Services;
 
-use Controllers\Investment;
 use Core\Database;
 use Dejurin\GoogleTranslateForFree;
 use DiDom\Document;
 use Exceptions\ErrorException;
+use Helpers\HttpClient\CurlHttpClient;
+use Helpers\HttpClient\CurlRequestDto;
 use Helpers\Output;
+use Helpers\Validator;
 use Libraries\Screens;
 use Models\Collection\Languages;
 use Models\Collection\MVProjectCounts;
@@ -15,11 +17,12 @@ use Models\Collection\MVProjectFilterAvailableLangs;
 use Models\Collection\MVProjectLangs;
 use Models\Collection\MVProjectSearchs;
 use Models\Constant\ProjectStatus;
-use Models\Constant\User;
+use Models\Constant\User as UserConstant;
+use Models\Constant\UserStatus;
 use Models\Table\Language;
 use Models\Table\Project;
-use Models\Table\ProjectLang;
 use Models\Table\Queue;
+use Models\Table\User;
 use Requests\Investment\ChangeStatusRequest;
 use Requests\Investment\ReloadScreenshotRequest;
 use Traits\DecodeErrorException;
@@ -181,7 +184,7 @@ class InvestmentService
 
             $project->fromArray([
                 'name'             => $hyipboxService->getTitle(),
-                'admin'            => User::SYSTEM,
+                'admin'            => UserConstant::SYSTEM,
                 'start_date'       => date(\DATE_ATOM, $hyipboxService->getStartDate()),
                 'paymenttype'      => $hyipboxService->getPaymentTypeId(),
                 'ref_percent'      => $hyipboxService->getReferralPlans(),
@@ -234,6 +237,10 @@ class InvestmentService
             ]))->save();
 
             self::refreshMViews();
+
+            if ($hid = $hyiplogsService->getProjectId()) {
+                $this->parseVotes($project->id, (int)$hid);
+            }
         } catch (\Exception $e) {
             throw new ErrorException('Parse error: ' . $project->url, $e->getMessage());
         }
@@ -245,5 +252,60 @@ class InvestmentService
         MVProjectLangs::refresh();
         MVProjectSearchs::refresh();
         MVProjectCounts::refresh();
+    }
+
+    private function parseVotes(int $projectId, int $hid) {
+        $base = 'https://hyiplogs.com/';
+
+        $result = (new CurlHttpClient())->post(new CurlRequestDto($base . 'votes/', [], [], [
+            'hid' => $hid,
+        ]));
+        $doc = new Document($result->getRawBody());
+
+        $items = $doc->xpath('//div[@class="main-vote-box"]/div[@class="vote-el"]/div') ?? [];
+
+        foreach ($items as $index => $item) {
+            $name = $item->first('.vote-body .top-line .fl .fs15')->text();
+            $login = '_' . strtolower(preg_replace('/[^' . Validator::LOGIN . ']/i', '', $name));
+
+            User::validationOff('login');
+            $user = (new User())->getRowFromDbAndFill([
+                'login' => $login
+            ]);
+            if ($user->id === null) {
+                $user->name = $name;
+                $user->password = str_repeat('x', 53);
+                $user->status_id = UserStatus::FAKE;
+                $user->lang_id = \Models\Constant\Language::EN;
+
+                $avatar = ($img = $item->first('.ava .img img')) === null ? '' : $img->attr('src');
+                $user->has_photo = $avatar !== '';
+                $user->save();
+                if ($avatar !== '') {
+                    $path = ROOT . '/assets/img/user/';
+                    $temp = $path . 'temp_' . $user->id;
+                    file_put_contents($temp, file_get_contents($avatar));
+                    Screens::toJpg($temp, $temp . '.jpg');
+                    Screens::makeThumb($temp . '.jpg', $path . $user->id . '.jpg', 64, 64, 95);
+                    Screens::makeWebp($path . $user->id . '.jpg', $path . $user->id . '.webp', 95);
+                    unlink($temp);
+                    unlink($temp . '.jpg');
+                }
+            }
+
+            $message = \trim($item->first('.vote-body .txt')->text());
+            $message = '<p>' . \str_replace(["\n", "'", '\\'], ['</p><p>', '', ''], $message) . '</p>';
+            $message = \preg_replace('/\s+/', ' ', $message);
+
+            $dt = $item->first('.vote-body .top-line .vote-date')->text();
+            preg_match_all('/(\d*[dhm])/', $dt, $matches);
+            $date = implode(' ', $matches[1]);
+
+            $sql = "
+                INSERT INTO message(date_create, user_id, project_id, lang_id, message, session_id)
+                VALUES (NOW() - INTERVAL '$date', {$user->id}, $projectId, -1, '$message', 1);
+            ";
+            Database::getInstance()->rawExecute($sql);
+        }
     }
 }

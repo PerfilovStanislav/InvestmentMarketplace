@@ -61,7 +61,7 @@ class Screens {
     }
 
     public static function makeThumbs(string $url, int $id) {
-        self::makeThumb(self::getOriginalJpgScreen($id), self::getJpgThumb($id));
+        self::makeThumb(self::getOriginalJpgScreen($id), self::getJpgThumb($id), 320, 240);
         self::makeWebp(self::getJpgThumb($id), self::getWebpThumb($id));
         self::makeWebp(self::getJpgThumb($id), self::getWebpPreThumb($id), 0);
         self::changeQualityJpg(self::getJpgThumb($id), 10, self::getJpgPreThumb($id));
@@ -73,9 +73,7 @@ class Screens {
         imagejpeg(imagecreatefromjpeg($from), $to ?? $from, $quality);
     }
 
-    public static function makeThumb(string $from, string $to, int $quality = 100) {
-        $w = 320;
-        $h = 240;
+    public static function makeThumb(string $from, string $to, int $w, int $h, int $quality = 100) {
         $imageFrom = imagecreatefromjpeg($from);
         $imageTo = imagecreatetruecolor($w, $h);
         imagecopyresampled($imageTo, $imageFrom, 0, 0, 0, 0, $w, $h, imagesx($imageFrom), imagesy($imageFrom));

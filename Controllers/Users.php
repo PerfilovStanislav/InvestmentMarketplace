@@ -75,7 +75,7 @@ class Users extends Controller {
         $user->fromArray([
             'name'      => $request->name,
             'password'  => App()->auth()->hashPassword($request->password),
-            'status_id' => UserStatus::NEED_CONFIRM,
+            'status_id' => UserStatus::USER,
             'lang_id'   => Language::getValue(App()->locale()->getLanguage()),
             'has_photo' => false,
         ])->save();
@@ -90,8 +90,7 @@ class Users extends Controller {
 
     public function setUserHead(): Output {
         Output()->addFunctions([
-            'setStorage' => [
-                'allClear' => [],
+            'setParams' => [
                 'webp' => WEBP,
                 'auth' => CurrentUser()->toArray()
             ],

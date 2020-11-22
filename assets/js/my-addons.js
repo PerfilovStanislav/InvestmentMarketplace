@@ -8,7 +8,7 @@ var xhrId = 0, Q = {};
 /* устанавливаем параметры для всех аякс запросов*/
 $.ajaxSetup({
     type: "POST",
-    data: {ajax:' 1'},
+    data: {ajax:'1'},
     dataType: 'json',
     beforeSend: function(xhr, status) {
         xhr.xhrId = ++xhrId;
@@ -535,6 +535,13 @@ var changeUrl = function(data) {
 
 var setStorage = function(data) {
     STORAGE = addToObject(STORAGE, data);
+};
+
+var setParams = function(data) {
+    $.ajaxSetup({
+        data: {webp:data.webp}
+    })
+    setStorage({auth:data.auth})
 };
 
 var showInConsole = function(data) {

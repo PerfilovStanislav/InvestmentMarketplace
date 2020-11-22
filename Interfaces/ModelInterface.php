@@ -2,11 +2,9 @@
 
 namespace Interfaces;
 
-use Core\Database;
-
 interface ModelInterface
 {
-    public static function setTable(): Database;
+    public static function setTable();
 
     public function save();
 

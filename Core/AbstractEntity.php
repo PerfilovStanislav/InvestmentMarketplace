@@ -274,4 +274,8 @@ abstract class AbstractEntity {
             ? self::FORMAT_DATE
             : self::FORMAT_DATETIME;
     }
+
+    public static function validationOff(string $key) {
+        unset(static::$properties[$key][1]);
+    }
 }

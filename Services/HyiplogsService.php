@@ -21,6 +21,10 @@ class HyiplogsService
         return $this;
     }
 
+    public function getProjectId() {
+        return $this->document->xpath('//@data-hid')[0] ?? null;
+    }
+
     public function getPayments(): array {
         $str = $this->document->first('div.container-fluid div.info-box div.item:nth-child(6) div.txt')->text();
         $str = explode(',', trim($str));

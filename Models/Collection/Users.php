@@ -8,9 +8,6 @@ use Models\Table\User;
 use Traits\IteratorTrait;
 use Traits\Model;
 
-/**
- * @var User[] $this
- */
 class Users extends AbstractEntity implements ModelInterface, \Iterator {
     use Model;
     use IteratorTrait;

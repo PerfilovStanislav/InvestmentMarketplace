@@ -10,36 +10,39 @@ use Models\CurrentUser;
 use Requests\Telegram\SendMessageRequest;
 use Exceptions\ErrorException;
 
-define('DIR', dirname($_SERVER['SCRIPT_NAME']));
-define('ROOT', __DIR__);
-define('DOMAIN', 'richinme.com');
-define('SITE', 'https://' . DOMAIN);
-define('WEBP', strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false);
-define('CLI', php_sapi_name() === 'cli');
-error_reporting(E_ALL | E_STRICT);
-define('IS_AJAX',
+\define('DIR', \dirname($_SERVER['SCRIPT_NAME']));
+\define('ROOT', __DIR__);
+\define('DOMAIN', 'richinme.com');
+\define('SITE', 'https://' . DOMAIN);
+\define('WEBP',
+    \strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false
+    || ($_POST['webp'] ?? '') === 'true'
+);
+\define('CLI', \php_sapi_name() === 'cli');
+\error_reporting(E_ALL | E_STRICT);
+\define('IS_AJAX',
     ($_POST['ajax'] ?? 0) == 1
     || isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-    || strtolower($_SERVER['REQUEST_METHOD'] ?? '') === 'post'
+    || \strtolower($_SERVER['REQUEST_METHOD'] ?? '') === 'post'
 );
-define('START_SHUTDOWN', true);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+\define('START_SHUTDOWN', true);
+\ini_set('display_errors', 1);
+\ini_set('display_startup_errors', 1);
 
-spl_autoload_extensions('.php');
+\spl_autoload_extensions('.php');
 function real_path(string $path): string {
-    return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, CLI ? DIR . '/' . $path : $path);
+    return \str_replace(['/', '\\'], DIRECTORY_SEPARATOR, CLI ? DIR . '/' . $path : $path);
 }
 function load(string $className) {
-    require_once(real_path($className) . '.php');
+    require_once(\real_path($className) . '.php');
 }
-spl_autoload_register('load');
+\spl_autoload_register('load');
 
-define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI);
+\define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI);
 
-require_once real_path('Helpers/Debug.php');
+require_once \real_path('Helpers/Debug.php');
 
-register_shutdown_function('shutdown');
+\register_shutdown_function('shutdown');
 require(ROOT . '/vendor/autoload.php');
 
 function App(): App {
@@ -86,9 +89,9 @@ function shutdown() {
 function sendToTelegram(array $data = []) {
     App()->telegram()->sendMessage(new SendMessageRequest([
         'chat_id' => \Config::TELEGRAM_MY_ID,
-        'text' => '```' . print_r([
+        'text' => '```' . \print_r([
             'data' => $data,
-            'debug' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2),
+            'debug' => \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2),
             'request' => $_REQUEST,
             'ip' => $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '0.0.0.1',
             'URI' =>  $_SERVER['REQUEST_URI'] ?? '',

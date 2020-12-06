@@ -24,6 +24,7 @@ class CurlHttpClient
 
     public function request(string $method): CurlResponseDto
     {
+        set_time_limit(60);
         $fullUri = $this->request->getUri()
             . (
                 $this->request->getUriParams()
@@ -35,6 +36,9 @@ class CurlHttpClient
             CURLOPT_URL => $fullUri,
             CURLOPT_CUSTOMREQUEST => $method,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_TIMEOUT => 60,
         ], $this->request->getCurlParams()));
 
         $raw = \curl_exec($ch);

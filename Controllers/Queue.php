@@ -5,6 +5,8 @@ namespace Controllers;
 use DiDom\Document;
 use DiDom\Element;
 use Exceptions\ErrorException;
+use Helpers\HttpClient\CurlHttpClient;
+use Helpers\HttpClient\CurlRequestDto;
 use Libraries\Screens;
 use Mappers\FacebookMapper;
 use Mappers\VKMapper;
@@ -256,7 +258,26 @@ class Queue
                 'deposits'      => 1,
             ]);
         try {
-            $document = new Document($url, true);
+            $result = (new CurlHttpClient())->get(new CurlRequestDto($url));
+            $body = $result->getRawBody();
+
+            $options = 	[
+                "indent" => false,
+                "output-xml" => false,
+                "clean" => true,
+                "drop-proprietary-attributes" => true,
+                "drop-empty-paras" => true,
+                "hide-comments" => true,
+                "join-classes" => true,
+                "join-styles" => true,
+                "show-body-only" => true,
+            ];
+            $tidy = new \tidy();
+            $tidy->parseString($body, $options, 'utf8');
+            $tidy->cleanRepair();
+
+            $document = new Document($tidy->html()->value, false);
+
             /** @var Element $row */
             foreach ($document->find('div.all-hyips-list div.item.ovh') as $row) {
                 $rating = $row->first('div.hl-index-box span')->text();

@@ -24,12 +24,12 @@ class CurlHttpClient
 
     public function request(string $method): CurlResponseDto
     {
-        set_time_limit(60);
+        \set_time_limit(300);
         $fullUri = $this->request->getUri()
             . (
-                $this->request->getUriParams()
-                    ? \http_build_query($this->request->getUriParams())
-                    : ''
+            $this->request->getUriParams()
+                ? \http_build_query($this->request->getUriParams())
+                : ''
             );
         $ch = \curl_init();
         \curl_setopt_array($ch, \array_replace([
@@ -38,7 +38,10 @@ class CurlHttpClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_TIMEOUT => 60,
+            CURLOPT_COOKIEJAR => $_SERVER['DOCUMENT_ROOT'].'/cookiefile.txt',
+            CURLOPT_TIMEOUT => 300,
+            CURLOPT_AUTOREFERER => true,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36',
         ], $this->request->getCurlParams()));
 
         $raw = \curl_exec($ch);
@@ -54,7 +57,7 @@ class CurlHttpClient
         }
         $status = \curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $response = new CurlResponseDto($rawBody, $status, $headers, \curl_error($ch));
+        $response = new CurlResponseDto($rawBody ?? '', $status, $headers, \curl_error($ch));
 
         \curl_close($ch);
 

@@ -258,7 +258,30 @@ class Queue
                 'deposits'      => 1,
             ]);
         try {
-            $result = (new CurlHttpClient())->get(new CurlRequestDto($url));
+            $client = (new CurlHttpClient());
+            $request = new CurlRequestDto($url);
+
+            $result = $client->get($request);
+            if ($result->getError() !== '') {
+                sleep(60);
+                $result = $client->get($request);
+                if ($result->getError() !== '') {
+                    sleep(120);
+                    $result = $client->get($request);
+                    if ($result->getError() !== '') {
+                        sleep(180);
+                        $result = $client->get($request);
+                        if ($result->getError() !== '') {
+                            sendToTelegram([
+                                'f' => __METHOD__,
+                                'line' => __LINE__,
+                                'error' => $result->getError(),
+                            ]);
+                            return;
+                        }
+                    }
+                }
+            }
             $body = $result->getRawBody();
 
             $options = 	[

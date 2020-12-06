@@ -52,4 +52,9 @@ class CurlResponseDto
         return $this->jsonBody = $data;
     }
 
+    public function getError()
+    {
+        return $this->error;
+    }
+
 }

@@ -287,7 +287,7 @@ class Queue
         }
 
         $errors = [];
-        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 5);
+        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 20);
         foreach ($list as $item) {
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;

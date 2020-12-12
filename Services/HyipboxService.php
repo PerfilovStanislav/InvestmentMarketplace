@@ -80,8 +80,9 @@ class HyipboxService {
 
     public function getReferralPlans(): array {
         $strPlan = trim($this->document->find('div.feat_elm')[9]->find('div.body_feat_elem')[2]->text()) ?? '';
-        $strPlan = preg_replace('/[^'.Validator::FLOAT.'\-]/', '', $strPlan);
-        return explode('-', $strPlan);
+        $strPlan = preg_replace('/[^'.Validator::FLOAT.'\-,]/', '', $strPlan);
+        $strPlan = str_replace([','], ['-'], $strPlan);
+        return array_filter(explode('-', $strPlan), fn($plan) => $plan > 0);
     }
 
     public function getPayments(): array {

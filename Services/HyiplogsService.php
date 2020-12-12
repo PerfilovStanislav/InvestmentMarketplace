@@ -3,6 +3,10 @@
 namespace Services;
 
 use DiDom\Document;
+use Exceptions\ErrorException;
+use Helpers\HttpClient\CurlHttpClient;
+use Helpers\HttpClient\CurlRequestDto;
+use Helpers\HttpClient\CurlResponseDto;
 use Mappers\HyiplogsMapper;
 use Models\Constant\PlanPeriodType;
 use Traits\Instance;
@@ -12,13 +16,55 @@ class HyiplogsService
 {
     use Instance, UrlValidate;
 
+    const PREFIX = 'https://hyiplogs.com/';
+
     private Document $document;
 
-    public function setUrl(string $url): self {
-        $url = sprintf('https://hyiplogs.com/project/%s/', $url);
-        $this->validate($url);
-        $this->document = new Document($url, true);
+    public function setUrl(string $url): ?self {
+        $url = self::PREFIX . $url;
+
+        $client = (new CurlHttpClient());
+        $request = new CurlRequestDto($url);
+        $result = $this->reTry(static function() use ($client, $request) {
+            return $client->get($request);
+        });
+
+        $options = 	[
+            "indent" => false,
+            "output-xml" => false,
+            "clean" => true,
+            "drop-proprietary-attributes" => true,
+            "drop-empty-paras" => true,
+            "hide-comments" => true,
+            "join-classes" => true,
+            "join-styles" => true,
+            "show-body-only" => true,
+        ];
+        $tidy = new \tidy();
+        $tidy->parseString($result->getRawBody(), $options, 'utf8');
+        $tidy->cleanRepair();
+
+        $this->document = new Document($tidy->html()->value, false);
         return $this;
+    }
+
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /** @return CurlResponseDto */
+    private function reTry(callable $functionForCall, int $try = 1)
+    {
+        $result = $functionForCall();
+        if ($result->getError() !== '') {
+            if ($try === 1) {
+                throw new ErrorException(__CLASS__, $result->getError());
+            }
+            sleep($try * 10);
+            return $this->reTry($functionForCall, ++$try);
+        }
+        return $result;
     }
 
     public function getProjectId() {

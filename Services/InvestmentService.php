@@ -79,12 +79,12 @@ class InvestmentService
         return $project;
     }
 
-    public function parseInfo(string $url) {
-        $hyiplogsService = $this->try(function () use ($url) {
-            return HyiplogsService::getInstance()->setUrl($url);
+    public function parseInfo(string $domain) {
+        $hyiplogsService = $this->try(function () use ($domain) {
+            return HyiplogsService::getInstance()->setUrl("project/$domain/");
         });
-        $hyipboxService = $this->try(function () use ($url) {
-            return HyipboxService::getInstance()->setUrl($url);
+        $hyipboxService = $this->try(function () use ($domain) {
+            return HyipboxService::getInstance()->setUrl($domain);
         });
         if (Error()->hasError()) {
             return;
@@ -169,80 +169,76 @@ class InvestmentService
     public function parseProject(Project $project): void {
         Output::getInstance()->disableLayout();
 
-        $hyiplogsService = HyiplogsService::getInstance()->setUrl($project->url);
+        $hyiplogsService = HyiplogsService::getInstance()->setUrl("project/{$project->url}/");
         $hyipboxService = HyipboxService::getInstance()->setUrl($project->url);
 
-        try {
-            if ($hyipboxService->isScam()) {
-                return;
-            }
+        if ($hyipboxService->isScam()) {
+            return;
+        }
 
-            $plans = $hyiplogsService->getPlans();
-            if (!$minDeposit = $hyipboxService->getMinDeposit()) {
-                return;
-            }
+        $plans = $hyiplogsService->getPlans();
+        if (!$minDeposit = $hyipboxService->getMinDeposit()) {
+            return;
+        }
 
-            $project->fromArray([
-                'name'             => $hyipboxService->getTitle(),
-                'admin'            => UserConstant::SYSTEM,
-                'start_date'       => date(\DATE_ATOM, $hyipboxService->getStartDate()),
-                'paymenttype'      => $hyipboxService->getPaymentTypeId(),
-                'ref_percent'      => $hyipboxService->getReferralPlans(),
-                'plan_percents'    => array_column($plans, 0),
-                'plan_period'      => array_column($plans, 1),
-                'plan_period_type' => array_column($plans, 2),
-                'currency'         => $minDeposit['currency'],
-                'min_deposit'      => $minDeposit['deposit'],
-                'id_payments'      => array_values(array_unique(array_merge(
-                    $hyipboxService->getPayments(),
-                    $hyiplogsService->getPayments()
-                ))),
-                'ref_url'          => 'https://' . $project->url,
-                'status_id'        => ProjectStatus::NOT_PUBLISHED,
-                'rating'           => $hyiplogsService->getRating(),
-            ]);
+        $project->fromArray([
+            'name'             => $hyipboxService->getTitle(),
+            'admin'            => UserConstant::SYSTEM,
+            'start_date'       => date(\DATE_ATOM, $hyipboxService->getStartDate()),
+            'paymenttype'      => $hyipboxService->getPaymentTypeId(),
+            'ref_percent'      => $hyipboxService->getReferralPlans(),
+            'plan_percents'    => array_column($plans, 0),
+            'plan_period'      => array_column($plans, 1),
+            'plan_period_type' => array_column($plans, 2),
+            'currency'         => $minDeposit['currency'],
+            'min_deposit'      => $minDeposit['deposit'],
+            'id_payments'      => array_values(array_unique(array_merge(
+                $hyipboxService->getPayments(),
+                $hyiplogsService->getPayments()
+            ))),
+            'ref_url'          => 'https://' . $project->url,
+            'status_id'        => ProjectStatus::NOT_PUBLISHED,
+            'rating'           => $hyiplogsService->getRating(),
+        ]);
 
-            if (count(array_filter($project->toArray())) !== 15) {
-                return;
-            }
+        if (count(array_filter($project->toArray())) !== 15) {
+            return;
+        }
 
-            $description = $hyipboxService->getDescription();
-            if (mb_strlen($description) < 50) {
-                return;
-            }
+        $description = $hyipboxService->getDescription();
+        if (mb_strlen($description) < 50) {
+            return;
+        }
 
-            $lang = $this->detectLanguage($description);
-            if ($lang === '') {
-                return;
-            }
+        $lang = $this->detectLanguage($description);
+        if ($lang === '') {
+            return;
+        }
 
-            $project->save();
+        $project->save();
 
-            $descriptions = $this->multiTranslate($lang, $description);
-            // Сохраняем описания
-            $sql = "INSERT INTO project_lang(project_id, lang_id, description) VALUES ";
-            $values = [];
-            foreach ($descriptions as $langId => $description) {
-                $desctiption = \str_replace(["\n", "'"], ['</br>', "''"], $description);
-                $values[] = "({$project->id}, {$langId}, '$desctiption')";
-            }
-            Database::getInstance()->rawExecute($sql . implode(',', $values));
+        $descriptions = $this->multiTranslate($lang, $description);
+        // Сохраняем описания
+        $sql = "INSERT INTO project_lang(project_id, lang_id, description) VALUES ";
+        $values = [];
+        foreach ($descriptions as $langId => $description) {
+            $desctiption = \str_replace(["\n", "'"], ['</br>', "''"], $description);
+            $values[] = "({$project->id}, {$langId}, '$desctiption')";
+        }
+        Database::getInstance()->rawExecute($sql . implode(',', $values));
 
-            (new Queue([
-                'action_id'  => Queue::ACTION_ID_SCREENSHOT,
-                'status_id'  => Queue::STATUS_CREATED,
-                'payload'    => [
-                    'project_id' => $project->id,
-                ],
-            ]))->save();
+        (new Queue([
+            'action_id'  => Queue::ACTION_ID_SCREENSHOT,
+            'status_id'  => Queue::STATUS_CREATED,
+            'payload'    => [
+                'project_id' => $project->id,
+            ],
+        ]))->save();
 
-            self::refreshMViews();
+        self::refreshMViews();
 
-            if ($hid = $hyiplogsService->getProjectId()) {
-                $this->parseVotes($project->id, (int)$hid);
-            }
-        } catch (\Exception $e) {
-            throw new ErrorException('Parse error: ' . $project->url, $e->getMessage());
+        if ($hid = $hyiplogsService->getProjectId()) {
+            $this->parseVotes($project->id, (int)$hid);
         }
 
     }

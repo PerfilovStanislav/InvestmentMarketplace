@@ -21,6 +21,7 @@ use Models\Table\User;
 use Requests\Investment\ReloadScreenshotRequest;
 use Requests\Telegram\SendPhotoRequest;
 use Services\HyipboxService;
+use Services\HyiplogsService;
 use Services\InvestmentService;
 use Services\VKService;
 
@@ -91,10 +92,11 @@ class Queue
                 unset($queue);
             } catch (\Throwable $e) {
                 sendToTelegram([
-                    'method' => __METHOD__ .'->' . $funcName,
-                    'line' => __LINE__,
-                    '$queue' => $queue->toArray(),
-                    'exception' => $e->getMessage(),
+                    'method'        => __METHOD__ .'->' . $funcName,
+                    'line'          => __LINE__,
+                    '$queue'        => $queue->toArray(),
+                    'exception'     => $e->getMessage(),
+                    'exceptionLine' => $e->getLine(),
                 ]);
             }
         }
@@ -248,58 +250,18 @@ class Queue
             exit(1);
         }
 
-        $url = 'https://hyiplogs.com/hyips/?' . http_build_query([
-                'hlindex[from]' => 2,
-                'hlindex[to]'   => 10,
-                'status[1]'     => 1,
-                'design'        => 1,
-                'license'       => 1,
-                'monitors'      => 1,
-                'deposits'      => 1,
-            ]);
+        $query = http_build_query([
+            'hlindex[from]' => 2,
+            'hlindex[to]'   => 10,
+            'status[1]'     => 1,
+            'design'        => 1,
+            'license'       => 1,
+            'monitors'      => 1,
+            'deposits'      => 1,
+        ]);
+
         try {
-            $client = (new CurlHttpClient());
-            $request = new CurlRequestDto($url);
-
-            $result = $client->get($request);
-            if ($result->getError() !== '') {
-                sleep(60);
-                $result = $client->get($request);
-                if ($result->getError() !== '') {
-                    sleep(120);
-                    $result = $client->get($request);
-                    if ($result->getError() !== '') {
-                        sleep(180);
-                        $result = $client->get($request);
-                        if ($result->getError() !== '') {
-                            sendToTelegram([
-                                'f' => __METHOD__,
-                                'line' => __LINE__,
-                                'error' => $result->getError(),
-                            ]);
-                            return;
-                        }
-                    }
-                }
-            }
-            $body = $result->getRawBody();
-
-            $options = 	[
-                "indent" => false,
-                "output-xml" => false,
-                "clean" => true,
-                "drop-proprietary-attributes" => true,
-                "drop-empty-paras" => true,
-                "hide-comments" => true,
-                "join-classes" => true,
-                "join-styles" => true,
-                "show-body-only" => true,
-            ];
-            $tidy = new \tidy();
-            $tidy->parseString($body, $options, 'utf8');
-            $tidy->cleanRepair();
-
-            $document = new Document($tidy->html()->value, false);
+            $document = HyiplogsService::getInstance()->setUrl("hyips/?$query")->getDocument();
 
             /** @var Element $row */
             foreach ($document->find('div.all-hyips-list div.item.ovh') as $row) {
@@ -313,7 +275,8 @@ class Queue
             sendToTelegram([
                 'f' => __METHOD__,
                 'line' => __LINE__,
-                '$exceptionMsg' => $e->getMessage(),
+                'exception'     => $e->getMessage(),
+                'exceptionLine' => $e->getLine(),
             ]);
         }
     }
@@ -323,15 +286,27 @@ class Queue
             exit(1);
         }
 
-        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 20);
+        $errors = [];
+        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 5);
         foreach ($list as $item) {
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;
             }
-            sleep(60*1);
-            (new InvestmentService())->parseProject($project);
+            try {
+                (new InvestmentService())->parseProject($project);
+            } catch (ErrorException $e) {
+                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage()];
+            } catch (\Throwable $e) {
+                $errors[$item['url']] = [$e->getLine(), $e->getMessage()];
+            }
             gc_collect_cycles();
-            sleep(60*1);
+        }
+        if (!empty($errors)) {
+            sendToTelegram([
+                'f' => __METHOD__,
+                'line' => __LINE__,
+                '$errors' => $errors,
+            ]);
         }
     }
 }

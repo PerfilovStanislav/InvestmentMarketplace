@@ -72,17 +72,23 @@ if (CLI) {
 else {
     try {
         App()->start();
-    } catch (ErrorException $exception) {
+    } catch (ErrorException $e) {
         Db()->rollBackTransaction();
-    } catch (\Exception $exception) {
+    } catch (\Throwable $e) {
         Db()->rollBackTransaction();
-//        sendToTelegram(['errorMessage' => $exception->getMessage()]);
+        sendToTelegram([
+            'exception'     => [
+                'line'      => $e->getLine(),
+                'message'   => $e->getMessage(),
+                'file'      => $e->getFile(),
+            ]
+        ]);
     }
 }
 
 function shutdown() {
     if ($error = error_get_last()) { // E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
-//        sendToTelegram(['error' => $error]);
+        sendToTelegram(['error' => $error]);
     }
 }
 

@@ -95,8 +95,11 @@ class Queue
                     'method'        => __METHOD__ .'->' . $funcName,
                     'line'          => __LINE__,
                     '$queue'        => $queue->toArray(),
-                    'exception'     => $e->getMessage(),
-                    'exceptionLine' => $e->getLine(),
+                    'exception'     => [
+                        'line'      => $e->getLine(),
+                        'message'   => $e->getMessage(),
+                        'file'      => $e->getFile(),
+                    ],
                 ]);
             }
         }
@@ -273,10 +276,13 @@ class Queue
             }
         } catch (\Throwable $e) {
             sendToTelegram([
-                'f' => __METHOD__,
-                'line' => __LINE__,
-                'exception'     => $e->getMessage(),
-                'exceptionLine' => $e->getLine(),
+                'f'             => __METHOD__,
+                'line'          => __LINE__,
+                'exception'     => [
+                    'line'      => $e->getLine(),
+                    'message'   => $e->getMessage(),
+                    'file'      => $e->getFile(),
+                ],
             ]);
         }
     }
@@ -295,9 +301,9 @@ class Queue
             try {
                 (new InvestmentService())->parseProject($project);
             } catch (ErrorException $e) {
-                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage()];
+                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage(), $e->getFile()];
             } catch (\Throwable $e) {
-                $errors[$item['url']] = [$e->getLine(), $e->getMessage()];
+                $errors[$item['url']] = [$e->getLine(), $e->getMessage(), $e->getFile()];
             }
             gc_collect_cycles();
         }

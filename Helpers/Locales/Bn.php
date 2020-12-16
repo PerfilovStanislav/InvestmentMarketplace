@@ -74,7 +74,6 @@ class Bn extends AbstractLanguage {
         $repeatPassword    = 'পাসওয়ার্ড পুনরায় প্রবেশ করান',
         $required          = 'প্রয়োজনীয়',
         $scam              = 'কেলেঙ্কারি',
-//        $selectFile        = 'একটি ফাইল নির্বাচন করুন',
         $sendForm          = 'ফর্ম প্রেরণ করুন',
         $showAllLangs      = 'সকল ভাষা দেখান',
         $siteExists        = 'সাইট ইতিমধ্যেই বিদ্যমান',

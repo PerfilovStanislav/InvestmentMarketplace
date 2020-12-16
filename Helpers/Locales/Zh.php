@@ -76,7 +76,6 @@ class Zh extends AbstractLanguage {
         $remove            = '刪掉',
         $repeatPassword    = '重新輸入密碼',
         $scam              = '詐騙',
-//        $selectFile        = '選擇檔案',
         $sendForm          = '提交表格',
         $showAllLangs      = '顯示所有語言',
         $siteExists        = '該站點已經在數據庫中',

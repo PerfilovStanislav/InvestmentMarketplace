@@ -74,7 +74,6 @@ class Ru extends AbstractLanguage {
         $repeatPassword    = 'Повторите пароль',
         $required          = 'Обязательно',
         $scam              = 'Скам',
-//        $selectFile        = 'Выбрать файл',
         $sendForm          = 'Отправить форму',
         $showAllLangs      = 'Показать все языки',
         $siteExists        = 'Сайт уже в базе',

@@ -74,7 +74,6 @@ abstract class AbstractLanguage implements LocaleInterface {
         $repeatPassword    = 'Repeat password',
         $required          = 'Required',
         $scam              = 'Scam',
-//        $selectFile        = 'Select a file',
         $sendForm          = 'Send form',
         $showAllLangs      = 'Show all languages',
         $siteExists        = 'Site already exists',

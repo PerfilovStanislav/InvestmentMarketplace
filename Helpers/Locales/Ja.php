@@ -74,7 +74,6 @@ class Ja extends AbstractLanguage {
         $repeatPassword    = 'パスワードを繰り返す',
         $required          = '必須',
         $scam              = '詐欺',
-//        $selectFile      = 'ファイルを選択',
         $sendForm          = 'フォームを送信',
         $showAllLangs      = 'すべての言語を表示する',
         $siteExists        = 'サイトはすでにデータベースにあります',

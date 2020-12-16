@@ -15,6 +15,7 @@ class SiteLanguageCollection
         Language::TR => Tr::class,
         Language::JA => Ja::class,
         Language::ID => Id::class,
+        Language::JV => Jv::class,
     ];
 
     public static function getByShortname(string $shortname): AbstractLanguage {

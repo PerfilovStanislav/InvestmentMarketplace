@@ -1750,8 +1750,8 @@ button.close {
 .mnw270 {
     min-width: 270px !important;
 }
-.mnw200 {
-    min-width: 200px !important;
+.mnw230 {
+    min-width: 230px !important;
 }
 table.tc-bold-1 tbody td:first-child,
 table.tc-bold-2 tbody td:nth-child(2),

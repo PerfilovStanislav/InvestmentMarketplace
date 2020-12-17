@@ -95,7 +95,7 @@ use Models\Table\{Payment, Project, Language, ProjectLang};
                             </span>
                         </div>
                     </div>
-                    <div class="mnw200" style="flex: 16 0">
+                    <div class="mnw230" style="flex: 16 0">
                         <div class="panel-heading lh30 h-30">
                             <span class="panel-icon">
                                 <i class="fa fa-signal"></i>

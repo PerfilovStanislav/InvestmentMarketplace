@@ -49,6 +49,9 @@ class Locale {
             }
         }
         foreach (array_keys($langs ?? []) as $langName) {
+            $langName = [
+                'br' => 'pt',
+            ][$langName] ?? $langName;
             if (App()->siteLanguages()->$langName) {
                 return ($this->language = $_SESSION['lang'] = $langName);
             }

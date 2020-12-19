@@ -95,8 +95,8 @@ class Fr extends AbstractLanguage {
 
     public function getPeriodName(int $i, int $k): string {
         return ['minute', 'heure', 'jour', 'semaine', 'mois', ''][$i-1].(
-            $i <= 3 ? ($k === 1 ? '' : 's') : (
-            $i === 5 ? ($k === 1 ? 'année' : (\in_array($k, [3,4,5,10]) ? 'années' : 'ans')) : ''
+            $i <= 4 ? ($k === 1 ? '' : 's') : (
+            $i === 6 ? ($k === 1 ? 'année' : (\in_array($k, [3,4,5,10]) ? 'années' : 'ans')) : ''
             )
         );
     }

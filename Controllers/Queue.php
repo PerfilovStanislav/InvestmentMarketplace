@@ -117,7 +117,7 @@ class Queue
 
             Screens::createFolder($project->id);
 
-            $this->reTry(static function () use ($project) {
+            $this->reTry(function () use ($project) {
                 (new InvestmentService())->reloadScreen(new ReloadScreenshotRequest(['project' => $project->id]));
             });
 

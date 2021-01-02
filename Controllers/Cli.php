@@ -40,7 +40,7 @@ class Cli extends Controller {
 
         $path = ROOT.'/assets/full/full.';
         file_put_contents($path.$type, $buffer);
-        file_put_contents($path.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
+//        file_put_contents($path.$type.'.gz', gzencode($buffer, 9, FORCE_GZIP));
 //        file_put_contents($path.$type.'.br', brotli_compress($buffer, 9, 11));
     }
 }

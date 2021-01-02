@@ -254,7 +254,7 @@ class Queue
         }
 
         $query = http_build_query([
-            'hlindex[from]' => 2,
+            'hlindex[from]' => 1,
             'hlindex[to]'   => 10,
             'status[1]'     => 1,
             'design'        => 1,

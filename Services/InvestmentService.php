@@ -181,12 +181,17 @@ class InvestmentService
             return;
         }
 
+        $refPlans = $hyiplogsService->getReferralPlans();
+        if (empty($refPlans)) {
+            $refPlans = $hyipboxService->getReferralPlans();
+        }
+
         $project->fromArray([
             'name'             => $hyipboxService->getTitle(),
             'admin'            => UserConstant::SYSTEM,
             'start_date'       => date(\DATE_ATOM, $hyipboxService->getStartDate()),
             'paymenttype'      => $hyipboxService->getPaymentTypeId(),
-            'ref_percent'      => $hyipboxService->getReferralPlans(),
+            'ref_percent'      => $refPlans ?? [],
             'plan_percents'    => array_column($plans, 0),
             'plan_period'      => array_column($plans, 1),
             'plan_period_type' => array_column($plans, 2),
@@ -250,7 +255,7 @@ class InvestmentService
         MVProjectCounts::refresh();
     }
 
-    private function parseVotes(int $projectId, int $hid) {
+    public function parseVotes(int $projectId, int $hid) {
         $base = 'https://hyiplogs.com/';
 
         $result = (new CurlHttpClient())->post(new CurlRequestDto($base . 'votes/', [], [], [
@@ -293,13 +298,19 @@ class InvestmentService
             $message = '<p>' . \str_replace(["\n", "'", '\\'], ['</p><p>', '', ''], $message) . '</p>';
             $message = \preg_replace('/\s+/', ' ', $message);
 
-            $dt = $item->first('.vote-body .top-line .vote-date')->text();
-            preg_match_all('/(\d*[dhm])/', $dt, $matches);
-            $date = implode(' ', $matches[1]);
+            $dt = trim($item->first('.vote-body .top-line .vote-date')->text());
+            if (strpos($dt, 'ago') !== false) {
+                preg_match_all('/(\d*[dhm])/', $dt, $matches);
+                $date = implode(' ', $matches[1]);
+                $date = "NOW() - INTERVAL '$date'";
+            } else {
+                $date = "'$dt'::timestamp";
+            }
+
 
             $sql = "
                 INSERT INTO message(date_create, user_id, project_id, lang_id, message, session_id)
-                VALUES (NOW() - INTERVAL '$date', {$user->id}, $projectId, -1, '$message', 1);
+                VALUES ($date, {$user->id}, $projectId, -1, '$message', 1);
             ";
             Database::getInstance()->rawExecute($sql);
         }

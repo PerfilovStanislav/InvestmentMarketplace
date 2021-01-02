@@ -7,6 +7,7 @@ use Exceptions\ErrorException;
 use Helpers\HttpClient\CurlHttpClient;
 use Helpers\HttpClient\CurlRequestDto;
 use Helpers\HttpClient\CurlResponseDto;
+use Helpers\Validator;
 use Mappers\HyiplogsMapper;
 use Models\Constant\PlanPeriodType;
 use Traits\Instance;
@@ -79,6 +80,14 @@ class HyiplogsService
 
     public function getRating() {
         return $this->document->first('div.container-fluid div.hl-index-box span')->text();
+    }
+
+    public function getReferralPlans()
+    {
+        $str = trim($this->document->first('.content div.info-box div.item:nth-child(5) div.txt')->text());
+        $str = preg_replace('/[^'.Validator::FLOAT.'\-,]/', '', $str);
+        $str = str_replace([','], ['-'], $str);
+        return array_filter(explode('-', $str), fn($plan) => $plan > 0 && $plan < 1000);
     }
 
     public function getPlans() {

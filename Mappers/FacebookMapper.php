@@ -14,6 +14,8 @@ class FacebookMapper
             Language::ZH => \Config::FB_PAGE_ZH_ID,
             Language::HI => \Config::FB_PAGE_HI_ID,
             Language::ES => \Config::FB_PAGE_ES_ID,
+            Language::AR => \Config::FB_PAGE_AR_ID,
+            Language::PT => \Config::FB_PAGE_PT_ID,
         ];
     }
 
@@ -28,6 +30,8 @@ class FacebookMapper
             \Config::FB_PAGE_ZH_ID => \Config::FB_PAGE_ZH_TOKEN,
             \Config::FB_PAGE_HI_ID => \Config::FB_PAGE_HI_TOKEN,
             \Config::FB_PAGE_ES_ID => \Config::FB_PAGE_ES_TOKEN,
+            \Config::FB_PAGE_AR_ID => \Config::FB_PAGE_AR_TOKEN,
+            \Config::FB_PAGE_PT_ID => \Config::FB_PAGE_PT_TOKEN,
         ][$pageId] ?? '';
     }
 }

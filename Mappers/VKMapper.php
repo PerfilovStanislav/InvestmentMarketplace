@@ -14,6 +14,8 @@ class VKMapper
             Language::ZH => \Config::VK_GROUP_ZH,
             Language::BN => \Config::VK_GROUP_BN,
             Language::ES => \Config::VK_GROUP_ES,
+            Language::AR => \Config::VK_GROUP_AR,
+            Language::PT => \Config::VK_GROUP_PT,
         ];
     }
 

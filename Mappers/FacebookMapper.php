@@ -13,6 +13,7 @@ class FacebookMapper
             Language::RU => \Config::FB_PAGE_RU_ID,
             Language::ZH => \Config::FB_PAGE_ZH_ID,
             Language::HI => \Config::FB_PAGE_HI_ID,
+            Language::ES => \Config::FB_PAGE_ES_ID,
         ];
     }
 
@@ -26,6 +27,7 @@ class FacebookMapper
             \Config::FB_PAGE_RU_ID => \Config::FB_PAGE_RU_TOKEN,
             \Config::FB_PAGE_ZH_ID => \Config::FB_PAGE_ZH_TOKEN,
             \Config::FB_PAGE_HI_ID => \Config::FB_PAGE_HI_TOKEN,
+            \Config::FB_PAGE_ES_ID => \Config::FB_PAGE_ES_TOKEN,
         ][$pageId] ?? '';
     }
 }

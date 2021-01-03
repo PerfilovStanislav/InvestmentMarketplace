@@ -1,14 +1,14 @@
 <?php
 
-use Core\App;
-use Core\Database;
-use Core\Router;
-use Helpers\Errors;
-use Helpers\Locales\AbstractLanguage;
-use Helpers\Output;
-use Models\CurrentUser;
-use Requests\Telegram\SendMessageRequest;
-use Exceptions\ErrorException;
+use App\Core\App;
+use App\Core\Database;
+use App\Core\Router;
+use App\Helpers\Errors;
+use App\Helpers\Locales\AbstractLanguage;
+use App\Helpers\Output;
+use App\Models\CurrentUser;
+use App\Requests\Telegram\SendMessageRequest;
+use App\Exceptions\ErrorException;
 
 \define('DIR', \dirname($_SERVER['SCRIPT_NAME']));
 \define('ROOT', __DIR__);
@@ -40,7 +40,7 @@ function load(string $className) {
 
 \define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI);
 
-require_once \real_path('Helpers/Debug.php');
+require_once \real_path('App/Helpers/Debug.php');
 
 \register_shutdown_function('shutdown');
 require(ROOT . '/vendor/autoload.php');

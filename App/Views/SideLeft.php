@@ -73,5 +73,7 @@ use App\Models\Constant\ProjectStatus;
                 </div>
             </a>
         </span>
+
+        <a href="https://www.free-kassa.ru/"><img src="https://www.free-kassa.ru/img/fk_btn/7.png"></a>
     </ul>
 </div>

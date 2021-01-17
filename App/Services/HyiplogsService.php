@@ -74,7 +74,8 @@ class HyiplogsService
 
     public function getPayments(): array {
         $str = $this->document->first('div.container-fluid div.info-box div.item:nth-child(6) div.txt')->text();
-        $str = explode(',', trim($str));
+        $str = str_replace(["\n", "\r", ' '], ['', '', ''], $str);
+        $str = explode(',', $str);
         return (new HyiplogsMapper())->payments($str);
     }
 
@@ -85,21 +86,24 @@ class HyiplogsService
     public function getReferralPlans()
     {
         $str = trim($this->document->first('.content div.info-box div.item:nth-child(5) div.txt')->text());
+        $str = str_replace(["\n", "\r"], ['', ''], $str);
         $str = preg_replace('/[^'.Validator::FLOAT.'\-,]/', '', $str);
         $str = str_replace([','], ['-'], $str);
         return array_filter(explode('-', $str), fn($plan) => $plan > 0 && $plan < 1000);
     }
 
     public function getPlans() {
-        try {
+//        try {
             $str = $this->document->first('.content div.info-box div.item:nth-child(1) div.txt')->text();
-        } catch (\Throwable $e) {
-            return [];
-        }
+            $str = str_replace(["\n", "\r"], ['', ''], $str);
+//        } catch (\Throwable $e) {
+//            return [];
+//        }
 
         $result = [];
         $strPlans = explode(';', strtolower($str));
         foreach ($strPlans as $strPlan) {
+            $strPlan = str_replace(["\n", "\r"], ['', ''], $strPlan);
             $strPlan = preg_replace('/\(.*?\)/', '', $strPlan); // убираем скобки
             $strPlan = preg_replace('/( \+ .*)/', '', $strPlan);
             $strPlan = str_replace('up to ', '', $strPlan);
@@ -228,6 +232,12 @@ class HyiplogsService
         }
 
         return $result;
+    }
+
+    public function isScam(): bool {
+        return (bool)(
+            $this->document->first('div.hyip-rid div.bg-notpaying')
+        );
     }
 
     private function round(float $percent): float {

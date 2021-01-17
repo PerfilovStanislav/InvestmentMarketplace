@@ -23,7 +23,13 @@ function dd(...$data) {
         if (IS_AJAX) {
             Output()->addFunction('showInConsole', $result);
             throw new ErrorException();
-        } else {
+        } elseif (CLI) {
+            (new \Symfony\Component\VarDumper\Dumper\CliDumper())->dump(
+                (new \Symfony\Component\VarDumper\Cloner\VarCloner())->cloneVar($data)
+            );
+            die();
+        }
+        else {
             echo '<pre>', print_r($result, true), '</pre>';
             die();
         }

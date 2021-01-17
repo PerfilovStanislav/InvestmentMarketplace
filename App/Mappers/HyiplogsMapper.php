@@ -37,7 +37,7 @@ class HyiplogsMapper
             'Ethereum'        => 27,
             'Litecoin'        => 28,
             'Dogecoin'        => 29,
-            'Dashcoin'        => 30,
+            'DashCoin'        => 30,
         ], array_flip($payments));
     }
 

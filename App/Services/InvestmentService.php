@@ -172,7 +172,7 @@ class InvestmentService
         $hyiplogsService = HyiplogsService::getInstance()->setUrl("project/{$project->url}/");
         $hyipboxService = HyipboxService::getInstance()->setUrl($project->url);
 
-        if ($hyipboxService->isScam()) {
+        if ($hyiplogsService->isScam() || $hyipboxService->isScam()) {
             return;
         }
 
@@ -211,7 +211,7 @@ class InvestmentService
         }
 
         $description = $hyipboxService->getDescription();
-        if (mb_strlen($description) < 50) {
+        if (mb_strlen($description) < 30) {
             return;
         }
 

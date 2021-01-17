@@ -127,7 +127,7 @@ class Queue
             $message = new SendPhotoRequest([
                 'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
                 'caption' => sprintf('New project %s is added by %s', $project->url, $user->login),
-                'photo'   => Screens::getOriginalJpgScreen($project->id),
+                'photo'   => Screens::getOriginalWebpScreen($project->id),
                 'reply_markup' => [
                     'inline_keyboard' => [
                         [
@@ -225,7 +225,10 @@ class Queue
         while (($project = $investmentService->getNextProject($projectId, ProjectStatus::ACTIVE))->id) {
             $projectId = $project->id;
             try {
-                if ((HyipboxService::getInstance()->setUrl($project->url))->isScam()) {
+                if (
+                    HyipboxService::getInstance()->setUrl($project->url)->isScam()
+                    || HyiplogsService::getInstance()->setUrl($project->url)->isScam()
+                ) {
                     $project->status_id = ProjectStatus::SCAM;
                     $project->scam_date = date(\DATE_ATOM);
                     $project->save();
@@ -233,7 +236,7 @@ class Queue
                     App()->telegram()->sendPhoto(new SendPhotoRequest([
                         'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
                         'caption' => sprintf('☠️ %s is scam', $project->url),
-                        'photo'   => Screens::getJpgThumb($project->id),
+                        'photo'   => Screens::getWebpThumb($project->id),
                     ]));
                 }
 

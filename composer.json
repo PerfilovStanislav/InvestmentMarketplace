@@ -7,6 +7,7 @@
         "facebook/graph-sdk": "^5.7.0",
       "ext-curl": "*",
       "ext-json": "*",
-      "ext-gd": "*"
+      "ext-gd": "*",
+        "symfony/var-dumper": "^5.2"
     }
 }

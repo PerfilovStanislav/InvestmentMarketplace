@@ -64,11 +64,10 @@ class HyipboxService {
     }
 
     public function isScam(): bool {
-//        try {
-            return (bool)$this->document->first('div.block_coun_st div.st_scam');
-//        } catch (\Throwable $e) {
-//            return false;
-//        }
+        return (bool)(
+            $this->document->first('div.block_coun_st div.st_scam')
+            ?? $this->document->first('div.block_coun_st.st_scam')
+        );
     }
 
     public function getTitle(): ?string {
@@ -126,12 +125,6 @@ class HyipboxService {
         return array_filter(explode('-', $strPlan), fn($plan) => $plan > 0);
     }
 
-    public function getPayments(): array {
-        $str = $this->document->find('div.feat_elm')[11]->first('div.body_feat_elem')->innerHtml() ?? '';
-        preg_match_all('/<div .*?(\d+)\.png.*?<\/div>/', $str, $matches);
-        return array_values(array_filter(array_map([$this, 'getPayment'], $matches[1])));
-    }
-
     public function getDescription(): string {
         return trim($this->document->find('div.feat_elm')[12]->first('div.body_feat_elem')->text()) ?? '';
     }
@@ -150,7 +143,38 @@ class HyipboxService {
         return CurrencyType::USD;
     }
 
-    private function getPayment(int $payment): int {
+    public function getPayments(): array {
+        $str = $this->document->first('div.feat_ps')->parent()->innerHtml() ?? '';
+
+        preg_match_all('/feat_ps (c\d+)/', $str, $matches);
+        $payments = array_values(array_filter(array_map([$this, 'getPayment'], $matches[1])));
+
+        preg_match_all('/<div .*?(\d+)\.png.*?<\/div>/', $str, $matches);
+        $payments2 = array_values(array_filter(array_map([$this, 'getPayment2'], $matches[1])));
+
+        return array_replace($payments, $payments2);
+    }
+
+    private function getPayment(string $payment): int {
+        return [
+                'c90'  => Payment::PERFECTMONEY,
+//            3  => Payment::PAYEER,
+//            4  => Payment::ADVCASH,
+                'c91'  => Payment::BITCOIN,
+                'c93'  => Payment::LITECOIN,
+//            7  => Payment::PAYZA,
+//            8  => Payment::OKPAY,
+//            9  => 0, // don't know
+                'c92' => Payment::ETHEREUM,
+                'c94' => Payment::BITCOINCASH,
+                'c95' => Payment::DASHCOIN,
+                'c96' => Payment::DOGECOIN,
+//            15 => 0, // Банк
+//            16 => 0, // Ripple
+            ][$payment] ?? 0;
+    }
+
+    private function getPayment2(int $payment): int {
         return [
             2  => Payment::PERFECTMONEY,
             3  => Payment::PAYEER,

@@ -33,13 +33,13 @@ class Validator
 
     public static function validate($key, $value, int $type, array $rules = []) {
         if ($type === AbstractEntity::TYPE_INT || $type === AbstractEntity::TYPE_FLOAT) {
-            if (!is_numeric($value)) {
+            if (!\is_numeric($value)) {
                 Error()->add($key, Translate()->expectedNumber);
             }
         }
         elseif ($type === AbstractEntity::TYPE_BOOL) {
-            if (in_array($value, ['1', 1, 'true', true], true)) return true;
-            if (in_array($value, ['0', 0, 'false', false], true)) return false;
+            if (\in_array($value, ['1', 1, 'true', true], true)) return true;
+            if (\in_array($value, ['0', 0, 'false', false], true)) return false;
             Error()->add($key, Translate()->wrongValue);
         }
 
@@ -85,7 +85,7 @@ class Validator
                 case self::REGEX:
                     self::regex($key, $value, $rule); break;
                 case self::IN:
-                    if (is_string($rule)) {
+                    if (\is_string($rule)) {
                         /** @var Collection $rule */
                         $rule = $rule::getValues();
                     }
@@ -100,7 +100,7 @@ class Validator
         }
 
         if ($type === AbstractEntity::TYPE_CURL_FILE) {
-            if (!file_exists($value)) {
+            if (!\file_exists($value)) {
                 Error()->add($key, sprintf(Translate()->fileNotFound, $value));
             }
             return new \CURLFile($value);
@@ -120,21 +120,21 @@ class Validator
     }
 
     private static function maxString($key, $value, $max) {
-        if (mb_strlen($value) > $max) Error()->add($key, Translate()->maxLength . ' ' . $max);
+        if (\mb_strlen($value) > $max) Error()->add($key, Translate()->maxLength . ' ' . $max);
     }
 
     private static function minString($key, $value, $min) {
-        if (mb_strlen($value) < $min) Error()->add($key, Translate()->minLength . ' ' . $min);
+        if (\mb_strlen($value) < $min) Error()->add($key, Translate()->minLength . ' ' . $min);
     }
 
     private static function lengthString($key, $value, $length) {
-        if (mb_strlen($value) != $length) {
+        if (\mb_strlen($value) != $length) {
             Error()->add($key, Translate()->fixedLength . ' ' . $length);
         }
     }
 
     public static function regex($key, $value, $regex): string {
-        if (($return = preg_replace('/[^' . $regex . ']/i', '', $value)) !== $value) {
+        if (($return = \preg_replace('/[^' . $regex . ']/i', '', $value)) !== $value) {
             Error()->add($key, Translate()->prohibitedChars);
         }
         return $return;
@@ -142,7 +142,7 @@ class Validator
 
     public static function in($key, $value, array $availables) : ?bool {
         if (!in_array($value, $availables)) {
-            Error()->add($key, Translate()->availableValues . ' ' . implode(', ', $availables));
+            Error()->add($key, Translate()->availableValues . ' ' . \implode(', ', $availables));
             return null;
         }
         return true;

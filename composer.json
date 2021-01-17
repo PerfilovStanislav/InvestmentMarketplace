@@ -1,10 +1,10 @@
 {
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "imangazaliev/didom": "^1.16.1",
         "dejurin/php-google-translate-for-free": "^1.0.0",
-        "patrickschur/language-detection": "^v4.0.1",
-        "facebook/graph-sdk": "^5.7.0",
+        "patrickschur/language-detection": "^5.0",
+        "facebook/graph-sdk": "*",
       "ext-curl": "*",
       "ext-json": "*",
       "ext-gd": "*",

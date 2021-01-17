@@ -92,17 +92,18 @@ class Router {
 
         $reflectionParameters = (new \ReflectionMethod($controller, $route->getAction()))->getParameters();
         if ($reflectionParameters) {
-            $params = array_map(static function (\ReflectionParameter $reflectionParameter) use (/*&*/$params) {
-                if ($reflectionClass = $reflectionParameter->getClass()) {
-                    $class = $reflectionClass->getName();
-                    return new $class($params);
+            $params = array_map(function (\ReflectionParameter $reflectionParameter) use (/*&*/$params) {
+                /** @var \ReflectionNamedType $type */
+                $type = $reflectionParameter->getType()->getName();
+                if (\strlen($type) > 10) {
+                    return new $type($params);
                 }
 
                 if ($param = ($params[/*$paramName = */$reflectionParameter->getName()] ?? null)) {
                     return $param;
                 }
 
-                if ($reflectionParameter->isArray()) {
+                if ($type === 'array') {
                     return $params;
                 }
 

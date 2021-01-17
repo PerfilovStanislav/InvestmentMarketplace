@@ -31,12 +31,12 @@
     ),
     'facebook/graph-sdk' => 
     array (
-      'pretty_version' => '5.7.0',
-      'version' => '5.7.0.0',
+      'pretty_version' => '5.1.4',
+      'version' => '5.1.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2d8250638b33d73e7a87add65f47fabf91f8ad9b',
+      'reference' => '38fd7187a6704d3ab14ded2f3a534ac4ee6f3481',
     ),
     'imangazaliev/didom' => 
     array (
@@ -49,12 +49,39 @@
     ),
     'patrickschur/language-detection' => 
     array (
-      'pretty_version' => 'v4.0.1',
-      'version' => '4.0.1.0',
+      'pretty_version' => 'v5.0.0',
+      'version' => '5.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2457cd130cb5d0f03d7c4337b1f1ca40dcc9de7b',
+      'reference' => 'b455e7f2d023af8feab4c5ac966384f8ce2058e7',
+    ),
+    'symfony/polyfill-mbstring' => 
+    array (
+      'pretty_version' => 'v1.22.0',
+      'version' => '1.22.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f377a3dd1fde44d37b9831d68dc8dea3ffd28e13',
+    ),
+    'symfony/polyfill-php80' => 
+    array (
+      'pretty_version' => 'v1.22.0',
+      'version' => '1.22.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'dc3063ba22c2a1fd2f45ed856374d79114998f91',
+    ),
+    'symfony/var-dumper' => 
+    array (
+      'pretty_version' => 'v5.2.1',
+      'version' => '5.2.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '13e7e882eaa55863faa7c4ad7c60f12f1a8b5089',
     ),
   ),
 );

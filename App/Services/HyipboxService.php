@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Libraries\Screens;
 use DiDom\Document;
 use App\Exceptions\ErrorException;
 use App\Helpers\HttpClient\CurlHttpClient;
@@ -17,12 +18,12 @@ use App\Traits\UrlValidate;
 class HyipboxService {
     use Instance, UrlValidate;
 
-    const PREFIX = 'https://hyipbox.org/details/';
+    const URL = 'https://hyipbox.org';
 
     private Document $document;
 
     public function setUrl(string $url): self {
-        $url = self::PREFIX . $url;
+        $url = self::URL . '/details/' . $url;
 
         $client = (new CurlHttpClient());
         $request = new CurlRequestDto($url);
@@ -153,6 +154,19 @@ class HyipboxService {
         $payments2 = array_values(array_filter(array_map([$this, 'getPayment2'], $matches[1])));
 
         return array_replace($payments, $payments2);
+    }
+
+    public function loadScreen(string $url, int $id)
+    {
+        $url = $this->document->first('a.zoom')->attr('href');
+
+        $temp = ROOT . '/screens/temp/' . $id;
+        file_put_contents($temp . '.xxx', file_get_contents(self::URL . $url));
+        Screens::toJpg($temp . '.xxx', $temp . '.jpg');
+        Screens::crop($temp . '.jpg', Screens::getOriginalJpgScreen($id));
+        Screens::makeThumbs($url, $id);
+        unlink($temp . '.xxx');
+        unlink($temp . '.jpg');
     }
 
     private function getPayment(string $payment): int {

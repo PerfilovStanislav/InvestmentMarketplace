@@ -59,22 +59,8 @@ class InvestmentService
         /** @var Project $project */
         $project = (new Project())->getById($request->project);
 
-        $url = sprintf('https://hyipbox.org/details/%s', $project->url);
-
-        try {
-            $document = new Document($url, true);
-            $url = $document->first('a.zoom')->attr('href');
-        } catch (\Exception $exception) {
-            throw new ErrorException('Parse error', 'project was n\'t found');
-        }
-
-        $temp = ROOT . '/screens/temp/' . $project->id;
-        file_put_contents($temp . '.xxx', file_get_contents('https://hyipbox.org' . $url));
-        Screens::toJpg($temp . '.xxx', $temp . '.jpg');
-        Screens::crop($temp . '.jpg', Screens::getOriginalJpgScreen($project->id));
-        Screens::makeThumbs($project->url, $project->id);
-        unlink($temp . '.xxx');
-        unlink($temp . '.jpg');
+        $hyipboxService = HyipboxService::getInstance()->setUrl($project->url);
+        $hyipboxService->loadScreen($project->url, $project->id);
 
         return $project;
     }

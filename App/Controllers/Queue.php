@@ -127,7 +127,7 @@ class Queue
             $message = new SendPhotoRequest([
                 'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
                 'caption' => sprintf('New project %s is added by %s', $project->url, $user->login),
-                'photo'   => Screens::getOriginalWebpScreen($project->id),
+                'photo'   => Screens::getOriginalJpgScreen($project->id),
                 'reply_markup' => [
                     'inline_keyboard' => [
                         [

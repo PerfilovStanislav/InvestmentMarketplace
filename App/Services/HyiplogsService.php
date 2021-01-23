@@ -234,6 +234,14 @@ class HyiplogsService
         return $result;
     }
 
+    public function loadScreen()
+    {
+        if (($node = $this->document->first('.hyip-img')) === null) {
+            return null;
+        }
+        return $node->attr('data-src');
+    }
+
     public function isScam(): bool {
         return (bool)(
             $this->document->first('div.hyip-rid div.bg-notpaying')

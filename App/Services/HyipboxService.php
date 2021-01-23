@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Libraries\Screens;
 use DiDom\Document;
 use App\Exceptions\ErrorException;
 use App\Helpers\HttpClient\CurlHttpClient;
@@ -156,17 +155,13 @@ class HyipboxService {
         return array_replace($payments, $payments2);
     }
 
-    public function loadScreen(string $url, int $id)
+    public function loadScreen()
     {
-        $url = $this->document->first('a.zoom')->attr('href');
-
-        $temp = ROOT . '/screens/temp/' . $id;
-        file_put_contents($temp . '.xxx', file_get_contents(self::URL . $url));
-        Screens::toJpg($temp . '.xxx', $temp . '.jpg');
-        Screens::crop($temp . '.jpg', Screens::getOriginalJpgScreen($id));
-        Screens::makeThumbs($url, $id);
-        unlink($temp . '.xxx');
-        unlink($temp . '.jpg');
+        $node = $this->document->first('a.zoom');
+        if ($node === null) {
+            return null;
+        }
+        return self::URL . $node->attr('href');
     }
 
     private function getPayment(string $payment): int {

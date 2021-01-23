@@ -57,10 +57,21 @@ class InvestmentService
 
     public function reloadScreen(ReloadScreenshotRequest $request): Project {
         /** @var Project $project */
-        $project = (new Project())->getById($request->project);
+        $id = $request->project;
+        $project = (new Project())->getById($id);
 
-        $hyipboxService = HyipboxService::getInstance()->setUrl($project->url);
-        $hyipboxService->loadScreen($project->url, $project->id);
+        $url = HyipboxService::getInstance()->setUrl($project->url)->loadScreen();
+        if ($url === null) {
+            $url = HyiplogsService::getInstance()->setUrl("project/{$project->url}/")->loadScreen();
+        }
+
+        $temp = ROOT . '/screens/temp/' . $id;
+        file_put_contents($temp . '.xxx', file_get_contents($url));
+        Screens::toJpg($temp . '.xxx', $temp . '.jpg');
+        Screens::crop($temp . '.jpg', Screens::getOriginalJpgScreen($id));
+        Screens::makeThumbs($url, $id);
+        unlink($temp . '.xxx');
+        unlink($temp . '.jpg');
 
         return $project;
     }

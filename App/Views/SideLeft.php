@@ -82,8 +82,6 @@ use App\Models\Constant\ProjectStatus;
             </a>
         </span>
 
-        <a href="https://www.free-kassa.ru/"><img src="https://www.free-kassa.ru/img/fk_btn/7.png"></a>
-
         <?php $h = count($this->banners) * 135 + 5; ?>
         <div class="bnrs bnrs_left" style="height: <?=$h?>px;">
             <?php foreach ($this->banners as $i => $banner): ?>

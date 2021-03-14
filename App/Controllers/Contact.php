@@ -12,7 +12,7 @@ use App\Views\Contact\Show;
 
 class Contact extends Controller {
 
-    public function show(): Output {
+    public function show(array $data = []): Output {
         return Output()
             ->addView(Show::class, [])
             ->addFunctions([

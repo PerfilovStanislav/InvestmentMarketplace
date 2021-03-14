@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Queries\Orders\GetActive;
 use App\Core\{Controller, Database, View};
 use App\Dto\ErrorRoute;
 use App\Helpers\{Data\Currency, Output,};
@@ -35,7 +36,7 @@ class Investment extends Controller {
     private CONST
         LIMIT = 20;
 
-    public function registration(): Output {
+    public function registration(array $data = []): Output {
         $params = [
             'payments'                  => new Payments(),
             'mainProjectLanguages'      => new Languages('pos is not null', 'pos asc'),
@@ -89,6 +90,10 @@ class Investment extends Controller {
         $payments       = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
         $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);
 
+        $banners = Db()->rawSelect(
+            GetActive::index(1)
+        );
+
         $pageParams = [
             'projects'            => $projects,
             'MVProjectLangs'      => $MVProjectLangs,
@@ -97,17 +102,22 @@ class Investment extends Controller {
             'projectLangs'        => $projectLangs,
             'languages'           => $languages,
             'isAdmin'             => CurrentUser()->isAdmin(),
+            'banners'             => $banners,
             Views::PROJECT_FILTER => $projectFilter,
         ];
 
-        Output()->addFunctions([
-            'setStorage' => ['lang' => $pageLanguage->id, 'chat' => []],
-            'initChat',
-            'panelScrollerInit',
-            'imgClickInit',
-            'loadRealThumbs',
-            'checkChats',
-        ], Output::DOCUMENT);
+        Output()
+            ->addFunctions([
+                'setStorage' => ['lang' => $pageLanguage->id, 'chat' => []],
+                'initChat',
+                'panelScrollerInit',
+                'imgClickInit',
+                'loadRealThumbs',
+                'checkChats',
+            ], Output::DOCUMENT)
+            ->addFunctions([
+                'setBanners' => $banners,
+            ]);
 
         return Output()->addView(Show::class, $pageParams);
     }
@@ -289,7 +299,7 @@ class Investment extends Controller {
                     limit 50)
                 ", $request->messages));
 
-            $messages = Database::getInstance()->rawSelect($sql);
+            $messages = Db()->rawSelect($sql);
 
             if (\count($messages) === 0) {
                 return Output()->addFunction('sleepAndCheckChats');

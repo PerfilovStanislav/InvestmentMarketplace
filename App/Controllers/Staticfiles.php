@@ -10,14 +10,14 @@ use App\Views\StaticFiles\Sitemap;
 
 class Staticfiles extends Controller {
 
-    public function sitemanifest(): Output {
+    public function sitemanifest(array $data = []): Output {
         return Output()
             ->disableLayout()
             ->addContentTypeHeader(Output::MANIFEST)
             ->addView(SiteManifest::class);
     }
 
-    public function sitemap(): Output {
+    public function sitemap(array $data = []): Output {
         $data = Db()->setTable('mv_sitemapxml')->select();
 
         return Output()
@@ -26,7 +26,7 @@ class Staticfiles extends Controller {
             ->addView(Sitemap::class, ['data' => $data]);
     }
 
-    public function rss(): Output {
+    public function rss(array $data = []): Output {
         Output()->disableMinifying();
         $data = Db()->setTable('mv_sitemapxml')->select(['shortname' => App()->locale()->getLanguage()]);
 

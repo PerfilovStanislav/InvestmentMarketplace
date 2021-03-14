@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\Output;
+use App\Queries\Orders\GetActive;
 use App\Models\{Collection\MVProjectCounts,
     Constant\DomElements,
     Constant\Language,
@@ -22,16 +23,16 @@ class Users extends Controller {
     /**
      * @deprecated как я сюда попадаю?
      */
-    public function login() {
+    public function login(array $data = []) {
         Output()->addView(Login::class);
     }
 
-    public function logout(): Output {
+    public function logout(array $data = []): Output {
         App()->auth()->logout();
         return $this->reloadPage();
     }
 
-    public function reloadPage(): Output {
+    public function reloadPage(array $data = []): Output {
         $url = parse_url($_SERVER['HTTP_REFERER'] ?? '');
 
         $this->setUserHead();
@@ -47,7 +48,7 @@ class Users extends Controller {
         return Output();
     }
 
-    public function registration(): Output {
+    public function registration(array $data = []): Output {
         return Output()
             ->addView(
             CurrentUser()->is_authorized
@@ -80,7 +81,7 @@ class Users extends Controller {
         ]));
     }
 
-    public function setUserHead(): Output {
+    public function setUserHead(array $data = []): Output {
         Output()->addFunctions([
             'setParams' => [
                 'webp' => WEBP,
@@ -109,12 +110,21 @@ class Users extends Controller {
         )->addFunction('initForms', [], Views::USER_HEAD, 1);
     }
 
-    public function setLeftSide(): Output {
+    public function setLeftSide(array $data = []): Output {
         $isAdmin = CurrentUser()->isAdmin();
-        return Output()->addView(SideLeft::class, [
+        $banners = Db()->rawSelect(
+            GetActive::index(2)
+        );
+
+        return Output()
+            ->addView(SideLeft::class, [
             'counts' => array_map(fn (array $cnt):string => $isAdmin ? ' ' . $cnt['cnt'] : '', (new MVProjectCounts())->toArray()),
             'isAdmin' => $isAdmin,
-        ], Views::SIDEBAR_LEFT);
+            'banners' => $banners,
+        ], Views::SIDEBAR_LEFT)
+            ->addFunctions([
+                'setBanners' => $banners
+            ], Views::SIDEBAR_LEFT);
     }
 
     public function changeLanguage(LanguageAvailableRequest $request): Output {

@@ -31,9 +31,9 @@ class Queue
 
     public function __construct()
     {
-        if (!CLI) {
-            throw new \RuntimeException('Only cli available');
-        }
+//        if (!CLI) {
+//            throw new \RuntimeException('Only cli available');
+//        }
         $this->fileTime = filemtime(__FILE__);
         Output()->disableLayout();
     }
@@ -301,14 +301,14 @@ class Queue
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;
             }
-            try {
+//            try {
                 (new InvestmentService())->parseProject($project);
-            } catch (ErrorException $e) {
-                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage(), $e->getFile()];
-            } catch (\Throwable $e) {
-                $errors[$item['url']] = [$e->getLine(), $e->getMessage(), $e->getFile()];
-            }
-            gc_collect_cycles();
+//            } catch (ErrorException $e) {
+//                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage(), $e->getFile()];
+//            } catch (\Throwable $e) {
+//                $errors[$item['url']] = [$e->getLine(), $e->getMessage(), $e->getFile()];
+//            }
+//            gc_collect_cycles();
         }
         if (!empty($errors)) {
             sendToTelegram([

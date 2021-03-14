@@ -34,13 +34,13 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
     ?>
     <?php for ($i = 0; $i <= $count; $i++): ?>
         <span>
-            <a class="svg bnr_top" href="/purchase/banners" target="_blank">
+            <a class="svg bnr_top" href="/purchase/banners" target="_blank" rel="noreferrer">
                 <img class="bnr_top" src="/assets/bnrs/empty.jpg" alt="ad">
             </a>
         </span>
     <?php endfor; ?>
     <span>
-        <a class="ajax page svg bnr_top" href="/purchase/banners">
+        <a class="ajax page svg bnr_top" href="/purchase/banners" rel="noreferrer">
             <object data="/assets/bnrs/bnr1.svg?<?=vsprintf('row1=%s&row2=%s', explode('|', sprintf(Translate()->placeBanner, 1)))?>" type="image/svg+xml" id="bnr1" ></object>
         </a>
     </span>

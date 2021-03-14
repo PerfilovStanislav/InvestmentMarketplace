@@ -58,7 +58,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
             <div class="panel-heading" itemprop="productID" content="<?=$project->id?>">
                 <?php if ($this->isAdmin): ?>
                     <span>
-                        <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+                        <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle" aria-label="edit">
                             <span class="fa fa-pencil"></span>
                         </button>
                         <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
@@ -73,7 +73,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     </span>
 
                     <span>
-                        <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle btn-warning">
+                        <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle btn-warning" aria-label="Update screenshot">
                             <span class="fa fa-image"></span>
                         </button>
                         <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu2">

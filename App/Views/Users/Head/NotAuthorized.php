@@ -15,7 +15,7 @@ use App\Models\Table\Language;
 <ul class="nav navbar-nav navbar-right">
     <li class="dropdown menu-merge">
         <div class="navbar-btn btn-group">
-            <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+            <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle" aria-label="Language">
                 <span class="flag flag-<?=$this->siteLanguages->{$this->selectedLanguage}->flag?>"></span>
             </button>
             <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">

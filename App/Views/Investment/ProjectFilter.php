@@ -19,7 +19,7 @@ use App\Requests\Investment\ShowRequest;
     <div class="panel-body">
         <div class="tab-content pn br-n">
             <div class="btn-group">
-                <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+                <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle" aria-label="Language">
                     <span class="flag flag-<?=$this->pageLanguage->flag?>"></span>
                 </button>
                 <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">

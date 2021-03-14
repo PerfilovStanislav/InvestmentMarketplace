@@ -9,9 +9,10 @@ Class SiteManifest {} }
 use App\Helpers\Locales\AbstractLanguage;
 ?>
 {
-    "start_url": "/",
+    "start_url": "https://richinme.com",
     "name": "Richinme",
     "short_name": "RiM",
+    "prefer_related_applications": false,
     "icons": [
         {
             "src": "/assets/icons/android-chrome-192x192.png",
@@ -28,7 +29,7 @@ use App\Helpers\Locales\AbstractLanguage;
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "description": "<?=Translate()->headDescription?>",
-    "display": "standalone",
+    "display": "fullscreen",
     "screenshots": [{
         "src": "/assets/img/sitescreen.png",
         "sizes": "1280x920",

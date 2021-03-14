@@ -88,12 +88,12 @@ class Ru extends AbstractLanguage {
         $wrongValue        = 'Неверное значение',
         $yes               = 'Да',
         $youAreAuthorized  = 'Вы авторизировались',
-        $banner_position   = 'Позиция',
-        $block_on_top      = 'Позиция баннера',
-        $block_on_the_left = 'Блок сверху',
-        $number_of_days    = 'Блок слева',
-        $discount          = 'Количество дней',
-        $total             = 'Скидка'
+        $banner_position   = 'Позиция баннера',
+        $block_on_top      = 'Блок сверху',
+        $block_on_the_left = 'Блок слев',
+        $number_of_days    = 'Количество дней',
+        $discount          = 'Скидка',
+        $total             = 'Итого'
     ;
 
     public array

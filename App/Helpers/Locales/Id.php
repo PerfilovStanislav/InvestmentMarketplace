@@ -88,10 +88,10 @@ class Id extends AbstractLanguage {
         $wrongValue        = 'Nilai salah',
         $yes               = 'Iya',
         $youAreAuthorized  = 'Anda berwenang',
-        $banner_position   = 'Posisi spanduk',
-        $block_on_top      = 'Blokir di atas',
-        $block_on_the_left = 'Blokir di kiri',
-        $number_of_days    = 'Jumlah hari',
+        $bannerPosition    = 'Posisi spanduk',
+        $blockOnTop        = 'Blokir di atas',
+        $blockOnTheLeft    = 'Blokir di kiri',
+        $numberOfDays      = 'Jumlah hari',
         $discount          = 'Diskon',
         $total             = 'Total'
     ;

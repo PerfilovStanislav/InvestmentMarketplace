@@ -88,10 +88,10 @@ class Jv extends AbstractLanguage {
         $wrongValue        = 'Nilai salah',
         $yes               = 'Nggih',
         $youAreAuthorized  = 'Sampeyan wis sah',
-        $banner_position   = 'Posisi spanduk',
-        $block_on_top      = 'Blokir ing ndhuwur',
-        $block_on_the_left = 'Blokir ing sisih kiwa',
-        $number_of_days    = 'Nomer dina',
+        $bannerPosition    = 'Posisi spanduk',
+        $blockOnTop        = 'Blokir ing ndhuwur',
+        $blockOnTheLeft    = 'Blokir ing sisih kiwa',
+        $numberOfDays      = 'Nomer dina',
         $discount          = 'Diskon',
         $total             = 'Total'
     ;

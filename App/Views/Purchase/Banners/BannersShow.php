@@ -43,13 +43,13 @@ use App\Models\Table\Payment;
                             <div>
                                 <label class="block field option option-success">
                                     <input type="radio" name="position" checked value="1">
-                                    <span class="radio br-success"></span><i class="glyphicon glyphicon-arrow-up"></i> <?=Translate()->block_on_top?> (<b>728</b>х<b>90</b>)
+                                    <span class="radio br-success"></span><i class="glyphicon glyphicon-arrow-up"></i> <?=Translate()->blockOnTop?> (<b>728</b>х<b>90</b>)
                                 </label>
 
                                 <label class="block mt15 field option option-success">
                                     <input type="radio" name="position" value="2">
                                     <span class="radio br-success"></span><i class="glyphicon glyphicon-arrow-left"></i>
-                                    <?=Translate()->block_on_the_left?> (<b>125</b>х<b>125</b>)
+                                    <?=Translate()->blockOnTheLeft?> (<b>125</b>х<b>125</b>)
                                 </label>
                             </div>
                         </div>
@@ -85,7 +85,7 @@ use App\Models\Table\Payment;
                             <div class="f_1_1_auto mt15">
                                 <div class="section flex">
                                     <blockquote class="blockquote-warning lh0_6">
-                                        <p class="w150"><?=Translate()->number_of_days?></p>
+                                        <p class="w150"><?=Translate()->numberOfDays?></p>
                                     </blockquote>
                                     <div class="smart-widget sm-right mw90">
                                         <label class="field prepend-icon">

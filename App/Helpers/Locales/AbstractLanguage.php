@@ -13,7 +13,6 @@ abstract class AbstractLanguage implements LocaleInterface {
         $after             = 'after',
         $availableValues   = 'Available values',
         $badPassword       = 'Wrong password',
-        $bannerPosition    = 'Banner position',
         $chat              = 'Chat',
         $check             = 'check',
         $contact           = 'Contact',
@@ -89,10 +88,10 @@ abstract class AbstractLanguage implements LocaleInterface {
         $wrongValue        = 'Wrong value',
         $yes               = 'Yes',
         $youAreAuthorized  = 'You are authorized',
-        $banner_position   = 'Banner position',
-        $block_on_top      = 'Block on top',
-        $block_on_the_left = 'Block on the left',
-        $number_of_days    = 'Number of days',
+        $bannerPosition    = 'Banner position',
+        $blockOnTop        = 'Block on top',
+        $blockOnTheLeft    = 'Block on the left',
+        $numberOfDays      = 'Number of days',
         $discount          = 'Discount',
         $total             = 'Total'
     ;

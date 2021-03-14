@@ -88,10 +88,10 @@ class Tr extends AbstractLanguage {
         $wrongValue        = 'Geçersiz değer',
         $yes               = 'Evet',
         $youAreAuthorized  = 'Yetkiniz var',
-        $banner_position   = 'Banner konumu',
-        $block_on_top      = 'Üstte engelle',
-        $block_on_the_left = 'Soldaki blok',
-        $number_of_days    = 'Gün sayısı',
+        $bannerPosition    = 'Banner konumu',
+        $blockOnTop        = 'Üstte engelle',
+        $blockOnTheLeft    = 'Soldaki blok',
+        $numberOfDays      = 'Gün sayısı',
         $discount          = 'İndirim',
         $total             = 'Toplam'
     ;

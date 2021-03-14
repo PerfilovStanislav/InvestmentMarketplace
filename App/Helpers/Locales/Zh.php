@@ -90,10 +90,10 @@ class Zh extends AbstractLanguage {
         $wrongValue        = '無效值',
         $yes               = '是的',
         $youAreAuthorized  = '您已登錄',
-        $banner_position   = '橫幅位置',
-        $block_on_top      = '擋在上面',
-        $block_on_the_left = '在左側阻止',
-        $number_of_days    = '天數',
+        $bannerPosition    = '橫幅位置',
+        $blockOnTop        = '擋在上面',
+        $blockOnTheLeft    = '在左側阻止',
+        $numberOfDays      = '天數',
         $discount          = '折扣',
         $total             = '全部的'
     ;

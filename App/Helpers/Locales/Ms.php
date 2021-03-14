@@ -88,10 +88,10 @@ class Ms extends AbstractLanguage {
         $wrongValue        = 'Nilai yang salah',
         $yes               = 'Ya',
         $youAreAuthorized  = 'Anda diberi kuasa',
-        $banner_position   = 'Kedudukan sepanduk',
-        $block_on_top      = 'Sekat di atas',
-        $block_on_the_left = 'Sekat di sebelah kiri',
-        $number_of_days    = 'Bilangan hari',
+        $bannerPosition    = 'Kedudukan sepanduk',
+        $blockOnTop        = 'Sekat di atas',
+        $blockOnTheLeft    = 'Sekat di sebelah kiri',
+        $numberOfDays      = 'Bilangan hari',
         $discount          = 'Diskaun',
         $total             = 'Jumlah'
     ;

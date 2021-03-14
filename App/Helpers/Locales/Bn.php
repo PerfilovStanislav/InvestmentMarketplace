@@ -88,10 +88,10 @@ class Bn extends AbstractLanguage {
         $wrongValue        = 'ভুল মান ',
         $yes               = 'হ্যাঁ',
         $youAreAuthorized  = 'আপনি অনুমোদিত হয়েছেন',
-        $banner_position   = 'ব্যানার পজিশন',
-        $block_on_top      = 'উপরে ব্লক করুন',
-        $block_on_the_left = 'বাম দিকে ব্লক করুন',
-        $number_of_days    = 'দিনের সংখ্যা.',
+        $bannerPosition    = 'ব্যানার পজিশন',
+        $blockOnTop        = 'উপরে ব্লক করুন',
+        $blockOnTheLeft    = 'বাম দিকে ব্লক করুন',
+        $numberOfDays      = 'দিনের সংখ্যা.',
         $discount          = 'ছাড়',
         $total             = 'মোট'
     ;

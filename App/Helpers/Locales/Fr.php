@@ -88,10 +88,10 @@ class Fr extends AbstractLanguage {
         $wrongValue        = 'Mauvaise valeur',
         $yes               = 'Oui',
         $youAreAuthorized  = 'Vous êtes autorisé',
-        $banner_position   = 'Position de la bannière',
-        $block_on_top      = 'Bloquer sur le dessus',
-        $block_on_the_left = 'Bloquer à gauche',
-        $number_of_days    = 'Nombre de jours',
+        $bannerPosition    = 'Position de la bannière',
+        $blockOnTop        = 'Bloquer sur le dessus',
+        $blockOnTheLeft    = 'Bloquer à gauche',
+        $numberOfDays      = 'Nombre de jours',
         $discount          = 'Rabais',
         $total             = 'Total'
     ;

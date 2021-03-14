@@ -88,10 +88,10 @@ class De extends AbstractLanguage {
         $wrongValue        = 'Falscher Wert',
         $yes               = 'Ja',
         $youAreAuthorized  = 'Sie sind berechtigt',
-        $banner_position   = 'Bannerpositie',
-        $block_on_top      = 'Blok bovenop',
-        $block_on_the_left = 'Blok aan de linkerkant',
-        $number_of_days    = 'Aantal dagen',
+        $bannerPosition    = 'Bannerpositie',
+        $blockOnTop        = 'Blok bovenop',
+        $blockOnTheLeft    = 'Blok aan de linkerkant',
+        $numberOfDays      = 'Aantal dagen',
         $discount          = 'Korting',
         $total             = 'Totaal'
     ;

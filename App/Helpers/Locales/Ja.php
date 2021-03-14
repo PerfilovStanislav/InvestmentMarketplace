@@ -88,10 +88,10 @@ class Ja extends AbstractLanguage {
         $wrongValue        = '無効な値',
         $yes               = 'はい',
         $youAreAuthorized  = 'あなたは認証されています',
-        $banner_position   = 'バナーの位置',
-        $block_on_top      = '上にブロックします',
-        $block_on_the_left = '左側のブロック',
-        $number_of_days    = '日数',
+        $bannerPosition    = 'バナーの位置',
+        $blockOnTop        = '上にブロックします',
+        $blockOnTheLeft    = '左側のブロック',
+        $numberOfDays      = '日数',
         $discount          = 'ディスカウント',
         $total             = '合計'
     ;

@@ -88,10 +88,10 @@ class Es extends AbstractLanguage {
         $wrongValue        = 'Valor no válido',
         $yes               = 'Sí',
         $youAreAuthorized  = 'Está autorizado',
-        $banner_position   = 'Posición de la pancarta',
-        $block_on_top      = 'Bloque en la parte superior',
-        $block_on_the_left = 'Bloque a la izquierda',
-        $number_of_days    = 'Número de días',
+        $bannerPosition    = 'Posición de la pancarta',
+        $blockOnTop        = 'Bloque en la parte superior',
+        $blockOnTheLeft    = 'Bloque a la izquierda',
+        $numberOfDays      = 'Número de días',
         $discount          = 'Descuento',
         $total             = 'Total'
     ;

@@ -88,10 +88,10 @@ class Pt extends AbstractLanguage {
         $wrongValue        = 'Valor errado',
         $yes               = 'Sim',
         $youAreAuthorized  = 'Você está autorizado',
-        $banner_position   = 'Posição do banner',
-        $block_on_top      = 'Bloco em cima',
-        $block_on_the_left = 'Bloco à esquerda',
-        $number_of_days    = 'Número de dias',
+        $bannerPosition    = 'Posição do banner',
+        $blockOnTop        = 'Bloco em cima',
+        $blockOnTheLeft    = 'Bloco à esquerda',
+        $numberOfDays      = 'Número de dias',
         $discount          = 'Desconto',
         $total             = 'Total'
     ;

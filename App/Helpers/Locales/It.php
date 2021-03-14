@@ -88,10 +88,10 @@ class It extends AbstractLanguage {
         $wrongValue        = 'Valore sbagliato',
         $yes               = 'Sì',
         $youAreAuthorized  = 'Sei autorizzato',
-        $banner_position   = 'Posizione banner',
-        $block_on_top      = 'Blocco in alto',
-        $block_on_the_left = 'Blocco a sinistra',
-        $number_of_days    = 'Numero di giorni',
+        $bannerPosition    = 'Posizione banner',
+        $blockOnTop        = 'Blocco in alto',
+        $blockOnTheLeft    = 'Blocco a sinistra',
+        $numberOfDays      = 'Numero di giorni',
         $discount          = 'Sconto',
         $total             = 'Totale'
     ;

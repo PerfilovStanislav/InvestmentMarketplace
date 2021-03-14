@@ -34,7 +34,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
     ?>
     <?php for ($i = 0; $i <= $count; $i++): ?>
         <span>
-            <a class="ajax page svg bnr_top" href="/purchase/banners">
+            <a class="svg bnr_top" href="/purchase/banners" target="_blank">
                 <img class="bnr_top" src="/assets/bnrs/empty.jpg" alt="ad">
             </a>
         </span>

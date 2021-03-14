@@ -88,7 +88,7 @@ use App\Models\Constant\ProjectStatus;
         <div class="bnrs bnrs_left" style="height: <?=$h?>px;">
             <?php foreach ($this->banners as $i => $banner): ?>
                 <span id="bnrs_<?=$i?>">
-                    <a class="ajax page svg bnr_top" href="/purchase/banners">
+                    <a class="svg bnr_top" href="/purchase/banners" target="_blank">
                         <img class="bnr_left" src="/assets/bnrs/empty.jpg" alt="ad">
                     </a>
                 </span>

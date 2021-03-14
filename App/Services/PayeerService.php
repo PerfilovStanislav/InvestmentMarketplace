@@ -13,8 +13,8 @@ class PayeerService {
     {
         $shop     = 1284900525;
         $amount   = number_format($sum, 2, '.', '');
-        $curr     = 'RUB'; // USD, RUB, EUR, BTC, ETH, BCH, LTC, DASH, USDT, XRP
-        $desc     = base64_encode("Test payment $orderId");
+        $curr     = 'USD'; // USD, RUB, EUR, BTC, ETH, BCH, LTC, DASH, USDT, XRP
+        $desc     = base64_encode("Buy banner");
 
         $arHash = [$shop, $orderId, $amount, $curr, $desc, \Config::PAYEER_SECRET_KEY];
         $sign = strtoupper(hash('sha256', implode(':', $arHash)));

@@ -25,4 +25,11 @@ class Payeer extends Controller {
                 'status' => base64_decode($data['m_desc']) ?? ''
             ]);
     }
+
+    public function status(array $data): Output {
+        return Output()
+            ->addView(StatusSuccess::class, [
+                'status' => 'Status'
+            ]);
+    }
 }

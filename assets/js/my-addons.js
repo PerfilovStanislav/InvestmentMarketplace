@@ -167,25 +167,6 @@ var initTypes = function(el) {
 	$('.onlyUrl'    , el).on('input', onlyUrl);
 };
 
-// var UserAuthorization = function() {
-//     initTypes(this);
-//
-//     var form = $("#authorizationuser_form");
-//     form.submit(function(){
-//         removeAlerts(form);
-//         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
-//
-//         if (a.length) {
-//             a.addClass('state-error');
-//             return !1;
-//         }
-//
-//         allClear();
-//         ajax('/Users/authorize', form.serialize());
-//         return false;
-//     });
-// };
-
 var removeAlerts = function(scope) {
     $('.alert', scope).slideToggle('fast', 'swing', function(){this.remove()});
 };
@@ -563,16 +544,6 @@ var datePickerInit = function(el) {
         }
       }
     });
-
-    // }).on("changeDate", function(e) {
-    //     //console.log(e.date);
-    //     var date = e.date;
-    //     var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
-    //     var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+6);
-    //     //$('#weekpicker').datepicker("setDate", startDate);
-    //     $(".datepicker").datepicker('update', startDate);
-    //     $(".datepicker").val((startDate.getMonth() + 1) + '/' + startDate.getDate() + '/' +  startDate.getFullYear() + ' - ' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + '/' +  endDate.getFullYear());
-    // });
 };
 
 /* ------------------------------------------------------------ FULLSCREEN BUTTONS ---------------------------------- */

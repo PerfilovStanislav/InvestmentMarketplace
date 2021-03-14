@@ -89,7 +89,7 @@ use App\Models\Constant\ProjectStatus;
             <?php foreach ($this->banners as $i => $banner): ?>
                 <span id="bnrs_<?=$i?>">
                     <a class="svg bnr_top" href="/purchase/banners" target="_blank">
-                        <img class="bnr_left" src="/assets/bnrs/empty.jpg" alt="ad">
+                        <img class="bnr_left" src="/assets/bnrs/empty2.jpg" alt="ad">
                     </a>
                 </span>
             <?php endforeach; ?>

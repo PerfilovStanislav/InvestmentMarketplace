@@ -15,7 +15,6 @@ class Zh extends AbstractLanguage {
         $after             = '後',
         $availableValues   = '可用值',
         $badPassword       = '密碼無效',
-        $bannerPosition    = 'Banner position',
         $chat              = '聊天室',
         $check             = '簽出',
         $contact           = '聯繫方式',

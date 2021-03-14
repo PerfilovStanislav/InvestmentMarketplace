@@ -38,7 +38,7 @@ use App\Models\Table\Payment;
                     <div class="section row">
                         <div class="section flex">
                             <blockquote class="blockquote-success">
-                                <p class="w150"><?=Translate()->bannerPosition?></p>
+                                <p class="w150"><?=Translate()->bannerPosition ?></p>
                             </blockquote>
                             <div>
                                 <label class="block field option option-success">

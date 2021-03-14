@@ -2,9 +2,9 @@
 
 namespace App\Core;
 
+use App\Models\File;
 use DateTime;
 use App\Helpers\Validator;
-use App\Interfaces\ConstantInterface;
 use App\Interfaces\EntityInterface;
 use LogicException;
 use App\Traits\Collection;
@@ -28,7 +28,8 @@ abstract class AbstractEntity {
         TYPE_STRING_ARRAY = 13,
         TYPE_CURL_FILE    = 14,
         TYPE_JSON         = 15,
-        TYPE_NOT_REQUIRED = 16;
+        TYPE_NOT_REQUIRED = 16,
+        TYPE_FILE         = 17;
 
     public CONST
         FORMAT_DATE     = 'Y-m-d',
@@ -123,6 +124,9 @@ abstract class AbstractEntity {
                         $this->data[$key] = $value;
                     }
                     break;
+                case self::TYPE_FILE:
+                    $this->data[$key] = new File($value);
+                    break;
                 default:
                     throw new LogicException('Unknown entity type');
             }
@@ -207,7 +211,7 @@ abstract class AbstractEntity {
             }
 
             $type = self::getType($key);
-            if ($type === self::TYPE_DTO || $type === self::TYPE_DTO_ARRAY) {
+            if (in_array($type, [self::TYPE_DTO, self::TYPE_DTO_ARRAY, self::TYPE_FILE])) {
                 /** @var AbstractEntity $entity */
                 $data[$key] = is_array($entity) ? $entity : $entity->toArray();
             }

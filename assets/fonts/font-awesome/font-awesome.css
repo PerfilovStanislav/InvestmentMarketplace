@@ -86,6 +86,9 @@
 .fa-pencil-square:before {
     content: "\f14b";
 }
+.fa-bullhorn:before {
+    content: "\f0a1";
+}
 .fa-street-view:before {
     content: "\f21d";
 }
@@ -104,4 +107,17 @@
 }
 .fa-thumbs-o-up:before {
     content: "\f087";
+}
+.fa-dollar:before,
+.fa-usd:before {
+    content: "\f155";
+}
+.fa-arrow-left:before {
+    content: "\f060";
+}
+.fa-arrow-right:before {
+    content: "\f061";
+}
+.fa-exclamation-circle:before {
+    content: "\f06a";
 }

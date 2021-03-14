@@ -9,6 +9,7 @@ if (DEBUG) {
 
 function dd(...$data) {
     if (DEBUG) {
+        $data = array_map(fn($item) => $item instanceof \App\Core\AbstractEntity ? $item->toArray() : $item, $data);
         $result = [
             'data' => (array)$data,
             'debug' => debug_backtrace(),

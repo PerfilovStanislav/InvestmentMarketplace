@@ -227,7 +227,7 @@ class InvestmentService
             $desctiption = \str_replace(["\n", "'"], ['</br>', "''"], $description);
             $values[] = "({$project->id}, {$langId}, '$desctiption')";
         }
-        Database::getInstance()->rawExecute($sql . implode(',', $values));
+        Db()->rawExecute($sql . implode(',', $values));
 
         (new Queue([
             'action_id'  => Queue::ACTION_ID_SCREENSHOT,
@@ -309,7 +309,7 @@ class InvestmentService
                 INSERT INTO message(date_create, user_id, project_id, lang_id, message, session_id)
                 VALUES ($date, {$user->id}, $projectId, -1, '$message', 1);
             ";
-            Database::getInstance()->rawExecute($sql);
+            Db()->rawExecute($sql);
         }
     }
 }

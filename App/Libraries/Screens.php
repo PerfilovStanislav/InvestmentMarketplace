@@ -116,23 +116,23 @@ class Screens {
     public static function addIPTC(string $path, array $data = []) {
         // установка IPTC тэгов
         $iptc = $data + [
-              5 => 'richinme.com',        // ObjectName
-             15 => 'investment',          // Category
-             25 => 'investment;richinme', // keywords
-             26 => '9G7VQJ2C+9P4',        // LocationCode
-             27 => 'Moscow',              // LocationName
-             80 => 'richinme.com',        // Author
-             85 => 'Richinme',            // AuthorName
-             90 => 'Moscow',              // City
-            100 => 'RU',                  // CountryCode
-            101 => 'Russia',              // CountryCode
-            105 => 'richinme.com',        // HeadLine
-            115 => 'richinme.com',        // Source
-            116 => 'Richinme',            // Copyright
-            118 => 'admin@richinme.com',  // Contact
-            120 => 'Richinme.com',        // Caption
-            122 => 'Richinme.com',        // Writer
-            135 => 'ru',                  // Lang
+              5 => 'richinme.com'             , // ObjectName
+             15 => 'hyip'                     , // Category
+             25 => 'investment;richinme;hyip' , // keywords
+             26 => '9G7VQJ2C+9P4'             , // LocationCode
+             27 => 'Moscow'                   , // LocationName
+             80 => 'richinme.com'             , // Author
+             85 => 'Richinme'                 , // AuthorName
+             90 => 'Moscow'                   , // City
+            100 => 'RU'                       , // CountryCode
+            101 => 'Russia'                   , // CountryCode
+            105 => 'richinme.com'             , // HeadLine
+            115 => 'richinme.com'             , // Source
+            116 => 'Richinme'                 , // Copyright
+            118 => 'admin@richinme.com'       , // Contact
+            120 => 'Richinme.com'             , // Caption
+            122 => 'Richinme.com'             , // Writer
+            135 => 'en'                       , // Lang
         ];
 
         // Преобразование IPTC тэгов в двоичный код

@@ -62,3 +62,8 @@ var addToObject = function(main_obj, obj) {
     }
     return main_obj;
 };
+
+Date.prototype.addDays = function(days) {
+    this.setDate(this.getDate() + days);
+    return this;
+}

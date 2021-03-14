@@ -10,6 +10,7 @@ namespace App\Views\Investment; {
  * @property AbstractLanguage $locale
  * @property bool $isAdmin
  * @property Language $pageLanguage
+ * @property array $banners
  */
 Class Show {} }
 
@@ -25,9 +26,25 @@ use App\Models\Constant\Views;
 use App\Models\MView\MVProjectLang;
 use App\Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
-<a class="ajax page svg" href="/Contact/show">
-    <object data="/assets/bnrs/bnr1.svg?<?=vsprintf('row1=%s&row2=%s', explode('|', sprintf(Translate()->placeBanner, 1)))?>" type="image/svg+xml" id="bnr1" ></object>
-</a>
+
+<div class="bnrs bnrs_top">
+    <?php
+        $count = count($this->banners);
+        $count -= $count % 2;
+    ?>
+    <?php for ($i = 0; $i <= $count; $i++): ?>
+        <span>
+            <a class="ajax page svg bnr_top" href="/purchase/banners">
+                <img class="bnr_top" src="/assets/bnrs/empty.jpg" alt="ad">
+            </a>
+        </span>
+    <?php endfor; ?>
+    <span>
+        <a class="ajax page svg bnr_top" href="/purchase/banners">
+            <object data="/assets/bnrs/bnr1.svg?<?=vsprintf('row1=%s&row2=%s', explode('|', sprintf(Translate()->placeBanner, 1)))?>" type="image/svg+xml" id="bnr1" ></object>
+        </a>
+    </span>
+</div>
 
 <div class="filters" id="<?=Views::PROJECT_FILTER?>">
     <?=$this->{Views::PROJECT_FILTER}?>

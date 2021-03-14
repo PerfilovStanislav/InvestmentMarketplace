@@ -40,7 +40,7 @@ use App\Models\Table\Payment;
                             </label>
                         </div>
                         <div class="section">
-                            <div class="smart-widget sm-right smr-100">
+                            <div class="smart-widget sm-right">
                                 <label class="field prepend-icon">
                                     <input name="website" class="gui-input onlyUrl" autocomplete="off"
                                            placeholder="<?=Translate()->projectUrl?>">

@@ -5,6 +5,7 @@ namespace App\Views; {
  * @package App\Views
  * @property string[] $counts
  * @property bool $isAdmin
+ * @property array $banners
  */
 Class SideLeft {}}
 use App\Models\Constant\ProjectStatus;
@@ -52,10 +53,17 @@ use App\Models\Constant\ProjectStatus;
             </li>
         <?php endif; ?>
         <li class="divider"></li>
-        <li class="sidebar-label"><?=Translate()->contact?></li>
+        <li class="sidebar-label"><?=Translate()->menu?></li>
         <li>
             <a href="/Contact/show" class="ajax page">
                 <span class="glyphicon glyphicon-book text-info-darker"></span>
+                <span class="sidebar-title"><?=Translate()->contact?></span>
+                <span class="sidebar-title-tray"></span>
+            </a>
+        </li>
+        <li>
+            <a href="/Purchase/banners" class="ajax page">
+                <span class="fa fa-bullhorn"></span>
                 <span class="sidebar-title"><?=Translate()->contact?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
@@ -75,5 +83,16 @@ use App\Models\Constant\ProjectStatus;
         </span>
 
         <a href="https://www.free-kassa.ru/"><img src="https://www.free-kassa.ru/img/fk_btn/7.png"></a>
+
+        <?php $h = count($this->banners) * 135 + 5; ?>
+        <div class="bnrs bnrs_left" style="height: <?=$h?>px;">
+            <?php foreach ($this->banners as $i => $banner): ?>
+                <span id="bnrs_<?=$i?>">
+                    <a class="ajax page svg bnr_top" href="/purchase/banners">
+                        <img class="bnr_left" src="/assets/bnrs/empty.jpg" alt="ad">
+                    </a>
+                </span>
+            <?php endforeach; ?>
+        </div>
     </ul>
 </div>

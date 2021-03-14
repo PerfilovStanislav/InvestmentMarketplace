@@ -142,7 +142,7 @@ function replace(e) {
     var filtered_str, $el = $(e.currentTarget);
     var str = $el.val();
     switch (e.handleObj.handler.name) {
-        case 'onlyUrl'      : filtered_str = str.replace(/[^a-zа-я0-9\-\.\/:\?\=\%]/gi,''); break;
+        case 'onlyUrl'      : filtered_str = str.replace(/[^a-zа-я0-9\-\.\/:\?\=\%&#]/gi,''); break;
         case 'onlyNumber'   : filtered_str = str.replace(/[^\d.]/gi,''); break;
         case 'onlyEmail'    : filtered_str = str.replace(/[^a-z0-9\-_.@]/gi,'').replace(/(^[@\._]*)|@(?=.*@)/gi,''); break;
         case 'onlyEn'       : filtered_str = str.replace(/[^a-z0-9 \-]/gi,''); break;
@@ -167,24 +167,24 @@ var initTypes = function(el) {
 	$('.onlyUrl'    , el).on('input', onlyUrl);
 };
 
-var UserAuthorization = function() {
-    initTypes(this);
-
-    var form = $("#authorizationuser_form");
-    form.submit(function(){
-        removeAlerts(form);
-        var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
-
-        if (a.length) {
-            a.addClass('state-error');
-            return !1;
-        }
-
-        allClear();
-        ajax('/Users/authorize', form.serialize());
-        return false;
-    });
-};
+// var UserAuthorization = function() {
+//     initTypes(this);
+//
+//     var form = $("#authorizationuser_form");
+//     form.submit(function(){
+//         removeAlerts(form);
+//         var a = $('input', form).filter(function(i) {return $(this).val() === "";}).parent();
+//
+//         if (a.length) {
+//             a.addClass('state-error');
+//             return !1;
+//         }
+//
+//         allClear();
+//         ajax('/Users/authorize', form.serialize());
+//         return false;
+//     });
+// };
 
 var removeAlerts = function(scope) {
     $('.alert', scope).slideToggle('fast', 'swing', function(){this.remove()});
@@ -209,9 +209,9 @@ var ProjectRegistration = function(a) {
 		reCountN(g);
 		c.find('.remove').on('click', remove);
 	});
-		
+
 	$('.remove', this).on('click', remove);
-	
+
 	$('.showPrev',this).on('click', function() {
 	  $(this).parent().hide('slow').prev().show('slow');
 	});
@@ -411,6 +411,81 @@ var initForms = function(a) {
     });
 };
 
+var initFormPurchaseBanner = function(a) {
+    var cost = 3;
+
+    var form = this[0].querySelector('form');
+    var tomorrow = (new Date()).addDays(1)
+
+    var calc = (start, end) => {
+        var count = (Math.abs(end-start))/(1000*60*60*24) + 1, discount = Math.min(count - 1, 30);
+        form.querySelector('#days_count').value = count;
+        form.querySelector('#discount').value = discount;
+        form.querySelector('#amount').value = cost * count * (100 - discount) / 100;
+    }
+
+    var reCalc = () => {
+        var fn = (className) => {return +form.querySelector(className).getAttribute('data-time')};
+        calc(fn('.is-start-date'), fn('.is-end-date'))
+    }
+
+    new Litepicker({
+        elementEnd: document.getElementById('end-date'),
+        element: document.getElementById('start-date'),
+        lang: 'en-US',
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        mobileFriendly: true,
+        singleMode: false,
+        minDate: tomorrow.toISOString(),
+        inlineMode: true,
+        startDate: tomorrow.toISOString(),
+        endDate: tomorrow.addDays(6).toISOString(),
+        onSelect: calc,
+        onShowTooltip: reCalc
+    });
+
+    form.querySelector('[type=file]').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        e.target.nextElementSibling.value = file.name + ' (' + (file.size / 1024).toFixed(2) + ' KiB)';
+    })
+
+    var positions = form.querySelectorAll('[name=position]');
+    [].forEach.call(positions, function(posElement) {
+        posElement.addEventListener('change', (e) => {
+            cost = [0, 3, 2][e.target.value]
+            reCalc()
+        })
+    });
+
+    form.onsubmit = function(e) {
+        $.ajax({
+            type: 'POST',
+            url: '/purchase/prepare',
+            data: new FormData(e.target),
+            cache: false,
+            timeout: 600000,
+            processData: false,
+            contentType: false
+        });
+        return false;
+    };
+
+    initTypes(this)
+};
+
+var setBanners = function (data) {
+    var length = data.length
+    var rand = Math.floor(Math.random() * length)
+    var bnrs = this[0].querySelector(".bnrs")
+    for (const [key, value] of Object.entries(data)) {
+        var k = (parseInt(key) + rand) % length + 1
+        var span = bnrs.querySelector("span:nth-child("+k+")")
+        span.querySelector("a").setAttribute('href', value.url)
+        span.querySelector("a img").setAttribute('src', '/assets/bnrs/' + value.path)
+    }
+}
+
 function remove() {
 	var p = $(this).closest('div[role=row]');
 	var g = p.closest('div[role=group]');
@@ -478,10 +553,9 @@ var changeScrollContentHeight = function() {
 var datePickerInit = function(el) {
 	$(".datepicker").datepicker({
         dateFormat: 'yy-mm-dd',
-      prevText: '<i class="fa fa-chevron-left"></i>',
-      nextText: '<i class="fa fa-chevron-right"></i>',
-      beforeShow: function(input, inst) {
-        var newclass = 'admin-form';
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        beforeShow: function(input, inst) {
         var themeClass = $(el).parents('.admin-form').attr('class');
         var smartpikr = inst.dpDiv.parent();
         if (!smartpikr.hasClass(themeClass)) {
@@ -489,6 +563,16 @@ var datePickerInit = function(el) {
         }
       }
     });
+
+    // }).on("changeDate", function(e) {
+    //     //console.log(e.date);
+    //     var date = e.date;
+    //     var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
+    //     var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+6);
+    //     //$('#weekpicker').datepicker("setDate", startDate);
+    //     $(".datepicker").datepicker('update', startDate);
+    //     $(".datepicker").val((startDate.getMonth() + 1) + '/' + startDate.getDate() + '/' +  startDate.getFullYear() + ' - ' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + '/' +  endDate.getFullYear());
+    // });
 };
 
 /* ------------------------------------------------------------ FULLSCREEN BUTTONS ---------------------------------- */
@@ -505,6 +589,7 @@ var linkClick = function() {
             applyFunctions('f', functions);
         }
         ajax($target.attr('href'), [], isNewPage)
+        $('html,body').animate({scrollTop: 0}, 250, 'easeOutQuad');
         return false;
     });
 };
@@ -531,6 +616,10 @@ var ajax = function(url, data, isNewPage) {
 
 var changeUrl = function(data) {
     window.history.pushState(null, null, data.url);
+};
+
+var redirect = function(data) {
+    document.location.href = data.url;
 };
 
 var setStorage = function(data) {

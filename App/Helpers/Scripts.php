@@ -12,7 +12,6 @@ class Scripts {
             ],
             [
                 '' => [
-                    'default_skin/css/theme.clear',
     //                'default_skin/css/theme',
 //                    'fullcalendar/fullcalendar',
 //                    'cropper/cropper',
@@ -20,6 +19,10 @@ class Scripts {
                     'flags/flags',
                     'payments/payments',
                     'magnific/magnific-popup',
+                    'default_skin/css/theme.clear',
+                ],
+                'plugins/' => [
+                    'litepicker/litepicker',
                 ],
                 'fonts/' => [
                     'google/fonts',
@@ -37,7 +40,15 @@ class Scripts {
             ],
             [
                 'jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
-                '' => ['magnific/jquery.magnific-popup', 'fullcalendar/lib/moment.min', 'cropper/cropper', 'pnotify/pnotify'],
+                '' => [
+                    'magnific/jquery.magnific-popup',
+                    'js/moment.min',
+                    'cropper/cropper',
+                    'pnotify/pnotify',
+                ],
+                'plugins/' => [
+                    'litepicker/litepicker',
+                ],
                 'js/' => ['utility', 'demo', 'main', 'highcharts'/*, 'widgets'*/, 'common', 'chat', 'my-addons']
             ]
         ];

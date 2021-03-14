@@ -4098,7 +4098,7 @@ td.legendColorBox {
     white-space: nowrap;
     padding: 9px 12px;
     font-size: 13px;
-    line-height: 1.49;
+    line-height: 1.5;
     border-radius: 2px;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -7449,7 +7449,7 @@ body {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
     font-size: 13px;
     font-weight: 400;
-    line-height: 1.49;
+    line-height: 1.5;
     color: #666666;
     background-color: #ffffff;
 }
@@ -7498,7 +7498,7 @@ img {
 }
 .img-thumbnail {
     padding: 4px;
-    line-height: 1.49;
+    line-height: 1.5;
     background-color: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 4px;
@@ -7771,7 +7771,7 @@ dl {
 }
 dt,
 dd {
-    line-height: 1.49;
+    line-height: 1.5;
 }
 dt {
     font-weight: bold;
@@ -7824,7 +7824,7 @@ blockquote small,
 blockquote .small {
     display: block;
     font-size: 80%;
-    line-height: 1.49;
+    line-height: 1.5;
     color: #777777;
 }
 blockquote footer:before,
@@ -7863,7 +7863,7 @@ blockquote:after {
 address {
     margin-bottom: 19px;
     font-style: normal;
-    line-height: 1.49;
+    line-height: 1.5;
 }
 .dropcap {
     min-height: 75px;
@@ -7945,7 +7945,7 @@ pre {
     padding: 9px;
     margin: 0 0 9.5px;
     font-size: 12px;
-    line-height: 1.49;
+    line-height: 1.5;
     word-break: break-all;
     word-wrap: break-word;
     color: #333333;
@@ -8939,7 +8939,7 @@ th {
 .table>tbody>tr>td,
 .table>tfoot>tr>td {
     padding: 9px;
-    line-height: 1.49;
+    line-height: 1.5;
     vertical-align: middle;
     border-top: 1px solid #eeeeee;
 }
@@ -9146,7 +9146,7 @@ output {
     display: block;
     padding-top: 10px;
     font-size: 13px;
-    line-height: 1.49;
+    line-height: 1.5;
     color: #555555;
 }
 .form-control {
@@ -9155,7 +9155,7 @@ output {
     height: 39px;
     padding: 9px 12px;
     font-size: 13px;
-    line-height: 1.49;
+    line-height: 1.5;
     color: #555555;
     background-color: #ffffff;
     background-image: none;
@@ -9726,7 +9726,7 @@ select[multiple].input-lg {
     white-space: nowrap;
     padding: 9px 12px;
     font-size: 13px;
-    line-height: 1.49;
+    line-height: 1.5;
     border-radius: 2px;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -10029,7 +10029,7 @@ tbody.collapse.in {
     clear: both;
     color: #666666;
     font-weight: normal;
-    line-height: 1.49;
+    line-height: 1.5;
     white-space: nowrap;
 }
 .dropdown-menu>li>a:hover,
@@ -10077,7 +10077,7 @@ tbody.collapse.in {
     display: block;
     padding: 3px 20px;
     font-size: 12px;
-    line-height: 1.49;
+    line-height: 1.5;
     color: #777777;
     white-space: nowrap;
 }
@@ -10495,7 +10495,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 }
 .nav-tabs>li>a {
     margin-right: 2px;
-    line-height: 1.49;
+    line-height: 1.5;
     border: 1px solid transparent;
     border-radius: 4px 4px 0 0;
 }
@@ -11267,7 +11267,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     position: relative;
     float: left;
     padding: 5px 12px;
-    line-height: 1.49;
+    line-height: 1.5;
     text-decoration: none;
     color: #3498db;
     background-color: #ffffff;
@@ -11515,7 +11515,7 @@ a.list-group-item.active>.badge,
     display: block;
     padding: 4px;
     /*margin-bottom: 19px;*/
-    line-height: 1.49;
+    line-height: 1.5;
     background-color: #ffffff;
     border: 1px solid #dddddd;
     /*border-radius: 4px;*/
@@ -13783,7 +13783,7 @@ ol.timeline-list li.timeline-item .timeline-date {
 }
 .modal-title {
     margin: 0;
-    line-height: 1.49;
+    line-height: 1.5;
 }
 .modal-body {
     position: relative;

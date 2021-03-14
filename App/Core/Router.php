@@ -46,11 +46,14 @@ class Router {
             App()->auth();
         }
 
-        $uriParams = explode('/', strtolower(trim($uri,'/')));
-        return $this->getRouteFromUriParams($uriParams);
+        $parsed = parse_url($uri);
+        parse_str($parsed['query'] ?? '', $params);
+
+        $uriParams = explode('/', strtolower(trim($parsed['path'] ?? '','/')));
+        return $this->getRouteFromUriParams($uriParams, $params);
     }
 
-    private function getRouteFromUriParams(array $uriParams): RouteInterface {
+    private function getRouteFromUriParams(array $uriParams, array $params): RouteInterface {
         $uriParams = array_filter($uriParams);
 
         $count = count($uriParams);
@@ -58,7 +61,7 @@ class Router {
             return new CustomRoute(
                 'App\Controllers\\' . ucfirst(array_shift($uriParams)),
                 array_shift($uriParams),
-                $this->prepareParams($uriParams ?? [])
+                $this->prepareParams($uriParams ?? []) + $params
             );
         }
 
@@ -86,20 +89,20 @@ class Router {
         }
 
         if (($_SERVER['CONTENT_TYPE'] ?? '') === Output::JSON) {
-            $input = json_decode(file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR);
+            $input = \json_decode(\file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR);
         }
-        $params = array_merge($_POST, $input ?? [], $route->getParams());
+        $params = array_merge($_POST, $input ?? [], $route->getParams(), $_FILES);
 
         $reflectionParameters = (new \ReflectionMethod($controller, $route->getAction()))->getParameters();
         if ($reflectionParameters) {
-            $params = array_map(function (\ReflectionParameter $reflectionParameter) use (/*&*/$params) {
+            $params = array_map(function (\ReflectionParameter $reflectionParameter) use ($params) {
                 /** @var \ReflectionNamedType $type */
                 $type = $reflectionParameter->getType()->getName();
                 if (\strlen($type) > 10) {
                     return new $type($params);
                 }
 
-                if ($param = ($params[/*$paramName = */$reflectionParameter->getName()] ?? null)) {
+                if ($param = ($params[$reflectionParameter->getName()] ?? null)) {
                     return $param;
                 }
 

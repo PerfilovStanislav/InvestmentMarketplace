@@ -9,7 +9,8 @@ class Ja extends AbstractLanguage {
         $addLevel          = 'レベルの追加',
         $addPlan           = '計画の追加',
         $addProject        = 'プロジェクトを追加',
-        $after             = 'through',
+        $advertising       = '広告',
+        $after             = '後',
         $availableValues   = '可能な値',
         $badPassword       = '無効なパスワード',
         $chat              = 'チャット',
@@ -86,7 +87,14 @@ class Ja extends AbstractLanguage {
         $wrongUrl          = '間違ったサイトのURL',
         $wrongValue        = '無効な値',
         $yes               = 'はい',
-        $youAreAuthorized  = 'あなたは認証されています';
+        $youAreAuthorized  = 'あなたは認証されています',
+        $banner_position   = 'バナーの位置',
+        $block_on_top      = '上にブロックします',
+        $block_on_the_left = '左側のブロック',
+        $number_of_days    = '日数',
+        $discount          = 'ディスカウント',
+        $total             = '合計'
+    ;
 
     public array
         $paymentType       = ['支払いタイプ', '手動', '即時', '自動'],

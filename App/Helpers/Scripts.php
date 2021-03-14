@@ -39,7 +39,7 @@ class Scripts {
                 'full/' => ['full'],
             ],
             [
-                'jquery/' => ['jquery-3.4.1.min', 'jquery-ui.min'],
+                'jquery/' => ['jquery-3.6.0.min', 'jquery-ui.min'],
                 '' => [
                     'magnific/jquery.magnific-popup',
                     'js/moment.min',

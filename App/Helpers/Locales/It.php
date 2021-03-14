@@ -9,6 +9,7 @@ class It extends AbstractLanguage {
         $addLevel          = 'Aggiungi livello',
         $addPlan           = 'Aggiungi piano',
         $addProject        = 'Aggiunta di progetti',
+        $advertising       = 'Pubblicità',
         $after             = 'dopo',
         $availableValues   = 'Valori disponibili',
         $badPassword       = 'Password errata',
@@ -86,7 +87,14 @@ class It extends AbstractLanguage {
         $wrongUrl          = 'Indirizzo del sito sbagliato',
         $wrongValue        = 'Valore sbagliato',
         $yes               = 'Sì',
-        $youAreAuthorized  = 'Sei autorizzato';
+        $youAreAuthorized  = 'Sei autorizzato',
+        $banner_position   = 'Posizione banner',
+        $block_on_top      = 'Blocco in alto',
+        $block_on_the_left = 'Blocco a sinistra',
+        $number_of_days    = 'Numero di giorni',
+        $discount          = 'Sconto',
+        $total             = 'Totale'
+    ;
 
     public array
         $paymentType       = ['Prelievo', 'Manuale', 'Istantaneo', 'Automatico'],

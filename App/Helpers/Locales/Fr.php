@@ -9,6 +9,7 @@ class Fr extends AbstractLanguage {
         $addLevel          = 'Ajouter un niveau',
         $addPlan           = 'Ajouter un plan',
         $addProject        = 'Ajout de projet',
+        $advertising       = 'Publicité',
         $after             = 'après',
         $availableValues   = 'Valeurs disponibles',
         $badPassword       = 'Mauvais mot de passe',
@@ -86,7 +87,14 @@ class Fr extends AbstractLanguage {
         $wrongUrl          = 'Mauvaise adresse du site',
         $wrongValue        = 'Mauvaise valeur',
         $yes               = 'Oui',
-        $youAreAuthorized  = 'Vous êtes autorisé';
+        $youAreAuthorized  = 'Vous êtes autorisé',
+        $banner_position   = 'Position de la bannière',
+        $block_on_top      = 'Bloquer sur le dessus',
+        $block_on_the_left = 'Bloquer à gauche',
+        $number_of_days    = 'Nombre de jours',
+        $discount          = 'Rabais',
+        $total             = 'Total'
+    ;
 
     public array
         $paymentType       = ['Retrait', 'Manuel', 'Instantané', 'Automatique'],

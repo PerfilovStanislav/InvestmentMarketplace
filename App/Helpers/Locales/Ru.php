@@ -9,6 +9,7 @@ class Ru extends AbstractLanguage {
         $addLevel          = 'Добавить уровень',
         $addPlan           = 'Добавить план',
         $addProject        = 'Добавление проекта',
+        $advertising       = 'Реклама',
         $after             = 'через',
         $availableValues   = 'Возможные значения',
         $badPassword       = 'Неверный пароль',
@@ -86,7 +87,14 @@ class Ru extends AbstractLanguage {
         $wrongUrl          = 'Неправильный адрес сайта',
         $wrongValue        = 'Неверное значение',
         $yes               = 'Да',
-        $youAreAuthorized  = 'Вы авторизировались';
+        $youAreAuthorized  = 'Вы авторизировались',
+        $banner_position   = 'Позиция',
+        $block_on_top      = 'Позиция баннера',
+        $block_on_the_left = 'Блок сверху',
+        $number_of_days    = 'Блок слева',
+        $discount          = 'Количество дней',
+        $total             = 'Скидка'
+    ;
 
     public array
         $paymentType       = ['Тип выплат', 'Ручной', 'Инстант (мгновенный)', 'Автоматический'],

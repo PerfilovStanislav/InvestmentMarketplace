@@ -9,6 +9,7 @@ class Id extends AbstractLanguage {
         $addLevel          = 'Tambahkan level',
         $addPlan           = 'Tambahkan rencana',
         $addProject        = 'Penambahan proyek',
+        $advertising       = 'Periklanan',
         $after             = 'setelah',
         $availableValues   = 'Nilai yang tersedia',
         $badPassword       = 'Kata sandi salah',
@@ -86,7 +87,14 @@ class Id extends AbstractLanguage {
         $wrongUrl          = 'Alamat situs salah',
         $wrongValue        = 'Nilai salah',
         $yes               = 'Iya',
-        $youAreAuthorized  = 'Anda berwenang';
+        $youAreAuthorized  = 'Anda berwenang',
+        $banner_position   = 'Posisi spanduk',
+        $block_on_top      = 'Blokir di atas',
+        $block_on_the_left = 'Blokir di kiri',
+        $number_of_days    = 'Jumlah hari',
+        $discount          = 'Diskon',
+        $total             = 'Total'
+    ;
 
     public array
         $paymentType       = ['Penarikan ',' Manual ',' Instan ',' Otomatis'],

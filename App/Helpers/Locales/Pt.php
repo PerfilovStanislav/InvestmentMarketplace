@@ -9,6 +9,7 @@ class Pt extends AbstractLanguage {
         $addLevel          = 'Adicione o nível',
         $addPlan           = 'Adicionar plano',
         $addProject        = 'Adicionando projeto',
+        $advertising       = 'Anúncio',
         $after             = 'depois de',
         $availableValues   = 'Valores disponíveis',
         $badPassword       = 'Senha incorreta',
@@ -86,7 +87,14 @@ class Pt extends AbstractLanguage {
         $wrongUrl          = 'Endereço do site errado',
         $wrongValue        = 'Valor errado',
         $yes               = 'Sim',
-        $youAreAuthorized  = 'Você está autorizado';
+        $youAreAuthorized  = 'Você está autorizado',
+        $banner_position   = 'Posição do banner',
+        $block_on_top      = 'Bloco em cima',
+        $block_on_the_left = 'Bloco à esquerda',
+        $number_of_days    = 'Número de dias',
+        $discount          = 'Desconto',
+        $total             = 'Total'
+    ;
 
     public array
         $paymentType       = ['Retirada', 'Manual', 'Instantâneo', 'Automático'],

@@ -9,6 +9,7 @@ class Ms extends AbstractLanguage {
         $addLevel          = 'Tambah tahap',
         $addPlan           = 'Tambah rancangan',
         $addProject        = 'Menambah projek',
+        $advertising       = 'Mengiklankan',
         $after             = 'selepas',
         $availableValues   = 'Nilai yang ada',
         $badPassword       = 'Salah kata laluan',
@@ -86,7 +87,14 @@ class Ms extends AbstractLanguage {
         $wrongUrl          = 'Alamat laman web yang salah',
         $wrongValue        = 'Nilai yang salah',
         $yes               = 'Ya',
-        $youAreAuthorized  = 'Anda diberi kuasa';
+        $youAreAuthorized  = 'Anda diberi kuasa',
+        $banner_position   = 'Kedudukan sepanduk',
+        $block_on_top      = 'Sekat di atas',
+        $block_on_the_left = 'Sekat di sebelah kiri',
+        $number_of_days    = 'Bilangan hari',
+        $discount          = 'Diskaun',
+        $total             = 'Jumlah'
+    ;
 
     public array
         $paymentType       = ['Pengeluaran', 'Manual', 'Segera', 'Automatik'],

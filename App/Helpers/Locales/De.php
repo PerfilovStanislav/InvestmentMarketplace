@@ -9,6 +9,7 @@ class De extends AbstractLanguage {
         $addLevel          = 'Level hinzufügen',
         $addPlan           = 'Plan hinzufügen',
         $addProject        = 'Projekt hinzufügen',
+        $advertising       = 'Reclame',
         $after             = 'nach',
         $availableValues   = 'Verfügbare Werte',
         $badPassword       = 'Falsches Passwort',
@@ -86,7 +87,14 @@ class De extends AbstractLanguage {
         $wrongUrl          = 'Falsche Adresse der Site',
         $wrongValue        = 'Falscher Wert',
         $yes               = 'Ja',
-        $youAreAuthorized  = 'Sie sind berechtigt';
+        $youAreAuthorized  = 'Sie sind berechtigt',
+        $banner_position   = 'Bannerpositie',
+        $block_on_top      = 'Blok bovenop',
+        $block_on_the_left = 'Blok aan de linkerkant',
+        $number_of_days    = 'Aantal dagen',
+        $discount          = 'Korting',
+        $total             = 'Totaal'
+    ;
 
     public array
         $paymentType       = ['Auszahlung', 'Manuell', 'Sofort', 'Automatisch'],

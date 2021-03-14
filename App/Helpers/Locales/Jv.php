@@ -9,6 +9,7 @@ class Jv extends AbstractLanguage {
         $addLevel          = 'Tambah level',
         $addPlan           = 'Tambah rencana',
         $addProject        = 'Nambahake proyek',
+        $advertising       = 'Pariwara',
         $after             = 'sawise',
         $availableValues   = 'Nilai sing kasedhiya',
         $badPassword       = 'Tembung sandhi sing salah',
@@ -86,7 +87,14 @@ class Jv extends AbstractLanguage {
         $wrongUrl          = 'Alamat situs sing salah',
         $wrongValue        = 'Nilai salah',
         $yes               = 'Nggih',
-        $youAreAuthorized  = 'Sampeyan wis sah';
+        $youAreAuthorized  = 'Sampeyan wis sah',
+        $banner_position   = 'Posisi spanduk',
+        $block_on_top      = 'Blokir ing ndhuwur',
+        $block_on_the_left = 'Blokir ing sisih kiwa',
+        $number_of_days    = 'Nomer dina',
+        $discount          = 'Diskon',
+        $total             = 'Total'
+    ;
 
     public array
         $paymentType       = ['Penarikan', 'Manual', 'Instan', 'Otomatis'],

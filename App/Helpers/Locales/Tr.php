@@ -9,6 +9,7 @@ class Tr extends AbstractLanguage {
         $addLevel          = 'Seviye Ekle',
         $addPlan           = 'Plan Ekle',
         $addProject        = 'Proje Ekle',
+        $advertising       = 'Reklâm',
         $after             = 'üzerinden',
         $availableValues   = 'Olası Değerler',
         $badPassword       = 'Geçersiz Parola',
@@ -86,7 +87,14 @@ class Tr extends AbstractLanguage {
         $wrongUrl          = 'Yanlış site url\'si',
         $wrongValue        = 'Geçersiz değer',
         $yes               = 'Evet',
-        $youAreAuthorized  = 'Yetkiniz var';
+        $youAreAuthorized  = 'Yetkiniz var',
+        $banner_position   = 'Banner konumu',
+        $block_on_top      = 'Üstte engelle',
+        $block_on_the_left = 'Soldaki blok',
+        $number_of_days    = 'Gün sayısı',
+        $discount          = 'İndirim',
+        $total             = 'Toplam'
+    ;
 
     public array
         $paymentType       = ['Ödeme türü', 'Manuel', 'Anında', 'Otomatik'],

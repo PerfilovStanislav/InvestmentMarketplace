@@ -9,9 +9,11 @@ abstract class AbstractLanguage implements LocaleInterface {
         $addLevel          = 'Add level',
         $addPlan           = 'Add plan',
         $addProject        = 'Project adding',
+        $advertising       = 'Advertising',
         $after             = 'after',
         $availableValues   = 'Available values',
         $badPassword       = 'Wrong password',
+        $bannerPosition    = 'Banner position',
         $chat              = 'Chat',
         $check             = 'check',
         $contact           = 'Contact',
@@ -86,7 +88,14 @@ abstract class AbstractLanguage implements LocaleInterface {
         $wrongUrl          = 'Wrong site\'s address',
         $wrongValue        = 'Wrong value',
         $yes               = 'Yes',
-        $youAreAuthorized  = 'You are authorized';
+        $youAreAuthorized  = 'You are authorized',
+        $banner_position   = 'Banner position',
+        $block_on_top      = 'Block on top',
+        $block_on_the_left = 'Block on the left',
+        $number_of_days    = 'Number of days',
+        $discount          = 'Discount',
+        $total             = 'Total'
+    ;
 
     public array
         $paymentType       = ['Withdrawal', 'Manual', 'Instant', 'Automatic'],

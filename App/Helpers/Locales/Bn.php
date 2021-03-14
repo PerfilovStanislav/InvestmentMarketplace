@@ -9,6 +9,7 @@ class Bn extends AbstractLanguage {
         $addLevel          = 'স্তর যুক্ত করুন',
         $addPlan           = 'পরিকল্পনা যুক্ত করুন',
         $addProject        = 'প্রকল্প যুক্ত করা হচ্ছে',
+        $advertising       = 'বিজ্ঞাপন',
         $after             = 'পরে',
         $availableValues   = 'উপলব্ধ মান সমূহ',
         $badPassword       = 'ভুল পাসওয়ার্ড',
@@ -86,7 +87,14 @@ class Bn extends AbstractLanguage {
         $wrongUrl          = 'সাইটের ঠিকানা ভুল হয়েছে',
         $wrongValue        = 'ভুল মান ',
         $yes               = 'হ্যাঁ',
-        $youAreAuthorized  = 'আপনি অনুমোদিত হয়েছেন';
+        $youAreAuthorized  = 'আপনি অনুমোদিত হয়েছেন',
+        $banner_position   = 'ব্যানার পজিশন',
+        $block_on_top      = 'উপরে ব্লক করুন',
+        $block_on_the_left = 'বাম দিকে ব্লক করুন',
+        $number_of_days    = 'দিনের সংখ্যা.',
+        $discount          = 'ছাড়',
+        $total             = 'মোট'
+    ;
 
     public array
         $paymentType       = ['উত্তোলন', 'ম্যানুয়াল', 'সাম্প্রতিক', 'স্বয়ংক্রিয়'],

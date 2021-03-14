@@ -11,9 +11,11 @@ class Zh extends AbstractLanguage {
         $addLevel          = '添加等級',
         $addPlan           = '添加計劃',
         $addProject        = '新增專案',
+        $advertising       = '廣告',
         $after             = '後',
         $availableValues   = '可用值',
         $badPassword       = '密碼無效',
+        $bannerPosition    = 'Banner position',
         $chat              = '聊天室',
         $check             = '簽出',
         $contact           = '聯繫方式',
@@ -88,7 +90,14 @@ class Zh extends AbstractLanguage {
         $wrongUrl          = '無效的網站地址',
         $wrongValue        = '無效值',
         $yes               = '是的',
-        $youAreAuthorized  = '您已登錄';
+        $youAreAuthorized  = '您已登錄',
+        $banner_position   = '橫幅位置',
+        $block_on_top      = '擋在上面',
+        $block_on_the_left = '在左側阻止',
+        $number_of_days    = '天數',
+        $discount          = '折扣',
+        $total             = '全部的'
+    ;
 
     public array
         $paymentType       = ['付款類型', '說明書', '即時(即時)', '自動的'],

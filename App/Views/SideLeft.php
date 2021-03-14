@@ -64,7 +64,7 @@ use App\Models\Constant\ProjectStatus;
         <li>
             <a href="/Purchase/banners" class="ajax page">
                 <span class="fa fa-bullhorn"></span>
-                <span class="sidebar-title"><?=Translate()->contact?></span>
+                <span class="sidebar-title"><?=Translate()->advertising?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
         </li>

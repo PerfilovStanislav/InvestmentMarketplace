@@ -2,14 +2,15 @@
 
 namespace App\Core;
 
+use App\Helpers\Sql;
 use App\Helpers\Validator;
 use App\Mappers\StaticRouteMapper;
 use App\Models\Constant\DomElements;
-use App\Models\Table\ProjectChatMessage;
 use App\Models\Table\Session;
 use App\Models\Table\User;
 use App\Models\Table\UserRemember;
 use App\Requests\User\AuthorizeRequest;
+use App\Services\Db;
 use App\Traits\Instance;
 use App\Models\CurrentUser;
 
@@ -94,7 +95,12 @@ class Auth {
         if (($user = (new User())->getRowFromDbAndFill(['login' => strtolower($request->login)]))->id) {
             if ($this->confirmPassword($request->password, $user->password)) {
                 $this->setUserAuth($user);
-                ProjectChatMessage::setTable()->update(['user_id' => $user->id], ['session_id' => CurrentUser()->session_id]);
+                Db::inst()->exec(
+                    new Sql('UPDATE message SET user_id = $user_id WHERE session_id = $session_id', [
+                        'user_id' => $user->id,
+                        'session_id' => CurrentUser()->session_id,
+                    ])
+                );
                 $s = &$_SESSION;
                 $s['user_id'] = $user->id;
 
@@ -125,10 +131,12 @@ class Auth {
             return true;
         }
 
-        UserRemember::setTable()->delete([
-            'user_id' => CurrentUser()->getId(),
-            'ip' => $this->getIP(),
-        ]);
+        Db::inst()->exec(
+            new Sql('DELETE FROM user_remember WHERE user_id = $user_id AND ip = $ip', [
+                'user_id'   => CurrentUser()->getId(),
+                'ip '       => $this->getIP(),
+            ])
+        );
 
         $this->removeCookies(['uid', 'hash', 'user_id']);
         session_destroy();
@@ -146,7 +154,7 @@ class Auth {
     }
 
     private function setUserAuth(User $user): void {
-        $authModel                = CurrentUser::getInstance();
+        $authModel                = CurrentUser::inst();
         $authModel->user          = $user;
         $authModel->is_authorized = true;
         $authModel->session_id    = $this->getSessionId();

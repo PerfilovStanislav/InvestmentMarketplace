@@ -4,7 +4,6 @@ namespace App\Views\Investment;
     /**
      * @var Show $this
      * @property Languages $languages
-     * @property ProjectLangs $projectLangs
      * @property MVProjectLang[] $MVProjectLangs
      * @property Payment[] payments
      * @property Project[] $projects
@@ -23,8 +22,6 @@ use App\Helpers\Data\Currency;
 use App\Helpers\Locales\AbstractLanguage;
 use App\Libraries\Screens;
 use App\Models\Collection\Languages;
-use App\Models\Collection\ProjectLangs;
-use App\Models\Constant\CurrencyType;
 use App\Models\Constant\PlanPeriodType;
 use App\Models\Constant\ProjectStatus;
 use App\Models\Constant\Views;
@@ -135,10 +132,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
     foreach ($this->projects as $project): ?>
         <div class="panel mb25 mt5" project_id="<?= $project->id ?>" itemprop="itemListElement" itemscope
              itemtype="http://schema.org/Product">
-            <?php /** @var ProjectLang $projectLang */
-            $projectLang = $this->projectLangs->getByKeyAndValue('project_id', $project->id); ?>
-            <meta itemprop="description"
-                  content="<?= str_replace(['< br>', '<br>', '>'], '', $projectLang->description) ?>">
+            <meta itemprop="description" content="<?= $project->id ?>">
             <div class="panel-heading" itemprop="productID" content="<?= $project->id ?>">
                 <?php if ($this->isAdmin): ?>
                     <span>
@@ -264,16 +258,6 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                             <tr>
                                 <td><?= Translate()->refProgram ?></td>
                                 <td class="fw600"><?= implode('%, ', $project->ref_percent) . '%' ?></td>
-                            </tr>
-                            <tr>
-                                <td><?= Translate()->languages ?></td>
-                                <td><?php foreach ($this->MVProjectLangs->{$project->id}->lang_id as $langId): ;
-                                        /** @var Language $lang */
-                                        $lang = $this->languages->{$langId}; ?>
-                                        <i class="flag flag-<?= $lang->flag ?>"
-                                           title="<?= $lang->name . " ({$lang->own_name})" ?>"></i>
-                                    <?php endforeach; ?>
-                                </td>
                             </tr>
                             <tr>
                                 <td>

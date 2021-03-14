@@ -16,8 +16,8 @@ class SetChatMessageRequest extends AbstractRequest {
 
     protected static array
         $properties = [
-            'lang'    => [self::TYPE_INT,    [Validator::MODEL => Language::class]],
-            'project' => [self::TYPE_INT,    [Validator::MODEL => Project::class]],
+            'lang'    => [self::TYPE_INT,    [Validator::MODEL => 'languages']],
+            'project' => [self::TYPE_INT,    [Validator::MODEL => 'project']],
             'message' => [self::TYPE_STRING, [Validator::MIN => 1, Validator::MAX => 2047, ]],
         ];
 }

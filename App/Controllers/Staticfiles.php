@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\Output;
+use App\Queries\Investment\SitemapXml;
+use App\Services\Db;
 use App\Views\StaticFiles\Rss;
 use App\Views\StaticFiles\SiteManifest;
 use App\Views\StaticFiles\Sitemap;
@@ -18,7 +20,9 @@ class Staticfiles extends Controller {
     }
 
     public function sitemap(array $data = []): Output {
-        $data = Db()->setTable('mv_sitemapxml')->select();
+        $data = Db::inst()->exec(
+            SitemapXml::index()
+        );
 
         return Output()
             ->disableLayout()
@@ -28,7 +32,9 @@ class Staticfiles extends Controller {
 
     public function rss(array $data = []): Output {
         Output()->disableMinifying();
-        $data = Db()->setTable('mv_sitemapxml')->select(['shortname' => App()->locale()->getLanguage()]);
+        $data = Db::inst()->exec(
+            SitemapXml::index(App()->locale()->getLanguage())
+        );
 
         return Output()
             ->disableLayout()

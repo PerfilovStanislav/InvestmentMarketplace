@@ -31,7 +31,6 @@ class App
 
         try {
             $this->router()->go();
-            Db()->endTransaction();
         } catch (\Throwable $e) {
             if (!$this->output()->isContentLoaded() && $this->output()->isLayoutEnabled()) {
                 if ($e instanceof ErrorException) {
@@ -51,7 +50,6 @@ class App
             } elseif (!($e instanceof ErrorException)) {
                 Error()->add('Unknown', $e->getMessage());
             }
-            Db()->rollBackTransaction();
         } finally {
             echo $this->output()
                 ->headers()
@@ -62,42 +60,42 @@ class App
     }
 
     public function db(): Database {
-        return Database::getInstance();
+        return Database::inst();
     }
 
     public function router(): Router {
-        return Router::getInstance();
+        return Router::inst();
     }
 
     public function output(): Output {
-        return Output::getInstance();
+        return Output::inst();
     }
 
     public function error(): Errors {
-        return Errors::getInstance();
+        return Errors::inst();
     }
 
     public function locale(): Locale {
-        return Locale::getInstance();
+        return Locale::inst();
     }
 
     public function currentUser(): CurrentUser {
-        return CurrentUser::getInstance();
+        return CurrentUser::inst();
     }
 
     public function siteLanguages(): SiteLanguages {
-        return SiteLanguages::getInstance();
+        return SiteLanguages::inst();
     }
 
     public function auth(): Auth {
-        return Auth::getInstance();
+        return Auth::inst();
     }
 
     public function telegram(): Telegram {
-        return Telegram::getInstance();
+        return Telegram::inst();
     }
 
     public function facebook(): FacebookService {
-        return FacebookService::getInstance();
+        return FacebookService::inst();
     }
 }

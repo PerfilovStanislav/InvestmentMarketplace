@@ -2,7 +2,6 @@
 namespace App\Views\Investment; {
 /**
  * @var ProjectFilter $this
- * @property MVProjectFilterAvailableLang[] $MVProjectFilterAvailableLangs
  * @property Languages $languages
  * @property Language $pageLanguage
  * @property string $url
@@ -23,14 +22,12 @@ use App\Requests\Investment\ShowRequest;
                     <span class="flag flag-<?=$this->pageLanguage->flag?>"></span>
                 </button>
                 <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
-                    <?php foreach ($this->MVProjectFilterAvailableLangs as $MVProjectFilterAvailableLang):
-                        /** @var Language $lang */$lang = $this->languages->{$MVProjectFilterAvailableLang->lang_id};
-                        ?>
+                    <?php foreach ($this->languages as $lang): ?>
                         <li>
                             <a class="ajax page"
-                               href="<?=$this->url.'/'.$this->request->getUriWithNewParam(['lang' => $lang->shortname])?>">
-                                <span class="flag flag-<?=$lang->flag?> mr10"></span>
-                                <?php printf('%s (%s) %d', $lang->name, $lang->own_name, $MVProjectFilterAvailableLang->cnt)?>
+                               href="<?=$this->url.'/'.$this->request->getUriWithNewParam(['lang' => $lang['shortname']])?>">
+                                <span class="flag flag-<?=$lang['flag']?> mr10"></span>
+                                <?php printf('%s (%s) %d', $lang['name'], $lang['own_name'], $lang['cnt'])?>
                             </a>
                         </li>
                     <?php endforeach;?>

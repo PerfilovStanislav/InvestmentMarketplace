@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Helpers\Output;
 use App\Queries\Orders\GetActive;
+use App\Services\Db;
 use App\Models\{Collection\MVProjectCounts,
     Constant\DomElements,
     Constant\Language,
@@ -112,9 +113,7 @@ class Users extends Controller {
 
     public function setLeftSide(array $data = []): Output {
         $isAdmin = CurrentUser()->isAdmin();
-        $banners = Db()->rawSelect(
-            GetActive::index(2, WEBP)
-        );
+        $banners = Db::inst()->exec(GetActive::index(2, WEBP));
 
         return Output()
             ->addView(SideLeft::class, [

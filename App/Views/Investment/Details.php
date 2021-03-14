@@ -161,7 +161,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     </span>
                     <span class="panel-title"><?=Translate()->chat?></span>
                 </div>
-                <div class="panel-body bg-light dark panel-scroller pn mh-500 max-height mih-50">
+                <div class="panel-body bg-light dark panel-scroller pn max-height mih-50">
                 </div>
                 <form class="admin-form chat-footer" chat_id="<?=$this->project->id?>"
                       data-chat="<?=$this->project->id?>" autocomplete="off">

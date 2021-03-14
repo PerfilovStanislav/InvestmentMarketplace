@@ -11,7 +11,7 @@ use App\Views\Purchase\Banners\StatusSuccess;
 class Payeer extends Controller {
 
     public function success(array $data): Output {
-        PayeerService::getInstance()->success($data);
+        PayeerService::inst()->success($data);
 
         return Output()
             ->addView(StatusSuccess::class, [

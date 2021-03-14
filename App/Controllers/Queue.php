@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use DiDom\Document;
+use App\Helpers\Sql;
+use App\Services\Db;
 use DiDom\Element;
 use App\Exceptions\ErrorException;
-use App\Helpers\HttpClient\CurlHttpClient;
-use App\Helpers\HttpClient\CurlRequestDto;
 use App\Libraries\Screens;
 use App\Mappers\FacebookMapper;
 use App\Mappers\VKMapper;
@@ -44,11 +43,6 @@ class Queue
         $output = [];
         exec($cmd, $output);
         return $output;
-    }
-
-    private function killChrome(): void
-    {
-        exec('kill $(pgrep chrome)');
     }
 
     private function killZombies(): void
@@ -226,8 +220,8 @@ class Queue
             $projectId = $project->id;
             try {
                 if (
-                    HyipboxService::getInstance()->setUrl($project->url)->isScam()
-                    || HyiplogsService::getInstance()->setUrl($project->url)->isScam()
+                    HyipboxService::inst()->setUrl($project->url)->isScam()
+                    || HyiplogsService::inst()->setUrl($project->url)->isScam()
                 ) {
                     $project->status_id = ProjectStatus::SCAM;
                     $project->scam_date = date(\DATE_ATOM);
@@ -267,7 +261,7 @@ class Queue
         ]);
 
         try {
-            $document = HyiplogsService::getInstance()->setUrl("hyips/?$query")->getDocument();
+            $document = HyiplogsService::inst()->setUrl("hyips/?$query")->getDocument();
 
             /** @var Element $row */
             foreach ($document->find('div.all-hyips-list div.item.ovh') as $row) {
@@ -296,7 +290,7 @@ class Queue
         }
 
         $errors = [];
-        $list = Hyiplog::setTable()->select(null, '*', 'id desc', 20);
+        $list = Db::inst()->exec(new Sql('SELECT * FROM hyiplogs ORDER by id desc LIMIT 20 '));
         foreach ($list as $item) {
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;

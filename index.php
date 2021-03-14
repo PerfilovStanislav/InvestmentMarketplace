@@ -11,9 +11,9 @@ use App\Requests\Telegram\SendMessageRequest;
 use App\Exceptions\ErrorException;
 
 \define('DIR', \dirname($_SERVER['SCRIPT_NAME']));
-\define('ROOT', __DIR__);
-\define('DOMAIN', 'richinme.com');
-\define('SITE', 'https://' . DOMAIN);
+const ROOT = __DIR__;
+const DOMAIN = 'richinme.com';
+const SITE = 'https://' . DOMAIN;
 \define('WEBP',
     \strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false
     || ($_POST['webp'] ?? '') === 'true'
@@ -25,7 +25,6 @@ use App\Exceptions\ErrorException;
     || isset($_SERVER['HTTP_X_REQUESTED_WITH'])
     || \strtolower($_SERVER['REQUEST_METHOD'] ?? '') === 'post'
 );
-\define('START_SHUTDOWN', true);
 \ini_set('display_errors', 1);
 \ini_set('display_startup_errors', 1);
 
@@ -46,7 +45,7 @@ require_once \real_path('App/Helpers/Debug.php');
 require(ROOT . '/vendor/autoload.php');
 
 function App(): App {
-    return App::getInstance();
+    return App::inst();
 }
 function Db(): Database {
     return App()->db();
@@ -73,9 +72,10 @@ else {
     try {
         App()->start();
     } catch (ErrorException $e) {
-        Db()->rollBackTransaction();
+//        Db()->rollBackTransaction();
     } catch (\Throwable $e) {
-        Db()->rollBackTransaction();
+//        Db()->rollBackTransaction();
+//        echo $e->getMessage(); die();
         sendToTelegram([
             'exception'     => [
                 'line'      => $e->getLine(),

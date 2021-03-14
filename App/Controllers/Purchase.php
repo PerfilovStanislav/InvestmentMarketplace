@@ -6,6 +6,7 @@ use App\Models\Constant\OrderType;
 use App\Queries\Orders\Create;
 use App\Requests\Purchase\PrepareRequest;
 use App\Requests\Telegram\SendMessageRequest;
+use App\Services\Db;
 use App\Services\PayeerService;
 use App\Views\Purchase\Banners\BannersShow;
 use App\Core\{AbstractEntity, Controller};
@@ -31,16 +32,16 @@ class Purchase extends Controller {
 
         $path = $this->getPath($r->banner->name);
 
-        Image::gifload($r->banner->tmp_name, [
-            'n' => -1,
-            'access' => Access::SEQUENTIAL,
-        ])->webpsave($path . '.webp', [
-            'Q'     => 75,
-            'strip' => true,
-        ]);
+//        Image::gifload($r->banner->tmp_name, [
+//            'n' => -1,
+//            'access' => Access::SEQUENTIAL,
+//        ])->webpsave($path . '.webp', [
+//            'Q'     => 75,
+//            'strip' => true,
+//        ]);
         move_uploaded_file($r->banner->tmp_name, $path);
 
-        $orderId = Db()->rawSelect(Create::index(
+        $orderId = Db::inst()->execOne(Create::index(
             $r->start_date->format(AbstractEntity::FORMAT_DATE),
             $r->end_date->format(AbstractEntity::FORMAT_DATE),
             $r->position,
@@ -49,9 +50,9 @@ class Purchase extends Controller {
             OrderType::BANNER,
             $sum,
             basename($path)
-        ))[0]['id'];
+        ), ['id'])['id'];
 
-        $url = PayeerService::getInstance()->getUrl($sum, $orderId);
+        $url = PayeerService::inst()->getUrl($sum, $orderId);
 
         App()->telegram()->sendMessage(new SendMessageRequest([
             'chat_id' => \Config::TELEGRAM_MY_ID,

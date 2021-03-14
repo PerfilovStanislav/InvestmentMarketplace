@@ -47,7 +47,7 @@ class PayeerService {
 
         $status = OrderStatus::getValue($data['m_status']);
         if ($sign === $data['m_sign'] && $status === OrderStatus::SUCCESS) {
-            Db()->rawExecute(
+            Db::inst()->exec(
                 Update::index($data['m_orderid'], $status, $data)
             );
         }

@@ -13,6 +13,6 @@ class ReloadScreenshotRequest extends AbstractRequest {
 
     protected static array
         $properties = [
-            'project'   => [self::TYPE_INT,        [Validator::MODEL => Project::class]],
+            'project'   => [self::TYPE_INT,        [Validator::MODEL => 'project']],
         ];
 }

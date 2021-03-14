@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Core\AbstractEntity;
 use App\Interfaces\ModelInterface;
+use App\Services\Db;
 use App\Traits\Collection;
 
 class Validator
@@ -92,7 +93,12 @@ class Validator
                     self::in($key, $value, $rule); break;
                 case self::MODEL:
                     /** @var ModelInterface $rule */
-                    if ($rule::setTable()->selectById($value, 'id') === null) {
+                    if (empty(Db::inst()->execOne(
+                        new Sql('SELECT id FROM $table WHERE id = $id', [
+                            'table' => new Sql($rule),
+                            'id'    => $value,
+                        ])
+                    ))) {
                         Error()->add($key, Translate()->wrongValue . ': ' . $value);
                     }
                     break;

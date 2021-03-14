@@ -22,7 +22,7 @@ class Languages extends AbstractEntity implements ModelInterface, \Iterator, \Co
             self::COLLECTION => [self::TYPE_DTO_ARRAY, Language::class, 'id'],
         ];
 
-    public function __construct($where = [], string $order = null) {
-        $this->fillCollection(self::setTable()->select($where, Language::getPropertyKeys(), $order));
+    public function __construct(array $data) {
+        $this->fillCollection($data);
     }
 }

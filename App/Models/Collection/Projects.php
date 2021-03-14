@@ -22,7 +22,7 @@ class Projects extends AbstractEntity implements ModelInterface, \Iterator {
             self::COLLECTION  => [self::TYPE_DTO_ARRAY, Project::class, 'id'],
         ];
 
-    public function __construct(array $where) {
-        $this->fillCollection(self::setTable()->select($where, Project::getPropertyKeys(), 'id desc'));
+    public function __construct(array $data) {
+        $this->fillCollection($data);
     }
 }

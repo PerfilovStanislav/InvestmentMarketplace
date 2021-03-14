@@ -3,16 +3,15 @@
 namespace App\Controllers;
 
 use App\Queries\Investment\Counts;
+use App\Queries\Investment\GetProjects;
+use App\Queries\Investment\ProjectLanguages;
 use App\Queries\Orders\GetActive;
+use App\Services\Db;
 use App\Core\{Controller, View};
 use App\Dto\ErrorRoute;
-use App\Helpers\{Data\Currency, Output,};
+use App\Helpers\{Data\Currency, Output, Sql};
 use App\Models\Collection\{Languages,
-    MVProjectFilterAvailableLangs,
-    MVProjectLangs,
-    MVProjectSearchs,
     Payments,
-    ProjectLangs,
     Projects};
 use App\Models\Constant\{ProjectStatus, User, Views};
 use App\Models\MView\MVProjectLang;
@@ -39,8 +38,12 @@ class Investment extends Controller {
     public function registration(array $data = []): Output {
         $params = [
             'payments'                  => new Payments(),
-            'mainProjectLanguages'      => new Languages('pos is not null', 'pos asc'),
-            'secondaryProjectLanguages' => new Languages('pos is null and id > 0'),
+            'mainProjectLanguages'      => new Languages(
+                Db::inst()->exec(new Sql('SELECT * FROM languages WHERE pos is not null ORDER BY pos asc'))
+            ),
+            'secondaryProjectLanguages'      => new Languages(
+                Db::inst()->exec(new Sql('SELECT * FROM languages WHERE pos is null and id > 0'))
+            ),
             'currency'                  => Currency::getCurrency(),
         ];
 
@@ -49,59 +52,49 @@ class Investment extends Controller {
     }
 
     public function show(ShowRequest $request): Output {
-        $MVProjectFilterAvailableLangs = new MVProjectFilterAvailableLangs(['status_id' => $request->status]);
-
-        if (!$MVProjectFilterAvailableLangs->count()) {
+        $languages = Db::inst()->exec(new Sql(ProjectLanguages::index($request->status)));
+        if (empty($languages ?? [])) {
             // без фильтра
             return $this->noShow([Views::PROJECT_FILTER => '']);
         }
-        $languages = new Languages(['id' => $MVProjectFilterAvailableLangs->getValuesByKey()]);
-        /** @var Language $pageLanguage текущий язык*/
-        $pageLanguage = $languages->getByKeyAndValue('shortname', $request->lang);
+
+        /** @var Language $pageLang */
+        $pageLang = new Language(
+            \array_column($languages, null, 'shortname')[$request->lang] ??
+            ['flag' => 'xx', 'id' => -1]
+        );
 
         $projectFilter = (new View(ProjectFilter::class, [
             'request'                       => $request,
             'url'                           => Router()->getRoute()->generateUrl(),
             'languages'                     => $languages,
-            'MVProjectFilterAvailableLangs' => $MVProjectFilterAvailableLangs,
-            'pageLanguage'                  => $pageLanguage ?? new Language(['flag' => 'xx']), // фэйк
+            'pageLanguage'                  => $pageLang,
         ]));
 
-        if (!$pageLanguage) {
+        if ($pageLang->id === -1) {
             return $this->noShow([Views::PROJECT_FILTER => $projectFilter]);
         }
 
-        // ID найденных проектов
-        $projectSearchs = new MVProjectSearchs([
-            'lang_id' => $pageLanguage->id,
-            'status_id' => $request->status,
-        ], min(self::LIMIT, $MVProjectFilterAvailableLangs->{$pageLanguage->id}->cnt));
+        $projects = new Projects(
+            Db::inst()->exec(
+                new Sql(
+                    GetProjects::index($request->status, $pageLang->id)
+                )
+            )
+        );
 
-        if (!$projectSearchs->count()) {
-            return $this->noShow([Views::PROJECT_FILTER => $projectFilter]);
-        }
+        $payments = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
 
-        $projectIds     = $projectSearchs->getValuesByKey();
-        $projects       = new Projects(['id' => $projectIds]);
-        if (!$projects->count()) {
-            return $this->noShow([Views::PROJECT_FILTER => $projectFilter]);
-        }
-        $MVProjectLangs = new MVProjectLangs(['id' => $projectIds]);
-        $payments       = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
-        $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);
-
-        $banners = Db()->rawSelect(
+        $banners = Db::inst()->exec(
             GetActive::index(1, WEBP)
         );
 
-        $counts = Db()->rawSelect(Counts::index())[0];
+        $counts = Db::inst()->execOne(Counts::index());
 
         $pageParams = [
             'projects'            => $projects,
-            'MVProjectLangs'      => $MVProjectLangs,
-            'pageLanguage'        => $pageLanguage,
+            'pageLanguage'        => $pageLang,
             'payments'            => $payments,
-            'projectLangs'        => $projectLangs,
             'languages'           => $languages,
             'isAdmin'             => CurrentUser()->isAdmin(),
             'banners'             => $banners,
@@ -111,10 +104,9 @@ class Investment extends Controller {
 
         Output()
             ->addFunctions([
-                'setStorage' => ['lang' => $pageLanguage->id, 'chat' => []],
+                'setStorage' => ['lang' => $pageLang->id, 'chat' => []],
                 'initChat',
                 'panelScrollerInit',
-//                'imgClickInit',
                 'loadRealThumbs',
                 'checkChats',
             ], Output::DOCUMENT)
@@ -176,8 +168,6 @@ class Investment extends Controller {
     }
 
     public function add(AddRequest $request, CheckSiteRequest $checkSiteRequest): Output {
-        Db()->startTransaction();
-
         $url = $this->getWebsiteUrl($checkSiteRequest);
 
         if (count(array_unique([
@@ -241,7 +231,7 @@ class Investment extends Controller {
         $url = self::getParsedUrl(str_replace('www.', '', strtolower($request->website)));
         Error()->exitIfExists();
 
-        if ((Project::setTable()->selectRow(['url' => $url]))) {
+        if (empty(Db::inst()->execOne(new Sql('SELECT id FROM project WHERE url = $url', ['url' => $url])))  === false) {
             Error()->add('website', Translate()->siteExists, true);
         }
 
@@ -286,6 +276,18 @@ class Investment extends Controller {
             'session_id'    => CurrentUser()->session_id,
         ]))->save();
 
+        App()->telegram()->sendMessage(new SendMessageRequest([
+            'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
+            'text' => sprintf( implode(PHP_EOL, ['Login: `%s`', 'SessionId: %d', 'Name: %s', 'Project: %d', 'Message: %s']),
+                CurrentUser()->user->login ?? 'Guest',
+                CurrentUser()->session_id,
+                CurrentUser()->user->name,
+                $request->project,
+                $request->message
+            ),
+            'disable_notification' => true,
+        ]));
+
         return Output()->addFunction('checkChats');
     }
 
@@ -302,7 +304,7 @@ class Investment extends Controller {
                     limit 50)
                 ", $request->messages));
 
-            $messages = Db()->rawSelect($sql);
+            $messages = Db::inst()->exec(new Sql($sql), ['id', 'user_id', 'project_id']);
 
             if (\count($messages) === 0) {
                 return Output()->addFunction('sleepAndCheckChats');

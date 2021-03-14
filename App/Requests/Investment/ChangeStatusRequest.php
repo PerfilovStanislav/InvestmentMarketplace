@@ -16,6 +16,6 @@ class ChangeStatusRequest extends AbstractRequest {
     protected static array
         $properties = [
             'status'    => [self::TYPE_CONSTANTS,  ProjectStatus::class],
-            'project'   => [self::TYPE_INT,        [Validator::MODEL => Project::class]],
+            'project'   => [self::TYPE_INT,        [Validator::MODEL => 'project']],
         ];
 }

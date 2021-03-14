@@ -21,7 +21,7 @@ class Language extends AbstractEntity implements ModelInterface {
 
     protected static array
         $properties = [
-            'id'        => [self::TYPE_INT,    [Validator::MIN    => 1]],
+            'id'        => [self::TYPE_INT,    [Validator::MIN    => -1]],
             'name'      => [self::TYPE_STRING, [Validator::MIN    => 1]],
             'shortname' => [self::TYPE_STRING, [Validator::LENGTH => 2]],
             'own_name'  => [self::TYPE_STRING, [Validator::MIN    => 1]],

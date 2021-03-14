@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Core\Database;
+use App\Helpers\Sql;
 use Dejurin\GoogleTranslateForFree;
 use DiDom\Document;
 use App\Exceptions\ErrorException;
@@ -40,7 +40,6 @@ class InvestmentService
         $project->save();
 
         self::refreshMViews();
-        Db()->setTable('mv_sitemapxml')->refresh(false);
 
         if ($request->status === ProjectStatus::ACTIVE) {
             (new Queue([
@@ -60,9 +59,9 @@ class InvestmentService
         $id = $request->project;
         $project = (new Project())->getById($id);
 
-        $url = HyipboxService::getInstance()->setUrl($project->url)->loadScreen();
+        $url = HyipboxService::inst()->setUrl($project->url)->loadScreen();
         if ($url === null) {
-            $url = HyiplogsService::getInstance()->setUrl("project/{$project->url}/")->loadScreen();
+            $url = HyiplogsService::inst()->setUrl("project/{$project->url}/")->loadScreen();
         }
 
         $temp = ROOT . '/screens/temp/' . $id;
@@ -78,10 +77,10 @@ class InvestmentService
 
     public function parseInfo(string $domain) {
         $hyiplogsService = $this->try(function () use ($domain) {
-            return HyiplogsService::getInstance()->setUrl("project/$domain/");
+            return HyiplogsService::inst()->setUrl("project/$domain/");
         });
         $hyipboxService = $this->try(function () use ($domain) {
-            return HyipboxService::getInstance()->setUrl($domain);
+            return HyipboxService::inst()->setUrl($domain);
         });
         if (Error()->hasError()) {
             return;
@@ -156,18 +155,20 @@ class InvestmentService
     }
 
     public function getNextProject(int $projectId, int $projectStatus): Project {
-        return (new Project())->fromArray(Db()->rawSelect(sprintf(
-                'select id, url from project where id > %d and status_id = %d order by id asc limit 1',
-                $projectId,
-                $projectStatus
-            ))[0] ?? []);
+        return (new Project())->fromArray(
+            Db::inst()->execOne(
+                new Sql('select id, url from project where id > $id and status_id = $status_id order by id asc limit 1'), [
+                    'id'        => $projectId,
+                    'status_id' => $projectStatus,
+                ]
+            ));
     }
 
     public function parseProject(Project $project): void {
-        Output::getInstance()->disableLayout();
+        Output::inst()->disableLayout();
 
-        $hyiplogsService = HyiplogsService::getInstance()->setUrl("project/{$project->url}/");
-        $hyipboxService = HyipboxService::getInstance()->setUrl($project->url);
+        $hyiplogsService = HyiplogsService::inst()->setUrl("project/{$project->url}/");
+        $hyipboxService = HyipboxService::inst()->setUrl($project->url);
 
         if ($hyiplogsService->isScam() || $hyipboxService->isScam()) {
             return;
@@ -221,13 +222,16 @@ class InvestmentService
 
         $descriptions = $this->multiTranslate($lang, $description);
         // Сохраняем описания
-        $sql = "INSERT INTO project_lang(project_id, lang_id, description) VALUES ";
         $values = [];
         foreach ($descriptions as $langId => $description) {
-            $desctiption = \str_replace(["\n", "'"], ['</br>', "''"], $description);
-            $values[] = "({$project->id}, {$langId}, '$desctiption')";
+            $description = \str_replace(["\n", "'"], ['</br>', "''"], $description);
+            $values[] = [$project->id, $langId, $description];
         }
-        Db()->rawExecute($sql . implode(',', $values));
+        Db::inst()->exec(new Sql(
+            'INSERT INTO project_lang(project_id, lang_id, description) VALUES $values', [
+                'values' => $values
+            ]
+        ));
 
         (new Queue([
             'action_id'  => Queue::ACTION_ID_SCREENSHOT,
@@ -304,12 +308,11 @@ class InvestmentService
                 $date = "'$dt'::timestamp";
             }
 
-
-            $sql = "
-                INSERT INTO message(date_create, user_id, project_id, lang_id, message, session_id)
-                VALUES ($date, {$user->id}, $projectId, -1, '$message', 1);
-            ";
-            Db()->rawExecute($sql);
+            Db::inst()->exec(
+                new Sql('INSERT INTO message(date_create, user_id, project_id, lang_id, message, session_id) VALUES $values', [
+                    'values' => [[$date, $user->id, $projectId, -1, $message, 1]]
+                ])
+            );
         }
     }
 }

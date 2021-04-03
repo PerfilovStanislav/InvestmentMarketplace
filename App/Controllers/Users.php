@@ -122,9 +122,9 @@ class Users extends Controller {
             'isAdmin' => $isAdmin,
             'banners' => $banners,
         ], Views::SIDEBAR_LEFT)
-            ->addFunctions([
+            /*->addFunctions([
                 'setBanners' => $banners
-            ], Views::SIDEBAR_LEFT);
+            ], Views::SIDEBAR_LEFT)*/;
     }
 
     public function changeLanguage(LanguageAvailableRequest $request): Output {

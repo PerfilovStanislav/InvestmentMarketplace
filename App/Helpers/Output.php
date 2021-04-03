@@ -29,7 +29,8 @@ class Output
         HTML     = 'text/html; charset=UTF-8',
         MANIFEST = 'application/manifest+json',
         JSON     = 'application/json',
-        XML      = 'text/xml';
+        XML      = 'text/xml',
+        JS       = 'text/xml';
 
     public CONST
         S200     = 'HTTP/1.1 200 OK',

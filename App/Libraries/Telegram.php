@@ -19,8 +19,8 @@ class Telegram {
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST           => 1,
             CURLOPT_POSTFIELDS     => $params->toArray(),
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_CAINFO         => '/etc/nginx/ssl/ssl.ca-bundle',
+            CURLOPT_SSL_VERIFYPEER => false,
+//            CURLOPT_CAINFO         => '/etc/nginx/ssl/ssl.ca-bundle',
             CURLOPT_HTTPHEADER     => ['Content-Type:multipart/form-data'],
         ]);
         $result = curl_exec($ch);
@@ -29,7 +29,7 @@ class Telegram {
         curl_close($ch);
 
         if ($error) {
-            dd($error);
+            dd($error, __LINE__);
         }
 
         return json_decode($result, true, 512, JSON_THROW_ON_ERROR);

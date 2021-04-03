@@ -7,6 +7,7 @@ use App\Helpers\Output;
 use App\Views\StaticFiles\Rss;
 use App\Views\StaticFiles\SiteManifest;
 use App\Views\StaticFiles\Sitemap;
+use App\Views\StaticFiles\Sw;
 
 class Staticfiles extends Controller {
 

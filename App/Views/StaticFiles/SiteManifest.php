@@ -9,7 +9,7 @@ Class SiteManifest {} }
 use App\Helpers\Locales\AbstractLanguage;
 ?>
 {
-    "start_url": "https://richinme.com",
+    "start_url": "<?=SITE?>",
     "name": "Richinme",
     "short_name": "RiM",
     "prefer_related_applications": false,

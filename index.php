@@ -11,11 +11,11 @@ use App\Requests\Telegram\SendMessageRequest;
 use App\Exceptions\ErrorException;
 
 \define('DIR', \dirname($_SERVER['SCRIPT_NAME']));
-\define('ROOT', __DIR__);
-\define('DOMAIN', 'richinme.com');
-\define('SITE', 'https://' . DOMAIN);
+const ROOT = __DIR__;
+const DOMAIN = 'localhost';
+const SITE = 'http://' . DOMAIN;
 \define('WEBP',
-    \strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'webp') !== false
+    str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'webp')
     || ($_POST['webp'] ?? '') === 'true'
 );
 \define('CLI', \php_sapi_name() === 'cli');
@@ -25,7 +25,6 @@ use App\Exceptions\ErrorException;
     || isset($_SERVER['HTTP_X_REQUESTED_WITH'])
     || \strtolower($_SERVER['REQUEST_METHOD'] ?? '') === 'post'
 );
-\define('START_SHUTDOWN', true);
 \ini_set('display_errors', 1);
 \ini_set('display_startup_errors', 1);
 
@@ -38,7 +37,7 @@ function load(string $className) {
 }
 \spl_autoload_register('load');
 
-\define('DEBUG', ($_COOKIE['XDEBUG_SESSION'] ?? '') === Config::DEBUG_KEY || CLI);
+const DEBUG = true;
 
 require_once \real_path('App/Helpers/Debug.php');
 
@@ -76,19 +75,20 @@ else {
         Db()->rollBackTransaction();
     } catch (\Throwable $e) {
         Db()->rollBackTransaction();
-        sendToTelegram([
-            'exception'     => [
-                'line'      => $e->getLine(),
-                'message'   => $e->getMessage(),
-                'file'      => $e->getFile(),
-            ]
-        ]);
+        dd($e);
+//        sendToTelegram([
+//            'exception'     => [
+//                'line'      => $e->getLine(),
+//                'message'   => $e->getMessage(),
+//                'file'      => $e->getFile(),
+//            ]
+//        ]);
     }
 }
 
 function shutdown() {
     if ($error = error_get_last()) { // E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR, E_PARSE
-        sendToTelegram(['error' => $error]);
+//        sendToTelegram(['error' => $error]);
     }
 }
 

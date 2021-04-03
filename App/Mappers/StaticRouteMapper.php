@@ -9,6 +9,7 @@ use App\Helpers\Locales\SiteLanguageCollection;
 use App\Models\Constant\Language;
 use App\Views\StaticFiles\Rss;
 use App\Views\StaticFiles\SiteManifest;
+use App\Views\StaticFiles\Sw;
 
 class StaticRouteMapper
 {

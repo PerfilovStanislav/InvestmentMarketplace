@@ -11,7 +11,6 @@ use App\Models\Collection\{Languages,
     MVProjectLangs,
     MVProjectSearchs,
     Payments,
-    ProjectChatMessages,
     ProjectLangs,
     Projects};
 use App\Models\Constant\{ProjectStatus, User, Views};
@@ -109,15 +108,15 @@ class Investment extends Controller {
         Output()
             ->addFunctions([
                 'setStorage' => ['lang' => $pageLanguage->id, 'chat' => []],
-                'initChat',
+//                'initChat',
                 'panelScrollerInit',
                 'imgClickInit',
                 'loadRealThumbs',
-                'checkChats',
+//                'checkChats',
             ], Output::DOCUMENT)
-            ->addFunctions([
+            /*->addFunctions([
                 'setBanners' => $banners,
-            ]);
+            ])*/;
 
         return Output()->addView(Show::class, $pageParams);
     }

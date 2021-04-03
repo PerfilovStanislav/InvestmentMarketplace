@@ -40,7 +40,7 @@ var allClear = function() {
 };
 
 var ajaxQueue = [];
-var addToAjaxQueue = function(links) {
+var addToAjaxQueue = links => {
     ajaxQueue = ajaxQueue.concat(links)
 };
 var linkAjaxQueue = function () {
@@ -55,7 +55,7 @@ var stopTimers = function() {
 /* вызывается после каждого ответа с сервера
 // умеет: отрисовывать вьюшки, вызывать методы, показывать ошибки и удачные запросы
 */
-var applyFunctions = function(key, value) {
+var applyFunctions = (key, value) => {
     if (key === 'view') {
         /*отрисовываем вьюшки*/
         $.each(value, function(k,v) {
@@ -552,14 +552,13 @@ var adminPanelInit = function() {
 };
 
 var linkClick = function() {
-    $(document).on('click', 'a.ajax', function(e) {
-        var $target = $(e.currentTarget);
-        var isNewPage = $target.hasClass('page');
-        var functions = $target.data('beforesend');
-        if (functions) {
-            applyFunctions('f', functions);
+    $(document).on('click', 'a.ajax', e => {
+        const $target = $(e.currentTarget);
+        const url = $target.attr('href');
+        if ($target.hasClass('page')) {
+            saveToHistory(url)
         }
-        ajax($target.attr('href'), [], isNewPage)
+        ajax(url, [])
         $('html,body').animate({scrollTop: 0}, 250, 'easeOutQuad');
         return false;
     });
@@ -572,18 +571,46 @@ var loadRealThumbs = function () {
     });
 };
 
-var ajax = function(url, data, isNewPage) {
-    var tmp = {url: url};
-    if (data) tmp.data = data;
-    if (isNewPage) {
-        abortAllAjax();
-        stopTimers();
-        if (url !== window.location.pathname) {
-            window.history.pushState(null, null, url);
+async function ajax(url, data = {}) {
+    return fetch(url, {
+        method: 'POST',
+        mode: 'same-origin',                /*no-cors, *cors, same-origin*/
+        cache: 'default',                   /*default, no-cache, reload, force-cache, only-if-cached*/
+        credentials: 'same-origin',         /*include, *same-origin, omit*/
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  /*'Content-Type': 'application/x-www-form-urlencoded', Content-Type': 'application/json*/
+        },
+        redirect: 'follow',                 /*manual, *follow, error*/
+        referrerPolicy: 'no-referrer',      /*no-referrer, *client*/
+        body: JSON.stringify(data)
+    }).then(res => {
+        console.log('__1__', res)
+        if (res.statusText !== 'OK') {
+            console.log('__2__', res)
+            return
         }
+        const responseClone = res.clone()
+        res.json().then(async json => {
+            const cache = await caches.open('richinme');
+            await cache.put(url, responseClone);
+            Object.entries(json).map(([key, value]) => {
+                applyFunctions(key, value)
+            })
+        }).catch(e => {
+            console.log('not json data', e)
+        })
+    }).catch(res => {
+        console.log(res, 'error =(')
+    })
+}
+
+var saveToHistory = url => {
+    /*abortAllAjax();
+    stopTimers();*/
+    if (url !== window.location.pathname) {
+        window.history.pushState(null, null, url);
     }
-    $.ajax(tmp);
-};
+}
 
 var changeUrl = function(data) {
     window.history.pushState(null, null, data.url);
@@ -672,14 +699,28 @@ var setDatepicker = function(data) {
     $('input[name=start_date]').datepicker("setDate", new Date(data['date']*1000) );
 };
 
-jQuery(document).ready(function() {
+document.onreadystatechange = _ => {
+    if (document.readyState !== 'complete') return
+    console.log('serviceWorker' in navigator)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(reg => {
+            if (reg.installing) {
+                console.log('Service worker installing');
+            } else if (reg.waiting) {
+                console.log('Service worker installed');
+            } else if (reg.active) {
+                console.log('Service worker active');
+            }
+        });
+    }
+
     Core.init();
     Demo.init();
 
-    $(window).bind('popstate', function(e) {
+    $(window).bind('popstate', _ => {
         ajax(location.pathname);
     });
 
     linkClick();
     logoInConsole();
-});
+}

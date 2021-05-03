@@ -59,7 +59,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     <span class="panel-icon">
                         <i class="glyphicons glyphicons-charts"></i>
                     </span>
-                    <span class="panel-title">For last month</span>
+                    <span class="panel-title"><?=Translate()->forLastMonth?></span>
                 </div>
                 <div class="panel-body bg-c_white max-height">
                     <p class="fs30px mn">+<?=$this->counts['new_last_month']?></p>
@@ -71,7 +71,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     <span class="panel-icon">
                         <i class="glyphicons glyphicons-signal"></i>
                     </span>
-                    <span class="panel-title">For last month</span>
+                    <span class="panel-title"><?=Translate()->forLastMonth?></span>
                 </div>
                 <div class="panel-body bg-c_white max-height">
                     <p class="fs30px mn">+<?=$this->counts['scam_last_month']?></p>
@@ -85,7 +85,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     <span class="panel-icon">
                         <i class="glyphicons glyphicons-charts"></i>
                     </span>
-                    <span class="panel-title">For all time</span>
+                    <span class="panel-title"><?=Translate()->forAllTime?></span>
                 </div>
                 <div class="panel-body bg-c_white max-height">
                     <p class="fs30px mn"><?=$this->counts['active']?></p>
@@ -97,7 +97,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     <span class="panel-icon">
                         <i class="glyphicons glyphicons-signal"></i>
                     </span>
-                    <span class="panel-title">For all time</span>
+                    <span class="panel-title"><?=Translate()->forAllTime?></span>
                 </div>
                 <div class="panel-body bg-c_white max-height">
                     <p class="fs30px mn"><?=$this->counts['total']?></p>

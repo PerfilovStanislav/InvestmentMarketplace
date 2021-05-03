@@ -1,0 +1,30 @@
+.flex {
+    display: flex;
+}
+.jc_sb {
+    justify-content: space-between;
+}
+.jc_sa {
+    justify-content: space-around;
+}
+.fd-c {
+    /*flex-direction: column;*/
+}
+.fw_w {
+    flex-wrap: wrap;
+}
+.f_1_1_auto {
+    flex: 1 1 auto;
+}
+.f_1_30 {
+    flex: 1 1 25%;
+}
+.f_1_1_40 {
+    flex: 1 1 40%;
+}
+.f_1_1_50 {
+    flex: 1 1 50%;
+}
+.f_1_1_60 {
+    flex: 1 1 60%;
+}

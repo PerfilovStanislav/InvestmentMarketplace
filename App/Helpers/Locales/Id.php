@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Id extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'Tentang kami',
         $active            = 'Aktif',
         $addLevel          = 'Tambahkan level',
         $addPlan           = 'Tambahkan rencana',
@@ -29,9 +30,12 @@ class Id extends AbstractLanguage {
         $free              = 'gratis',
         $freeForAddProject = 'Menambahkan proyek ke database sepenuhnya',
         $from              = 'dari',
+        $new               = 'Baru',
+        $forLastMonth      = 'Selama sebulan terakhir',
+        $forAllTime        = 'Selama ini',
         $guest             = 'Tamu',
-        $headKeywords      = 'pemantauan hyip 2020, proyek menguntungkan, modal, investasi',
-        $headDescription   = 'Proyek Investasi Hasil Tinggi 2020',
+        $headKeywords      = 'pemantauan hyip 2021, proyek menguntungkan, modal, investasi',
+        $headDescription   = 'Proyek Investasi Hasil Tinggi 2021',
         $headTitle         = 'Pasar Investasi Riil',
         $invalidDateFormat = 'Format tanggal tidak valid',
         $languages         = 'Bahasa situs',
@@ -63,8 +67,9 @@ class Id extends AbstractLanguage {
         $placeBanner       = 'Tempatkan spanduk|seharga $%d per minggu',
         $plans             = 'Rencana investasi',
         $profit            = 'Keuntungan',
-        $projectName       = 'Nama Proyek',
         $projectIsAdded    = 'Proyek ditambahkan',
+        $projectName       = 'Nama Proyek',
+        $projects          = 'Proyek',
         $projectUrl        = 'URL proyek atau tautan rujukan',
         $prohibitedChars   = 'Karakter yang dilarang dimasukkan',
         $rating            = 'Peringkat',

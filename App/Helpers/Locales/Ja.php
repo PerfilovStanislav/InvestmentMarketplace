@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Ja extends AbstractLanguage {
 
     public string
+        $aboutUs           = '私たちに関しては',
         $active            = 'アクティブ',
         $addLevel          = 'レベルの追加',
         $addPlan           = '計画の追加',
@@ -29,9 +30,12 @@ class Ja extends AbstractLanguage {
         $free              = '無料',
         $freeForAddProject = 'プロジェクトをデータベースに完全に追加する',
         $from              = 'から',
+        $new               = '新着',
+        $forLastMonth      = '先月',
+        $forAllTime        = 'この間ずっと',
         $guest             = 'ゲスト',
-        $headKeywords      = '2020年の誇大宣伝,高収益プロジェクト,インターネットでの収益,投資プロジェクト,ピラミッド',
-        $headDescription   = 'ハイイールド投資プロジェクト2020',
+        $headKeywords      = '2021年の誇大宣伝,高収益プロジェクト,インターネットでの収益,投資プロジェクト,ピラミッド',
+        $headDescription   = 'ハイイールド投資プロジェクト2021',
         $headTitle         = '投資市場',
         $invalidDateFormat = '無効な日付形式',
         $languages         = 'サイト言語',
@@ -63,8 +67,9 @@ class Ja extends AbstractLanguage {
         $placeBanner       = '週に%dドル|のバナーを配置する',
         $plans             = '関税プラン',
         $profit            = '利益',
-        $projectName       = 'プロジェクト名',
         $projectIsAdded    = '追加されたプロジェクト',
+        $projectName       = 'プロジェクト名',
+        $projects          = 'プロジェクト',
         $projectUrl        = 'プロジェクトへのリンク（または参照リンク）',
         $prohibitedChars   = '不正な文字が入力されました',
         $rating            = '評価',

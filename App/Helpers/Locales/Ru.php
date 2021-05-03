@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Ru extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'О нас',
         $active            = 'Активные',
         $addLevel          = 'Добавить уровень',
         $addPlan           = 'Добавить план',
@@ -29,9 +30,12 @@ class Ru extends AbstractLanguage {
         $free              = 'бесплатно',
         $freeForAddProject = 'Добавление проекта в базу совершенно',
         $from              = 'от',
+        $new               = 'Новые',
+        $forLastMonth      = 'За последний месяц',
+        $forAllTime        = 'За всё время',
         $guest             = 'Гость',
-        $headKeywords      = 'хайп мониторинг 2020, высокодоходные проекты, заработок в интернете, инвестиционные проекты, пирамиды',
-        $headDescription   = 'Высокодоходные инвестиционные проекты 2020',
+        $headKeywords      = 'хайп мониторинг 2021, высокодоходные проекты, заработок в интернете, инвестиционные проекты, пирамиды',
+        $headDescription   = 'Высокодоходные инвестиционные проекты 2021',
         $headTitle         = 'Инвестиционная Рыночная Площадка',
         $invalidDateFormat = 'Неверный формат даты',
         $languages         = 'Языки сайта',
@@ -63,8 +67,9 @@ class Ru extends AbstractLanguage {
         $placeBanner       = 'Разместите баннер|за $%d в неделю',
         $plans             = 'Тарифные планы',
         $profit            = 'Прибыль',
-        $projectName       = 'Название проекта',
         $projectIsAdded    = 'Проект добавлен',
+        $projectName       = 'Название проекта',
+        $projects          = 'Проекты',
         $projectUrl        = 'Ссылка на проект (либо реферальная ссылка)',
         $prohibitedChars   = 'Введены запрещённые символы',
         $rating            = 'Рейтинг',
@@ -90,7 +95,7 @@ class Ru extends AbstractLanguage {
         $youAreAuthorized  = 'Вы авторизировались',
         $bannerPosition    = 'Позиция баннера',
         $blockOnTop        = 'Блок сверху',
-        $blockOnTheLeft    = 'Блок слев',
+        $blockOnTheLeft    = 'Блок слева',
         $numberOfDays      = 'Количество дней',
         $discount          = 'Скидка',
         $total             = 'Итого'

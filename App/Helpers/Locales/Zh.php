@@ -7,6 +7,7 @@ class Zh extends AbstractLanguage {
     public static int $id = 356;
     
     public string
+        $aboutUs           = '关于我们',
         $active            = '活躍的',
         $addLevel          = '添加等級',
         $addPlan           = '添加計劃',
@@ -31,9 +32,12 @@ class Zh extends AbstractLanguage {
         $free              = '免費的',
         $freeForAddProject = '將項目完全添加到數據庫',
         $from              = '來自',
+        $new               = '新的',
+        $forLastMonth      = '在上個月',
+        $forAllTime        = '在這段時間裡',
         $guest             = '來賓',
-        $headKeywords      = '炒作監測2020年，高利潤項目，在互聯網上賺錢，投資項目，金字塔',
-        $headDescription   = '2020年高利潤投資項目',
+        $headKeywords      = '炒作監測2021年，高利潤項目，在互聯網上賺錢，投資項目，金字塔',
+        $headDescription   = '2021年高利潤投資項目',
         $headTitle         = '投資市場',
         $invalidDateFormat = '日期格式無效',
         $languages         = '網站語言',
@@ -65,8 +69,9 @@ class Zh extends AbstractLanguage {
         $placeBanner       = '放橫幅|每週$%d',
         $plans             = '關稅計劃',
         $profit            = '獲利',
-        $projectName       = '項目名稱',
         $projectIsAdded    = '項目已添加',
+        $projectName       = '項目名稱',
+        $projects          = '专案',
         $projectUrl        = '鏈接到項目(或引薦鏈接)',
         $prohibitedChars   = '輸入了非法字符',
         $rating            = '評分',

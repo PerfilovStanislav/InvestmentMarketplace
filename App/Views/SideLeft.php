@@ -12,7 +12,7 @@ use App\Models\Constant\ProjectStatus;
 ?>
 <div class="sidebar-left-content nano-content">
     <ul class="nav sidebar-menu">
-        <li class="sidebar-label pt20"><?=Translate()->menu?></li>
+        <li class="sidebar-label pt20"><?=Translate()->projects?></li>
         <li>
             <a href="/Investment/show/status/active" class="ajax page">
                 <span class="fa fa-thumbs-o-up text-success-dark"></span>
@@ -22,7 +22,7 @@ use App\Models\Constant\ProjectStatus;
         </li>
         <li>
             <a href="/Investment/show/status/not_published" class="ajax page">
-                <span class="glyphicon glyphicon-time text-warning-dark"></span>
+                <span class="glyphicons glyphicons-alarm text-warning-dark"></span>
                 <span class="sidebar-title"><?=Translate()->notPublished . ($this->counts[ProjectStatus::NOT_PUBLISHED] ?? '')?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
@@ -39,7 +39,7 @@ use App\Models\Constant\ProjectStatus;
             <li class="sidebar-label">АДМИН</li>
             <li>
                 <a href="/Investment/show/status/paywait" class="ajax page">
-                    <span class="glyphicon glyphicon-time"></span>
+                    <span class="glyphicons glyphicons-clock"></span>
                     <span class="sidebar-title"><?=Translate()->paywait . ($this->counts[ProjectStatus::PAYWAIT] ?? ' 0')?></span>
                     <span class="sidebar-title-tray"></span>
                 </a>
@@ -55,8 +55,13 @@ use App\Models\Constant\ProjectStatus;
         <li class="divider"></li>
         <li class="sidebar-label"><?=Translate()->menu?></li>
         <li>
+            <!--<a href="/Articles/about" class="ajax page">
+                <span class="glyphicons glyphicons-pencil"></span>
+                <span class="sidebar-title"><?/*=Translate()->aboutUs*/?></span>
+                <span class="sidebar-title-tray"></span>
+            </a>-->
             <a href="/Contact/show" class="ajax page">
-                <span class="glyphicon glyphicon-book text-info-darker"></span>
+                <span class="glyphicons glyphicons-book text-info-darker"></span>
                 <span class="sidebar-title"><?=Translate()->contact?></span>
                 <span class="sidebar-title-tray"></span>
             </a>

@@ -7,6 +7,7 @@ html .halflings {
     src:
         url('/assets/fonts/glyphicons-pro/glyphicons-regular.eot') format('embedded-opentype'),
         url('/assets/fonts/glyphicons-pro/glyphicons-regulard41d.eot?#iefix') format("embedded-opentype"),
+        url('/assets/fonts/glyphicons-pro/glyphicons-regular.woff2') format("woff2"),
         url('/assets/fonts/glyphicons-pro/glyphicons-regular.woff') format("woff"),
         url('/assets/fonts/glyphicons-pro/glyphicons-regular.ttf') format("truetype"),
         url('/assets/fonts/glyphicons-pro/glyphicons-regular.svg#glyphicons_halflingsregular') format("svg");

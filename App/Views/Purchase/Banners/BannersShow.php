@@ -43,12 +43,12 @@ use App\Models\Table\Payment;
                             <div>
                                 <label class="block field option option-success">
                                     <input type="radio" name="position" checked value="1">
-                                    <span class="radio br-success"></span><i class="glyphicon glyphicon-arrow-up"></i> <?=Translate()->blockOnTop?> (<b>728</b>х<b>90</b>)
+                                    <span class="radio br-success"></span><i class="glyphicons glyphicons-up_arrow"></i> <?=Translate()->blockOnTop?> (<b>728</b>х<b>90</b>)
                                 </label>
 
                                 <label class="block mt15 field option option-success">
                                     <input type="radio" name="position" value="2">
-                                    <span class="radio br-success"></span><i class="glyphicon glyphicon-arrow-left"></i>
+                                    <span class="radio br-success"></span><i class="glyphicons glyphicons-left_arrow"></i>
                                     <?=Translate()->blockOnTheLeft?> (<b>125</b>х<b>125</b>)
                                 </label>
                             </div>

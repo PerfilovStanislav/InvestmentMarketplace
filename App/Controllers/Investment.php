@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Queries\Investment\Counts;
 use App\Queries\Orders\GetActive;
-use App\Core\{Controller, Database, View};
+use App\Core\{Controller, View};
 use App\Dto\ErrorRoute;
 use App\Helpers\{Data\Currency, Output,};
 use App\Models\Collection\{Languages,
@@ -11,7 +12,6 @@ use App\Models\Collection\{Languages,
     MVProjectLangs,
     MVProjectSearchs,
     Payments,
-    ProjectChatMessages,
     ProjectLangs,
     Projects};
 use App\Models\Constant\{ProjectStatus, User, Views};
@@ -94,6 +94,8 @@ class Investment extends Controller {
             GetActive::index(1)
         );
 
+        $counts = Db()->rawSelect(Counts::index())[0];
+
         $pageParams = [
             'projects'            => $projects,
             'MVProjectLangs'      => $MVProjectLangs,
@@ -103,6 +105,7 @@ class Investment extends Controller {
             'languages'           => $languages,
             'isAdmin'             => CurrentUser()->isAdmin(),
             'banners'             => $banners,
+            'counts'              => $counts,
             Views::PROJECT_FILTER => $projectFilter,
         ];
 
@@ -111,7 +114,7 @@ class Investment extends Controller {
                 'setStorage' => ['lang' => $pageLanguage->id, 'chat' => []],
                 'initChat',
                 'panelScrollerInit',
-                'imgClickInit',
+//                'imgClickInit',
                 'loadRealThumbs',
                 'checkChats',
             ], Output::DOCUMENT)

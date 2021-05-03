@@ -15,11 +15,16 @@ class Scripts {
     //                'default_skin/css/theme',
 //                    'fullcalendar/fullcalendar',
 //                    'cropper/cropper',
-                    'admin-forms/css/admin-forms.min',
+                    'admin-forms/css/admin-forms',
                     'flags/flags',
                     'payments/payments',
                     'magnific/magnific-popup',
-                    'default_skin/css/theme.clear',
+                ],
+                'css/' => [
+                    'font',
+                    'color',
+                    'flex',
+                    'theme.clear'
                 ],
                 'plugins/' => [
                     'litepicker/litepicker',
@@ -28,7 +33,7 @@ class Scripts {
                     'google/fonts',
                     'admindesigns/admindesigns',
                     'glyphicons-pro/glyphicons-pro',
-                    'glyphicons/glyphicons',
+//                    'glyphicons/glyphicons',
                     'font-awesome/font-awesome',
                 ]
             ]
@@ -43,7 +48,7 @@ class Scripts {
                 '' => [
                     'magnific/jquery.magnific-popup',
                     'js/moment.min',
-                    'cropper/cropper',
+//                    'cropper/cropper',
                     'pnotify/pnotify',
                 ],
                 'plugins/' => [

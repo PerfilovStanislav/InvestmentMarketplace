@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   nginx:
-    container_name: r_nginx
+    container_name: richinme_nginx
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
@@ -19,7 +19,7 @@ services:
       - richinme-network
 
   php-fpm:
-    container_name: r_php
+    container_name: richinme_php
     build:
       context: .
       dockerfile: docker/php-fpm/Dockerfile
@@ -32,7 +32,7 @@ services:
       - richinme-network
 
   postgres:
-    container_name: r_postgres
+    container_name: richinme_postgres
     build:
       context: ./docker/postgres
     volumes:
@@ -45,6 +45,15 @@ services:
       - POSTGRES_PASSWORD=
     networks:
       - richinme-network
+    restart: always
+
+  redis:
+    container_name: richinme_redis
+    hostname: richinme_redis
+    image: redis:6.2.2-alpine
+    restart: always
+    ports:
+      - "6377:6377"
 
 networks:
   richinme-network:

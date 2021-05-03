@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 abstract class AbstractLanguage implements LocaleInterface {
 
     public string
+        $aboutUs           = 'About us',
         $active            = 'Active',
         $addLevel          = 'Add level',
         $addPlan           = 'Add plan',
@@ -29,9 +30,12 @@ abstract class AbstractLanguage implements LocaleInterface {
         $free              = 'free',
         $freeForAddProject = 'Adding a project to the database is completely',
         $from              = 'from',
+        $new               = 'New',
+        $forLastMonth      = 'For last month',
+        $forAllTime        = 'For all time',
         $guest             = 'Guest',
-        $headKeywords      = 'hyip monitoring 2020, profitable projects, capital, investments',
-        $headDescription   = 'High Yield Investment Projects 2020',
+        $headKeywords      = 'hyip monitoring 2021, profitable projects, capital, investments',
+        $headDescription   = 'High Yield Investment Projects 2021',
         $headTitle         = 'Real Investment Market',
         $invalidDateFormat = 'Invalid date format',
         $languages         = 'Site languages',
@@ -63,8 +67,9 @@ abstract class AbstractLanguage implements LocaleInterface {
         $placeBanner       = 'Place a banner|for $%d per week',
         $plans             = 'Investment plans',
         $profit            = 'Profit',
-        $projectName       = 'Project name',
         $projectIsAdded    = 'Project is added',
+        $projectName       = 'Project name',
+        $projects          = 'Projects',
         $projectUrl        = 'Project\'s url or referral link',
         $prohibitedChars   = 'Prohibited characters are entered',
         $rating            = 'Rating',

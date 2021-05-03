@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Tr extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'Hakkımızda',
         $active            = 'Aktif',
         $addLevel          = 'Seviye Ekle',
         $addPlan           = 'Plan Ekle',
@@ -29,9 +30,12 @@ class Tr extends AbstractLanguage {
         $free              = 'ücretsiz',
         $freeForAddProject = 'Veritabanına tamamen proje ekleniyor',
         $from              = 'from',
+        $new               = 'Yeni',
+        $forLastMonth      = 'Geçen ay için',
+        $forAllTime        = 'Tüm bu zaman boyunca',
         $guest             = 'Misafir',
-        $headKeywords      = 'heyecan izleme 2020, yüksek karlı projeler, İnternette kazançlar, yatırım projeleri, piramitler',
-        $headDescription   = '2020 Yüksek Verimli Yatırım Projeleri',
+        $headKeywords      = 'heyecan izleme 2021, yüksek karlı projeler, İnternette kazançlar, yatırım projeleri, piramitler',
+        $headDescription   = '2021 Yüksek Verimli Yatırım Projeleri',
         $headTitle         = 'Yatırım Pazarı',
         $invalidDateFormat = 'Geçersiz tarih biçimi',
         $languages         = 'Site dilleri',
@@ -63,8 +67,9 @@ class Tr extends AbstractLanguage {
         $placeBanner       = 'Haftada $%d|bir afiş yerleştirin',
         $plans             = 'Tarife Planları',
         $profit            = 'Kar',
-        $projectName       = 'Proje Adı',
         $projectIsAdded    = 'Proje Eklendi',
+        $projectName       = 'Proje Adı',
+        $projects          = 'Projeler',
         $projectUrl        = 'Projeye (veya yönlendirme bağlantısına) bağlantı',
         $prohibitedChars   = 'Geçersiz karakterler girildi',
         $rating            = 'Puan',

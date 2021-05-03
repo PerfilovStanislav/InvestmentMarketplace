@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class It extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'Chi siamo',
         $active            = 'Attivo',
         $addLevel          = 'Aggiungi livello',
         $addPlan           = 'Aggiungi piano',
@@ -29,9 +30,12 @@ class It extends AbstractLanguage {
         $free              = 'gratuita',
         $freeForAddProject = 'L\'aggiunta di un progetto al database è completamente',
         $from              = 'a partire dal',
+        $new               = 'Nuovo',
+        $forLastMonth      = 'Nell\'ultimo mese',
+        $forAllTime        = 'Durante tutto questo tempo',
         $guest             = 'Ospite',
-        $headKeywords      = 'monitoraggio hyip 2020, progetti redditizi, capitali, investimenti',
-        $headDescription   = 'Progetti di investimento ad alto rendimento 2020',
+        $headKeywords      = 'monitoraggio hyip 2021, progetti redditizi, capitali, investimenti',
+        $headDescription   = 'Progetti di investimento ad alto rendimento 2021',
         $headTitle         = 'Mercato degli investimenti reali',
         $invalidDateFormat = 'Formato data non valido',
         $languages         = 'Lingue del sito',
@@ -63,8 +67,9 @@ class It extends AbstractLanguage {
         $placeBanner       = 'Posiziona un banner|per $%d a settimana',
         $plans             = 'Piani di investimento',
         $profit            = 'Profitto',
-        $projectName       = 'Nome del progetto',
         $projectIsAdded    = 'Il progetto viene aggiunto',
+        $projectName       = 'Nome del progetto',
+        $projects          = 'Progetti',
         $projectUrl        = 'URL del progetto o link di riferimento',
         $prohibitedChars   = 'Vengono inseriti caratteri vietati',
         $rating            = 'Valutazione',

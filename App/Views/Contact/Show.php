@@ -27,12 +27,12 @@ use App\Models\Table\Payment;
         <div class="panel heading-border panel-warning">
             <div class="panel-heading">
                 <span class="panel-title">
-                    <i class="glyphicon glyphicon-book"></i><?=Translate()->contact?>
+                    <i class="glyphicons glyphicons-book"></i><?=Translate()->contact?>
                 </span>
             </div>
             <div class="panel-body bg-light">
                 <div class="section pl28">
-                    <i class="glyphicon glyphicon-map-marker text-warning glyphicon-2x fs18 ml3 mr10"></i>
+                    <i class="glyphicons glyphicons-google_maps text-warning glyphicon-2x fs18 ml3 mr10"></i>
                     190000, Saint-Petersburg, Russia
                 </div>
                 <div class="section">

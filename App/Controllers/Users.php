@@ -118,9 +118,9 @@ class Users extends Controller {
 
         return Output()
             ->addView(SideLeft::class, [
-            'counts' => array_map(fn (array $cnt):string => $isAdmin ? ' ' . $cnt['cnt'] : '', (new MVProjectCounts())->toArray()),
-            'isAdmin' => $isAdmin,
-            'banners' => $banners,
+                'counts' => array_map(fn (array $cnt):string => $isAdmin ? ' ' . $cnt['cnt'] : '', (new MVProjectCounts())->toArray()),
+                'isAdmin' => $isAdmin,
+                'banners' => $banners,
         ], Views::SIDEBAR_LEFT)
             ->addFunctions([
                 'setBanners' => $banners

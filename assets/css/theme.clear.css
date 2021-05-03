@@ -1066,7 +1066,6 @@ span.nowrap { white-space: nowrap; }
 @media (min-width: 480px) {
     .navbar-right {
         float: right;
-        float: right!important;
     }
 }
 .navbar-nav>li>.dropdown-menu {
@@ -1191,14 +1190,17 @@ form .alert {
 }
 .panel {
     position: relative;
-    margin-bottom: 27px;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     /*border-radius: 3px;*/
 }
 .panel-body {
     position: relative;
     padding: 1vh 0.5vw;
     border: 1px solid #e2e2e2;
+    background-color: #ffffff;
+}
+.panel-body.max-height {
+    height: calc(100% - 20px - 1.5vw);
 }
 .panel-heading {
     position: relative;
@@ -1587,6 +1589,9 @@ button.close {
 .mh-500 {
     max-height: 500px !important;
 }
+.mih-50 {
+    min-height: 50px;
+}
 .mih-220 {
     min-height: 220px !important;
 }
@@ -1750,8 +1755,17 @@ button.close {
 .w350 {
     width: 350px !important;
 }
+.mnw125 {
+    min-width: 125px;
+}
+.mnw200 {
+    min-width: 200px;
+}
 .mnw270 {
-    min-width: 270px !important;
+    min-width: 270px;
+}
+.mnw300 {
+    min-width: 300px;
 }
 .mnw230 {
     min-width: 230px !important;
@@ -1799,7 +1813,7 @@ body {
 #content_wrapper {
     position: relative;
     left: 0px;
-    margin-left: 250px;
+    margin-left: 225px;
 }
 .navbar.navbar-fixed-top + #sidebar_left + #content_wrapper {
     padding-top: 60px;
@@ -2358,6 +2372,9 @@ fieldset[disabled] .btn-primary.active {
 .text-success {
     color: #70ca63;
 }
+.text-success-darker {
+    color: #56c046;
+}
 .text-warning-dark {
     color: #f5b531;
 }
@@ -2372,6 +2389,9 @@ fieldset[disabled] .btn-primary.active {
 }
 .alert-danger.alert-border-left {
     border-left-color: #bd3520;
+}
+.tt-u {
+    text-transform: uppercase;
 }
 #content {
     min-width: 338px;
@@ -2400,18 +2420,6 @@ fieldset[disabled] .btn-primary.active {
     float: left
 }
 
-.flex {
-    display: flex;
-}
-.jc_sb {
-    justify-content: space-between;
-}
-.fw_w {
-    flex-wrap: wrap;
-}
-.f_1_1_auto {
-    flex: 1 1 auto;
-}
 .hidden {
     display: none!important;
     visibility: hidden!important;
@@ -2437,13 +2445,8 @@ fieldset[disabled] .btn-primary.active {
     border-bottom: none;
 }
 
-.investment .inforow {
-    justify-content: space-around;
-    flex-wrap: wrap;
-    flex: 1 0 10px;
-}
 
-.investment .inforow > div {
+.inforow > div {
     padding: 0.5vh 0.25vw;
 }
 
@@ -2520,6 +2523,9 @@ fieldset[disabled] .btn-primary.active {
 .text-info-darker {
     color: #269dc9;
 }
+.text-primary-dark {
+    color: #2690d7;
+}
 .lead {
     margin-bottom: 19px;
     font-size: 24px;
@@ -2589,7 +2595,6 @@ li.divider {
     }
 }
 #bnr1 {
-    /*max-width: calc(98vw - 18px);*/
     max-width: 100%
 }
 a.svg {
@@ -2778,4 +2783,8 @@ textarea.form-control {
 }
 .daterangepicker .calendar-date td {
     padding: 5px;
+}
+
+.bg-c_white {
+    background-color: #fff;
 }

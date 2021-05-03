@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Jv extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'Babagan kita',
         $active            = 'Aktif',
         $addLevel          = 'Tambah level',
         $addPlan           = 'Tambah rencana',
@@ -29,9 +30,12 @@ class Jv extends AbstractLanguage {
         $free              = 'gratis',
         $freeForAddProject = 'Nambahake proyek menyang basis data rampung',
         $from              = 'saka',
+        $new               = 'Anyar',
+        $forLastMonth      = 'Kanggo wulan pungkasan',
+        $forAllTime        = 'Sajrone wektu iki',
         $guest             = 'Tamu',
-        $headKeywords      = 'ngawasi hyip 2020, proyek sing nguntungake, modal, investasi',
-        $headDescription   = 'Proyek Investasi Hasil Tinggi 2020',
+        $headKeywords      = 'ngawasi hyip 2021, proyek sing nguntungake, modal, investasi',
+        $headDescription   = 'Proyek Investasi Hasil Tinggi 2021',
         $headTitle         = 'Pasar Investasi Nyata',
         $invalidDateFormat = 'Format tanggal ora valid',
         $languages         = 'Basa situs',
@@ -63,8 +67,9 @@ class Jv extends AbstractLanguage {
         $placeBanner       = 'Selehake spanduk kanthi|rega $%d saben minggu',
         $plans             = 'Rencana investasi',
         $profit            = 'Bathi',
-        $projectName       = 'Jeneng proyek',
         $projectIsAdded    = 'Proyek ditambahake',
+        $projectName       = 'Jeneng proyek',
+        $projects          = 'Proyek',
         $projectUrl        = 'Link url utawa referensi proyek',
         $prohibitedChars   = 'Karakter terlarang dilebokake',
         $rating            = 'Rating',

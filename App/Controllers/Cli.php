@@ -26,7 +26,11 @@ class Cli extends Controller {
 
         $buffer = preg_replace('/\/\*.*?\*\//si', '', $buffer);
         if ($type === 'css') {
-            $buffer = str_replace(["\r\n", "\r", "\n", "\t", '  ', ' {', ': ', ';}', ') ', ' ('], ['', '', '', '', '', '{', ':', '}', ')', '('], $buffer);
+            $buffer = str_replace(
+                ["\r\n", "\r", "\n", "\t", '   ', ' {', ': ', ';}', ') ', ' ('],
+                [''    , ''  , ''  , ''  , ''   , '{' , ':' , '}' , ')' , '(' ],
+                $buffer
+            );
         }
         else {
             $buffer = str_replace(["\t"], ' ', $buffer);

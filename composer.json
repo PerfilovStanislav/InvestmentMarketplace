@@ -1,4 +1,6 @@
 {
+  "name": "richinme",
+  "description": "Richinme",
     "require": {
         "php": "^8.0",
         "imangazaliev/didom": "^1.16.1",
@@ -8,6 +10,7 @@
       "ext-curl": "*",
       "ext-json": "*",
       "ext-gd": "*",
-        "symfony/var-dumper": "^5.2"
+        "symfony/var-dumper": "^5.2",
+      "ext-pdo": "*"
     }
 }

@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Pt extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'Sobre nós',
         $active            = 'Ativo',
         $addLevel          = 'Adicione o nível',
         $addPlan           = 'Adicionar plano',
@@ -29,9 +30,12 @@ class Pt extends AbstractLanguage {
         $free              = 'gratuito',
         $freeForAddProject = 'Adicionar um projeto ao banco de dados é totalmente',
         $from              = 'de',
+        $new               = 'Novo',
+        $forLastMonth      = 'Durante o último mês',
+        $forAllTime        = 'Durante todo esse tempo',
         $guest             = 'Convidado',
-        $headKeywords      = 'Hyip monitoring 2020, projetos lucrativos, capital, investimentos',
-        $headDescription   = 'Projetos de investimento de alto rendimento 2020',
+        $headKeywords      = 'Hyip monitoring 2021, projetos lucrativos, capital, investimentos',
+        $headDescription   = 'Projetos de investimento de alto rendimento 2021',
         $headTitle         = 'Mercado de investimento real',
         $invalidDateFormat = 'Formato de data inválido',
         $languages         = 'Idiomas do site',
@@ -63,8 +67,9 @@ class Pt extends AbstractLanguage {
         $placeBanner       = 'Coloque um banner|por $%d por semana',
         $plans             = 'Planos de investimento',
         $profit            = 'Lucro',
-        $projectName       = 'Nome do Projeto',
         $projectIsAdded    = 'O projeto é adicionado',
+        $projectName       = 'Nome do Projeto',
+        $projects          = 'Projetos',
         $projectUrl        = 'URL do projeto ou link de referência',
         $prohibitedChars   = 'Caracteres proibidos são inseridos',
         $rating            = 'Avaliação',

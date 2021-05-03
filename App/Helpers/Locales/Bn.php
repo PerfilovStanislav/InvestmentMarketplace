@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Bn extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'আমাদের সম্পর্কে',
         $active            = 'সক্রিয়',
         $addLevel          = 'স্তর যুক্ত করুন',
         $addPlan           = 'পরিকল্পনা যুক্ত করুন',
@@ -29,6 +30,9 @@ class Bn extends AbstractLanguage {
         $free              = 'বিনামূল্যে',
         $freeForAddProject = 'ডাটাবেসে একটি প্রকল্প যুক্ত করা সম্পূর্ণ হয়েছে',
         $from              = 'থেকে',
+        $new               = 'নতুন',
+        $forLastMonth      = 'গত মাসের জন্য',
+        $forAllTime        = 'এই সমস্ত সময়',
         $guest             = 'অতিথি',
         $headKeywords      = 'হিপ পর্যবেক্ষণ ২০২০, লাভজনক প্রকল্প, মূলধন, বিনিয়োগ',
         $headDescription   = 'উচ্চ লাভজনক বিনিয়োগ প্রকল্পসমূহ ২০২০',
@@ -63,8 +67,9 @@ class Bn extends AbstractLanguage {
         $placeBanner       = 'একটি ব্যানার রাখুন|$%d প্রতি সপ্তাহের জন্য',
         $plans             = 'বিনিয়োগের পরিকল্পনা',
         $profit            = 'মুনাফা',
-        $projectName       = 'প্রকল্পের নাম',
         $projectIsAdded    = 'প্রকল্প সংযুক্ত করা হয়েছে',
+        $projectName       = 'প্রকল্পের নাম',
+        $projects          = 'প্রকল্প',
         $projectUrl        = 'প্রকল্পের ঠিকানা ও সুপারিশ',
         $prohibitedChars   = 'নিষিদ্ধ অক্ষর প্রবেশ করানো হয়েছে',
         $rating            = 'নির্ধারণ',

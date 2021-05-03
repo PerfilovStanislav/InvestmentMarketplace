@@ -20,7 +20,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
 <article>
 <div class="tray tray-center" project_id="<?=$this->project->id?>">
-    <div class="panel admin-form theme-primary mw1000 center-block">
+    <div class="panel admin-form theme-primary mw1000 center-block mb10">
         <div class="heading-border panel-<?=[
             ProjectStatus::ACTIVE        => 'success',
             ProjectStatus::PAYWAIT       => 'warning',
@@ -53,9 +53,10 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
             </div>
         </div>
     </div>
-    <div class="panel mw1000 center-block investment">
+
+    <div class="panel mw1000 center-block mb10">
         <div class="panel-body">
-            <div class="mbn flex inforow">
+            <div class="mbn flex inforow fw_w jc_sa f_1_1_auto">
                 <div class="mnw270" style="flex: 1 0">
                     <div class="panel-heading lh30 h-30">
                                 <span class="panel-icon">
@@ -151,7 +152,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
         </div>
     </div>
 
-    <div class="panel mw1000 center-block investment">
+    <div class="panel mw1000 center-block">
         <div class="panel-body">
             <div class="panel-widget chat-widget">
                 <div class="panel-heading lh30 h-30">
@@ -160,7 +161,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                     </span>
                     <span class="panel-title"><?=Translate()->chat?></span>
                 </div>
-                <div class="panel-body bg-light dark panel-scroller pn mh-500">
+                <div class="panel-body bg-light dark panel-scroller pn mh-500 max-height mih-50">
                 </div>
                 <form class="admin-form chat-footer" chat_id="<?=$this->project->id?>"
                       data-chat="<?=$this->project->id?>" autocomplete="off">

@@ -5,6 +5,7 @@ namespace App\Helpers\Locales;
 class Ms extends AbstractLanguage {
 
     public string
+        $aboutUs           = 'Tentang kita',
         $active            = 'Aktif',
         $addLevel          = 'Tambah tahap',
         $addPlan           = 'Tambah rancangan',
@@ -29,9 +30,12 @@ class Ms extends AbstractLanguage {
         $free              = 'percuma',
         $freeForAddProject = 'Menambah projek ke pangkalan data adalah',
         $from              = 'dari',
+        $new               = 'Baru',
+        $forLastMonth      = 'Untuk bulan terakhir',
+        $forAllTime        = 'Selama ini',
         $guest             = 'Tetamu',
-        $headKeywords      = 'pemantauan hyip 2020, projek yang menguntungkan, modal, pelaburan',
-        $headDescription   = 'Projek Pelaburan Hasil Tinggi 2020',
+        $headKeywords      = 'pemantauan hyip 2021, projek yang menguntungkan, modal, pelaburan',
+        $headDescription   = 'Projek Pelaburan Hasil Tinggi 2021',
         $headTitle         = 'Pasaran Pelaburan Sebenar',
         $invalidDateFormat = 'Format tarikh tidak sah',
         $languages         = 'Bahasa laman web',
@@ -63,8 +67,9 @@ class Ms extends AbstractLanguage {
         $placeBanner       = 'Letakkan sepanduk|dengan harga $%d seminggu',
         $plans             = 'Pelan pelaburan',
         $profit            = 'Keuntungan',
-        $projectName       = 'Nama Projek',
         $projectIsAdded    = 'Projek ditambah',
+        $projectName       = 'Nama Projek',
+        $projects          = 'Projek',
         $projectUrl        = 'Pautan url atau rujukan projek',
         $prohibitedChars   = 'Watak terlarang dimasukkan',
         $rating            = 'Penarafan',

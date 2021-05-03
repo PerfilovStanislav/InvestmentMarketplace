@@ -15,7 +15,7 @@ use App\Models\MView\MVProjectFilterAvailableLang;
 use App\Models\Table\{Language};
 use App\Requests\Investment\ShowRequest;
 ?>
-<div class="panel mb25 mt5">
+<div class="panel">
     <div class="panel-body">
         <div class="tab-content pn br-n">
             <div class="btn-group">

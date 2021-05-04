@@ -126,7 +126,8 @@ class HyipboxService {
     }
 
     public function getDescription(): string {
-        return trim($this->document->find('div.feat_elm')[12]->first('div.body_feat_elem')->text()) ?? '';
+        $description = trim($this->document->find('div.feat_elm')[12]->first('div.body_feat_elem')->text()) ?? '';
+        return str_replace(["\n"], [' '], $description);
     }
 
     private function getCurrencyType(string $str): int {

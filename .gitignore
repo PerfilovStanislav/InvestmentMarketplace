@@ -3,3 +3,5 @@
 Config.php
 /postgres/
 InvestmentService
+/docker/postgres/data/
+/nginx/

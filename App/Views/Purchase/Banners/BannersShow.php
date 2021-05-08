@@ -33,7 +33,7 @@ use App\Models\Table\Payment;
           <i class="fa fa-pencil-square"></i><?= Translate()->advertising ?>
         </span>
             </div>
-            <form method="post" action="http://richinme.org/Purchase/prepare" target="_blank" >
+            <form method="post" action="/Purchase/prepare" target="_blank" >
                 <div class="panel-body bg-light">
                     <div class="section row">
                         <div class="section flex">

@@ -8,10 +8,12 @@ use App\Models\Constant\OrderType;
 
 class GetActive
 {
-    public static function index(int $pos)
+    public static function index(int $pos, bool $webp)
     {
         return (new Sql(/** @lang PostgreSQL */'
-            SELECT b.path, b.url
+            SELECT 
+                b.path || $webp as path, 
+                b.url as url
             FROM order_banners b
             INNER JOIN orders o
                 ON o.entity_id = b.id
@@ -24,6 +26,7 @@ class GetActive
             'status'  => OrderStatus::SUCCESS,
             'type'    => OrderType::BANNER,
             'pos'     => $pos,
+            'webp'    => $webp ? '.webp' : '',
         ]));
     }
 }

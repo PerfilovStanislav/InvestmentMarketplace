@@ -1,0 +1,225 @@
+# Changelog
+All notable changes to `:vips` will be documented in this file.
+
+### 1.0.8 - 2020-08-29
+
+### Added
+- allow type names as type params to Image::setType() -- fixes issue with GType
+  on 32-bit platforms
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+### 1.0.7 - 2020-08-28
+
+### Added
+- use nullable types and void return type where possible
+
+### Deprecated
+- requires php >= 7.1
+
+### Fixed
+- fix autodocs for non-static methods
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 1.0.6 - 2020-08-28
+
+### Added
+- Image::setType() 
+- Utils::typeFromName() 
+- Updated autodocs for libvips 8.10
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 1.0.5 - 2019-09-26
+
+### Added
+- writeToArray() [John Cupitt]
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 1.0.4 - 2018-12-22
+
+### Added
+- polar() and rect() now work on non-complex images [John Cupitt]
+- add crossPhase() [John Cupitt]
+- update autodocs [John Cupitt]
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 1.0.3 - 2017-06-06
+
+### Added
+- add Image::newInterpolator() [Kleis Auke Wolthuizen]
+- implement array access interface [John Cupitt]
+- add BlendMode and Image::composite [John Cupitt]
+- add Config::version() [John Cupitt]
+- add Image::newFromMemory() / Image::writeToMemory() [Kleis Auke Wolthuizen]
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 1.0.2 - 2017-04-29
+
+### Added
+- fix minor formatting issues reported by phpcs [John Cupitt]
+- add Image::hasAlpha() [Kleis Auke Wolthuizen]
+- add Image::findLoad(), Image::findLoadBuffer() [John Cupitt]
+- add Image::copyMemory() [John Cupitt]
+- add Image::newFromImage() [John Cupitt]
+- update docs for libvips 8.5 [John Cupitt]
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 1.0.1 
+
+### Added
+- oops, mistagged, use 1.0.2
+
+## 1.0.0 - 2016-11-03
+
+### Added
+- logging with PSR-3 Logger Interface [Kleis Auke Wolthuizen]
+- switch to PSR2 formatting [Kleis Auke Wolthuizen]
+- add sig.php example [John Cupitt]
+- add Vips\Image::debugLogger() sample logger [John Cupitt]
+- added Vips\Config and Vips\Utils 
+
+### Deprecated
+- removed `\Enum` from enum names
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 0.1.2 - 2016-10-02
+
+### Added
+- Image::set, Image::get methods, handy for properties whose names do not
+  confirm to PHP conventions
+- add Image::typeof
+- add Image::remove
+- type annotations [Kleis Auke Wolthuizen]
+- libvips draw calls now work
+- logging, see Vips\Image::setLogging()
+- throw Vips\Exception on error
+- much better docs, including automatically-generated docs for magic methods
+  and properties
+
+### Deprecated
+- now require php >= 7.0.11, fixes #10
+
+### Fixed
+- support 2D array args to add() etc. 
+- fix bandsplit
+- fix ifthenelse with options
+- many more phpdoc fixes [Kleis Auke Wolthuizen]
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 0.1.1 - 2016-10-01
+
+### Added
+- Nothing
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Many phpdoc markup fixes [Kleis Auke Wolthuizen]
+- Fix capitalization JCupitt -> Jcupitt
+
+### Remove
+- Nothing
+
+### Security
+- Nothing
+
+## 0.1.0 - 2016-09-03
+
+### Added
+- First commit
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Remove
+- Nothing
+
+### Security
+- Nothing

@@ -89,7 +89,7 @@ use App\Models\Table\Payment;
                                     </blockquote>
                                     <div class="smart-widget sm-right mw90">
                                         <label class="field prepend-icon">
-                                            <input class="gui-input onlyUrl" readonly id="days_count" value="7">
+                                            <input class="gui-input" readonly id="days_count" value="7">
                                             <label class="field-icon">
                                                 <i class="fa fa-calendar"></i>
                                             </label>
@@ -103,7 +103,7 @@ use App\Models\Table\Payment;
                                     </blockquote>
                                     <div class="smart-widget sm-right mw90">
                                         <label class="field prepend-icon">
-                                            <input class="gui-input onlyUrl" readonly id="discount" value="6">
+                                            <input class="gui-input" readonly id="discount" value="6">
                                             <label class="field-icon">
                                                 <i class="fa fa-percent"></i>
                                             </label>
@@ -117,7 +117,7 @@ use App\Models\Table\Payment;
                                     </blockquote>
                                     <div class="smart-widget sm-right mw90">
                                         <label class="field prepend-icon">
-                                            <input class="gui-input onlyUrl" readonly id="amount" value="19.74">
+                                            <input class="gui-input" readonly id="amount" value="19.74">
                                             <label class="field-icon">
                                                 <i class="fa fa-dollar"></i>
                                             </label>
@@ -130,7 +130,7 @@ use App\Models\Table\Payment;
                         <div class="section">
                             <div class="smart-widget sm-right">
                                 <label class="field prepend-icon">
-                                    <input name="contact" class="gui-input onlyUrl" autocomplete="off"
+                                    <input name="contact" class="gui-input" autocomplete="off"
                                            placeholder="<?= Translate()->contact ?>">
                                     <label class="field-icon">
                                         <i class="fa fa-envelope-o"></i>

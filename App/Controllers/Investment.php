@@ -91,7 +91,7 @@ class Investment extends Controller {
         $projectLangs   = new ProjectLangs(['project_id' => $projectIds, 'lang_id' => $pageLanguage->id]);
 
         $banners = Db()->rawSelect(
-            GetActive::index(1)
+            GetActive::index(1, WEBP)
         );
 
         $counts = Db()->rawSelect(Counts::index())[0];

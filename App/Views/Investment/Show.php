@@ -122,7 +122,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
     <?php endfor; ?>
     <span>
         <a class="ajax page svg bnr_top" href="/purchase/banners" rel="noreferrer">
-            <object data="/assets/bnrs/bnr1.svg?<?= vsprintf('row1=%s&row2=%s', explode('|', sprintf(Translate()->placeBanner, 1))) ?>"
+            <object data="/assets/bnrs/bnr1.svg?<?= vsprintf('row1=%s&row2=%s', explode('|', sprintf(Translate()->placeBanner, 20))) ?>"
                     type="image/svg+xml" id="bnr1"></object>
         </a>
     </span>

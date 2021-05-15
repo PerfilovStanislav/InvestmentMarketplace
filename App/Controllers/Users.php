@@ -113,7 +113,7 @@ class Users extends Controller {
     public function setLeftSide(array $data = []): Output {
         $isAdmin = CurrentUser()->isAdmin();
         $banners = Db()->rawSelect(
-            GetActive::index(2)
+            GetActive::index(2, WEBP)
         );
 
         return Output()

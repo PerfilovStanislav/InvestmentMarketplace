@@ -9,6 +9,7 @@ use App\Services\PayeerService;
 use App\Views\Purchase\Banners\BannersShow;
 use App\Core\{AbstractEntity, Controller};
 use App\Helpers\Output;
+use Jcupitt\Vips\Image;
 
 class Purchase extends Controller {
 
@@ -27,6 +28,13 @@ class Purchase extends Controller {
         $sum = [0, 3, 2][$r->position] * $count * (100 - $discount) / 100;
 
         $path = $this->getPath($r->banner->name);
+
+        Image::newFromFile($r->banner->tmp_name, [
+            'n' => -1,
+        ])->webpsave($path . '.webp', [
+            'Q'     => 75,
+            'strip' => true,
+        ]);
         move_uploaded_file($r->banner->tmp_name, $path);
 
         $orderId = Db()->rawSelect(Create::index(

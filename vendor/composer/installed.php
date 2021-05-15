@@ -40,35 +40,53 @@
     ),
     'imangazaliev/didom' => 
     array (
-      'pretty_version' => '1.16.1',
-      'version' => '1.16.1.0',
+      'pretty_version' => '1.16.3',
+      'version' => '1.16.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c88f5a562868d92b86d0b6aa8dfb30aa7f99977f',
+      'reference' => '7fc9cc1f519e5b2342c3ce00d98e53ed32b33011',
+    ),
+    'jcupitt/vips' => 
+    array (
+      'pretty_version' => 'v1.0.8',
+      'version' => '1.0.8.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd3cf61bd087bd9c00cfc5ae32f6ded7165963058',
     ),
     'patrickschur/language-detection' => 
     array (
-      'pretty_version' => 'v5.0.0',
-      'version' => '5.0.0.0',
+      'pretty_version' => 'v5.1.0',
+      'version' => '5.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b455e7f2d023af8feab4c5ac966384f8ce2058e7',
+      'reference' => '728f1434dcf126ce3ed7118567c014d80d7fdd9c',
+    ),
+    'psr/log' => 
+    array (
+      'pretty_version' => '1.1.4',
+      'version' => '1.1.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
     ),
     'symfony/polyfill-mbstring' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f377a3dd1fde44d37b9831d68dc8dea3ffd28e13',
+      'reference' => '5232de97ee3b75b0360528dae24e73db49566ab1',
     ),
     'symfony/polyfill-php80' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
@@ -76,12 +94,12 @@
     ),
     'symfony/var-dumper' => 
     array (
-      'pretty_version' => 'v5.2.1',
-      'version' => '5.2.1.0',
+      'pretty_version' => 'v5.2.7',
+      'version' => '5.2.7.0',
       'aliases' => 
       array (
       ),
-      'reference' => '13e7e882eaa55863faa7c4ad7c60f12f1a8b5089',
+      'reference' => '27cb9f7cfa3853c736425c7233a8f68814b19636',
     ),
   ),
 );

@@ -9,6 +9,7 @@ use App\Services\PayeerService;
 use App\Views\Purchase\Banners\BannersShow;
 use App\Core\{AbstractEntity, Controller};
 use App\Helpers\Output;
+use Jcupitt\Vips\Access;
 use Jcupitt\Vips\Image;
 
 class Purchase extends Controller {
@@ -30,7 +31,7 @@ class Purchase extends Controller {
         $path = $this->getPath($r->banner->name);
 
         Image::newFromFile($r->banner->tmp_name, [
-            'n' => -1,
+            'access' => Access::SEQUENTIAL
         ])->webpsave($path . '.webp', [
             'Q'     => 75,
             'strip' => true,

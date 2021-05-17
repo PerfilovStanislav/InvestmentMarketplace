@@ -31,7 +31,7 @@ class Purchase extends Controller {
 
         $path = $this->getPath($r->banner->name);
 
-        Image::newFromFile($r->banner->tmp_name, [
+        Image::gifload($r->banner->tmp_name, [
             'n' => -1,
             'access' => Access::SEQUENTIAL,
         ])->webpsave($path . '.webp', [

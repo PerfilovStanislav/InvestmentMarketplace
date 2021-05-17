@@ -104,7 +104,12 @@ class Fr extends AbstractLanguage {
     public array
         $paymentType       = ['Retrait', 'Manuel', 'Instantané', 'Automatique'],
         $periodName        = ['', 'minutes', 'heures', 'jours', 'semaines', 'mois', 'années'],
-        $currency          = ['dollar', 'euro', 'bitcoin', 'rouble', 'livre', 'yen', 'gagné', 'roupie'];
+        $currency          = ['dollar', 'euro', 'bitcoin', 'rouble', 'livre', 'yen', 'gagné', 'roupie'],
+        $about             = [
+            'Bienvenue sur', '',
+            "Sur le site, nous recueillons les informations les plus récentes sur les HYIP. Il s'agit de la note, des avis et de la date de début de la campagne. Pour un calcul plus pratique des bénéfices, nous apportons les plans tarifaires à la forme humaine. En un seul endroit, vous trouverez tout ce dont vous avez besoin pour choisir un projet dans lequel vous allez investir ou partager votre opinion dans le chat.",
+            'Pour les administrateurs, nous proposons un placement de projet gratuit sur notre site. Commandez des emplacements pour les bannières dans la section', 'publicité', ''
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['minute', 'heure', 'jour', 'semaine', 'mois', ''][$i-1].(

@@ -2,8 +2,12 @@
 
 namespace App\Helpers\Locales;
 
+/**
+ * @deprecated not used
+ */
 class Id extends AbstractLanguage {
 
+    // Indonesian
     public string
         $aboutUs           = 'Tentang kami',
         $active            = 'Aktif',
@@ -104,7 +108,12 @@ class Id extends AbstractLanguage {
     public array
         $paymentType       = ['Penarikan ',' Manual ',' Instan ',' Otomatis'],
         $periodName        = ['', 'menit', 'jam', 'hari', 'minggu', 'bulan', 'tahun'],
-        $currency          = ['dolar', 'euro', 'bitcoin', 'rubel', 'pound', 'yen', 'won', 'rupee'];
+        $currency          = ['dolar', 'euro', 'bitcoin', 'rubel', 'pound', 'yen', 'won', 'rupee'],
+        $about             = [
+            'Selamat datang di', '',
+            'Di situs kami mengumpulkan informasi terbaru tentang HYIP. Ini adalah peringkat, ulasan, dan tanggal mulai kampanye. Untuk perhitungan keuntungan yang lebih nyaman, kami membawa rencana tarif ke bentuk manusia. Di satu tempat Anda akan menemukan semua yang Anda butuhkan untuk memilih proyek yang akan Anda investasikan, atau membagikan pendapat Anda dalam obrolan.',
+            'Untuk administrator, kami menawarkan penempatan proyek gratis di situs kami. Pesan tempat untuk spanduk di bagian', 'iklan', ''
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['menit', 'jam', 'hari', 'minggu', 'bulan', 'tahun'][$i-1];

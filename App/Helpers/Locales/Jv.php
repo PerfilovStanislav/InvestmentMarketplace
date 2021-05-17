@@ -4,6 +4,7 @@ namespace App\Helpers\Locales;
 
 class Jv extends AbstractLanguage {
 
+    // Javanese
     public string
         $aboutUs           = 'Babagan kita',
         $active            = 'Aktif',
@@ -104,7 +105,12 @@ class Jv extends AbstractLanguage {
     public array
         $paymentType       = ['Penarikan', 'Manual', 'Instan', 'Otomatis'],
         $periodName        = ['', 'menit', 'jam', 'dina', 'minggu', 'wulan', 'taun'],
-        $currency          = ['dolar', 'euro', 'bitcoin', 'rubel', 'pound', 'yen', 'won', 'rupee'];
+        $currency          = ['dolar', 'euro', 'bitcoin', 'rubel', 'pound', 'yen', 'won', 'rupee'],
+        $about             = [
+            'Sugeng rawuh ing', '',
+            'Ing situs kasebut, kita nglumpukake informasi paling anyar babagan HYIP. Iki minangka rating, review lan tanggal wiwitan kampanye. Kanggo pitungan bathi sing luwih trep, kita nggawa rencana tarif menyang bentuk manungsa. Ing sak panggonan sampeyan bakal nemokake kabeh sing dibutuhake kanggo milih proyek sing bakal diinvestasikan, utawa nuduhake pendapat ing obrolan.',
+            'Kanggo administrator, kita nawakake penempatan proyek gratis ing situs iki. Pesenan papan kanggo spanduk ing bagean', 'pariwara', ''
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['menit', 'jam', 'dina', 'minggu', 'wulan', 'taun'][$i-1];

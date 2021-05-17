@@ -104,7 +104,12 @@ class De extends AbstractLanguage {
     public array
         $paymentType       = ['Auszahlung', 'Manuell', 'Sofort', 'Automatisch'],
         $periodName        = ['', 'minuten', 'stunden', 'tage', 'wochen', 'monate', 'jahre'],
-        $currency          = ['dollar', 'euro', 'bitcoin', 'rubel', 'pfund', 'yen', 'won', 'rupie'];
+        $currency          = ['dollar', 'euro', 'bitcoin', 'rubel', 'pfund', 'yen', 'won', 'rupie'],
+        $about             = [
+            'Willkommen bei', '',
+            'Auf der Website sammeln wir die aktuellsten Informationen zu HYIPs. Dies sind die Bewertung, Bewertungen und das Startdatum der Kampagne. Für eine bequemere Gewinnberechnung bringen wir Tarifpläne in die menschliche Form. An einem Ort finden Sie alles, was Sie brauchen, um ein Projekt auszuwählen, in das Sie investieren möchten, oder um Ihre Meinung im Chat mitzuteilen.',
+            'Für Administratoren bieten wir eine kostenlose Projektplatzierung auf unserer Website an. Bestellen Sie Plätze für Banner im Bereich', 'Werbung', ''
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['minute', 'stunde', 'tag', 'woche', 'monat', 'jahr'][$i-1].(

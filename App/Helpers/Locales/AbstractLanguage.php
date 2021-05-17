@@ -104,7 +104,12 @@ abstract class AbstractLanguage implements LocaleInterface {
     public array
         $paymentType       = ['Withdrawal', 'Manual', 'Instant', 'Automatic'],
         $periodName        = ['', 'minutes', 'hours', 'days', 'weeks', 'months', 'years'],
-        $currency          = ['dollar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'won', 'rupee'];
+        $currency          = ['dollar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'won', 'rupee'],
+        $about             = [
+            'Welcome to ', '',
+            'On the site we collect the most up-to-date information about HYIPs. These are the rating, reviews and the start date of the campaign. For a more convenient calculation of profits, we bring tariff plans to the human form. In one place you will find everything you need to choose a project in which you are going to invest, or share your opinion in the chat.',
+            'For administrators, we offer free project placement on our site. Order places for banners in the ', 'advertising', ' section'
+        ];
 
     abstract public function getPeriodName(int $i, int $k): string;
 }

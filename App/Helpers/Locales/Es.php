@@ -4,6 +4,7 @@ namespace App\Helpers\Locales;
 
 class Es extends AbstractLanguage {
 
+    // Spanish
     public string
         $aboutUs           = 'Sobre nosotros',
         $active            = 'Activo',
@@ -104,7 +105,12 @@ class Es extends AbstractLanguage {
     public array
         $paymentType       = ['Tipo de pago', 'Manual', 'Instantáneo', 'Automático'],
         $periodName        = ['', 'minutos', 'horas', 'días', 'semanas', 'meses', 'año'],
-        $currency          = ['dólar', 'euro', 'bitcoin', 'rublo', 'libra', 'yen', 'won', 'rupia'];
+        $currency          = ['dólar', 'euro', 'bitcoin', 'rublo', 'libra', 'yen', 'won', 'rupia'],
+        $about             = [
+            'Bienvenido a', '',
+            'En el sitio recopilamos la información más actualizada sobre los HYIP. Estos son la calificación, las reseñas y la fecha de inicio de la campaña. Para un cálculo de beneficios más conveniente, traemos planes tarifarios a la forma humana. En un solo lugar encontrarás todo lo necesario para elegir un proyecto en el que vas a invertir, o compartir tu opinión en el chat.',
+            'Para los administradores, ofrecemos la colocación de proyectos gratis en nuestro sitio. Solicitar lugares para banners en la sección', 'publicidad', ''
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['minuto', 'hora', 'día', 'semana', 'mes', 'año'][$i-1].(

@@ -41,14 +41,12 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
             <span class="panel-title"> <?=Translate()->aboutUs?></span>
         </div>
         <div class="panel-body bg-c_white max-height">
-            <p class="fs15px"><i>Добро пожаловать на </i><b><i class="c0af fs1_125em">Rich</i><i class="cf33">inMe</i></b>.</p>
-            <p class="fs14px">На сайте мы собираем самую актуальную информацию о хайпах.
-                Это рейтинг, отзывы и дата старта кампании. Для более удобного подсчёта прибыли мы приводим тарифные планы к человеческому виду.
-                В одном месте ты найдёшь всё необходимое для выбора проекта, в который собираешься инвестировать, либо поделись своим мнением в чате.
+            <p class="fs15px">
+                <i><?=Translate()->about[0]?></i> <b><i class="c0af fs1_125em">Rich</i><i class="cf33">inMe</i></b> <?=Translate()->about[1]?>
             </p>
+            <p class="fs14px"><?=Translate()->about[2]?></p>
             <p class="fs14px">
-                Для администраторов мы предлагаем бесплатное размещение проекта на нашей площадке. Рекламу на свои сайты заказывайте
-                в разделе <a href="/Purchase/banners" class="ajax page">реклама</a>.
+                <?=Translate()->about[3]?> <a href="/Purchase/banners" class="ajax page"><?=Translate()->about[4]?></a> <?=Translate()->about[5]?>
             </p>
         </div>
     </div>

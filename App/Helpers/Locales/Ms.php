@@ -104,7 +104,12 @@ class Ms extends AbstractLanguage {
     public array
         $paymentType       = ['Pengeluaran', 'Manual', 'Segera', 'Automatik'],
         $periodName        = ['', 'minit', 'jam', 'hari', 'minggu', 'bulan', 'tahun'],
-        $currency          = ['dolar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'won', 'rupee'];
+        $currency          = ['dolar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'won', 'rupee'],
+        $about             = [
+            'Selamat datang ke', '',
+            'Di laman web ini kami mengumpulkan maklumat terkini mengenai HYIP. Ini adalah penilaian, ulasan dan tarikh mula kempen. Untuk pengiraan keuntungan yang lebih mudah, kami membawa rancangan tarif ke bentuk manusia. Di satu tempat, anda akan menemui semua yang anda perlukan untuk memilih projek di mana anda akan melabur, atau berkongsi pendapat anda dalam sembang.',
+            'Untuk pentadbir, kami menawarkan penempatan projek percuma di laman web kami. Pesan tempat untuk sepanduk di bahagian', 'pengiklanan', ''
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['minit', 'jam', 'hari', 'minggu', 'bulan', 'tahun'][$i-1];

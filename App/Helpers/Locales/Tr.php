@@ -104,7 +104,12 @@ class Tr extends AbstractLanguage {
     public array
         $paymentType       = ['Ödeme türü', 'Manuel', 'Anında', 'Otomatik'],
         $periodName        = ['', 'dakika', 'saat', 'gün', 'hafta', 'ay', 'yıl'],
-        $currency          = ['dolar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'kazandı', 'rupi'];
+        $currency          = ['dolar', 'euro', 'bitcoin', 'ruble', 'pound', 'yen', 'kazandı', 'rupi'],
+        $about             = [
+            '', "'a hoş geldiniz.",
+            "Sitede HYIP'ler hakkında en güncel bilgileri topluyoruz. Bunlar, kampanyanın derecelendirilmesi, incelemeleri ve başlangıç ​​tarihidir. Daha uygun bir kâr hesaplaması için, tarife planlarını insan formuna getiriyoruz. Yatırım yapacağınız bir projeyi seçmek için ihtiyacınız olan her şeyi tek bir yerde bulacaksınız veya sohbette fikrinizi paylaşacaksınız.",
+            'Yöneticiler için sitemizde ücretsiz proje yerleştirme sunuyoruz. ', 'Reklamcılık', ' bölümünde afişler için yer sipariş edin'
+        ];
 
     public function getPeriodName(int $i, int $k): string {
         return ['dakika', 'saat', 'gün', 'hafta', 'ay', 'yıl'][$i-1];

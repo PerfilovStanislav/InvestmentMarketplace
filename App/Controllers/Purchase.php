@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Constant\OrderType;
 use App\Queries\Orders\Create;
 use App\Requests\Purchase\PrepareRequest;
+use App\Requests\Telegram\SendMessageRequest;
 use App\Services\PayeerService;
 use App\Views\Purchase\Banners\BannersShow;
 use App\Core\{AbstractEntity, Controller};
@@ -31,7 +32,8 @@ class Purchase extends Controller {
         $path = $this->getPath($r->banner->name);
 
         Image::newFromFile($r->banner->tmp_name, [
-            'access' => Access::SEQUENTIAL
+            'n' => -1,
+            'access' => Access::SEQUENTIAL,
         ])->webpsave($path . '.webp', [
             'Q'     => 75,
             'strip' => true,
@@ -51,6 +53,10 @@ class Purchase extends Controller {
 
         $url = PayeerService::getInstance()->getUrl($sum, $orderId);
 
+        App()->telegram()->sendMessage(new SendMessageRequest([
+            'chat_id' => \Config::TELEGRAM_MY_ID,
+            'text' => "Заказ баннера. Сумма: $sum",
+        ]));
         return Output()
             ->addFunctions([
                 'redirect' => ['url' => $url],

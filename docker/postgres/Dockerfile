@@ -2,4 +2,4 @@ FROM postgres:12.2-alpine
 
 CMD ["postgres"]
 
-EXPOSE 5432
+EXPOSE 5430

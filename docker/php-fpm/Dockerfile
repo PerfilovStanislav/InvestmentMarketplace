@@ -3,6 +3,11 @@ FROM php:8.0.5-fpm-alpine3.13
 ARG COMPOSER_VERSION="2.0.13"
 ARG COMPOSER_SUM="116fdf07cc926af646635a6abc92d88aff7b02a5dc36538f81c50a7d27366dbf"
 
+RUN rm -rf /var/cache/apk/* && \
+    rm -rf /tmp/*
+
+RUN apk update
+
 # Install dependencies
 RUN set -eux \
     && apk add --no-cache \

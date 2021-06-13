@@ -157,10 +157,10 @@ class InvestmentService
     public function getNextProject(int $projectId, int $projectStatus): Project {
         return (new Project())->fromArray(
             Db::inst()->execOne(
-                new Sql('select id, url from project where id > $id and status_id = $status_id order by id asc limit 1'), [
+                new Sql('select id, url from project where id > $id and status_id = $status_id order by id asc limit 1', [
                     'id'        => $projectId,
                     'status_id' => $projectStatus,
-                ]
+                ])
             ));
     }
 

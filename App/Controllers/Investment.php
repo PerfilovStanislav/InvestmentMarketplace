@@ -87,7 +87,7 @@ class Investment extends Controller {
         $payments = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
 
         $banners = Db::inst()->exec(
-            GetActive::index(1, WEBP)
+            GetActive::index(1)
         );
 
         $counts = Db::inst()->execOne(Counts::index());

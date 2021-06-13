@@ -6,6 +6,7 @@ use App\Queries\Investment\Counts;
 use App\Queries\Investment\GetProjects;
 use App\Queries\Investment\ProjectLanguages;
 use App\Queries\Orders\GetActive;
+use App\Requests\Telegram\SendMessageRequest;
 use App\Services\Db;
 use App\Core\{Controller, View};
 use App\Dto\ErrorRoute;

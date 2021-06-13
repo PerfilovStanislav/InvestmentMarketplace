@@ -5,12 +5,10 @@ namespace App\Views\Users\Head; {
      * @property User $user
      * @property Language[] $siteLanguages
      * @property string[] $selectedLanguage
-     * @property LocaleInterface $locale
      * @property string $avatar
      */
 Class Authorized {} }
 
-use App\Interfaces\LocaleInterface;
 use App\Models\Table\Language;
 use App\Models\Table\User;
 ?>

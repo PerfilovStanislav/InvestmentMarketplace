@@ -301,3 +301,7 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
         </div>
         <?php $isFirstRow = false; endforeach; ?>
 </div>
+
+<div class="filters mb10" id="<?= Views::PROJECT_FILTER ?>">
+    <?= $this->{Views::PROJECT_FILTER} ?>
+</div>

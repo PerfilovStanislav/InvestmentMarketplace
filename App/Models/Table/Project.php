@@ -52,5 +52,6 @@ class Project extends AbstractEntity implements ModelInterface {
             'status_id'          => [self::TYPE_INT,         [Validator::MIN  => 1]],
             'rating'             => [self::TYPE_FLOAT,       [Validator::MIN  => 0, Validator::MAX => 10]],
             'scam_date'          => [self::TYPE_DATE,        [], self::TYPE_NULLABLE],
+            '_count'             => [self::TYPE_INT,         [Validator::MIN  => 0]],
         ];
 }

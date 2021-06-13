@@ -14,21 +14,21 @@ use App\Models\Constant\ProjectStatus;
     <ul class="nav sidebar-menu">
         <li class="sidebar-label pt20"><?=Translate()->projects?></li>
         <li>
-            <a href="/Investment/show/status/active" class="ajax page">
+            <a href="/Investment/show/status/active" class="ajax page scrollup">
                 <span class="fa fa-thumbs-o-up text-success-dark"></span>
                 <span class="sidebar-title"><?=Translate()->active . ($this->counts[ProjectStatus::ACTIVE] ?? '')?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
         </li>
         <li>
-            <a href="/Investment/show/status/not_published" class="ajax page">
+            <a href="/Investment/show/status/not_published" class="ajax page scrollup">
                 <span class="glyphicons glyphicons-alarm text-warning-dark"></span>
                 <span class="sidebar-title"><?=Translate()->notPublished . ($this->counts[ProjectStatus::NOT_PUBLISHED] ?? '')?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
         </li>
         <li>
-            <a href="/Investment/show/status/scam" class="ajax page">
+            <a href="/Investment/show/status/scam" class="ajax page scrollup">
                 <span class="glyphicons glyphicons-skull text-danger-dark"></span>
                 <span class="sidebar-title"><?=Translate()->scam . ($this->counts[ProjectStatus::SCAM] ?? '')?></span>
                 <span class="sidebar-title-tray"></span>
@@ -38,14 +38,14 @@ use App\Models\Constant\ProjectStatus;
             <li class="divider"></li>
             <li class="sidebar-label">АДМИН</li>
             <li>
-                <a href="/Investment/show/status/paywait" class="ajax page">
+                <a href="/Investment/show/status/paywait" class="ajax page scrollup">
                     <span class="glyphicons glyphicons-clock"></span>
                     <span class="sidebar-title"><?=Translate()->paywait . ($this->counts[ProjectStatus::PAYWAIT] ?? ' 0')?></span>
                     <span class="sidebar-title-tray"></span>
                 </a>
             </li>
             <li>
-                <a href="/Investment/show/status/deleted" class="ajax page">
+                <a href="/Investment/show/status/deleted" class="ajax page scrollup">
                     <span class="glyphicons glyphicons-remove_2"></span>
                     <span class="sidebar-title"><?=Translate()->deleted . ($this->counts[ProjectStatus::DELETED] ?? ' 0')?></span>
                     <span class="sidebar-title-tray"></span>
@@ -60,14 +60,14 @@ use App\Models\Constant\ProjectStatus;
                 <span class="sidebar-title"><?/*=Translate()->aboutUs*/?></span>
                 <span class="sidebar-title-tray"></span>
             </a>-->
-            <a href="/Contact/show" class="ajax page">
+            <a href="/Contact/show" class="ajax page scrollup">
                 <span class="glyphicons glyphicons-book text-info-darker"></span>
                 <span class="sidebar-title"><?=Translate()->contact?></span>
                 <span class="sidebar-title-tray"></span>
             </a>
         </li>
         <li>
-            <a href="/Purchase/banners" class="ajax page">
+            <a href="/Purchase/banners" class="ajax page scrollup">
                 <span class="fa fa-bullhorn"></span>
                 <span class="sidebar-title"><?=Translate()->advertising?></span>
                 <span class="sidebar-title-tray"></span>
@@ -75,7 +75,7 @@ use App\Models\Constant\ProjectStatus;
         </li>
         <li class="divider"></li>
         <span>
-            <a href="/Investment/registration" class="ajax page">
+            <a href="/Investment/registration" class="ajax page scrollup">
                 <div class="btn-type1 btn-type1-success" data-event="success">
                     <div class="btn-type1-icon">
                         <span class="fa fa-plus"></span>

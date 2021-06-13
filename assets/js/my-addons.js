@@ -555,12 +555,15 @@ var linkClick = function() {
     $(document).on('click', 'a.ajax', function(e) {
         var $target = $(e.currentTarget);
         var isNewPage = $target.hasClass('page');
+        var scrollup = $target.hasClass('scrollup');
         var functions = $target.data('beforesend');
         if (functions) {
             applyFunctions('f', functions);
         }
         ajax($target.attr('href'), [], isNewPage)
-        $('html,body').animate({scrollTop: 0}, 250, 'easeOutQuad');
+        if (scrollup) {
+            $('html,body').animate({scrollTop: 0}, 250, 'easeOutQuad');
+        }
         return false;
     });
 };

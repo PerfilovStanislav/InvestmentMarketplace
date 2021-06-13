@@ -6,6 +6,7 @@ namespace App\Views\Investment; {
  * @property Language $pageLanguage
  * @property string $url
  * @property ShowRequest $request
+ * @property integer $pagesCount
  */
 Class ProjectFilter {} }
 
@@ -32,6 +33,20 @@ use App\Requests\Investment\ShowRequest;
                         </li>
                     <?php endforeach;?>
                 </ul>
+
+                <div class="btn-group ml7">
+                    <?php if ($this->pagesCount > 1): ?>
+                    <?php foreach (range(1, min($this->pagesCount, 10)) as $page): ?>
+                        <a href="<?=$this->url.'/'.$this->request->getUriWithNewParam(['page' => $page])?>" class="ajax page">
+                            <div class="btn btn-sm ">
+                                <span class="">
+                                    <b><?=$page?></b>
+                                </span>
+                            </div>
+                        </a>
+                    <?php endforeach;?>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>

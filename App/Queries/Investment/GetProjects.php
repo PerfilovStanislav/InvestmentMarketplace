@@ -9,7 +9,8 @@ class GetProjects
     public static function index(
         int $statusId,
         int $langId,
-        int $limit = 10
+        int $limit,
+        int $page,
     )
     {
         return (new Sql(/** @lang PostgreSQL */'
@@ -34,6 +35,7 @@ class GetProjects
                 , p.status_id
                 , p.rating
                 , p.scam_date
+                , count(1) over () as _count
             FROM project p
             INNER JOIN project_lang pl
                 ON pl.project_id = p.id
@@ -41,10 +43,12 @@ class GetProjects
             WHERE status_id = $status_id
             ORDER BY id desc
             LIMIT $limit
+            OFFSET $offset
         ', [
             'status_id' => $statusId,
             'lang_id'   => $langId,
             'limit'     => $limit,
+            'offset'    => ($page - 1) * $limit,
         ]));
     }
 }

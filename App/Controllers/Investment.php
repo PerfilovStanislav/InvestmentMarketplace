@@ -65,24 +65,25 @@ class Investment extends Controller {
             ['flag' => 'xx', 'id' => -1]
         );
 
+        $projects = new Projects(
+            Db::inst()->exec(
+                new Sql(
+                    GetProjects::index($request->status, $pageLang->id, $limit = 10, $request->page)
+                )
+            )
+        );
+
         $projectFilter = (new View(ProjectFilter::class, [
             'request'                       => $request,
             'url'                           => Router()->getRoute()->generateUrl(),
             'languages'                     => $languages,
             'pageLanguage'                  => $pageLang,
+            'pagesCount'                    => ceil(($projects->current()->_count ?? 0) / $limit),
         ]));
 
         if ($pageLang->id === -1) {
             return $this->noShow([Views::PROJECT_FILTER => $projectFilter]);
         }
-
-        $projects = new Projects(
-            Db::inst()->exec(
-                new Sql(
-                    GetProjects::index($request->status, $pageLang->id)
-                )
-            )
-        );
 
         $payments = new Payments(['id' => $projects->getUniqueValuesByKey('id_payments')]);
 
@@ -93,14 +94,14 @@ class Investment extends Controller {
         $counts = Db::inst()->execOne(Counts::index());
 
         $pageParams = [
-            'projects'            => $projects,
-            'pageLanguage'        => $pageLang,
-            'payments'            => $payments,
-            'languages'           => $languages,
-            'isAdmin'             => CurrentUser()->isAdmin(),
-            'banners'             => $banners,
-            'counts'              => $counts,
-            Views::PROJECT_FILTER => $projectFilter,
+            'projects'                      => $projects,
+            'pageLanguage'                  => $pageLang,
+            'payments'                      => $payments,
+            'languages'                     => $languages,
+            'isAdmin'                       => CurrentUser()->isAdmin(),
+            'banners'                       => $banners,
+            'counts'                        => $counts,
+            Views::PROJECT_FILTER           => $projectFilter,
         ];
 
         Output()

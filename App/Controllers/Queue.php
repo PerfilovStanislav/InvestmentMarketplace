@@ -151,7 +151,7 @@ class Queue
             if ($try === 3) {
                 throw $e;
             }
-            sleep($try * 10);
+            sleep($try * 4);
             return $this->reTry($functionForCall, ++$try);
         }
     }
@@ -193,7 +193,7 @@ class Queue
                         sprintf("%s\n\n%s\n\n%s %s", $url, $description, '#invest', '#money'),
                         $project->name,
                     );
-                    sleep(5);
+                    sleep(2);
                     $vkService->sendToMarket(
                         $projectLang->lang_id,
                         Screens::getOriginalJpgScreen($project->id),
@@ -202,7 +202,7 @@ class Queue
                         $project->name,
                     );
                 }
-                sleep(10);
+                sleep(3);
             }
 
             unset($projectLangs, $project);
@@ -235,7 +235,7 @@ class Queue
                 }
 
                 unset($project);
-                sleep(5);
+                sleep(3);
             } catch (ErrorException $e) {
                 //
             }

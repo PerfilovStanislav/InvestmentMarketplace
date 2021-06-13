@@ -136,7 +136,7 @@ class InvestmentService
     }
 
     public function multiTranslate(string $fromLang, string $description): array {
-        $languages = new Languages(['pos' => range(1, 19)], 'pos');
+        $languages = new Languages(['pos' => range(1, 36)], 'pos');
         /** @var Language $lang */
         $result = [];
         foreach ($languages as $lang) {
@@ -170,9 +170,9 @@ class InvestmentService
         $hyiplogsService = HyiplogsService::inst()->setUrl("project/{$project->url}/");
         $hyipboxService = HyipboxService::inst()->setUrl($project->url);
 
-        if ($hyiplogsService->isScam() || $hyipboxService->isScam()) {
-            return;
-        }
+//        if ($hyiplogsService->isScam() || $hyipboxService->isScam()) {
+//            return;
+//        }
 
         $plans = $hyiplogsService->getPlans();
         if (!$minDeposit = $hyipboxService->getMinDeposit()) {

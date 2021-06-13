@@ -62,7 +62,7 @@ class HyiplogsService
             if ($try === 1) {
                 throw new ErrorException(__CLASS__, $result->getError());
             }
-            sleep($try * 10);
+            sleep($try * 4);
             return $this->reTry($functionForCall, ++$try);
         }
         return $result;

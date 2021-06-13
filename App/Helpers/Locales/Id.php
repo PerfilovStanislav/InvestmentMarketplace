@@ -2,9 +2,6 @@
 
 namespace App\Helpers\Locales;
 
-/**
- * @deprecated not used
- */
 class Id extends AbstractLanguage {
 
     // Indonesian

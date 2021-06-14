@@ -35,8 +35,6 @@ class InvestmentService
         }
         $project->save();
 
-        self::refreshMViews();
-
         if ($request->status === ProjectStatus::ACTIVE) {
             (new Queue([
                 'action_id'  => Queue::ACTION_ID_POST_TO_SOCIAL,

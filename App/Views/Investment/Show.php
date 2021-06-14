@@ -4,7 +4,6 @@ namespace App\Views\Investment;
     /**
      * @var Show $this
      * @property Languages $languages
-     * @property MVProjectLang[] $MVProjectLangs
      * @property Payment[] payments
      * @property Project[] $projects
      * @property AbstractLanguage $locale

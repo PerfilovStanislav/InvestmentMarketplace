@@ -4,9 +4,10 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\Output;
+use App\Helpers\Sql;
 use App\Queries\Orders\GetActive;
 use App\Services\Db;
-use App\Models\{Collection\MVProjectCounts,
+use App\Models\{
     Constant\DomElements,
     Constant\Language,
     Constant\UserStatus,
@@ -114,10 +115,18 @@ class Users extends Controller {
     public function setLeftSide(array $data = []): Output {
         $isAdmin = CurrentUser()->isAdmin();
         $banners = Db::inst()->exec(GetActive::index(2));
+        $counts = Db::inst()->exec(
+            new Sql('
+                SELECT p.status_id,
+                       count(*) AS cnt
+                FROM project p
+                GROUP BY p.status_id'
+            )
+        );
 
         return Output()
             ->addView(SideLeft::class, [
-                'counts' => array_map(fn (array $cnt):string => $isAdmin ? ' ' . $cnt['cnt'] : '', (new MVProjectCounts())->toArray()),
+                'counts' => array_map(fn (array $cnt):string => $isAdmin ? ' ' . $cnt['cnt'] : '', $counts),
                 'isAdmin' => $isAdmin,
                 'banners' => $banners,
         ], Views::SIDEBAR_LEFT)

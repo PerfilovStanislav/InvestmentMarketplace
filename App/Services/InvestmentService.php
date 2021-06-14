@@ -12,10 +12,6 @@ use App\Helpers\Output;
 use App\Helpers\Validator;
 use App\Libraries\Screens;
 use App\Models\Collection\Languages;
-use App\Models\Collection\MVProjectCounts;
-use App\Models\Collection\MVProjectFilterAvailableLangs;
-use App\Models\Collection\MVProjectLangs;
-use App\Models\Collection\MVProjectSearchs;
 use App\Models\Constant\ProjectStatus;
 use App\Models\Constant\User as UserConstant;
 use App\Models\Constant\UserStatus;
@@ -136,7 +132,9 @@ class InvestmentService
     }
 
     public function multiTranslate(string $fromLang, string $description): array {
-        $languages = new Languages(['pos' => range(1, 36)], 'pos');
+        $languages = new Languages(
+            Db::inst()->exec(new Sql('SELECT * FROM languages WHERE pos <= 36 ORDER BY pos'))
+        );
         /** @var Language $lang */
         $result = [];
         foreach ($languages as $lang) {
@@ -224,12 +222,13 @@ class InvestmentService
         // Сохраняем описания
         $values = [];
         foreach ($descriptions as $langId => $description) {
-            $description = \str_replace(["\n", "'"], ['</br>', "''"], $description);
+            $description = \str_replace(["\n"], [''], $description);
             $values[] = [$project->id, $langId, $description];
         }
+
         Db::inst()->exec(new Sql(
             'INSERT INTO project_lang(project_id, lang_id, description) VALUES $values', [
-                'values' => $values
+                'values' => Sql::toRows($values)
             ]
         ));
 
@@ -241,19 +240,10 @@ class InvestmentService
             ],
         ]))->save();
 
-        self::refreshMViews();
-
         if ($hid = $hyiplogsService->getProjectId()) {
             $this->parseVotes($project->id, (int)$hid);
         }
 
-    }
-
-    public static function refreshMViews(): void {
-        MVProjectFilterAvailableLangs::refresh();
-        MVProjectLangs::refresh();
-        MVProjectSearchs::refresh();
-        MVProjectCounts::refresh();
     }
 
     public function parseVotes(int $projectId, int $hid) {
@@ -310,7 +300,7 @@ class InvestmentService
 
             Db::inst()->exec(
                 new Sql('INSERT INTO message(date_create, user_id, project_id, lang_id, message, session_id) VALUES $values', [
-                    'values' => [[$date, $user->id, $projectId, -1, $message, 1]]
+                    'values' => Sql::toRows([[new Sql($date), $user->id, $projectId, -1, $message, 1]])
                 ])
             );
         }

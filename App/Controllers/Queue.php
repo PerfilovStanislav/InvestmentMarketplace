@@ -115,8 +115,6 @@ class Queue
                 (new InvestmentService())->reloadScreen(new ReloadScreenshotRequest(['project' => $project->id]));
             });
 
-            InvestmentService::refreshMViews();
-
             $user = (new User())->getById($project->admin);
             $message = new SendPhotoRequest([
                 'chat_id' => \Config::TELEGRAM_ADD_GROUP_PROJECT_ID,
@@ -240,8 +238,6 @@ class Queue
                 //
             }
         }
-
-        InvestmentService::refreshMViews();
     }
 
     public function parseNewProjects(): void
@@ -290,19 +286,19 @@ class Queue
         }
 
         $errors = [];
-        $list = Db::inst()->exec(new Sql('SELECT * FROM hyiplogs ORDER by id desc LIMIT 20 '));
+        $list = Db::inst()->exec(new Sql('SELECT * FROM hyiplogs ORDER by id desc LIMIT 1 '));
         foreach ($list as $item) {
             if (($project = (new Project())->getRowFromDbAndFill(['url' => $item['url']]))->id) {
                 continue;
             }
-//            try {
+            try {
                 (new InvestmentService())->parseProject($project);
-//            } catch (ErrorException $e) {
-//                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage(), $e->getFile()];
-//            } catch (\Throwable $e) {
-//                $errors[$item['url']] = [$e->getLine(), $e->getMessage(), $e->getFile()];
-//            }
-//            gc_collect_cycles();
+            } catch (ErrorException $e) {
+                $errors[$item['url']] = [$e->getKey(), $e->getLine(), $e->getMessage(), $e->getFile()];
+            } catch (\Throwable $e) {
+                $errors[$item['url']] = [$e->getLine(), $e->getMessage(), $e->getFile()];
+            }
+            gc_collect_cycles();
         }
         if (!empty($errors)) {
             sendToTelegram([

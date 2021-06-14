@@ -123,6 +123,7 @@ class Users extends Controller {
                 GROUP BY p.status_id'
             )
         );
+        $counts = \array_column($counts, null, 'status_id');
 
         return Output()
             ->addView(SideLeft::class, [

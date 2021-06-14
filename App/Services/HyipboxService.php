@@ -145,7 +145,11 @@ class HyipboxService {
     }
 
     public function getPayments(): array {
-        $str = $this->document->first('div.feat_ps')->parent()->innerHtml() ?? '';
+        $dom = $this->document->first('div.feat_ps');
+        if (empty($dom)) {
+            return [];
+        }
+        $str = $dom->parent()->innerHtml() ?? '';
 
         preg_match_all('/feat_ps (c\d+)/', $str, $matches);
         $payments = array_values(array_filter(array_map([$this, 'getPayment'], $matches[1])));

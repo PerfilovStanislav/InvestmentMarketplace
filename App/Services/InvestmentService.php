@@ -56,7 +56,7 @@ class InvestmentService
         $project = (new Project())->getById($id);
 
         $url = HyipboxService::inst()->setUrl($project->url)->loadScreen();
-        if ($url === null) {
+        if ($url === null || \strlen($url) < 35) {
             $url = HyiplogsService::inst()->setUrl("project/{$project->url}/")->loadScreen();
         }
 

@@ -6,7 +6,6 @@ namespace App\Views\Investment; {
  * @property ProjectLang $projectLang
  * @property AbstractLanguage $locale
  * @property Payment[] payments
- * @property Languages $languages
  */
 Class Details {} }
 
@@ -122,15 +121,6 @@ use App\Models\Table\{Payment, Project, Language, ProjectLang};
                             <tr>
                                 <td><?=Translate()->refProgram?></td>
                                 <td class="fw600"><?= implode('%, ', $this->project->ref_percent) . '%'?></td>
-                            </tr>
-                            <tr class="hide_for_iv">
-                                <td><?=Translate()->languages?></td>
-                                <td><?php foreach ($this->languages as $langId => $language):
-                                        /** @var Language $language */ ?>
-                                        <i class="flag flag-<?=$language->flag?>"
-                                           title="<?=$language->name . " ({$language->own_name})"?>"></i>
-                                    <?php endforeach;?>
-                                </td>
                             </tr>
                             <tr class="hide_for_iv">
                                 <td>

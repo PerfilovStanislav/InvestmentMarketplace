@@ -15,7 +15,6 @@ use App\Models\Collection\{Languages,
     Payments,
     Projects};
 use App\Models\Constant\{ProjectStatus, User, Views};
-use App\Models\MView\MVProjectLang;
 use App\Models\Table\{Language, Project, ProjectChatMessage, ProjectLang, Queue, Redirect};
 use App\Requests\Investment\{AddRequest,
     ChangeStatusRequest,
@@ -138,15 +137,12 @@ class Investment extends Controller {
         if (!$projectLang->id) {
             Error()->add('lang', Translate()->noLanguage, true);
         }
-        $MVProjectLang  = (new MVProjectLang())->getById($project->id);
         $payments       = new Payments(['id' => $project->id_payments]);
-        $languages      = new Languages(['id' => $MVProjectLang->lang_id]);
 
         $pageParams = [
             'project'     => $project,
             'projectLang' => $projectLang,
             'payments'    => $payments,
-            'languages'   => $languages,
             'language'    => $language,
         ];
 

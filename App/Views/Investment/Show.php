@@ -24,7 +24,6 @@ use App\Models\Collection\Languages;
 use App\Models\Constant\PlanPeriodType;
 use App\Models\Constant\ProjectStatus;
 use App\Models\Constant\Views;
-use App\Models\MView\MVProjectLang;
 use App\Models\Table\{Payment, Project, Language, ProjectLang};
 ?>
 

@@ -34,6 +34,14 @@ use App\Models\Constant\ProjectStatus;
                 <span class="sidebar-title-tray"></span>
             </a>
         </li>
+        <li class="divider"></li>
+        <li>
+            <a href="/Investment/registration" class="ajax page scrollup">
+                <span class="fa fa-plus text-success-dark"></span>
+                <span class="sidebar-title"><?=Translate()->addProject?></span>
+                <span class="sidebar-title-tray"></span>
+            </a>
+        </li>
         <?php if ($this->isAdmin): ?>
             <li class="divider"></li>
             <li class="sidebar-label">АДМИН</li>
@@ -55,11 +63,6 @@ use App\Models\Constant\ProjectStatus;
         <li class="divider"></li>
         <li class="sidebar-label"><?=Translate()->menu?></li>
         <li>
-            <!--<a href="/Articles/about" class="ajax page">
-                <span class="glyphicons glyphicons-pencil"></span>
-                <span class="sidebar-title"><?/*=Translate()->aboutUs*/?></span>
-                <span class="sidebar-title-tray"></span>
-            </a>-->
             <a href="/Contact/show" class="ajax page scrollup">
                 <span class="glyphicons glyphicons-book text-info-darker"></span>
                 <span class="sidebar-title"><?=Translate()->contact?></span>
@@ -74,19 +77,6 @@ use App\Models\Constant\ProjectStatus;
             </a>
         </li>
         <li class="divider"></li>
-        <span>
-            <a href="/Investment/registration" class="ajax page scrollup">
-                <div class="btn-type1 btn-type1-success" data-event="success">
-                    <div class="btn-type1-icon">
-                        <span class="fa fa-plus"></span>
-                    </div>
-                    <div class="btn-type1-text">
-                        <b><?= Translate()->addProject ?></b>
-                    </div>
-                </div>
-            </a>
-        </span>
-
         <?php $h = count($this->banners) * 135 + 5; ?>
         <div class="bnrs bnrs_left" style="height: <?=$h?>px;">
             <?php foreach ($this->banners as $i => $banner): ?>

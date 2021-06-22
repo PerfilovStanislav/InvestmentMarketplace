@@ -62,8 +62,8 @@ class Scripts {
         foreach (self::JS[(int)DEBUG] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.js';
-                $t = filemtime(ROOT.$f);
-                echo '<script src="'.$f.'?'.$t.'"></script>';
+                $t = filectime(ROOT.$f);
+                echo "<script src=\"$f?$t\"></script>";
             }
         }
     }
@@ -72,8 +72,8 @@ class Scripts {
         foreach (self::CSS[(int)DEBUG] as $dir => $files) {
             foreach ($files as $file) {
                 $f = self::ASSETS_DIR.$dir.$file.'.css';
-                $t = filemtime(ROOT.$f);
-                echo '<link rel="stylesheet" type="text/css" href="'.$f.'?'.$t.'">';
+                $t = filectime(ROOT.$f);
+                echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$f?$t\">";
             }
         }
     }
